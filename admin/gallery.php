@@ -18,28 +18,23 @@ $galleries = json_decode($galleryData, true) ?: [];
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
-
         <?php include 'includes/navbar.php'; ?>
         <?php include 'includes/menubar.php'; ?>
 
-        <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
             <section class="content-header box-header-background">
                 <h1>
                     Content <i class="fa fa-angle-right"></i> Gallery
                 </h1>
-                <div class="box-inline ">
-
-                    <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
-                            class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
+                <div class="box-inline">
+                    <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat">
+                        <i class="fa fa-plus-circle"></i>&nbsp;&nbsp; New
+                    </a>
 
                     <div class="search-container">
-                        <input type="text" class="search-input" id="search-input" placeholder="Search...">
-                        <button class="search-button" onclick="filterDivs()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-search">
+                        <input type="text" class="search-input" id="search-input" placeholder="Search by album title...">
+                        <button class="search-button" onclick="filterGallery()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
@@ -53,27 +48,25 @@ $galleries = json_decode($galleryData, true) ?: [];
                     <li class="active">Gallery</li>
                 </ol>
             </section>
-            <!-- Main content -->
+
             <section class="content">
                 <?php
                 if (isset($_SESSION['error'])) {
                     echo "
-            <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-warning'></i> Error!</h4>
-              " . $_SESSION['error'] . "
-            </div>
-          ";
+                    <div class='alert alert-danger alert-dismissible'>
+                        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                        <h4><i class='icon fa fa-warning'></i> Error!</h4>
+                        " . $_SESSION['error'] . "
+                    </div>";
                     unset($_SESSION['error']);
                 }
                 if (isset($_SESSION['success'])) {
                     echo "
-            <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-check'></i> Success!</h4>
-              " . $_SESSION['success'] . "
-            </div>
-          ";
+                    <div class='alert alert-success alert-dismissible'>
+                        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                        <h4><i class='icon fa fa-check'></i> Success!</h4>
+                        " . $_SESSION['success'] . "
+                    </div>";
                     unset($_SESSION['success']);
                 }
                 ?>
@@ -84,49 +77,34 @@ $galleries = json_decode($galleryData, true) ?: [];
                                 <!-- Any header content you might want to add -->
                             </div>
                             <div class="box-body" style="padding:30px">
-                                <div class="album">
+                                <div class="album album-container">
                                     <?php foreach ($galleries as $id => $gallery): ?>
                                         <?php if (isset($gallery['gallery_name'], $gallery['image_url'])): ?>
                                             <div class="album-item">
                                                 <div class="album-box"
                                                     style="background-image: url('<?php echo htmlspecialchars($gallery['image_url']); ?>'); background-size: cover; background-position: center;">
-                                                    <div class="circle"
-                                                        onclick="toggleDropdown(event, 'album<?php echo $id; ?>')">
+                                                    <div class="circle" onclick="toggleDropdown(event, 'album<?php echo $id; ?>')">
                                                         <svg viewBox="0 0 24 24" width="16" height="16">
-                                                            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor"
-                                                                stroke-width="2" stroke-linecap="round" />
+                                                            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                                                         </svg>
                                                     </div>
                                                     <div class="dropdown-menu" id="album<?php echo $id; ?>">
-
-                                                        <div class="dropdown-item open-modal"
-                                                            data-id="<?php echo htmlspecialchars($id); ?>"
-                                                            onclick="event.stopPropagation(); openEditModal('<?php echo $id; ?>')">
-                                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
-                                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                                stroke-linejoin="round">
+                                                        <div class="dropdown-item open-modal" data-id="<?php echo htmlspecialchars($id); ?>" onclick="event.stopPropagation(); openEditModal('<?php echo $id; ?>')">
+                                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                                 <path d="M12 20h9" />
-                                                                <path
-                                                                    d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                                                <path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
                                                             </svg>
                                                             Change Cover
                                                         </div>
-                                                        <div class="dropdown-item open-delete"
-                                                            data-id="<?php echo htmlspecialchars($id); ?>"
-                                                            onclick="event.stopPropagation(); openDeleteModal('<?php echo $id; ?>')">
-                                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
-                                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                                stroke-linejoin="round">
+                                                        <div class="dropdown-item open-delete" data-id="<?php echo htmlspecialchars($id); ?>" onclick="event.stopPropagation(); openDeleteModal('<?php echo $id; ?>')">
+                                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                                 <path d="M3 6h18M3 6l1 16H2l1-16zM8 6v12M16 6v12" />
                                                             </svg>
                                                             Delete
                                                         </div>
                                                     </div>
                                                     <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
-                                                        <a href="gallery_view.php?id=<?php echo urlencode($id); ?>"
-                                                            class='btn btn-default btn-class'
-                                                            style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none;">View
-                                                            Album</a>
+                                                        <a href="gallery_view.php?id=<?php echo urlencode($id); ?>" class='btn btn-default btn-class' style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none;">View Album</a>
                                                     </div>
                                                 </div>
                                                 <div class="album-title">
@@ -142,12 +120,7 @@ $galleries = json_decode($galleryData, true) ?: [];
                 </div>
 
                 <!-- Delete Modal -->
-
-
-                <!-- Delete Modal -->
-
-
-
+                <!-- Your delete modal content here -->
             </section>
         </div>
 
@@ -155,10 +128,10 @@ $galleries = json_decode($galleryData, true) ?: [];
         <?php include 'includes/album_modal.php'; ?>
     </div>
     <?php include 'includes/scripts.php'; ?>
-
 </body>
 
 </html>
+
 <script>
     $(document).ready(function () {
         // Function to fetch content from the server
@@ -230,12 +203,6 @@ $galleries = json_decode($galleryData, true) ?: [];
         });
     });
 
-
-
-
-
-
-
     function toggleDropdown(event, dropdownId) {
         event.stopPropagation();
         const dropdown = document.getElementById(dropdownId);
@@ -259,5 +226,20 @@ $galleries = json_decode($galleryData, true) ?: [];
         });
     });
 
+    function filterGallery() {
+        const input = document.getElementById('search-input').value.toLowerCase();
+        const albums = document.querySelectorAll('.album-container .album-item');
 
+        albums.forEach(album => {
+            const title = album.querySelector('.album-title').textContent.toLowerCase();
+            if (title.includes(input)) {
+                album.style.display = 'block';
+            } else {
+                album.style.display = 'none';
+            }
+        });
+    }
+
+    // Optional: Filter as you type
+    document.getElementById('search-input').addEventListener('input', filterGallery);
 </script>

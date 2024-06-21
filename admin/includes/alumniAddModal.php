@@ -34,7 +34,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" action="alumni_listadd.php">
-
+        <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
           <div class="personal_information">
             <div class="form-group row" style="border-bottom: 1px solid silver !important;">
               <label for="firstname" class="col-sm-3 col-form-label text-sm-end">

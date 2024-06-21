@@ -34,12 +34,11 @@ $galleries = json_decode($galleryData, true) ?: [];
                     <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
                             class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
 
+                
                     <div class="search-container">
-                        <input type="text" class="search-input" id="search-input" placeholder="Search...">
-                        <button class="search-button" onclick="filterTable()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-search">
+                        <input type="text" class="search-input" id="search-input" placeholder="Search by album title...">
+                        <button class="search-button" onclick="filterGallery()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
@@ -58,22 +57,22 @@ $galleries = json_decode($galleryData, true) ?: [];
                 <?php
                 if (isset($_SESSION['error'])) {
                     echo "
-            <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-warning'></i> Error!</h4>
-              " . $_SESSION['error'] . "
-            </div>
-          ";
+                        <div class='alert alert-danger alert-dismissible'>
+                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                            <h4><i class='icon fa fa-warning'></i> Error!</h4>
+                            " . $_SESSION['error'] . "
+                        </div>
+                    ";
                     unset($_SESSION['error']);
                 }
                 if (isset($_SESSION['success'])) {
                     echo "
-            <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-check'></i> Success!</h4>
-              " . $_SESSION['success'] . "
-            </div>
-          ";
+                        <div class='alert alert-success alert-dismissible'>
+                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                            <h4><i class='icon fa fa-check'></i> Success!</h4>
+                            " . $_SESSION['success'] . "
+                        </div>
+                    ";
                     unset($_SESSION['success']);
                 }
                 ?>
@@ -85,13 +84,12 @@ $galleries = json_decode($galleryData, true) ?: [];
 
                             </div>
                             <div class="box-body" style="padding:30px">
-                                <div class="album">
-
+                                <div class="album" id="album-container">
                                     <?php foreach ($galleries as $id => $gallery): ?>
                                         <?php if ($gallery['gallery_id'] === $_GET['id']): ?>
                                             <div class="album-item">
                                                 <div class="album-box"
-                                                    style="background-image: url('<?php echo $gallery['image_url']; ?>'); background-size: cover; background-position: center;">
+                                                    style="background-image: url('<?php echo htmlspecialchars($gallery['image_url']); ?>'); background-size: cover; background-position: center;">
                                                     <div class="circle"
                                                         onclick="toggleDropdown(event, 'album<?php echo $id; ?>')">
                                                         <svg viewBox="0 0 24 24" width="16" height="16">
@@ -102,7 +100,7 @@ $galleries = json_decode($galleryData, true) ?: [];
                                                     <div class="dropdown-menu" id="album<?php echo $id; ?>">
                                                         <div class="dropdown-item" onclick="event.stopPropagation()">Change
                                                             Cover Photo</div>
-                                                        <div class="dropdown-item open-modal" data-id="<?php echo $id; ?>"
+                                                        <div class="dropdown-item open-modal" data-id="<?php echo htmlspecialchars($id); ?>"
                                                             data-toggle="modal" data-target="#editModal">
                                                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
                                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -113,7 +111,7 @@ $galleries = json_decode($galleryData, true) ?: [];
                                                             </svg>
                                                             Edit
                                                         </div>
-                                                        <div class="dropdown-item open-delete" data-id="<?php echo $id; ?>">
+                                                        <div class="dropdown-item open-delete" data-id="<?php echo htmlspecialchars($id); ?>">
                                                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
                                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                                 stroke-linejoin="round">
@@ -129,24 +127,20 @@ $galleries = json_decode($galleryData, true) ?: [];
                                                     </div>
                                                 </div>
                                                 <div class="album-title">
-                                                    <?php echo pathinfo($gallery['image_url'], PATHINFO_FILENAME); ?>
+                                                    <?php echo htmlspecialchars(pathinfo($gallery['image_url'], PATHINFO_FILENAME)); ?>
                                                 </div>
                                             </div>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </section>
         </div>
 
         <!-- Edit Modal -->
-
 
     </div>
 
@@ -160,7 +154,6 @@ $galleries = json_decode($galleryData, true) ?: [];
 </html>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-
 
 <script>
     function toggleDropdown(event, dropdownId) {
@@ -185,7 +178,6 @@ $galleries = json_decode($galleryData, true) ?: [];
             dropdown.style.display = 'none';
         });
     });
-
 
     $(document).ready(function () {
         // Function to fetch content from the server
@@ -279,7 +271,25 @@ $galleries = json_decode($galleryData, true) ?: [];
                 }
             });
         });
+
+        // Filter function to filter gallery items based on input value
+        function filterGallery() {
+            var searchTerm = $('#search-input').val().toLowerCase();
+            $('#album-container').children('.album-item').each(function () {
+                var title = $(this).find('.album-title').text().toLowerCase();
+                if (title.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        // Attach input event listener to search input for live filtering
+        $('#search-input').on('input', filterGallery);
+
+        // Initial filtering on page load (in case there's an initial value in the search input)
+        filterGallery();
     });
-
-
 </script>
+

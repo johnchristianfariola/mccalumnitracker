@@ -7,18 +7,23 @@ $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
 // Create an instance of the firebaseRDB class
 $firebase = new firebaseRDB($databaseURL);
 
-// Fetch courses, departments, and batch years data from Firebase
+// Fetch courses, departments, batch years, and alumni data from Firebase
 $coursesData = $firebase->retrieve("course");
 $departmentsData = $firebase->retrieve("departments");
 $batchYearsData = $firebase->retrieve("batch_yr");
+$alumniData = $firebase->retrieve("alumni");
 
 // Decode JSON data into associative arrays
 $courses = json_decode($coursesData, true) ?: [];
 $departments = json_decode($departmentsData, true) ?: [];
 $batchYears = json_decode($batchYearsData, true) ?: [];
+$alumni = json_decode($alumniData, true) ?: [];
 
 // Prepare an array to store courses filtered by department ID
 $filteredCourses = [];
+
+// Count the total number of alumni
+$totalAlumniCount = count($alumni);
 
 // Iterate through courses and filter by department ID
 foreach ($courses as $courseId => $course) {
@@ -45,6 +50,7 @@ foreach ($courses as $courseId => $course) {
     }
 }
 ?>
+
 <div class="manage-alumni">
     <button type="button" class="btn-gradient-info btn-fw" id="toggle-button">
         <span class="menu-title">Manage Alumni</span>
@@ -62,7 +68,7 @@ foreach ($courses as $courseId => $course) {
 <div>
     <div class="alumni-count-container">
         <span class="all-alumni"><a href="alumni.php">All Alumni</a></span>
-        <div class="count">1000</div> <!-- Add content to see the alignment -->
+        <div class="count"><?php echo $totalAlumniCount; ?></div>
     </div>
 </div>
 <hr>
