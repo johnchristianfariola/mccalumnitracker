@@ -26,7 +26,8 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-flat pull-right btn-class" name="addImages"
-                    style="background:#EE4E4E; color:white;"><i class="fa fa-save"></i> Save</button>
+                    style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i
+                        class="fa fa-save"></i> Save</button>
                 <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
                         class="fa fa-close"></i> Close</button>
 
@@ -71,8 +72,14 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
+                <button type="submit" class="btn btn-flat pull-right btn-class" id="saveChanges"
+                    style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i
+                        class="fa fa-save"></i>
+                    Save</button>
+                <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
+                        class="fa fa-close"></i> Close</button>
+
+           
             </div>
         </div>
     </div>
@@ -100,8 +107,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger btn-confirm-delete">Delete</button>
+
+
+                <button type="submit" class="btn btn-default pull-right btn-flat btn-class btn-confirm-delete"
+                    style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+                <button type="button" class="btn btn-flat  btn-class" data-dismiss="modal">
+                    <i class="fa fa-close"></i> Close
+                </button>
             </div>
         </div>
     </div>

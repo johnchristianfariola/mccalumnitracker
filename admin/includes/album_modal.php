@@ -31,7 +31,8 @@
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-flat pull-right btn-class" name="add"
-          style="background:#EE4E4E; color:white;"><i class="fa fa-save"></i> Save</button>
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i>
+          Save</button>
         <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
             class="fa fa-close"></i> Close</button>
 
@@ -55,9 +56,11 @@
         <form method="POST" action="gallery_edit.php" enctype="multipart/form-data">
           <input type="hidden" id="editId" name="id">
           <center>
-            <div class="form-group" style="background: silver; width:50%; min-height: 0;">
-              <img id="edit_album_image" src="" alt="Album Image" style="display: none; width: 100%; height: auto;">
+            <div class="form-group" style="background: silver; width:50%; min-height: 0; position: relative;">
+              <img id="edit_album_image" src="" alt="Album Image"
+                style="display: none; max-width: 100%; height: auto; top: 0; left: 0; right: 0; bottom: 0; margin: auto;">
             </div>
+
           </center>
           <div class="form-group">
             <label for="edit_album_name">Gallery Name</label>
@@ -67,9 +70,10 @@
             <label for="edit_album_image">Upload Image</label>
             <input type="file" class="form-control" id="" name="imageUpload">
           </div>
- 
+
           <div class="modal-footer">
-            <button type="submit" class="btn btn-flat pull-right btn-class" style="background:#EE4E4E; color:white;"><i
+            <button type="submit" class="btn btn-flat pull-right btn-class"
+              style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i
                 class="fa fa-save"></i> Save</button>
             <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
                 class="fa fa-close"></i> Close</button>
@@ -94,19 +98,22 @@
         <h4 class="modal-title"><b>Deleting...</b></h4>
       </div>
       <div class="modal-body">
-        
+
         <input type="hidden" id="deleteAlbumId" value="">
-          <div class="text-center">
-            <p>Are you sure you want to delete this Album?</p>
-            <h2 class="deleteTitle"></h2>
-          </div>
+        <div class="text-center">
+          <p>Are you sure you want to delete this Album?</p>
+          <h2 class="deleteTitle"></h2>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger btn-confirm-delete">Delete</button>
+        <button type="submit" class="btn btn-default pull-right btn-flat btn-class btn-confirm-delete"
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+        <button type="button" class="btn btn-flat  btn-class" data-dismiss="modal">
+          <i class="fa fa-close"></i> Close
+        </button>
       </div>
     </div>
   </div>
 </div>
-
-

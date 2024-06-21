@@ -125,7 +125,7 @@ $galleries = json_decode($galleryData, true) ?: [];
                                                     <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
                                                         <a href="gallery_view.php?id=<?php echo urlencode($id); ?>"
                                                             class='btn btn-default btn-class'
-                                                            style="opacity: 1; background:#EE4E4E; color:white; width: 100px;">View
+                                                            style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none;">View
                                                             Album</a>
                                                     </div>
                                                 </div>
