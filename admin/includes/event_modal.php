@@ -35,6 +35,7 @@
             <div class="modal-body" style="padding: 0 !important;">
                 <form class="form-horizontal flex-container" method="POST" action="event_add.php"
                     enctype="multipart/form-data">
+                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="form-container">
                         <div class="form-group">
                             <label for="event_title" class="col-sm-2 control-label">New Title</label>

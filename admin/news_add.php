@@ -1,7 +1,21 @@
 <?php
 session_start(); // Start the session
 
+// Generate a CSRF token if one is not present
+if (!isset($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF token
+    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+        header('Location: news.php');
+        exit;
+    }
+
+    // Unset the token to prevent reuse
+    unset($_SESSION['token']);
+
     // Ensure all form fields are set and not empty
     if (
         isset($_POST['news_title']) && !empty($_POST['news_title']) &&

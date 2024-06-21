@@ -173,7 +173,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
       <div class="modal-footer">
 
         <button type="submit" class="btn btn-flat pull-right btn-class" name="add"
-          style="background:#EE4E4E; color:white;"><i class="fa fa-save"></i> Save</button>
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
         <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
             class="fa fa-close"></i> Close</button>
         </form>
@@ -364,7 +364,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-flat pull-right btn-class" name="edit_add"
-          style="background:#EE4E4E; color:white;">
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
           <i class="fa fa-save"></i> Save
         </button>
         <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal">
@@ -382,6 +382,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
   aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+    <div class="box-headerModal"></div>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -400,7 +401,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
       
    
         
-        <button type="submit" class="btn btn-default pull-right btn-flat btn-class" name="delete" style="background:#EE4E4E; color:white;">
+        <button type="submit" class="btn btn-default pull-right btn-flat btn-class" name="delete" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
           <i class="fa fa-trash"></i> Delete
         </button>
         <button type="button" class="btn btn-flat  btn-class" data-dismiss="modal">

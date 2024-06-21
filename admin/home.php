@@ -54,10 +54,10 @@
         }
       ?>
       <!-- Small boxes (Stat box) -->
-      <div class="row">
+      <div class="row" >
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-aqua">
+          <div class="small-box" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
             <div class="inner">
               <?php
                 $sql = "SELECT * FROM books";
@@ -77,7 +77,7 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-green">
+          <div class="small-box" style="background: linear-gradient(to right, #90caf9, #047edf 99%) !important;">
             <div class="inner">
               <?php
                 $sql = "SELECT * FROM students";
@@ -97,7 +97,7 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-yellow">
+          <div class="small-box" style="background: linear-gradient(to right, #84d9d2, #07cdae) !important">
             <div class="inner">
               <?php
                 $sql = "SELECT * FROM returns WHERE date_return = '$today'";
@@ -117,7 +117,7 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-red">
+          <div class="small-box" style="background: linear-gradient(to right, #f6e384, #ffd500) !important;">
             <div class="inner">
               <?php
                 $sql = "SELECT * FROM borrow WHERE date_borrow = '$today'";

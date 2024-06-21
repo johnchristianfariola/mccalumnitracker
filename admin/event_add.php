@@ -1,7 +1,22 @@
 <?php
 session_start(); // Start the session
 
+// Generate a CSRF token if one is not present
+if (!isset($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF token
+    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+      
+        header('Location: event.php');
+        exit;
+    }
+
+    // Unset the token to prevent reuse
+    unset($_SESSION['token']);
+
     // Ensure all form fields are set and not empty
     if (
         isset($_POST['event_title']) && !empty($_POST['event_title']) &&
@@ -25,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (in_array($file_ext, $extensions) === false) {
             $_SESSION['error'] = "Extension not allowed, please choose a JPEG, JPG, PNG, or GIF file.";
-            header('Location: even.php');
+            header('Location: event.php');
             exit;
         }
 
@@ -79,4 +94,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Redirect to the appropriate page (event.php) regardless of success or failure
 header('Location: event.php');
 exit;
+
 ?>
