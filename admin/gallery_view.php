@@ -236,7 +236,7 @@ $galleries = json_decode($galleryData, true) ?: [];
         $('.btn-confirm-delete').click(function () {
             var id = $('#deleteAlbumId').val();
             $.ajax({
-                url: 'gallery__view_delete.php',
+                url: 'gallery_view_delete.php',
                 type: 'POST',
                 data: { id: id },
                 success: function () {
