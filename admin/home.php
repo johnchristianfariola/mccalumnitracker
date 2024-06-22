@@ -1,6 +1,4 @@
-<?php 
-include 'includes/session.php'; 
-?>
+<?php include 'includes/session.php'; ?>
 <?php
 include 'includes/timezone.php';
 $today = date('Y-m-d');
@@ -11,29 +9,35 @@ if (isset($_GET['year'])) {
 
 require_once 'includes/firebaseRDB.php';
 
+
 // Your Firebase Realtime Database URL
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
 
 // Create an instance of the firebaseRDB class
 $firebase = new firebaseRDB($databaseURL);
 
-// Fetch courses, departments, batch years, and alumni data from Firebase
+// Fetch course and alumni data from Firebase
+$courseData = $firebase->retrieve("course");
 $alumniData = $firebase->retrieve("alumni");
+$batchYrData = $firebase->retrieve("batch_yr");
 $forumData = $firebase->retrieve("forum");
 $jobData = $firebase->retrieve("job");
 $eventData = $firebase->retrieve("event");
 
 // Decode JSON data into associative arrays
+$courses = json_decode($courseData, true) ?: [];
 $alumni = json_decode($alumniData, true) ?: [];
-$forumData = json_decode($forumData, true) ?: [];
+$batchYr = json_decode($batchYrData, true) ?: [];
+$forum = json_decode($forumData, true) ?: [];
 $jobData = json_decode($jobData, true) ?: [];
-$eventData = json_decode($eventData, true) ?: [];
+$event = json_decode($eventData, true) ?: [];
 
 
 $alumniCount = 0;
 if (is_array($alumni)) {
   $alumniCount = count($alumni);
 }
+
 
 $jobCount = 0;
 if (is_array($jobData)) {
@@ -45,10 +49,51 @@ if (is_array($jobData)) {
 }
 
 $eventCount = 0;
-if (is_array($alumni)) {
-  $eventCount = count($eventData);
+if (is_array($event)) {
+  $eventCount = count($event);
 }
 
+$forumCount = 0;
+if (is_array($forum)) {
+  $forumCount = count($forum);
+}
+
+// Get the selected year from the query parameter
+$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+
+// Filter alumni data for the selected batch year
+$filteredAlumni = [];
+if (is_array($alumni)) {
+  foreach ($alumni as $alumId => $alum) {
+    if (isset($alum['batch']) && isset($batchYr[$alum['batch']]['batch_yrs']) && $batchYr[$alum['batch']]['batch_yrs'] == $year) {
+      $filteredAlumni[$alumId] = $alum;
+    }
+  }
+}
+
+// Count the number of alumni for each course
+$courseMap = [];
+if (is_array($courses)) {
+  foreach ($courses as $courseId => $course) {
+    if (isset($course['courCode'])) {
+      $courseMap[$courseId] = $course['courCode'];
+    }
+  }
+}
+
+$courseCounts = array_fill_keys(array_values($courseMap), 0);
+if (is_array($filteredAlumni)) {
+  foreach ($filteredAlumni as $alum) {
+    if (isset($alum['course']) && isset($courseMap[$alum['course']])) {
+      $courseCode = $courseMap[$alum['course']];
+      $courseCounts[$courseCode]++;
+    }
+  }
+}
+
+// Convert the course counts array to a JSON string for JavaScript
+$courseCountsJson = json_encode(array_values($courseCounts));
+$courseCodesJson = json_encode(array_keys($courseCounts));
 
 ?>
 <?php include 'includes/header.php'; ?>
@@ -66,6 +111,7 @@ if (is_array($alumni)) {
         <h1>
           Dashboard
         </h1>
+
 
         <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -102,7 +148,7 @@ if (is_array($alumni)) {
           <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
-            <div class="inner">
+              <div class="inner">
                 <h3><?php echo $alumniCount; ?></h3>
                 <p>Total Alumni</p>
               </div>
@@ -117,12 +163,7 @@ if (is_array($alumni)) {
             <!-- small box -->
             <div class="small-box" style="background: linear-gradient(to right, #90caf9, #047edf 99%) !important;">
               <div class="inner">
-                <?php
-                $sql = "SELECT * FROM students";
-                $query = $conn->query($sql);
-
-                echo "<h3>" . $query->num_rows . "</h3>";
-                ?>
+                <h3><?php echo $forumCount; ?></h3>
 
                 <p>Forum Topic</p>
               </div>
@@ -136,7 +177,7 @@ if (is_array($alumni)) {
           <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box" style="background: linear-gradient(to right, #84d9d2, #07cdae) !important">
-            <div class="inner">
+              <div class="inner">
                 <h3><?php echo $jobCount; ?></h3>
                 <p>Active Job</p>
               </div>
@@ -150,11 +191,10 @@ if (is_array($alumni)) {
           <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box" style="background: linear-gradient(to right, #f6e384, #ffd500) !important;">
-            <div class="inner">
+              <div class="inner">
                 <h3><?php echo $eventCount; ?></h3>
                 <p>Event</p>
               </div>
-     
               <div class="icon">
                 <i class="fa fa-clock-o"></i>
               </div>
@@ -185,6 +225,13 @@ if (is_array($alumni)) {
                       </select>
                     </div>
                   </form>
+                  <script>
+                    $(function () {
+                      $('#select_year').change(function () {
+                        window.location.href = 'home.php?year=' + $(this).val();
+                      });
+                    });
+                  </script>
                 </div>
               </div>
               <div class="box-body">
@@ -207,104 +254,57 @@ if (is_array($alumni)) {
   <!-- ./wrapper -->
 
   <!-- Chart Data -->
-  <?php
-  $and = 'AND YEAR(date) = ' . $year;
-  $months = array();
-  $return = array();
-  $borrow = array();
-  for ($m = 1; $m <= 12; $m++) {
-    $sql = "SELECT * FROM returns WHERE MONTH(date_return) = '$m' AND YEAR(date_return) = '$year'";
-    $rquery = $conn->query($sql);
-    array_push($return, $rquery->num_rows);
 
-    $sql = "SELECT * FROM borrow WHERE MONTH(date_borrow) = '$m' AND YEAR(date_borrow) = '$year'";
-    $bquery = $conn->query($sql);
-    array_push($borrow, $bquery->num_rows);
-
-    $num = str_pad($m, 2, 0, STR_PAD_LEFT);
-    $month = date('M', mktime(0, 0, 0, $m, 1));
-    array_push($months, $month);
-  }
-
-  $months = json_encode($months);
-  $return = json_encode($return);
-  $borrow = json_encode($borrow);
-
-  ?>
   <!-- End Chart Data -->
   <?php include 'includes/scripts.php'; ?>
   <script>
-    $(function () {
-      var barChartCanvas = $('#barChart').get(0).getContext('2d')
-      var barChart = new Chart(barChartCanvas)
-      var barChartData = {
-        labels: <?php echo $months; ?>,
-        datasets: [
-          {
-            label: 'Borrow',
-            fillColor: 'rgba(210, 214, 222, 1)',
-            strokeColor: 'rgba(210, 214, 222, 1)',
-            pointColor: 'rgba(210, 214, 222, 1)',
-            pointStrokeColor: '#c1c7d1',
-            pointHighlightFill: '#fff',
-            pointHighlightStroke: 'rgba(220,220,220,1)',
-            data: <?php echo $borrow; ?>
-          },
-          {
-            label: 'Return',
-            fillColor: 'rgba(60,141,188,0.9)',
-            strokeColor: 'rgba(60,141,188,0.8)',
-            pointColor: '#3b8bba',
-            pointStrokeColor: 'rgba(60,141,188,1)',
-            pointHighlightFill: '#fff',
-            pointHighlightStroke: 'rgba(60,141,188,1)',
-            data: <?php echo $return; ?>
-          }
-        ]
-      }
-      barChartData.datasets[1].fillColor = '#00a65a'
-      barChartData.datasets[1].strokeColor = '#00a65a'
-      barChartData.datasets[1].pointColor = '#00a65a'
-      var barChartOptions = {
-        //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-        scaleBeginAtZero: true,
-        //Boolean - Whether grid lines are shown across the chart
-        scaleShowGridLines: true,
-        //String - Colour of the grid lines
-        scaleGridLineColor: 'rgba(0,0,0,.05)',
-        //Number - Width of the grid lines
-        scaleGridLineWidth: 1,
-        //Boolean - Whether to show horizontal lines (except X axis)
-        scaleShowHorizontalLines: true,
-        //Boolean - Whether to show vertical lines (except Y axis)
-        scaleShowVerticalLines: true,
-        //Boolean - If there is a stroke on each bar
-        barShowStroke: true,
-        //Number - Pixel width of the bar stroke
-        barStrokeWidth: 2,
-        //Number - Spacing between each of the X value sets
-        barValueSpacing: 5,
-        //Number - Spacing between data sets within X values
-        barDatasetSpacing: 1,
-        //String - A legend template
-        legendTemplate: '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>',
-        //Boolean - whether to make the chart responsive
-        responsive: true,
-        maintainAspectRatio: true
-      }
+    'use strict';
+    var courseLabels = <?php echo $courseCodesJson; ?>;
+    var courseData = <?php echo $courseCountsJson; ?>;
+    var data = {
+        labels: courseLabels,
+        datasets: [{
+            label: 'Number of Alumni',
+            data: courseData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1,
+            fill: false
+        }]
+    };
 
-      barChartOptions.datasetFill = false
-      var myChart = barChart.Bar(barChartData, barChartOptions)
-      document.getElementById('legend').innerHTML = myChart.generateLegend();
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
     });
-  </script>
-  <script>
-    $(function () {
-      $('#select_year').change(function () {
-        window.location.href = 'home.php?year=' + $(this).val();
-      });
-    });
+
   </script>
 </body>
 
 </html>
+
+
+<script src="../plugins/chart/Chart.min.js"></script>
+<script src="../plugins/chart/chart.js"></script>
