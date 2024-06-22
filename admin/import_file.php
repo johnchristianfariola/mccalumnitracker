@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
                 $errors[] = 'Alumni data already exists for ' . $firstname . ' ' . $lastname . ' (' . $studentid . ')';
                 continue; // Skip this entry if it's a duplicate in the database
             }
-
+ 
             // Fetch batch ID
             $batchId = getBatchId($firebase, $batchYear);
             if ($batchId === null) {
