@@ -1,3 +1,4 @@
+
 <header class="main-header">
   <!-- Logo -->
   <a href="index.php" class="logo">
@@ -18,16 +19,17 @@
         <!-- User Account: style can be found in dropdown.less -->
         <li class="dropdown user user-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <img src="<?php echo (!empty($user['photo'])) ? '../images/'.$user['photo'] : '../images/profile.jpg'; ?>" class="user-image" alt="User Image">
+            <img src="<?php echo (!empty($user['image_url'])) ? $user['image_url'] : 'uploads/profile.png'; ?>" class="user-image" alt="User Image">
             <span class="hidden-xs"><?php echo $user['firstname'].' '.$user['lastname']; ?></span>
           </a>
           <ul class="dropdown-menu">
             <!-- User image -->
             <li class="user-header">
-              <img src="<?php echo (!empty($user['photo'])) ? '../images/'.$user['photo'] : '../images/profile.jpg'; ?>" class="img-circle" alt="User Image">
+              <img src="<?php echo (!empty($user['image_url'])) ? $user['image_url'] : 'uploads/profile.png'; ?>" class="img-circle" alt="User Image">
 
               <p>
                 <?php echo $user['firstname'].' '.$user['lastname']; ?>
+                <!-- Assuming 'created_on' is part of the admin data -->
                 <small>Member since <?php echo date('M. Y', strtotime($user['created_on'])); ?></small>
               </p>
             </li>

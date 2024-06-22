@@ -26,11 +26,14 @@ if (!isset($adminData['user']) || $adminData['user'] !== $adminId) {
     exit();
 }
 
-// Admin user is authenticated, retrieve user data
+// Admin user is authenticated, store user data in session
 $user = [
     'id' => $adminId,
     'user' => $adminData['user'],
-    'password' => $adminData['password']
+    'firstname' => $adminData['firstname'],
+    'lastname' => $adminData['lastname'],
+    'image_url' => $adminData['image_url'],
+    'created_on' => $adminData['created_on'] // Ensure this field exists in your Firebase data
 ];
 
 // Generate CSRF token if not already set
