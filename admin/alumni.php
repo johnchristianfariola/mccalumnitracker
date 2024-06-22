@@ -21,6 +21,9 @@
             <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
                 class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
 
+                <a href="#exportnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
+                class="fa fa-plus-circle"></i>&nbsp;&nbsp; Import</a>
+
             <div class="search-container">
               <input type="text" class="search-input" id="search-input" placeholder="Search...">
               <button class="search-button" onclick="filterTable()">
@@ -112,6 +115,7 @@
     <?php include 'includes/addDepartmentModal.php' ?>
     <?php include 'includes/addCourseModal.php' ?>
     <?php include 'includes/addBatchModal.php' ?>
+    <?php include 'includes/import_excelModal.php' ?>
 
 
   </div>
