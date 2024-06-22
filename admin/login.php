@@ -18,8 +18,8 @@ if (isset($_POST['login'])) {
 
     // Check if credentials are fetched and decoded correctly
     if (isset($adminData['user']) && $adminData['user'] === $username) {
-        // Verify input credentials against stored credentials
-        if ($password === $adminData['password']) {
+        // Verify input credentials against stored credentials using password_verify
+        if (password_verify($password, $adminData['password'])) {
             $_SESSION['admin'] = $username; // Set session admin ID
             header('location: home.php'); // Redirect to admin home
             exit();
