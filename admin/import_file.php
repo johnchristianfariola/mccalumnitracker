@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
 
             // Check for duplicate in the database
             if (in_array($entryKey, $existingEntries)) {
-                $warnings[] = "Warning! Duplicate data in database: $firstname $lastname student-id $studentid";
+                $errors[] = 'Alumni data already exists for ' . $firstname . ' ' . $lastname . ' (' . $studentid . ')';
                 continue; // Skip this entry if it's a duplicate in the database
             }
 
@@ -92,10 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
             $importedEntries[] = $entryKey;
         }
 
-        if (!empty($errors) || !empty($warnings)) {
-            $_SESSION['errors'] = $errors;
-            $_SESSION['warnings'] = $warnings;
-        } else {
+        if (!empty($errors)) {
+            $_SESSION['error'] = implode('<br>', $errors);
+        } 
+        else {
             $_SESSION['success'] = 'Data imported successfully!';
         }
 
