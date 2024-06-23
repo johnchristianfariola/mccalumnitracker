@@ -84,7 +84,7 @@
                     <table id="example1" class="table table-bordered printable-table">
                       <thead>
                         <tr>
-                          
+                          <th style="display:none;"></th> 
                           <th>Student ID</th>
                           <th>Name</th>
                           <th>Email</th>
@@ -244,6 +244,8 @@
     /*=========Table Modal=============*/
 
 
+    
+
     document.addEventListener('DOMContentLoaded', function () {
       const modalTableBody = document.getElementById('modalTableBody');
       const outsideTableBody = document.querySelector('#example1 tbody');
@@ -303,3 +305,5 @@
 </body>
 
 </html>
+
+
