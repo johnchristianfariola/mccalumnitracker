@@ -16,13 +16,14 @@
           <h1>
             Alumni List
           </h1>
-          <div class="box-inline ">
+          <div class="box-inline">
+            <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat">
+              <i class="fa fa-plus-circle"></i>&nbsp;&nbsp; New
+            </a>
 
-            <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
-                class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
-
-                <a href="#exportnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
-                class="fa fa-plus-circle"></i>&nbsp;&nbsp; Import</a>
+            <a href="#exportnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat">
+              <i class="fa fa-plus-circle"></i>&nbsp;&nbsp; Import
+            </a>
 
             <div class="search-container">
               <input type="text" class="search-input" id="search-input" placeholder="Search...">
@@ -122,113 +123,113 @@
   <?php include 'includes/scripts.php'; ?>
   <script>
 
-$(document).ready(function () {
-  // Open edit modal when edit button is clicked
-  $('.open-modal').click(function () {
-    var id = $(this).data('id');
-    $.ajax({
-      url: 'alumni_row.php',
-      type: 'GET',
-      data: { id: id },
-      dataType: 'json',
-      success: function (response) {
-        $('#editId').val(id);
-        $('#editFirstname').val(response.firstname);
-        $('#editLastname').val(response.lastname);
-        $('#editMiddlename').val(response.middlename);
-        $('#editAuxiliaryname').val(response.auxiliaryname);
-        $('#editBirthdate').val(response.birthdate);
-        $('#editCivilstatus').val(response.civilstatus);
-        $('#editMale').prop('checked', response.gender === 'Male');
-        $('#editMemale').prop('checked', response.gender === 'Female');
-        $('#editAddressline1').val(response.addressline1);
-        $('#editCity').val(response.city);
-        $('#editState').val(response.state);
-        $('#editZipcode').val(response.zipcode);
-        $('#editContactnumber').val(response.contactnumber);
-        $('#editEmail').val(response.email);
-        $('#editCourse').val(response.course);
-        $('#editBatch').val(response.batch);
-        $('#editStudentid').val(response.studentid);
+    $(document).ready(function () {
+      // Open edit modal when edit button is clicked
+      $('.open-modal').click(function () {
+        var id = $(this).data('id');
+        $.ajax({
+          url: 'alumni_row.php',
+          type: 'GET',
+          data: { id: id },
+          dataType: 'json',
+          success: function (response) {
+            $('#editId').val(id);
+            $('#editFirstname').val(response.firstname);
+            $('#editLastname').val(response.lastname);
+            $('#editMiddlename').val(response.middlename);
+            $('#editAuxiliaryname').val(response.auxiliaryname);
+            $('#editBirthdate').val(response.birthdate);
+            $('#editCivilstatus').val(response.civilstatus);
+            $('#editMale').prop('checked', response.gender === 'Male');
+            $('#editMemale').prop('checked', response.gender === 'Female');
+            $('#editAddressline1').val(response.addressline1);
+            $('#editCity').val(response.city);
+            $('#editState').val(response.state);
+            $('#editZipcode').val(response.zipcode);
+            $('#editContactnumber').val(response.contactnumber);
+            $('#editEmail').val(response.email);
+            $('#editCourse').val(response.course);
+            $('#editBatch').val(response.batch);
+            $('#editStudentid').val(response.studentid);
 
-        // Show the edit modal
-        $('#editModal').modal('show');
-      },
-      error: function (xhr, status, error) {
-        console.error('AJAX Error: ' + status + ' ' + error);
-      }
-    });
-  });
-
-  // Open delete modal when delete button is clicked
-  $('.open-delete').click(function () {
-    var id = $(this).data('id');
-    $.ajax({
-      url: 'alumni_row.php',
-      type: 'GET',
-      data: { id: id },
-      dataType: 'json',
-      success: function (response) {
-        // Populate modal with alumni name
-        $('.deleteId').val(id);
-        var fullName = response.firstname + ' ' + response.middlename + ' ' + response.lastname;
-        $('.editFirstname, .editMiddlename, .editLastname').text(fullName);
-        $('.editStudentid').text(response.studentid);
-
-        // Show the delete confirmation modal
-        $('#deleteModal').modal('show');
-
-        // Store the ID in a data attribute of the delete button
-        $('.btn-confirm-delete').data('id', id);
-      },
-      error: function (xhr, status, error) {
-        console.error('AJAX Error: ' + status + ' ' + error);
-      }
-    });
-  });
-});
-
-// Toggle dropdown menu
-document.getElementById('toggle-button').addEventListener('click', function () {
-  var dropdownMenu = document.getElementById('dropdown-menu');
-  dropdownMenu.classList.toggle('show');
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  function closeAllExcept(current, className) {
-    var coll = document.getElementsByClassName(className);
-    for (var i = 0; i < coll.length; i++) {
-      if (coll[i] !== current) {
-        coll[i].classList.remove("active");
-        var content = coll[i].nextElementSibling;
-        if (content) {
-          content.classList.remove("active");
-        }
-      }
-    }
-  }
-
-  function toggleContent(className) {
-    var coll = document.getElementsByClassName(className);
-    for (var i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function () {
-        // Close all other collapsibles of the same class
-        closeAllExcept(this, className);
-
-        // Toggle the clicked collapsible
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content) {
-          content.classList.toggle("active");
-        }
+            // Show the edit modal
+            $('#editModal').modal('show');
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX Error: ' + status + ' ' + error);
+          }
+        });
       });
-    }
-  }
 
-  toggleContent("collapsible");
-  toggleContent("collaps-department");
-  toggleContent("collaps-year");
-});
+      // Open delete modal when delete button is clicked
+      $('.open-delete').click(function () {
+        var id = $(this).data('id');
+        $.ajax({
+          url: 'alumni_row.php',
+          type: 'GET',
+          data: { id: id },
+          dataType: 'json',
+          success: function (response) {
+            // Populate modal with alumni name
+            $('.deleteId').val(id);
+            var fullName = response.firstname + ' ' + response.middlename + ' ' + response.lastname;
+            $('.editFirstname, .editMiddlename, .editLastname').text(fullName);
+            $('.editStudentid').text(response.studentid);
+
+            // Show the delete confirmation modal
+            $('#deleteModal').modal('show');
+
+            // Store the ID in a data attribute of the delete button
+            $('.btn-confirm-delete').data('id', id);
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX Error: ' + status + ' ' + error);
+          }
+        });
+      });
+    });
+
+    // Toggle dropdown menu
+    document.getElementById('toggle-button').addEventListener('click', function () {
+      var dropdownMenu = document.getElementById('dropdown-menu');
+      dropdownMenu.classList.toggle('show');
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      function closeAllExcept(current, className) {
+        var coll = document.getElementsByClassName(className);
+        for (var i = 0; i < coll.length; i++) {
+          if (coll[i] !== current) {
+            coll[i].classList.remove("active");
+            var content = coll[i].nextElementSibling;
+            if (content) {
+              content.classList.remove("active");
+            }
+          }
+        }
+      }
+
+      function toggleContent(className) {
+        var coll = document.getElementsByClassName(className);
+        for (var i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function () {
+            // Close all other collapsibles of the same class
+            closeAllExcept(this, className);
+
+            // Toggle the clicked collapsible
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content) {
+              content.classList.toggle("active");
+            }
+          });
+        }
+      }
+
+      toggleContent("collapsible");
+      toggleContent("collaps-department");
+      toggleContent("collaps-year");
+    });
 
 
 

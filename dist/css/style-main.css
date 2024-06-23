@@ -283,6 +283,7 @@ section.content-header.box-header-background.box-padding > ol.breadcrumb {
   display: flex;
   color: black;
   align-items: center;
+  margin-left: auto; /* Align search container to the right */
 }
 
 .search-input {
@@ -328,10 +329,12 @@ section.content-header.box-header-background.box-padding > ol.breadcrumb {
 .box-inline {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 20px;
   /* Adjust as needed */
   padding: 6px 12px;
 }
+
+
 
 .box-header {
   width: 100%;
