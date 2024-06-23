@@ -25,7 +25,7 @@
               <i class="fa fa-plus-circle"></i>&nbsp;&nbsp; Import
             </a>
 
-            <a href="#print" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat">
+            <a href="#print" data-toggle="modal" id="showModalButton" class="btn-add-class btn btn-primary btn-sm btn-flat" >
               <i class="fa fa-print"></i>&nbsp;&nbsp; Print
             </a>
 
@@ -100,6 +100,10 @@
 
                       </tbody>
                     </table>
+                  
+
+        <!-- Modal -->
+       
                   </div>
                 </div>
 
@@ -234,6 +238,32 @@
       toggleContent("collaps-department");
       toggleContent("collaps-year");
     });
+
+
+    /*=========Table Modal=============*/
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+            const modalTableBody = document.getElementById('modalTableBody');
+            const outsideTableBody = document.querySelector('#example1 tbody');
+            const showModalButton = document.getElementById('showModalButton');
+
+            showModalButton.addEventListener('click', function() {
+                // Clear previous data
+                modalTableBody.innerHTML = '';
+                // Clone rows from outside table and append to modal table
+                Array.from(outsideTableBody.rows).forEach(row => {
+                    // Clone the row without the last cell (actions cell)
+                    const clonedRow = row.cloneNode(true);
+                    clonedRow.deleteCell(-1); // Remove the last cell (actions cell)
+                    // Append the modified row to modal table
+                    modalTableBody.appendChild(clonedRow);
+                });
+                // Show the modal
+                $('#dataModal').modal('show');
+            });
+
+        });
 
 
 

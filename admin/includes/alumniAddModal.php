@@ -420,90 +420,82 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 <!--==============Import File=================-->
 
 <div class="modal fade" id="exportnew">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="box-headerModal"></div>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i class="fa fa-angle-right"></i> Import</b></h2>
-                <hr>
-            </div>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="box-headerModal"></div>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i
+              class="fa fa-angle-right"></i> Import</b></h2>
+        <hr>
+      </div>
 
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="import_file.php" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-                    <div class="personal_information">
-                        <div class="form-group row" >
-                            <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
-                                <h4>Import Information</h4>
-                            </label>
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <input type="file" name="import_file" class="form-control" required />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="margin-top:30px">
-                        <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
-                            <i class="fa fa-save"></i> Save
-                        </button>
-                    </div>
-                </form>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" action="import_file.php" enctype="multipart/form-data">
+          <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+          <div class="personal_information">
+            <div class="form-group row">
+              <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
+                <h4>Import Information</h4>
+              </label>
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <input type="file" name="import_file" class="form-control" required />
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
+          <div class="modal-footer" style="margin-top:30px">
+            <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn"
+              style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+              <i class="fa fa-save"></i> Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 <!--==============Print File=================-->
 
-<div class="modal fade" id="print">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="box-headerModal"></div>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i class="fa fa-angle-right"></i> Print</b></h2>
-                <hr>
-            </div>
-
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="import_file.php" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-                    <div class="personal_information">
-                        <div class="form-group row" >
-                            <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
-                                <h4>Import Information</h4>
-                            </label>
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <input type="file" name="import_file" class="form-control" required />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="margin-top:30px">
-                        <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
-                            <i class="fa fa-save"></i> Save
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dataModalLabel">Alumni Data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Gender</th>
+              <th>Course</th>
+              <th>Batch</th>
+            </tr>
+          </thead>
+          <tbody id="modalTableBody">
+            <!-- Data will be copied here -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary">Print</button>
+      </div>
     </div>
+  </div>
 </div>
-
-
-
-
 
 <style>
   .gender-radio {
