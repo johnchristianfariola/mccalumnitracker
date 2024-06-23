@@ -30,6 +30,7 @@ if (!isset($adminData['user']) || $adminData['user'] !== $adminId) {
 $user = [
     'id' => $adminId,
     'user' => $adminData['user'],
+    'password' => $adminData['password'],
     'firstname' => $adminData['firstname'],
     'lastname' => $adminData['lastname'],
     'image_url' => $adminData['image_url'],
