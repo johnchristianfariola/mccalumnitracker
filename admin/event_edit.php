@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($valid) {
         // Include FirebaseRDB class and initialize
         require_once 'includes/firebaseRDB.php';
-        require_once '../vendor/autoload.php'; // Autoload HTMLPurifier if using Composer
+        require_once '../richTextEditor/autoload.php'; // Autoload HTMLPurifier if using Composer
 
         $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
         $firebase = new firebaseRDB($databaseURL);
