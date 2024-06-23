@@ -11,12 +11,12 @@
     /* Custom styles for printing */
     @media print {
       body {
-
         margin: 1in;
+        /* 1-inch margins */
       }
 
       .printable-table {
-        width: 90%;
+        width: 100%;
         border-collapse: collapse;
         page-break-inside: auto;
       }
@@ -48,6 +48,7 @@
     <table id="outsideTable" class="table table-bordered">
       <thead>
         <tr>
+          <th></th> <!-- Checkbox column -->
           <th>Student ID</th>
           <th>Name</th>
           <th>Email</th>
@@ -98,6 +99,7 @@
             $courseName = isset($courseData[$courseId]['courCode']) ? $courseData[$courseId]['courCode'] : 'Unknown Course';
 
             echo "<tr>
+                        <td><input type='checkbox' class='modal-checkbox' data-id='$id'></td>
                         <td>{$alumni['studentid']}</td>
                         <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
                         <td>{$alumni['email']}</td>
@@ -117,7 +119,6 @@
 
     <!-- New Button to Open Modal -->
     <button type="button" class="btn btn-primary" id="showModalButton">Show Data in Modal</button>
-
     <!-- Modal -->
     <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel"
       aria-hidden="true">
@@ -153,10 +154,11 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- Include Bootstrap JS and dependencies -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script>
@@ -174,6 +176,16 @@
           // Clone the row without the last cell (actions cell)
           const clonedRow = row.cloneNode(true);
           clonedRow.deleteCell(-1); // Remove the last cell (actions cell)
+          // Remove any existing checkbox if mistakenly added
+          clonedRow.querySelector('td:first-child input[type="checkbox"]').remove();
+          // Add checkbox to the first cell
+          const checkboxCell = document.createElement('td');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.className = 'modal-checkbox';
+          checkbox.dataset.id = row.cells[1].textContent.trim(); // Assuming student ID is in the second cell
+          checkboxCell.appendChild(checkbox);
+          clonedRow.insertBefore(checkboxCell, clonedRow.cells[0]);
           // Append the modified row to modal table
           modalTableBody.appendChild(clonedRow);
         });
@@ -182,12 +194,16 @@
       });
 
       printModalButton.addEventListener('click', function () {
-        // Print the content of the modal table
-        const printContents = document.getElementById('printTable').outerHTML;
-        const originalContents = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
+        // Collect data to be printed
+        const dataToPrint = [];
+        Array.from(modalTableBody.rows).forEach(row => {
+          dataToPrint.push(row.innerHTML);
+        });
+
+        // Encode the data to be sent via URL
+        const encodedData = encodeURIComponent(JSON.stringify(dataToPrint));
+        // Redirect to the print page with the encoded data
+        window.open(`alumni_print.php?data=${encodedData}`, '_blank');
       });
     });
   </script>

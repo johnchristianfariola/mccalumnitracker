@@ -37,6 +37,7 @@ if (is_array($alumniData) && count($alumniData) > 0) {
         $courseName = isset($courseData[$courseId]['courCode']) ? $courseData[$courseId]['courCode'] : 'Unknown Course';
 
         echo "<tr>
+        <td style='display:none;'><input type='checkbox' class='modal-checkbox'  data-id='$id'></td>
         <td>{$alumni['studentid']}</td>
         <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
         <td>{$alumni['email']}</td>

@@ -25,7 +25,8 @@
               <i class="fa fa-plus-circle"></i>&nbsp;&nbsp; Import
             </a>
 
-            <a href="#print" data-toggle="modal" id="showModalButton" class="btn-add-class btn btn-primary btn-sm btn-flat" >
+            <a href="#print" data-toggle="modal" id="showModalButton"
+              class="btn-add-class btn btn-primary btn-sm btn-flat">
               <i class="fa fa-print"></i>&nbsp;&nbsp; Print
             </a>
 
@@ -80,10 +81,10 @@
                 <div class="box-header"></div>
                 <div class="box-body">
                   <div class="table-responsive"> <!-- Add this div for responsive behavior -->
-                    <table id="example1" class="table table-bordered">
+                    <table id="example1" class="table table-bordered printable-table">
                       <thead>
                         <tr>
-
+                          
                           <th>Student ID</th>
                           <th>Name</th>
                           <th>Email</th>
@@ -100,10 +101,10 @@
 
                       </tbody>
                     </table>
-                  
 
-        <!-- Modal -->
-       
+
+                    <!-- Modal -->
+
                   </div>
                 </div>
 
@@ -243,29 +244,60 @@
     /*=========Table Modal=============*/
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-            const modalTableBody = document.getElementById('modalTableBody');
-            const outsideTableBody = document.querySelector('#example1 tbody');
-            const showModalButton = document.getElementById('showModalButton');
+    document.addEventListener('DOMContentLoaded', function () {
+      const modalTableBody = document.getElementById('modalTableBody');
+      const outsideTableBody = document.querySelector('#example1 tbody');
+      const showModalButton = document.getElementById('showModalButton');
+      const printModalButton = document.getElementById('printModalButton');
+      const removeSelectedButton = document.getElementById('removeSelectedButton');
 
-            showModalButton.addEventListener('click', function() {
-                // Clear previous data
-                modalTableBody.innerHTML = '';
-                // Clone rows from outside table and append to modal table
-                Array.from(outsideTableBody.rows).forEach(row => {
-                    // Clone the row without the last cell (actions cell)
-                    const clonedRow = row.cloneNode(true);
-                    clonedRow.deleteCell(-1); // Remove the last cell (actions cell)
-                    // Append the modified row to modal table
-                    modalTableBody.appendChild(clonedRow);
-                });
-                // Show the modal
-                $('#dataModal').modal('show');
-            });
+      showModalButton.addEventListener('click', function () {
+        // Clear previous data
+        modalTableBody.innerHTML = '';
+        // Clone rows from outside table and append to modal table
+        Array.from(outsideTableBody.rows).forEach(row => {
+          // Clone the row without the last cell (actions cell)
+          const clonedRow = row.cloneNode(true);
+          clonedRow.deleteCell(-1); // Remove the last cell (actions cell)
+          // Remove any existing checkbox if mistakenly added
+          clonedRow.querySelector('td:first-child input[type="checkbox"]').remove();
+          // Add checkbox to the first cell
+          const checkboxCell = document.createElement('td');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.className = 'modal-checkbox';
+          checkbox.dataset.id = row.cells[1].textContent.trim(); // Assuming student ID is in the second cell
+          checkboxCell.appendChild(checkbox);
+          clonedRow.insertBefore(checkboxCell, clonedRow.cells[0]);
+          // Append the modified row to modal table
+          modalTableBody.appendChild(clonedRow);
+        });
+        // Show the modal
+        $('#dataModal').modal('show');
+      });
 
+      removeSelectedButton.addEventListener('click', function () {
+        // Remove selected rows from modal table
+        const checkboxes = document.querySelectorAll('.modal-checkbox:checked');
+        checkboxes.forEach(checkbox => {
+          const row = checkbox.closest('tr');
+          row.parentNode.removeChild(row);
+        });
+      });
+
+      printModalButton.addEventListener('click', function () {
+        // Collect data to be printed
+        const dataToPrint = [];
+        Array.from(modalTableBody.rows).forEach(row => {
+          dataToPrint.push(row.innerHTML);
         });
 
-
+        // Encode the data to be sent via URL
+        const encodedData = encodeURIComponent(JSON.stringify(dataToPrint));
+        // Redirect to the print page with the encoded data
+        window.open(`alumni_print.php?data=${encodedData}`, '_blank');
+      });
+    });
 
   </script>
 </body>
