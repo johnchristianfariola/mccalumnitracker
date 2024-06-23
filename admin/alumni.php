@@ -25,6 +25,10 @@
               <i class="fa fa-plus-circle"></i>&nbsp;&nbsp; Import
             </a>
 
+            <a href="#print" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat">
+              <i class="fa fa-print"></i>&nbsp;&nbsp; Print
+            </a>
+
             <div class="search-container">
               <input type="text" class="search-input" id="search-input" placeholder="Search...">
               <button class="search-button" onclick="filterTable()">

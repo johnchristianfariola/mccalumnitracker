@@ -1,4 +1,3 @@
-
 <?php
 // Include the FirebaseRDB class file
 require_once 'includes/firebaseRDB.php';
@@ -19,22 +18,21 @@ $batchYears = $firebase->retrieve("batch_yr");
 $batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
 ?>
 
-
 <div class="modal fade" id="addnew">
-  <div class="modal-dialog" style="width:80%;">
+  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Adjust 'modal-lg' for different screen sizes -->
     <div class="modal-content">
       <div class="box-headerModal"></div>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span></button>
+          <span aria-hidden="true">&times;</span>
+        </button>
         <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i
-              class="fa fa-angle-right"></i>
-            Add</b></h2>
+              class="fa fa-angle-right"></i> Add</b></h2>
         <hr>
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" action="alumni_listadd.php">
-        <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+          <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
           <div class="personal_information">
             <div class="form-group row" style="border-bottom: 1px solid silver !important;">
               <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
@@ -173,16 +171,17 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
       <div class="modal-footer">
 
         <button type="submit" class="btn btn-flat pull-right btn-class" name="add"
-          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i>
+          Save</button>
         <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
             class="fa fa-close"></i> Close</button>
         </form>
       </div>
-
-
     </div>
   </div>
 </div>
+
+
 
 <!-- Edit
 <div class="modal fade" id="editModal">
@@ -212,17 +211,17 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
     </div>
 </div> -->
 
-<div class='modal fade' id='editModal' tabindex='-1' role='dialog' aria-labelledby='editModalLabel' aria-hidden='true'>
-  <div class="modal-dialog" style="width:80%;">
-    <div class="modal-content">
 
+<div class='modal fade' id='editModal' tabindex='-1' role='dialog' aria-labelledby='editModalLabel' aria-hidden='true'>
+  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Adjust 'modal-lg' for different screen sizes -->
+    <div class="modal-content">
       <div class="box-headerModal"></div>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span></button>
+          <span aria-hidden="true">&times;</span>
+        </button>
         <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i
-              class="fa fa-angle-right"></i>
-            Update</b></h2>
+              class="fa fa-angle-right"></i> Add</b></h2>
         <hr>
       </div>
       <div class="modal-body">
@@ -377,12 +376,15 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 </div>
 
 
+
+
+
 <!-- Delete -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
   aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-    <div class="box-headerModal"></div>
+      <div class="box-headerModal"></div>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -398,21 +400,110 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
           </div>
       </div>
       <div class="modal-footer">
-      
-   
-        
-        <button type="submit" class="btn btn-default pull-right btn-flat btn-class" name="delete" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+
+
+
+        <button type="submit" class="btn btn-default pull-right btn-flat btn-class" name="delete"
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
           <i class="fa fa-trash"></i> Delete
         </button>
         <button type="button" class="btn btn-flat  btn-class" data-dismiss="modal">
           <i class="fa fa-close"></i> Close
         </button>
       </div>
-      
+
       </form>
     </div>
   </div>
 </div>
+
+<!--==============Import File=================-->
+
+<div class="modal fade" id="exportnew">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="box-headerModal"></div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i class="fa fa-angle-right"></i> Import</b></h2>
+                <hr>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="import_file.php" enctype="multipart/form-data">
+                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                    <div class="personal_information">
+                        <div class="form-group row" >
+                            <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
+                                <h4>Import Information</h4>
+                            </label>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <input type="file" name="import_file" class="form-control" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top:30px">
+                        <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+                            <i class="fa fa-save"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==============Print File=================-->
+
+<div class="modal fade" id="print">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="box-headerModal"></div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i class="fa fa-angle-right"></i> Print</b></h2>
+                <hr>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="import_file.php" enctype="multipart/form-data">
+                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                    <div class="personal_information">
+                        <div class="form-group row" >
+                            <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
+                                <h4>Import Information</h4>
+                            </label>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <input type="file" name="import_file" class="form-control" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top:30px">
+                        <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+                            <i class="fa fa-save"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <style>
   .gender-radio {
@@ -450,6 +541,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
     height: 100%;
     /* Ensure it covers the full height if needed */
   }
+
   .mb-3 {
     margin-bottom: 30px;
   }
