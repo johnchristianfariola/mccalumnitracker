@@ -4,207 +4,226 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modal Form Example</title>
-  <!-- Include Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <title>A4 Document Centered</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
   <style>
-    /* Custom styles for printing */
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background-color: #f0f0f0;
+    }
+
+    .a4 {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20mm;
+      box-sizing: border-box;
+      margin-top: 20px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      width: 185px;
+      height: auto;
+    }
+
+    .header .left {
+      margin-right: auto;
+    }
+
+    .header .right {
+      width: 95px;
+      margin-left: auto;
+    }
+
+    .header center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-39%);
+      text-align: center;
+    }
+
+    .header p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .content {
+      overflow-x: auto;
+    }
+
+    .content center h2 {
+      margin-top: 50px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+
+    th,
+    td {
+      border: 1px solid #000;
+      padding: 8px;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .print-button {
+      position: absolute;
+      bottom: 10mm;
+      right: 10mm;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .download-pdf-button {
+      position: absolute;
+      bottom: 10mm;
+      right: 80mm;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .download-pdf-button:hover {
+      transform: scale(1.1);
+    }
+
+    .print-button:hover {
+      transform: scale(1.1);
+    }
+
     @media print {
-      body {
-        margin: 1in;
-        /* 1-inch margins */
-      }
-
-      .printable-table {
-        width: 100%;
-        border-collapse: collapse;
-        page-break-inside: auto;
-      }
-
-      .printable-table th,
-      .printable-table td {
-        border: 1px solid #000;
-        padding: 8px;
-        text-align: left;
-      }
-
-      .printable-table th {
-        background-color: #f2f2f2;
-      }
-
-      .modal {
+      .print-button {
         display: none;
-        /* Hide modal when printing */
+      }
+
+      body {
+        background-color: transparent;
+      }
+
+      .a4 {
+        box-shadow: none;
+        background-color: transparent;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h2 class="mt-5">Alumni Data</h2>
-
-    <!-- Outside Table -->
-    <table id="outsideTable" class="table table-bordered">
-      <thead>
-        <tr>
-          <th></th> <!-- Checkbox column -->
-          <th>Student ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Gender</th>
-          <th>Course</th>
-          <th>Batch</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        require_once 'includes/firebaseRDB.php';
-
-        $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-        $firebase = new firebaseRDB($databaseURL);
-
-        function getFirebaseData($firebase, $path)
-        {
-          $data = $firebase->retrieve($path);
-          return json_decode($data, true);
-        }
-
-        function sanitizeInput($data)
-        {
-          return htmlspecialchars(strip_tags($data));
-        }
-
-        $alumniData = getFirebaseData($firebase, "alumni");
-        $batchData = getFirebaseData($firebase, "batch_yr");
-        $courseData = getFirebaseData($firebase, "course");
-
-        $filterCourse = isset($_GET['course']) ? sanitizeInput($_GET['course']) : '';
-        $filterBatch = isset($_GET['batch']) ? sanitizeInput($_GET['batch']) : '';
-
-        if (is_array($alumniData) && count($alumniData) > 0) {
-          foreach ($alumniData as $id => $alumni) {
-            $courseId = $alumni['course'];
-            $batchId = $alumni['batch'];
-
-            if ($filterCourse && $filterCourse != $courseId) {
-              continue;
-            }
-            if ($filterBatch && $filterBatch != $batchId) {
-              continue;
-            }
-
-            $batchName = isset($batchData[$batchId]['batch_yrs']) ? $batchData[$batchId]['batch_yrs'] : 'Unknown Batch';
-            $courseName = isset($courseData[$courseId]['courCode']) ? $courseData[$courseId]['courCode'] : 'Unknown Course';
-
-            echo "<tr>
-                        <td><input type='checkbox' class='modal-checkbox' data-id='$id'></td>
-                        <td>{$alumni['studentid']}</td>
-                        <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
-                        <td>{$alumni['email']}</td>
-                        <td>{$alumni['gender']}</td>
-                        <td>{$courseName}</td>
-                        <td>{$batchName}</td>
-                        <td>
-                        <a class='btn btn-success btn-sm btn-flat open-modal' data-id='$id'>EDIT</a>
-                        <a class='btn btn-danger btn-sm btn-flat open-delete' data-id='$id'>DELETE</a>
-                        </td>
-                        </tr>";
-          }
-        }
-        ?>
-      </tbody>
-    </table>
-
-    <!-- New Button to Open Modal -->
-    <button type="button" class="btn btn-primary" id="showModalButton">Show Data in Modal</button>
-    <!-- Modal -->
-    <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="dataModalLabel">Alumni Data</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <table id="printTable" class="printable-table">
-              <thead>
-                <tr>
-                  <th>Student ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Gender</th>
-                  <th>Course</th>
-                  <th>Batch</th>
-                </tr>
-              </thead>
-              <tbody id="modalTableBody">
-                <!-- Data will be copied here -->
-              </tbody>
-            </table>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="printModalButton">Print</button>
-          </div>
-        </div>
-      </div>
+  <div class="a4" id="a4-container">
+    <div class="header">
+      <img src="../images/school_logo.png" class="left" alt="">
+      <center>
+        <p>Republic of the Philippines</p>
+        <p>Region VII, Central Visayas</p>
+        <p>Commission on Higher Education</p>
+        <p><b>MADRIDEJOS COMMUNITY COLLEGE</b></p>
+        <p>Crossing Bunakan, Madridejos, Cebu</p>
+      </center>
+      <img src="../images/madridejos.png" class="right" alt="">
     </div>
+    <div class="content" style="overflow-x:auto;">
+      <center>
+        <h2>
+          <?php
+          if (isset($_GET['data'])) {
+            $encodedData = $_GET['data'];
+            $decodedData = json_decode(urldecode($encodedData), true);
+            $dataToPrint = $decodedData['dataToPrint'];
+            $isMixedBatch = $decodedData['isMixedBatch'];
 
+            if ($isMixedBatch) {
+              echo "LIST OF ALUMNI";
+            } else {
+              if (is_array($dataToPrint) && count($dataToPrint) > 0) {
+                echo "LIST OF BATCH " . htmlspecialchars($dataToPrint[0]['batchYear']);
+              } else {
+                echo "No data to display.";
+              }
+            }
+          } else {
+            echo "No data provided.";
+          }
+          ?>
+        </h2>
+      </center>
+
+      <table id="printTable" class="printable-table">
+        <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Course</th>
+            <th>Batch</th>
+          </tr>
+        </thead>
+        <tbody id="printTableBody">
+          <?php
+          if (isset($dataToPrint)) {
+            foreach ($dataToPrint as $row) {
+              echo "<tr>" . $row['content'] . "</tr>";
+            }
+          }
+          ?>
+        </tbody>
+      </table>
+    </div>
+    <button class="print-button" id="printButton">Print</button>
   </div>
 
-  <!-- Include Bootstrap JS and dependencies -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const modalTableBody = document.getElementById('modalTableBody');
-      const outsideTableBody = document.querySelector('#outsideTable tbody');
-      const showModalButton = document.getElementById('showModalButton');
-      const printModalButton = document.getElementById('printModalButton');
+    window.addEventListener('scroll', function () {
+      var a4Container = document.getElementById('a4-container');
+      var printButton = document.getElementById('printButton');
 
-      showModalButton.addEventListener('click', function () {
-        // Clear previous data
-        modalTableBody.innerHTML = '';
-        // Clone rows from outside table and append to modal table
-        Array.from(outsideTableBody.rows).forEach(row => {
-          // Clone the row without the last cell (actions cell)
-          const clonedRow = row.cloneNode(true);
-          clonedRow.deleteCell(-1); // Remove the last cell (actions cell)
-          // Remove any existing checkbox if mistakenly added
-          clonedRow.querySelector('td:first-child input[type="checkbox"]').remove();
-          // Add checkbox to the first cell
-          const checkboxCell = document.createElement('td');
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.className = 'modal-checkbox';
-          checkbox.dataset.id = row.cells[1].textContent.trim(); // Assuming student ID is in the second cell
-          checkboxCell.appendChild(checkbox);
-          clonedRow.insertBefore(checkboxCell, clonedRow.cells[0]);
-          // Append the modified row to modal table
-          modalTableBody.appendChild(clonedRow);
-        });
-        // Show the modal
-        $('#dataModal').modal('show');
-      });
+      if (window.pageYOffset > a4Container.offsetTop) {
+        printButton.style.position = 'fixed';
+        printButton.style.bottom = '10mm';
+        printButton.style.right = '10mm';
+      } else {
+        printButton.style.position = 'absolute';
+        printButton.style.bottom = '10mm';
+        printButton.style.right = '10mm';
+      }
+    });
 
-      printModalButton.addEventListener('click', function () {
-        // Collect data to be printed
-        const dataToPrint = [];
-        Array.from(modalTableBody.rows).forEach(row => {
-          dataToPrint.push(row.innerHTML);
-        });
-
-        // Encode the data to be sent via URL
-        const encodedData = encodeURIComponent(JSON.stringify(dataToPrint));
-        // Redirect to the print page with the encoded data
-        window.open(`alumni_print.php?data=${encodedData}`, '_blank');
-      });
+    // JavaScript for printing the A4 document content
+    var printButton = document.getElementById('printButton');
+    printButton.addEventListener('click', function () {
+      window.print();
     });
   </script>
 </body>

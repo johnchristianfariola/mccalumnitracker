@@ -84,7 +84,7 @@
                     <table id="example1" class="table table-bordered printable-table">
                       <thead>
                         <tr>
-                          <th style="display:none;"></th> 
+                          <th style="display:none;"></th>
                           <th>Student ID</th>
                           <th>Name</th>
                           <th>Email</th>
@@ -243,9 +243,6 @@
 
     /*=========Table Modal=============*/
 
-
-    
-
     document.addEventListener('DOMContentLoaded', function () {
       const modalTableBody = document.getElementById('modalTableBody');
       const outsideTableBody = document.querySelector('#example1 tbody');
@@ -288,22 +285,51 @@
       });
 
       printModalButton.addEventListener('click', function () {
-        // Collect data to be printed
-        const dataToPrint = [];
-        Array.from(modalTableBody.rows).forEach(row => {
-          dataToPrint.push(row.innerHTML);
+        // Temporarily hide checkboxes
+        const checkboxes = modalTableBody.querySelectorAll('.modal-checkbox');
+        checkboxes.forEach(checkbox => {
+          checkbox.style.display = 'none';
         });
 
+        // Collect data to be printed
+        const dataToPrint = [];
+        const batchYears = new Set();
+
+        Array.from(modalTableBody.rows).forEach(row => {
+          // Clone the row to manipulate without the first column
+          const clonedRow = row.cloneNode(true);
+          clonedRow.deleteCell(0); // Remove the first cell (first column)
+          const batchYear = row.cells[7].textContent.trim(); // Assuming the batch year is in the 7th cell
+          batchYears.add(batchYear);
+          dataToPrint.push({
+            content: clonedRow.innerHTML,
+            batchYear: batchYear
+          });
+        });
+
+        // Determine if there are mixed batches
+        const isMixedBatch = batchYears.size > 1;
+
         // Encode the data to be sent via URL
-        const encodedData = encodeURIComponent(JSON.stringify(dataToPrint));
+        const encodedData = encodeURIComponent(JSON.stringify({
+          dataToPrint: dataToPrint,
+          isMixedBatch: isMixedBatch
+        }));
+
         // Redirect to the print page with the encoded data
-        window.open(`alumni_print.php?data=${encodedData}`, '_blank');
+        window.open(`try.php?data=${encodedData}`, '_blank');
+
+        // Show checkboxes again after the print dialog is opened (optional)
+        checkboxes.forEach(checkbox => {
+          checkbox.style.display = ''; // Restore default display (could be 'block', 'inline', etc.)
+        });
       });
+
+
+
     });
 
   </script>
 </body>
 
 </html>
-
-

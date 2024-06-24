@@ -69,24 +69,24 @@
 
               </div>
               <div class="box-body">
-              <div class="table-responsive"> <!-- Add this div for responsive behavior -->
-                <table id="example1" class="table table-bordered">
-                  <thead>
-                    <th>Thumnails</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th width="30%">Description</th>
-                    <th width="10%">Date Posted</th>
+                <div class="table-responsive"> <!-- Add this div for responsive behavior -->
+                  <table id="example1" class="table table-bordered">
+                    <thead>
+                      <th>Thumnails</th>
+                      <th>Title</th>
+                      <th>Author</th>
+                      <th width="30%">Description</th>
+                      <th width="10%">Date Posted</th>
 
-                    <th width="10%">Tools</th>
-                  </thead>
-                  <tbody>
-                    <?php include 'fetch_data/fetch_dataEvent.php'; ?>
-                  </tbody>
-                </table>
+                      <th width="10%">Tools</th>
+                    </thead>
+                    <tbody>
+                      <?php include 'fetch_data/fetch_dataEvent.php'; ?>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
       </section>
@@ -119,6 +119,13 @@
         }
       }
 
+      // Function to destroy CKEditor instance
+      function destroyCKEditor(elementId) {
+        if (window.CKEDITOR && CKEDITOR.instances[elementId]) {
+          CKEDITOR.instances[elementId].destroy(true);
+        }
+      }
+
       // Open edit modal when edit button is clicked
       $('.open-modal').click(function () {
         var id = $(this).data('id');
@@ -142,11 +149,22 @@
           // Show the edit modal after setting the form fields
           $('#editModal').modal('show');
 
+          // Destroy any existing CKEditor instance before initializing a new one
+          destroyCKEditor('editDesc');
+
           // Initialize CKEditor after modal is shown
-          initializeCKEditor('editDesc');
+          $('#editModal').on('shown.bs.modal', function () {
+            initializeCKEditor('editDesc');
+          });
+
         }, function (xhr, status, error) {
           console.error('AJAX Error: ' + status + ' ' + error);
         });
+      });
+
+      // Destroy CKEditor instance when modal is hidden
+      $('#editModal').on('hidden.bs.modal', function () {
+        destroyCKEditor('editDesc');
       });
 
 

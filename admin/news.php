@@ -98,56 +98,70 @@
   <?php include 'includes/scripts.php'; ?>
   <script>
     $(document).ready(function () {
-      // Function to fetch content from the server
-      function fetchNewsData(id, successCallback, errorCallback) {
-        $.ajax({
-          url: 'news_row.php',
-          type: 'GET',
-          data: { id: id },
-          dataType: 'json',
-          success: successCallback,
-          error: errorCallback
-        });
-      }
+  // Function to fetch content from the server
+  function fetchNewsData(id, successCallback, errorCallback) {
+    $.ajax({
+      url: 'news_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: successCallback,
+      error: errorCallback
+    });
+  }
 
-      // Function to initialize CKEditor
-      function initializeCKEditor(elementId) {
-        if (window.CKEDITOR && CKEDITOR.replace) {
-          CKEDITOR.replace(elementId);
-        } else {
-          console.error('CKEditor is not defined or replace method is missing.');
-        }
-      }
+  // Function to initialize CKEditor
+  function initializeCKEditor(elementId) {
+    if (window.CKEDITOR && CKEDITOR.instances[elementId]) {
+      CKEDITOR.instances[elementId].destroy(true);
+    }
+    if (window.CKEDITOR && CKEDITOR.replace) {
+      CKEDITOR.replace(elementId);
+    } else {
+      console.error('CKEditor is not defined or replace method is missing.');
+    }
+  }
 
-      // Open edit modal when edit button is clicked
-      $('.open-modal').click(function () {
-        var id = $(this).data('id');
+  // Function to handle modal display and data population
+  function openEditModal(response, id) {
+    $('#editId').val(id);
+    $('#editTitle').val(response.news_title);
+    $('#editAuthor').val(response.news_author);
+    $('#editDesc').val(response.news_description);
 
-        // Fetch news data via AJAX
-        fetchNewsData(id, function (response) {
-          $('#editId').val(id);
-          $('#editTitle').val(response.news_title);
-          $('#editAuthor').val(response.news_author);
-          $('#editDesc').val(response.news_description);
+    // Display the fetched image in the edit modal
+    if (response.image_url && response.image_url.trim() !== '') {
+      $('#imagePreviewImg2').attr('src', response.image_url);
+      $('#imagePreviewImg2').css('display', 'block'); // Ensure the image is displayed
+    } else {
+      $('#imagePreviewImg2').attr('src', ''); // Clear the image src if no image URL is returned
+      $('#imagePreviewImg2').css('display', 'none'); // Hide the image if no image URL is returned
+    }
 
-          // Display the fetched image in the edit modal
-          if (response.image_url) {
-            $('#imagePreviewImg2').attr('src', response.image_url);
-            $('#imagePreviewImg2').css('display', 'block'); // Ensure the image is displayed
-          } else {
-            $('#imagePreviewImg2').attr('src', ''); // Clear the image src if no image URL is returned
-            $('#imagePreviewImg2').css('display', 'none'); // Hide the image if no image URL is returned
-          }
+    // Show the edit modal after setting the form fields
+    $('#editModal').modal('show');
 
-          // Show the edit modal after setting the form fields
-          $('#editModal').modal('show');
+    // Initialize CKEditor after modal is shown
+    initializeCKEditor('editDesc');
 
-          // Initialize CKEditor after modal is shown
-          initializeCKEditor('editDesc');
-        }, function (xhr, status, error) {
-          console.error('AJAX Error: ' + status + ' ' + error);
-        });
-      });
+    // Set focus to the first input field for accessibility
+    $('#editTitle').focus();
+  }
+
+  // Open edit modal when edit button is clicked
+  $('.open-modal').click(function () {
+    var id = $(this).data('id');
+
+    // Fetch news data via AJAX
+    fetchNewsData(id, function (response) {
+      openEditModal(response, id);
+    }, function (xhr, status, error) {
+      console.error('AJAX Error: ' + status + ' ' + error);
+      alert('Failed to fetch news data. Please try again later.');
+    });
+  });
+
+
 
 
       $(document).ready(function () {
