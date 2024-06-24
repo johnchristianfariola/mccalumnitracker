@@ -317,7 +317,7 @@
         }));
 
         // Redirect to the print page with the encoded data
-        window.open(`try.php?data=${encodedData}`, '_blank');
+        window.open(`alumni_print.php?data=${encodedData}`, '_blank');
 
         // Show checkboxes again after the print dialog is opened (optional)
         checkboxes.forEach(checkbox => {
