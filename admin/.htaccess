@@ -2,14 +2,3 @@
 # HTID:23422420: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
 php_value display_errors 1
 # DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23422420:
-RewriteEngine On
-RewriteBase /
-
-# Rewrite rule to hide .php extension
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ $1.php [L]
-
-# Rewrite rule to redirect /home.php to /home
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+home\.php [NC]
-RewriteRule ^home\.php$ /home [R=301,L]
