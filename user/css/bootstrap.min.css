@@ -4904,7 +4904,6 @@ fieldset:disabled .btn {
 }
 .modal-dialog {
   position: relative;
-  width: auto;
   margin: 0.5rem;
   pointer-events: none;
 }
@@ -4987,6 +4986,7 @@ fieldset:disabled .btn {
   position: relative;
   flex: 1 1 auto;
   padding: 1rem;
+  
 }
 .modal-footer {
   display: flex;

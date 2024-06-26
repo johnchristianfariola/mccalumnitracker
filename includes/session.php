@@ -8,34 +8,48 @@ $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 // Instantiate FirebaseRDB object
 $firebase = new firebaseRDB($databaseURL);
 
-// Debugging session values
-if (!isset($_SESSION['admin']) || trim($_SESSION['admin']) == '') {
+// Check if the alumni session is set
+if (!isset($_SESSION['alumni']) || trim($_SESSION['alumni']) == '') {
     header('location: index.php');
     exit();
 }
 
-// Retrieve admin user data from Firebase
-$adminId = $_SESSION['admin'];
-$adminData = $firebase->retrieve("admin");
-$adminData = json_decode($adminData, true);
+$alumniUsername = $_SESSION['alumni'];
 
-// Check if the admin data exists and matches the session admin ID
-if (!isset($adminData['user']) || $adminData['user'] !== $adminId) {
-    // Invalid session or admin not found
+// Retrieve alumni data from Firebase
+try {
+    $alumniData = $firebase->retrieve("alumni");
+    $alumniData = json_decode($alumniData, true);
+} catch (Exception $e) {
+    // Handle errors when retrieving data
+    error_log("Error retrieving alumni data: " . $e->getMessage());
     header('location: index.php');
     exit();
 }
 
-// Admin user is authenticated, store user data in session
-$user = [
-    'id' => $adminId,
-    'user' => $adminData['user'],
-    'password' => $adminData['password'],
-    'firstname' => $adminData['firstname'],
-    'lastname' => $adminData['lastname'],
-    'image_url' => $adminData['image_url'],
-    'created_on' => $adminData['created_on'] // Ensure this field exists in your Firebase data
-];
+// Find the alumni record based on username
+$authenticated = false;
+foreach ($alumniData as $id => $alumni) {
+    if ($alumni['username'] === $alumniUsername) {
+        // Alumni user is authenticated, store user data in session
+        $user = [
+            'id' => $id,
+            'username' => $alumni['username'],
+            'firstname' => $alumni['firstname'],
+            'lastname' => $alumni['lastname'],
+            'email' => $alumni['email'],
+        ];
+        $_SESSION['user'] = $user;
+        $authenticated = true;
+        break;
+    }
+}
+
+if (!$authenticated) {
+    // Invalid session or alumni not found
+    header('location: index.php');
+    exit();
+}
 
 // Generate CSRF token if not already set
 if (!isset($_SESSION['token'])) {
@@ -43,3 +57,4 @@ if (!isset($_SESSION['token'])) {
 }
 
 $token = $_SESSION['token'];
+?>

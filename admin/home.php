@@ -6,7 +6,7 @@ $year = date('Y');
 if (isset($_GET['year'])) {
   $year = $_GET['year'];
 }
-
+ 
 require_once 'includes/firebaseRDB.php';
 
 

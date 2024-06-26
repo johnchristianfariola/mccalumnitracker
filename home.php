@@ -1,10 +1,5 @@
+<?php include 'includes/session.php'; ?>
 
-<?php
-session_start();
-if (isset($_SESSION['alumni'])) {
-	header('location:home.php');
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,15 +33,28 @@ if (isset($_SESSION['alumni'])) {
                     <div class="container">
                         <div class="row justify-content-start">
                             <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Welcome Back
+                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">
+                                    <?php echo $user['firstname']; ?>
                                 </h5>
                                 <h1 class="display-3 text-white animated slideInDown">Reconnect. Reimagine. Rediscover.
                                 </h1>
                                 <p class="fs-5 text-white mb-4 pb-2">Welcome to the MCC Alumni Network! We are thrilled
                                     to have you back and eager to help you reconnect with old friends, reimagine your
                                     future, and rediscover the spirit of our beloved institution.</p>
-                                <a class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal" data-target="#signInModal"><i
-                                        class="fa fa-user"></i> Signin</a>
+                              
+                                <?php
+                                if (isset($_SESSION['alumni'])) {
+                                    echo '
+                                    <a style="display:none" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
+                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
+                                   ';
+                                } else {
+                                    echo '
+                                    <a class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
+                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
+                                ';  
+                                }
+                                ?>
 
                             </div>
                         </div>
@@ -68,8 +76,19 @@ if (isset($_SESSION['alumni'])) {
                                     exclusive job listings, mentorship programs, and career development resources
                                     tailored just for you. Whether it’s professional networking or social gatherings,
                                     there’s always something exciting happening. Your success is our pride.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal" data-target="#signInModal"><i
-                                        class="fa fa-user"></i> Signin</a>
+                                    <?php
+                                if (isset($_SESSION['alumni'])) {
+                                    echo '
+                                    <a style="display:none" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
+                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
+                                   ';
+                                } else {
+                                    echo '
+                                    <a class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
+                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
+                                ';  
+                                }
+                                ?>
 
                             </div>
                         </div>
@@ -92,8 +111,19 @@ if (isset($_SESSION['alumni'])) {
                                     and achievements from our community. Celebrate the milestones that keep our legacy
                                     alive. Your involvement can inspire current students and shape the future of our
                                     institution.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal" data-target="#signInModal"><i
-                                        class="fa fa-user"></i> Signin</a>
+                                    <?php
+                                if (isset($_SESSION['alumni'])) {
+                                    echo '
+                                    <a style="display:none" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
+                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
+                                   ';
+                                } else {
+                                    echo '
+                                    <a class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
+                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
+                                ';  
+                                }
+                                ?>
 
                             </div>
                         </div>
@@ -268,7 +298,7 @@ if (isset($_SESSION['alumni'])) {
                 <h1 class="mb-5">News</h1>
             </div>
             <div class="owl-carousel testimonial-carousel position-relative">
-                
+
 
                 <div class="testimonial-item">
 
@@ -289,13 +319,14 @@ if (isset($_SESSION['alumni'])) {
                     </div>
                 </div>
 
-                 <div class="testimonial-item">
+                <div class="testimonial-item">
 
                     <div class="item">
                         <a href="#" class="probootstrap-featured-news-box">
                             <center>
                                 <figure class="probootstrap-media">
-                                    <img src="user\img\graduation_carousel.png" alt="Free Bootstrap Template by ProBootstrap.com"
+                                    <img src="user\img\graduation_carousel.png"
+                                        alt="Free Bootstrap Template by ProBootstrap.com"
                                         class="img-responsive fixed-dimension-img">
                                 </figure>
                             </center>
@@ -314,7 +345,8 @@ if (isset($_SESSION['alumni'])) {
                         <a href="#" class="probootstrap-featured-news-box">
                             <center>
                                 <figure class="probootstrap-media">
-                                    <img src="user/img/graduation_carousel_1.png" alt="Free Bootstrap Template by ProBootstrap.com"
+                                    <img src="user/img/graduation_carousel_1.png"
+                                        alt="Free Bootstrap Template by ProBootstrap.com"
                                         class="img-responsive fixed-dimension-img">
                                 </figure>
                             </center>
@@ -329,7 +361,7 @@ if (isset($_SESSION['alumni'])) {
 
             </div>
             <button class="btn" style="float:right" data-toggle="modal" data-target="#signInModal">View All</button>
-            
+
         </div>
     </div>
     <!-- News End -->
@@ -343,111 +375,129 @@ if (isset($_SESSION['alumni'])) {
             </div>
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>Tempora consectetur unde nisi</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>Tempora consectetur unde nisi</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>Tempora consectetur unde nisi</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>Tempora consectetur unde nisi</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>Tempora consectetur unde nisi</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>Tempora consectetur unde nisi</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
-                
+
             </div>
             <button class="btn" style="float:right" data-toggle="modal" data-target="#signInModal">View All</button>
-            
+
         </div>
     </div>
     <!-- Event End -->
@@ -603,7 +653,7 @@ if (isset($_SESSION['alumni'])) {
 
 
     <!-- Footer Start -->
-    <?php include 'includes/footer.php'?>
+    <?php include 'includes/footer.php' ?>
     <!-- Footer End -->
 
 
@@ -621,8 +671,8 @@ if (isset($_SESSION['alumni'])) {
     <script src="user/js/main.js"></script>
 
 
-     <!-- Modal -->
-     <?php include 'includes/auth.php'?>
+    <!-- Modal -->
+    <?php include 'includes/auth.php' ?>
 </body>
 
 </html>

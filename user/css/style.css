@@ -1,4 +1,8 @@
 /********** Template CSS **********/
+* {
+  margin: 0;
+  padding: 0;
+}
 :root {
     --primary: #06BBCC;
     --light: #F0FBFC;
