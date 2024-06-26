@@ -1,55 +1,25 @@
-<header class="main-header">
-  <nav class="navbar navbar-static-top">
-    <div class="container">
-      <div class="navbar-header">
-        <a href="#" class="navbar-brand"><b>Library</b> System</a>
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-          <i class="fa fa-bars"></i>
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="index.php" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h2 class="m-0 text-primary"><i class="fa fa-graduation-cap me-3"></i>MCC ALUMNI</h2>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
         </button>
-      </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-        <ul class="nav navbar-nav">
-          <?php
-            if(isset($_SESSION['student'])){
-              echo "
-                <li><a href='index.php'>HOME</a></li>
-                <li><a href='transaction.php'>TRANSACTION</a></li>
-              ";
-            } 
-          ?>
-        </ul>
-      </div>
-      <!-- /.navbar-collapse -->
-      <!-- Navbar Right Menu -->
-      <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-          <?php
-            if(isset($_SESSION['student'])){
-              $photo = (!empty($student['photo'])) ? 'images/'.$student['photo'] : 'images/profile.jpg';
-              echo "
-                <li class='user user-menu'>
-                  <a href='#'>
-                    <img src='".$photo."' class='user-image' alt='User Image'>
-                    <span class='hidden-xs'>".$student['firstname'].' '.$student['lastname']."</span>
-                  </a>
-                </li>
-                <li><a href='logout.php'><i class='fa fa-sign-out'></i> LOGOUT</a></li>
-              ";
-            }
-            else{
-              echo "
-                <li><a href='#login' data-toggle='modal'><i class='fa fa-sign-in'></i> LOGIN</a></li>
-                <li><a href='admin/index.php' data-toggle='modal'><i class='fa fa-key'></i> ADMIN LOGIN</a></li>
-              ";
-            } 
-          ?>
-        </ul>
-      </div>
-      <!-- /.navbar-custom-menu -->
-    </div>
-    <!-- /.container-fluid -->
-  </nav>
-</header>
-<?php include 'includes/login_modal.php'; ?>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.php" class="nav-item nav-link active">Home</a>
+                <a href="about.html" class="nav-item nav-link">About</a>
+                <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="team.html" class="dropdown-item">Our Team</a>
+                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="404.html" class="dropdown-item">404 Page</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link">Contact</a>
+            </div>
+           
+        </div>
+    </nav>
