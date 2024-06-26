@@ -39,18 +39,13 @@
                                         <span>' . $alumni['firstname'] . ' ' . $alumni['middlename'] . ' ' . $alumni['lastname'] . '</span>
                                         <span class="mgs-time">2 min ago</span>
                                     </div>
+                                   
                                 </div>
-                                    
+                                     <div class="button_container"> <a class="btn" id="log">Logout</button></a>
                                     ';
                                 }
                                 ?>
-                                <div class="hd-message-info hd-task-info">
-                                    <img src="../homepage/img/team-2.jpg" class="profile" alt="Profile Picture">
-                                    <div class="profile_details">
-                                        <span>John Christian Fariola</span>
-                                        <span class="mgs-time">2 min ago</span>
-                                    </div>
-                                </div>
+                                
 
 
                             </div>

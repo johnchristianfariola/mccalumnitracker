@@ -49,6 +49,12 @@
     <link rel="stylesheet" href="style.css">
     <!-- responsive CSS
 		============================================ -->
+<!-- dialog CSS
+		============================================ -->
+    <link rel="stylesheet" href="css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="css/dialog/dialog.css">
+
+    
     <link rel="stylesheet" href="css/responsive.css">
 
     <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">

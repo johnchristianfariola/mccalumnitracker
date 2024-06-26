@@ -1,27 +1,47 @@
 .hd-message-info {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: flex-start;
 }
 
 .profile {
-    margin-right: 10px; /* Adjust spacing between image and details */
-    width: 50px; /* Adjust the size as needed */
-    height: 50px; /* Adjust the size as needed */
-    border-radius: 50%; /* Make the image circular if needed */
+  margin-right: 10px; /* Adjust spacing between image and details */
+  width: 50px; /* Adjust the size as needed */
+  height: 50px; /* Adjust the size as needed */
+  border-radius: 50%; /* Make the image circular if needed */
 }
 
 .profile_details {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .profile_details span {
-    margin: 2px 0; /* Adjust spacing between text elements */
+  margin: 2px 0; /* Adjust spacing between text elements */
+}
+
+.button_container {
+  margin-top: 10px;
+}
+
+.button_container .btn {
+  display: inline-block;
+  padding: 1px 20px;
+  background-color: #ffffff;
+  color: black;
+  text-align: left;
+  text-decoration: none;
+ font-size: 17px !important;
+  transition: background-color 0.3s;
+}
+
+.button_container .btn:hover {
+  background:linear-gradient(to right, #da8cff, #9a55ff);
+  color: white;
 }
 
 .mgs-time {
-    font-size: 0.9em; /* Adjust font size as needed */
-    color: gray; /* Adjust color as needed */
+  font-size: 0.9em; /* Adjust font size as needed */
+  color: gray; /* Adjust color as needed */
 }
 
 
