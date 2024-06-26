@@ -1,0 +1,85 @@
+.profile{
+    width: 30%;
+    height: auto;
+    border-radius: 100px;
+}
+
+.curved-ctn {
+  display: flex;
+  align-items: center;
+  /* Align items vertically centered */
+  justify-content: space-between;
+  /* Space between image and info section */
+  padding: 0px;
+  border-radius: 10px;
+  /* Optional: add border radius for curved corners */
+}
+
+.image-section img {
+  max-width: 80%;
+  /* Ensure the image is responsive */
+  height: auto;
+  border-radius: 10px;
+  /* Optional: add border radius to the image */
+}
+
+.info-section {
+  margin-left: 10px;
+  /* Add some space between the image and the info section */
+}
+
+.info-section h2,
+.info-section i {
+  margin: 0;
+  font-size: 14px;
+  /* Remove default margins */
+}
+
+.news_post {
+  width: 100%;
+  height: 50vh;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 350px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  margin: 20px auto;
+  /* Center the card horizontally */
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.event_image {
+  width: 100%;
+  height: 190px;
+  display: block;
+  /* Remove bottom space */
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.card-title {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+.card-date {
+  color: #888;
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+.card-description {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
