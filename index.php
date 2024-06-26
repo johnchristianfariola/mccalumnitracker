@@ -2,7 +2,7 @@
 <?php
 session_start();
 if (isset($_SESSION['alumni'])) {
-	header('location:home.php');
+	header('location: userpage/index.php');
 }
 ?>
 <!DOCTYPE html>

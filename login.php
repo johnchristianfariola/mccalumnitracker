@@ -36,7 +36,7 @@ if (isset($_POST['login'])) {
         // Verify the password (if hashed, use password_verify)
         if ($password === $foundUser['password']) {
             $_SESSION['alumni'] = $username; // Set session alumni ID
-            header('location: home.php'); // Redirect to alumni home
+            header('location: userpage/index.php'); // Redirect to alumni home
             exit();
         } else {
             $_SESSION['error'] = 'Incorrect password';
