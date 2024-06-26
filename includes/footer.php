@@ -25,22 +25,22 @@
                     <h4 class="text-white mb-3">Gallery</h4>
                     <div class="row g-2 pt-2">
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="homepage/img/profile.jpg" alt="">
                         </div>
                     </div>
                 </div>

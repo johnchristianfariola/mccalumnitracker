@@ -32,7 +32,7 @@ if (isset($_SESSION['alumni'])) {
     <div class="container-fluid p-0 mb-5">
         <div class="owl-carousel header-carousel position-relative">
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="user/img/carousel-1.png" alt="">
+                <img class="img-fluid" src="homepage/img/carousel-1.png" alt="">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
                     style="background: rgba(24, 29, 56, .7);">
                     <div class="container">
@@ -54,7 +54,7 @@ if (isset($_SESSION['alumni'])) {
                 </div>
             </div>
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="user/img/graduation_carousel_1.png" alt="">
+                <img class="img-fluid" src="homepage/img/graduation_carousel_1.png" alt="">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
                     style="background: rgba(24, 29, 56, .7);">
                     <div class="container">
@@ -78,7 +78,7 @@ if (isset($_SESSION['alumni'])) {
             </div>
 
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="user/img/graduation_carousel.png" alt="">
+                <img class="img-fluid" src="homepage/img/graduation_carousel.png" alt="">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
                     style="background: rgba(24, 29, 56, .7);">
                     <div class="container">
@@ -158,7 +158,7 @@ if (isset($_SESSION['alumni'])) {
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
                         <img class="img-fluid position-absolute w-100 h-100"
-                            src="user/img/Community-College-Madridejos-ee8b60f4.jpeg" alt="" style="object-fit: cover;">
+                            src="homepage/img/Community-College-Madridejos-ee8b60f4.jpeg" alt="" style="object-fit: cover;">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -211,7 +211,7 @@ if (isset($_SESSION['alumni'])) {
                     <div class="row g-3">
                         <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.1s">
                             <a class="position-relative d-block overflow-hidden" href="">
-                                <img class="img-fluid" src="user/img/bsit.png" alt="">
+                                <img class="img-fluid" src="homepage/img/bsit.png" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
                                     style="margin: 1px;">
                                     <h5 class="m-0">IT Department</h5>
@@ -220,7 +220,7 @@ if (isset($_SESSION['alumni'])) {
                         </div>
                         <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.3s">
                             <a class="position-relative d-block overflow-hidden" href="">
-                                <img class="img-fluid" src="user/img/education.png" alt="">
+                                <img class="img-fluid" src="homepage/img/education.png" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
                                     style="margin: 1px;">
                                     <h5 class="m-0">Education Department</h5>
@@ -229,7 +229,7 @@ if (isset($_SESSION['alumni'])) {
                         </div>
                         <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.3s">
                             <a class="position-relative d-block overflow-hidden" href="">
-                                <img class="img-fluid" src="user/img/bshm.png" alt="">
+                                <img class="img-fluid" src="homepage/img/bshm.png" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
                                     style="margin: 1px;">
                                     <h5 class="m-0">HM Department</h5>
@@ -238,7 +238,7 @@ if (isset($_SESSION['alumni'])) {
                         </div>
                         <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.5s">
                             <a class="position-relative d-block overflow-hidden" href="">
-                                <img class="img-fluid" src="user/img/bsba.png" alt="">
+                                <img class="img-fluid" src="homepage/img/bsba.png" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3"
                                     style="margin: 1px;">
                                     <h5 class="m-0">BSBA Department</h5>
@@ -250,7 +250,7 @@ if (isset($_SESSION['alumni'])) {
                 <div class="col-lg-5 col-md-6 wow zoomIn" data-wow-delay="0.7s" style="min-height: 350px;">
                     <a class="position-relative d-block h-100 overflow-hidden" href="">
                         <img class="img-fluid position-absolute w-100 h-100"
-                            src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="" style="object-fit: cover;">
+                            src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="" style="object-fit: cover;">
 
                     </a>
                 </div>
@@ -276,7 +276,7 @@ if (isset($_SESSION['alumni'])) {
                         <a href="#" class="probootstrap-featured-news-box">
                             <center>
                                 <figure class="probootstrap-media">
-                                    <img src="user/img/carousel-1.png" alt="Free Bootstrap Template by ProBootstrap.com"
+                                    <img src="homepage/img/carousel-1.png" alt="Free Bootstrap Template by ProBootstrap.com"
                                         class="img-responsive fixed-dimension-img">
                                 </figure>
                             </center>
@@ -314,7 +314,7 @@ if (isset($_SESSION['alumni'])) {
                         <a href="#" class="probootstrap-featured-news-box">
                             <center>
                                 <figure class="probootstrap-media">
-                                    <img src="user/img/graduation_carousel_1.png" alt="Free Bootstrap Template by ProBootstrap.com"
+                                    <img src="homepage/img/graduation_carousel_1.png" alt="Free Bootstrap Template by ProBootstrap.com"
                                         class="img-responsive fixed-dimension-img">
                                 </figure>
                             </center>
@@ -347,7 +347,7 @@ if (isset($_SESSION['alumni'])) {
                     <div class="item">
                         <center>
                           <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
+                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
                               <h3>Tempora consectetur unde nisi</h3>
                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
@@ -364,7 +364,7 @@ if (isset($_SESSION['alumni'])) {
                     <div class="item">
                         <center>
                           <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
+                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
                               <h3>Tempora consectetur unde nisi</h3>
                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
@@ -381,7 +381,7 @@ if (isset($_SESSION['alumni'])) {
                     <div class="item">
                         <center>
                           <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
+                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
                               <h3>Tempora consectetur unde nisi</h3>
                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
@@ -398,7 +398,7 @@ if (isset($_SESSION['alumni'])) {
                     <div class="item">
                         <center>
                           <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
+                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
                               <h3>Tempora consectetur unde nisi</h3>
                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
@@ -415,7 +415,7 @@ if (isset($_SESSION['alumni'])) {
                     <div class="item">
                         <center>
                           <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
+                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
                               <h3>Tempora consectetur unde nisi</h3>
                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
@@ -432,7 +432,7 @@ if (isset($_SESSION['alumni'])) {
                     <div class="item">
                         <center>
                           <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="user/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
+                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
                               <h3>Tempora consectetur unde nisi</h3>
                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
@@ -465,7 +465,7 @@ if (isset($_SESSION['alumni'])) {
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
@@ -485,7 +485,7 @@ if (isset($_SESSION['alumni'])) {
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
@@ -505,7 +505,7 @@ if (isset($_SESSION['alumni'])) {
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
@@ -525,7 +525,7 @@ if (isset($_SESSION['alumni'])) {
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="user/img/profile.jpg" alt="">
+                            <img class="img-fluid" src="homepage/img/profile.jpg" alt="">
                         </div>
                         <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
@@ -557,7 +557,7 @@ if (isset($_SESSION['alumni'])) {
             </div>
             <div class="owl-carousel testimonial-carousel position-relative">
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="user/img/profile.jpg"
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
@@ -567,7 +567,7 @@ if (isset($_SESSION['alumni'])) {
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="user/img/profile.jpg"
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
@@ -577,7 +577,7 @@ if (isset($_SESSION['alumni'])) {
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="user/img/profile.jpg"
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
@@ -587,7 +587,7 @@ if (isset($_SESSION['alumni'])) {
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="user/img/profile.jpg"
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
@@ -612,13 +612,13 @@ if (isset($_SESSION['alumni'])) {
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="user/lib/wow/wow.min.js"></script>
-    <script src="user/lib/easing/easing.min.js"></script>
-    <script src="user/lib/waypoints/waypoints.min.js"></script>
-    <script src="user/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="homepage/lib/wow/wow.min.js"></script>
+    <script src="homepage/lib/easing/easing.min.js"></script>
+    <script src="homepage/lib/waypoints/waypoints.min.js"></script>
+    <script src="homepage/lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="user/js/main.js"></script>
+    <script src="homepage/js/main.js"></script>
 
 
      <!-- Modal -->
