@@ -19,34 +19,11 @@
     <?php include 'includes/mobile_view.php' ?>
     <!-- Mobile Menu end -->
     <!-- Main Menu area start-->
-    <div class="main-menu-area mg-tb-40">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                        <li class="active"><a data-toggle="tab" href="#Home"><i
-                                    class="notika-icon notika-house"></i>Home</a>
-                        </li>
-                        <li><a data-toggle="tab" href="#mailbox"><i class="notika-icon notika-mail"></i> News</a>
-                        </li>
-                        <li><a data-toggle="tab" href="#Interface"><i class="notika-icon notika-edit"></i> Event</a>
-                        </li>
-                        <li><a data-toggle="tab" href="#Charts"><i class="notika-icon notika-bar-chart"></i> Job</a>
-                        </li>
-                        <li><a data-toggle="tab" href="#Tables"><i class="notika-icon notika-windows"></i> Forum</a>
-                        </li>
-                        <li><a data-toggle="tab" href="#Forms"><i class="notika-icon notika-form"></i> Gallery</a>
-
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php include 'includes/main_menu.php' ?>
 
     <!-- End Sale Statistic area-->
 
-    <div class="sale-statistic-area">
+        <div class="sale-statistic-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
@@ -74,7 +51,7 @@
                     $data = json_decode($data, true);
 
                     if (is_array($data)) {
-                        usort($data, 'sortByDate'); // Sort data by news_created field in descending order
+                        usort($data, 'sortByDate'); // 
                         foreach ($data as $id => $news) {
                             // Strip HTML tags from news_description and convert newlines to <br> tags
                             $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news['news_description'])));
@@ -119,6 +96,7 @@
                 $data = json_decode($data, true);
 
                 if (is_array($data)) {
+                    
                     foreach ($data as $id => $event) {
                         // Retrieve and sanitize event data
                         $eventTitle = htmlspecialchars($event['event_title']);
@@ -128,7 +106,7 @@
 
                         echo '
                         <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
-                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.1s">
+                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
                                 <div class="card">
                                     <img src="../admin/' . $eventImage . '" alt="Event Image" class="event_image">
                                     <div class="card-content">
@@ -148,14 +126,22 @@
                 ?>
 
                 <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12" style="margin-top:60px">
-                    <h3><i class="fa fa-briefcase"></i> JOB POSTING</h3>
+                    <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
                     <?php
 
 
                     $data = $firebase->retrieve("job");
                     $data = json_decode($data, true);
 
+                    function sortByDateJob($a, $b)
+                    {
+                        $dateA = strtotime($a['job_created']);
+                        $dateB = strtotime($b['job_created']);
+                        return $dateB - $dateA;
+                    }
+
                     if (is_array($data)) {
+                        usort($data, 'sortByDateJob'); // 
                         foreach ($data as $id => $job) {
                             // Check if status is Active
                             if (isset($job['status']) && $job['status'] == 'Active') {
@@ -167,6 +153,7 @@
 
                                 // Set background color based on work time
                                 $backgroundColor = ($workTime == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold';
+                                $color = ($workTime == 'Full-Time') ? 'white' : 'black';
 
                                 echo '
                     
@@ -175,14 +162,12 @@
                                 <div class="card-content">
                                     <div class="job-container">
                                         <div class="job-title">' . $jobTitle . '</div>
-                                        <div class="job-timesced" style="background-color: ' . $backgroundColor . ';">' . $workTime . '</div>
+                                        <div class="job-timesced" style="background-color: ' . $backgroundColor . '; color: ' . $color . ';">' . $workTime . '</div>
                                     </div>
                                     <hr>
                                     <div class="card-date">' . $company . '</div>
                                     <div class="card-date">Posted on ' . $jobDate . '</div>
-                                    <div class="btn btn-default btn-icon-notika waves-effect">
-                                        <i class="fa fa-send"> Interested</i>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -191,7 +176,29 @@
                         }
                     }
                     ?>
+
+                    <div class="" style="margin-top:60px">
+                        <h3><i class="fa fa-wechat"></i> Forum</h3>
+                        <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
+                            data-wow-delay="0.3">
+                            <div class="card">
+                                <div class="card-content">
+                                    
+                                <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
+
+
+
+
+
+
 
 
 
