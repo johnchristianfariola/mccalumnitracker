@@ -244,3 +244,34 @@
     padding: 20px 0;
   }
 }
+.breadcomb-list .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.breadcomb-wp {
+  display: flex;
+  align-items: center;
+}
+
+.breadcomb-icon {
+  margin-right: 15px;
+}
+
+.breadcomb-ctn {
+  flex-grow: 1;
+}
+
+.visited-content {
+  display: flex;
+}
+
+.uploader {
+  margin-right: 15px;
+}
+
+.date-uploaded {
+  text-align: right;
+}

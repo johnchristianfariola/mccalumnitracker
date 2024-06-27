@@ -22,7 +22,7 @@
     <?php include 'includes/main_menu.php' ?>
 
     
-    <?php
+<?php
 // Include Firebase database handling class
 require_once '../includes/firebaseRDB.php';
 
@@ -30,71 +30,60 @@ require_once '../includes/firebaseRDB.php';
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
-// Retrieve news data from Firebase
-$data = $firebase->retrieve("news");
-$data = json_decode($data, true);
+// Get the news ID from the URL
+if (isset($_GET['id'])) {
+    $news_id = $_GET['id'];
 
-// Check if data exists and iterate through each news item
-if ($data && is_array($data)) {
-    // Build a new array where keys are preserved
-    $indexed_data = [];
-    foreach ($data as $news_id => $news_item) {
-        // Ensure $news_id matches the unique Firebase key
-        $indexed_data[$news_id] = $news_item;
-    }
+    // Retrieve the specific news item using the ID
+    $news_data = $firebase->retrieve("news/{$news_id}");
+    $news_data = json_decode($news_data, true);
 
-    // Sort indexed data by news_created, descending order
-    uasort($indexed_data, function($a, $b) {
-        return strtotime($b['news_created']) - strtotime($a['news_created']);
-    });
-
-    // Iterate through sorted data and output
-    foreach ($indexed_data as $news_id => $news_item) {
-        // Retrieve sanitized data
-        $image_url = htmlspecialchars($news_item['image_url']);
-        $news_author = htmlspecialchars($news_item['news_author']);
-        $news_created = htmlspecialchars($news_item['news_created']);
-        $news_description = nl2br(htmlspecialchars($news_item['news_description']));
-        $news_title = htmlspecialchars($news_item['news_title']);
+    if ($news_data) {
+        // Display news details
+        $image_url = htmlspecialchars($news_data['image_url']);
+        $news_author = htmlspecialchars($news_data['news_author']);
+        $news_created = htmlspecialchars($news_data['news_created']);
+        $news_description = nl2br(htmlspecialchars($news_data['news_description']));
+        $news_title = htmlspecialchars($news_data['news_title']);
         ?>
-        <div class="breadcomb-area wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>s">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="main_card">
-                            <div class="news_card">
-                                <div class="news_image">
-                                    <img src="../admin/<?php echo $image_url; ?>" alt="News Image">
+
+    <div class="breadcomb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="breadcomb-wp">
+                                <div class="breadcomb-icon">
+                                    <img class="profile" src="../images/profile.jpg" alt="">
                                 </div>
-                                <div class="news_content">
-                                    <h3><?php echo $news_title; ?></h3>
-                                    <div class="post_info">
-                                        <p>Posted By <?php echo $news_author; ?></p>
-                                        <p class="date_posted"><?php echo $news_created; ?></p>
-                                    </div>
-                                    <div class="news-description" style="margin-top:20px;">
-                                        <p><?php echo $news_description; ?></p>
-                                    </div>
-                                    <div style="margin-top:20px">
-                                        <a href="visit_news.php?id=<?php echo urlencode($news_id); ?>"
-                                            class="btn btn-default btn-icon-notika">
-                                            <i class="notika-icon notika-next"></i> READ...
-                                        </a>
+                                <div class="breadcomb-ctn">
+                                    <h2><?php echo $news_title; ?></h2>
+                                    <div class="visited-content">
+                                        <i class="uploader">Posted by:  Admin <?php echo $news_author; ?></i>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <p class="date-uploaded">Date Posted: <?php echo $news_created; ?></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <?php
+<?php
+    } else {
+        echo "News item not found.";
     }
+} else {
+    echo "No news ID provided.";
 }
 ?>
-
-
 
 
 
@@ -194,7 +183,6 @@ if ($data && is_array($data)) {
                 }
             });
         });
-
 
     </script>
 
