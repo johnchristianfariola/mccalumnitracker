@@ -233,16 +233,3 @@
 .description {
   margin-top: 20px;
 }
-@media (max-width: 600px) {
-  .main-card {
-    flex-direction: column;
-  }
-
-  .news_image, .news_content {
-    padding: 0;
-  }
-
-  .news_content {
-    padding-top: 16px;
-  }
-}
