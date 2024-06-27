@@ -54,7 +54,8 @@ if ($data && is_array($data)) {
         $image_url = htmlspecialchars($news_item['image_url']);
         $news_author = htmlspecialchars($news_item['news_author']);
         $news_created = htmlspecialchars($news_item['news_created']);
-        $news_description = nl2br(htmlspecialchars($news_item['news_description']));
+   
+        $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news_item['news_description'])));
         $news_title = htmlspecialchars($news_item['news_title']);
         ?>
         <div class="breadcomb-area wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>s">

@@ -43,7 +43,7 @@ if (isset($_GET['id'])) {
         $image_url = htmlspecialchars($news_data['image_url']);
         $news_author = htmlspecialchars($news_data['news_author']);
         $news_created = htmlspecialchars($news_data['news_created']);
-        $news_description = nl2br(htmlspecialchars($news_data['news_description']));
+         $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news_data['news_description'])));
         $news_title = htmlspecialchars($news_data['news_title']);
         ?>
 
