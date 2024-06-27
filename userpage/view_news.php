@@ -56,37 +56,34 @@ if (is_array($data)) {
         $image_url = strip_tags($news['image_url']);
         ?>
         <div class="breadcomb-area wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>s">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                       
-                            <div class="main_card">
-                                <div class="news_card">
-                                    <div class="news_image">
-                                        <img src="../admin/<?php echo htmlspecialchars($image_url); ?>" alt="News Image">
-                                    </div>
-                                    <div class="news_content">
-                                        <h3><?php echo htmlspecialchars($news_title); ?></h3>
-                                        <div class="post_info">
-                                            <p>Posted By <?php echo htmlspecialchars($news_author); ?></p>
-                                            <p class="date_posted"><?php echo htmlspecialchars($news_created); ?></p>
-                                        </div>
-                                        <div class="news-description" style="margin-top:20px;">
-                                            <p><?php echo $news_description; ?></p>
-                                          
-                                        </div>
-                                        <div style="margin-top:20px">
-                                        <button class="btn btn-default btn-icon-notika"><i class="notika-icon notika-next"></i> READ...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                        </div>
-                    </div>
-                </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="main_card">
+          <div class="news_card">
+            <div class="news_image">
+              <img src="../admin/<?php echo htmlspecialchars($image_url); ?>" alt="News Image">
             </div>
-            
+            <div class="news_content">
+              <h3><?php echo htmlspecialchars($news_title); ?></h3>
+              <div class="post_info">
+                <p>Posted By <?php echo htmlspecialchars($news_author); ?></p>
+                <p class="date_posted"><?php echo htmlspecialchars($news_created); ?></p>
+              </div>
+              <div class="news-description" style="margin-top:20px;">
+                <p><?php echo $news_description; ?></p>
+              </div>
+              <div style="margin-top:20px">
+                <button class="btn btn-default btn-icon-notika"><i class="notika-icon notika-next"></i> READ...</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
         <?php
         $delay += 0.1; // Increment the delay for the next item
     }
