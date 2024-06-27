@@ -1,4 +1,6 @@
 <?php
+
+
 session_start(); // Start the session
 
 // Generate a CSRF token if one is not present
@@ -49,6 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $firebase = new firebaseRDB($databaseURL);
 
         // Function to upload image and add news
+
+        date_default_timezone_set('Asia/Manila');
+
+
         function addNewsWithImage($firebase, $news_title, $news_author, $news_description, $image_url) {
             $table = 'news'; // Assuming 'news' is your Firebase database node for news
             $data = array(
@@ -56,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'news_author' => $news_author,
                 'news_description' => $news_description,
                 'image_url' => $image_url,
-                'news_created' => date('F j, Y')
+                'news_created' => date('F j, Y H:i:s')  // Include current date and time
             );
             $result = $firebase->insert($table, $data);
             return $result;
