@@ -21,69 +21,84 @@
     <!-- Main Menu area start-->
     <?php include 'includes/main_menu.php' ?>
 
-    
-<?php
-// Include Firebase database handling class
-require_once '../includes/firebaseRDB.php';
 
-// Initialize Firebase URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-$firebase = new firebaseRDB($databaseURL);
+    <?php
+    // Include Firebase database handling class
+    require_once '../includes/firebaseRDB.php';
 
-// Get the news ID from the URL
-if (isset($_GET['id'])) {
-    $news_id = $_GET['id'];
+    // Initialize Firebase URL
+    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+    $firebase = new firebaseRDB($databaseURL);
 
-    // Retrieve the specific news item using the ID
-    $news_data = $firebase->retrieve("news/{$news_id}");
-    $news_data = json_decode($news_data, true);
+    // Get the news ID from the URL
+    if (isset($_GET['id'])) {
+        $news_id = $_GET['id'];
 
-    if ($news_data) {
-        // Display news details
-        $image_url = htmlspecialchars($news_data['image_url']);
-        $news_author = htmlspecialchars($news_data['news_author']);
-        $news_created = htmlspecialchars($news_data['news_created']);
-         $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news_data['news_description'])));
-        $news_title = htmlspecialchars($news_data['news_title']);
-        ?>
+        // Retrieve the specific news item using the ID
+        $news_data = $firebase->retrieve("news/{$news_id}");
+        $news_data = json_decode($news_data, true);
 
-    <div class="breadcomb-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="breadcomb-list">
+        $adminData = $firebase->retrieve("admin/admin");
+        $adminData = json_decode($adminData, true);
+
+        // Extract admin profile image URL
+        $admin_image_url = $adminData['image_url'];
+
+        if ($news_data) {
+            // Display news details
+            $image_url = htmlspecialchars($news_data['image_url']);
+            $news_author = htmlspecialchars($news_data['news_author']);
+            $news_created = htmlspecialchars($news_data['news_created']);
+            // Ensure HTML content in news_description is displayed correctly
+            $news_description = $news_data['news_description'];
+            $news_title = htmlspecialchars($news_data['news_title']);
+            ?>
+
+            <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1">
+                <div class="container">
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div class="breadcomb-wp">
-                                <div class="breadcomb-icon">
-                                    <img class="profile" src="../images/profile.jpg" alt="">
-                                </div>
-                                <div class="breadcomb-ctn">
-                                    <h2><?php echo $news_title; ?></h2>
-                                    <div class="visited-content">
-                                        <i class="uploader">Posted by:  Admin <?php echo $news_author; ?></i>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="breadcomb-list">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="breadcomb-wp">
+                                            <div class="breadcomb-icon">
+                                                <img class="profile" src="../admin/<?php echo $admin_image_url; ?>" alt="">
+                                            </div>
+                                            <div class="breadcomb-ctn">
+                                                <h2><?php echo $news_title; ?></h2>
+                                                <div class="visited-content">
+                                                    <i class="uploader">Posted by: <?php echo $news_author; ?></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <p class="date-uploaded">Date Posted: <?php echo $news_created; ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <p class="date-uploaded">Date Posted: <?php echo $news_created; ?></p>
-                        </div>
+                    </div>
+                    <div style="background:white; padding: 20px 190px 20px 20px; text-align: justify;">
+                        <?php echo $news_description; ?>
+                    </div>
+                    <div class="background">
+                        <img style="width:100%; height: 500px; object-fit: cover;" src="../admin/<?php echo $image_url; ?>"
+                            alt="">
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<?php
+            <?php
+        } else {
+            echo "News item not found.";
+        }
     } else {
-        echo "News item not found.";
+        echo "No news ID provided.";
     }
-} else {
-    echo "No news ID provided.";
-}
-?>
+    ?>
+
 
 
 
