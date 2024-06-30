@@ -30,22 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
             $firebase = new firebaseRDB($databaseURL);
 
-            // Function to add job
-            function addJob($firebase, $survey_title, $survey_desc, $survey_start, $survey_end) {
-                $table = 'survey_set'; // Assuming 'jobs' is your Firebase database node for job postings
+            // Function to add surveys
+            function addsurveys($firebase, $survey_title, $survey_desc, $survey_start, $survey_end) {
+                $table = 'survey_set'; // Assuming 'surveys' is your Firebase database node for surveys postings
                 $data = array(
                     'survey_title' => $survey_title,
                     'survey_desc' => $survey_desc,
                     'survey_start' => $survey_start,
                     'survey_end' => $survey_end,
-                    'job_created' => date('F j, Y')
+                    'surveys_created' => date('F j, Y')
                 );
                 $result = $firebase->insert($table, $data);
                 return $result;
             }
 
-            // Add job to Firebase
-            $result = addJob($firebase, $survey_title, $survey_desc, $survey_start, $survey_end);
+            // Add surveys to Firebase
+            $result = addsurveys($firebase, $survey_title, $survey_desc, $survey_start, $survey_end);
 
             // Check result
             if ($result === null) {
@@ -63,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Function to handle redirection
-function redirectToJobPage() {
+function redirectToSurveyPage() {
     header('Location: survey.php');
     exit;
 }
 
-// Redirect to the job page
-redirectToJobPage();
+// Redirect to the surveys page
+redirectToSurveyPage();
 ?>

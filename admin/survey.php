@@ -78,7 +78,7 @@
                       <th  width="15%">Tools</th>
                     </thead>
                     <tbody>
-                    
+                    <?php include 'fetch_data/fetch_dataSurvey.php'; ?>
                     </tbody>
                   </table>
                 </div>
