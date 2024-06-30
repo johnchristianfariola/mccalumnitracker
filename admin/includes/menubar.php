@@ -61,9 +61,9 @@
           </span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="student.php"><i class="fa fa-angle-right"></i> Survey List</a></li>
-          <li><a href="student.php"><i class="fa fa-angle-right"></i> Survey Report</a></li>
-          <li><a href="student.php"><i class="fa fa-angle-right"></i> Alumni Report</a></li>
+          <li><a href="survey.php"><i class="fa fa-angle-right"></i> Survey List</a></li>
+          <li><a href="survery_report.php"><i class="fa fa-angle-right"></i> Survey Report</a></li>
+          <li><a href="alumni.php"><i class="fa fa-angle-right"></i> Alumni Report</a></li>
         </ul>
       </li>
     </ul>
