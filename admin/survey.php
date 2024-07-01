@@ -94,7 +94,78 @@
   </div>
   <?php include 'includes/scripts.php'; ?>
   <script>
-  
+    $(document).ready(function () {
+      // Function to fetch content from the server
+      function fetcheventData(id, successCallback, errorCallback) {
+        $.ajax({
+          url: 'survey_row.php',
+          type: 'GET',
+          data: { id: id },
+          dataType: 'json',
+          success: successCallback,
+          error: errorCallback
+        });
+      }
+
+
+
+      // Open edit modal when edit button is clicked
+      $('.open-modal').click(function () {
+        var id = $(this).data('id');
+
+        // Fetch event data via AJAX
+        fetcheventData(id, function (response) {
+          $('#editId').val(id);
+          $('#edit_survey_title').val(response.survey_title);
+          $('#edit_survey_desc').val(response.survey_desc);
+          $('#edit_survey_start').val(response.survey_start);
+          $('#edit_survey_end').val(response.survey_end);
+
+
+          // Show the edit modal after setting the form fields
+          $('#editModal').modal('show');
+
+          
+        }, function (xhr, status, error) {
+          console.error('AJAX Error: ' + status + ' ' + error);
+        });
+      });
+
+
+      // Open delete modal when delete button is clicked
+      $(document).ready(function () {
+        // Open delete confirmation modal
+        $('.open-delete').click(function () {
+          var id = $(this).data('id');
+
+          // Make an AJAX request to fetch job details
+
+          $.ajax({
+            url: 'survey_row.php',
+            type: 'GET',
+            data: { id: id },
+            dataType: 'json',
+
+            success: function (response) {
+              // Populate modal with alumni name
+              $('.deleteId').val(id); // Update value of deleteId input field
+
+              $('.edit_survey_title').text(response.survey_title);
+
+              // Show the delete confirmation modal
+              $('#deleteModal').modal('show');
+
+              // Store the ID in a data attribute of the delete button
+              $('.btn-confirm-delete').data('id', id);
+            },
+            error: function (xhr, status, error) {
+              console.error('AJAX Error: ' + status + ' ' + error);
+            }
+          });
+        });
+      });
+
+    });
   </script>
 </body>
 

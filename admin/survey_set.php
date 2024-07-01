@@ -54,7 +54,7 @@ if ($id) {
             <!-- Content Header (Page header) -->
             <section class="content-header box-header-background">
                 <h1>
-                    Survey <i class="fa fa-angle-right"></i> Survey List
+                    Survey <i class="fa fa-angle-right"></i> <?php echo $title ?>
                 </h1>
                 <div class="box-inline ">
 
@@ -185,12 +185,12 @@ if ($id) {
                             <div class="box-header with-border"></div>
                             <div class="box-body survey-detail">
                                 <center>
-                                <p><strong>Title</strong><br> <?php echo $title ?></p>
-                                <p><strong>Description</strong><br> <?php echo $description ?></p>
-                                <hr>
-                                <p><strong>Start Date</strong><br> <?php echo $startDate ?></p>
-                                <p><strong>End Date</strong><br> <?php echo $endDate ?></p>
-                                <p><strong>Date Created</strong><br> <?php echo $dateCreated ?></p>
+                                    <p><strong>Title</strong><br> <?php echo $title ?></p>
+                                    <p><strong>Description</strong><br> <?php echo $description ?></p>
+                                    <hr>
+                                    <p><strong>Start Date</strong><br> <?php echo $startDate ?></p>
+                                    <p><strong>End Date</strong><br> <?php echo $endDate ?></p>
+                                    <p><strong>Date Created</strong><br> <?php echo $dateCreated ?></p>
                                 </center>
                             </div>
                         </div>
@@ -213,34 +213,35 @@ if ($id) {
 </html>
 <style>
     [class*=icheck-]>label {
-    padding-left: 29px!important;
-    min-height: 22px;
-    line-height: 22px;
-    display: inline-block;
-    position: relative;
-    vertical-align: top;
-    margin-bottom: 0;
-    font-weight: 400;
-    cursor: pointer
-}
-@each $name, $color in $theme-colors {
-  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):hover + label::before,
-  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
-    border-color: #{$color};
-  }
+        padding-left: 29px !important;
+        min-height: 22px;
+        line-height: 22px;
+        display: inline-block;
+        position: relative;
+        vertical-align: top;
+        margin-bottom: 0;
+        font-weight: 400;
+        cursor: pointer
+    }
 
-  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):focus + label::before,
-  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):focus + input[type="hidden"] + label::before {
-    border-color: #{$color};
-  }
+    @each $name, $color in $theme-colors {
 
-  .icheck-#{$name} > input:first-child:checked + label::before,
-  .icheck-#{$name} > input:first-child:checked + input[type="hidden"] + label::before {
-    background-color: #{$color};
-    border-color: #{$color};
-  }
-}
+        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):hover+label::before,
+        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):hover+input[type="hidden"]+label::before {
+            border-color: #{$color};
+        }
 
+        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):focus+label::before,
+        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):focus+input[type="hidden"]+label::before {
+            border-color: #{$color};
+        }
+
+        .icheck-#{$name}>input:first-child:checked+label::before,
+        .icheck-#{$name}>input:first-child:checked+input[type="hidden"]+label::before {
+            background-color: #{$color};
+            border-color: #{$color};
+        }
+    }
 </style>
 
 <style>

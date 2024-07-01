@@ -16,7 +16,7 @@ if (is_array($data)) {
                 <td>{$survey['survey_end']}</td>
                 <td>
                     <a class='btn btn-warning btn-sm btn-flat' href='survey_set.php?id=$id'>View</a>
-                    <a class='btn btn-success btn-sm btn-flat' href='edit_survey.php?id=$id'>Edit</a>
+                    <a class='btn btn-success btn-sm btn-flat open-modal' data-id='$id'>Edit</a>
                     <a class='btn btn-danger btn-sm btn-flat open-delete' data-id='$id'>DELETE</a>
                 </td>
               </tr>";
