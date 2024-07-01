@@ -20,6 +20,19 @@ if ($id) {
         $startDate = $survey['survey_start'];
         $endDate = $survey['survey_end'];
         $dateCreated = $survey['surveys_created'];  // Assuming 'survey_created' field exists
+
+        // Retrieve questions related to the survey set
+        $questions = $firebase->retrieve("questions");
+        $questions = json_decode($questions, true);
+
+        // Check if questions is an array
+        $related_questions = [];
+        if (is_array($questions)) {
+            // Filter questions by survey_set_unique_id
+            $related_questions = array_filter($questions, function ($question) use ($id) {
+                return isset($question['survey_set_unique_id']) && $question['survey_set_unique_id'] === $id;
+            });
+        }
     } else {
         echo "Survey not found.";
         exit;
@@ -29,6 +42,7 @@ if ($id) {
     exit;
 }
 ?>
+
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
@@ -91,31 +105,98 @@ if ($id) {
                 }
                 ?>
                 <div class="row">
-                    <div class="col-xs-9"> <!-- Left column (80% width) -->
+                    <div class="col-md-9">
                         <div class="box">
                             <div class="box-header with-border"></div>
                             <div class="box-body">
-                                <!-- Content for the left column -->
+                                <div class="card card-outline card-success">
+                                    <div class="card-header">
+                                        <h3 class="card-title"><b>Survey Questionnaire</b></h3>
+                                    </div>
+                                    <form action="" id="manage-sort">
+                                        <div class="card-body ui-sortable">
+                                            <?php foreach ($related_questions as $question_id => $question): ?>
+                                                <div class="callout callout-info">
+                                                    <div class="row">
+                                                        <div class="col-md-10" style="color:black">
+                                                            <h5><?= $question['question'] ?></h5>
+                                                        </div>
+                                                        <div class="col-md-2 text-right">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-sm btn-default dropdown-toggle"
+                                                                    type="button" id="dropdownMenuButton"
+                                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                                    aria-expanded="false">
+                                                                    <i class="fa fa-ellipsis-v text-dark"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu"
+                                                                    aria-labelledby="dropdownMenuButton">
+                                                                    <a class="dropdown-item edit_question text-dark"
+                                                                        href="javascript:void(0)"
+                                                                        style="color:black">Edit</a>
+                                                                    <a class="dropdown-item delete_question text-dark"
+                                                                        href="javascript:void(0)"
+                                                                        style="color:black">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <input type="hidden" name="qid[]" value="<?= $question_id ?>">
+                                                            <?php if ($question['type'] == 'radio_opt'): ?>
+                                                                <?php $options = json_decode($question['frm_option'], true); ?>
+                                                                <?php foreach ($options as $option_id => $option): ?>
+                                                                    <div class="icheck-primary">
+                                                                        <input type="radio" id="option_<?= $option_id ?>"
+                                                                            name="answer[<?= $question_id ?>]"
+                                                                            value="<?= $option_id ?>">
+                                                                        <label for="option_<?= $option_id ?>"
+                                                                            style="color:black"><?= $option ?></label>
+                                                                    </div>
+                                                                <?php endforeach; ?>
+                                                            <?php elseif ($question['type'] == 'check_opt'): ?>
+                                                                <?php $options = json_decode($question['frm_option'], true); ?>
+                                                                <?php foreach ($options as $option_id => $option): ?>
+                                                                    <div class="icheck-primary">
+                                                                        <input type="checkbox" id="option_<?= $option_id ?>"
+                                                                            name="answer[<?= $question_id ?>][]"
+                                                                            value="<?= $option_id ?>">
+                                                                        <label for="option_<?= $option_id ?>"
+                                                                            style="color:black"><?= $option ?></label>
+                                                                    </div>
+                                                                <?php endforeach; ?>
+                                                            <?php elseif ($question['type'] == 'textfield_s'): ?>
+                                                                <div class="form-group">
+                                                                    <textarea name="answer[<?= $question_id ?>]" cols="30"
+                                                                        rows="4" class="form-control"></textarea>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-md-3">
                         <div class="box">
-                            <center>
                             <div class="box-header with-border"></div>
                             <div class="box-body survey-detail">
-                                <p><strong>Title</strong><br> <?php echo $title?></p>
-                                <p><strong>Description</strong><br> <?php echo $description?></p>
+                                <center>
+                                <p><strong>Title</strong><br> <?php echo $title ?></p>
+                                <p><strong>Description</strong><br> <?php echo $description ?></p>
                                 <hr>
-                                <p><strong>Start Date</strong><br> <?php echo $startDate?></p>
-                                <p><strong>End Date</strong><br> <?php echo $endDate?></p>
-                                <p><strong>Date Created</strong><br> <?php echo $dateCreated?></p>
+                                <p><strong>Start Date</strong><br> <?php echo $startDate ?></p>
+                                <p><strong>End Date</strong><br> <?php echo $endDate ?></p>
+                                <p><strong>Date Created</strong><br> <?php echo $dateCreated ?></p>
+                                </center>
                             </div>
-                            </center>
                         </div>
                     </div>
-
                 </div>
+
 
             </section>
         </div>
@@ -130,7 +211,37 @@ if ($id) {
 </body>
 
 </html>
+<style>
+    [class*=icheck-]>label {
+    padding-left: 29px!important;
+    min-height: 22px;
+    line-height: 22px;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    margin-bottom: 0;
+    font-weight: 400;
+    cursor: pointer
+}
+@each $name, $color in $theme-colors {
+  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):hover + label::before,
+  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #{$color};
+  }
 
+  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):focus + label::before,
+  .icheck-#{$name} > input:first-child:not(:checked):not(:disabled):focus + input[type="hidden"] + label::before {
+    border-color: #{$color};
+  }
+
+  .icheck-#{$name} > input:first-child:checked + label::before,
+  .icheck-#{$name} > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #{$color};
+    border-color: #{$color};
+  }
+}
+
+</style>
 
 <style>
     table {

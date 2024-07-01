@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['success'] = 'Batch added successfully!';
             // Redirect back to the form page or any other desired page
             header('Location: alumni.php');
-            exit; // Ensure that code below is not executed after redirection
+            exit; 
         }
     } else {
         $_SESSION['error'] = 'Batch name is required.';
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['error'] = 'Invalid request method.';
 }
 
-// Redirect to the appropriate page (batch_form.php) if there was an error
+
 header('Location: alumni.php');
 exit;
 ?>

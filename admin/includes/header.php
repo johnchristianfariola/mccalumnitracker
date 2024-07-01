@@ -23,6 +23,8 @@
 
   <link rel="stylesheet" href="../bower_components/datepicker/bootstrap-datepicker.min.css">
 
+
+  <link rel="stylesheet" href="../bower_components/icheck-bootstrap/icheck-bootstrap.min.css">
   <script src="../bower_components/datepicker/bootstrap-datepicker.min.js"></script>
 
   <script src="../bower_components/datepicker/jquery-3.5.1.min.js"></script>
