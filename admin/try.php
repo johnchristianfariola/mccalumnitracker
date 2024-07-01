@@ -1,55 +1,358 @@
 
-<?php
-// Include Firebase database handling class
-require_once '../includes/firebaseRDB.php';
 
-// Initialize Firebase URL
+
+<?php include 'includes/session.php'; ?>
+<?php include 'includes/header.php'; ?>
+<?php
+require_once 'includes/firebaseRDB.php';
+
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
-// Get the news ID from the URL
-if (isset($_GET['id'])) {
-    $news_id = $_GET['id'];
+// Get the unique ID from the URL parameter
+$id = isset($_GET['id']) ? $_GET['id'] : '';
 
-    // Retrieve the specific news item using the ID
-    $news_data = $firebase->retrieve("news/{$news_id}");
-    $news_data = json_decode($news_data, true);
+if ($id) {
+    // Retrieve the specific survey set using the unique ID
+    $survey = $firebase->retrieve("survey_set/$id");
+    $survey = json_decode($survey, true);
 
-    if ($news_data) {
-        // Display news details
-        $image_url = htmlspecialchars($news_data['image_url']);
-        $news_author = htmlspecialchars($news_data['news_author']);
-        $news_created = htmlspecialchars($news_data['news_created']);
-        $news_description = nl2br(htmlspecialchars($news_data['news_description']));
-        $news_title = htmlspecialchars($news_data['news_title']);
-        ?>
+    if ($survey) {
+        $title = $survey['survey_title'];
+        $description = $survey['survey_desc'];
+        $startDate = $survey['survey_start'];
+        $endDate = $survey['survey_end'];
+        $dateCreated = $survey['surveys_created'];  // Assuming 'survey_created' field exists
 
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title><?php echo $news_title; ?></title>
-            <link rel="stylesheet" href="path/to/your/css/styles.css">
-        </head>
-        <body>
-            <div class="news-details">
-                <img src="../admin/<?php echo $image_url; ?>" alt="News Image">
-                <h1></h1>
-                <p>Posted By </p>
-                <p>Date: </p>
-                <div class="news-description">
-                    <?php echo $news_description; ?>
-                </div>
-            </div>
-        </body>
-        </html>
+        // Retrieve questions related to the survey set
+        $questions = $firebase->retrieve("questions");
+        $questions = json_decode($questions, true);
 
-        <?php
+        // Check if questions is an array
+        $related_questions = [];
+        if (is_array($questions)) {
+            // Filter questions by survey_set_unique_id
+            $related_questions = array_filter($questions, function ($question) use ($id) {
+                return isset($question['survey_set_unique_id']) && $question['survey_set_unique_id'] === $id;
+            });
+        }
     } else {
-        echo "News item not found.";
+        echo "Survey not found.";
+        exit;
     }
 } else {
-    echo "No news ID provided.";
+    echo "Invalid ID.";
+    exit;
 }
 ?>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+
+        <?php include 'includes/navbar.php'; ?>
+        <?php include 'includes/menubar.php'; ?>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header box-header-background">
+                <h1>
+                    Survey <i class="fa fa-angle-right"></i> <?php echo $title ?>
+                </h1>
+                <div class="box-inline ">
+
+                    <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
+                            class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
+
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="search-input" placeholder="Search...">
+                        <button class="search-button" onclick="filterTable()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-search">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li>Survey</li>
+                    <li class="active">Survey Set</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <?php
+                if (isset($_SESSION['error'])) {
+                    echo "
+            <div class='alert alert-danger alert-dismissible'>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <h4><i class='icon fa fa-warning'></i> Error!</h4>
+              " . $_SESSION['error'] . "
+            </div>
+          ";
+                    unset($_SESSION['error']);
+                }
+                if (isset($_SESSION['success'])) {
+                    echo "
+            <div class='alert alert-success alert-dismissible'>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <h4><i class='icon fa fa-check'></i> Success!</h4>
+              " . $_SESSION['success'] . "
+            </div>
+          ";
+                    unset($_SESSION['success']);
+                }
+                ?>
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="box">
+                            <div class="box-header with-border"></div>
+                            <div class="box-body">
+                                <div class="card card-outline card-success">
+                                    <div class="card-header">
+                                        <h3 class="card-title"><b>Survey Questionnaire</b></h3>
+                                    </div>
+                                    <form action="" id="manage-sort">
+                                        <div class="card-body ui-sortable">
+                                            <?php foreach ($related_questions as $question_id => $question): ?>
+                                                <div class="callout callout-info">
+                                                   
+                                                        <div class="col-md-10" style="color:black">
+                                                            <h5><?= $question['question'] ?></h5>
+                                                        </div>
+                                                        <div class="col-md-2 text-right">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-sm btn-default dropdown-toggle"
+                                                                    type="button" id="dropdownMenuButton"
+                                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                                    aria-expanded="false">
+                                                                    <i class="fa fa-ellipsis-v text-dark"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu"
+                                                                    aria-labelledby="dropdownMenuButton">
+                                                                    <a class="dropdown-item edit_question text-dark open-modal"
+                                                                        href="javascript:void(0)"
+                                                                        data-id="<?php echo $question_id; ?>">Edit</a>
+                                                                    <a class="dropdown-item delete_question text-dark"
+                                                                        href="javascript:void(0)"
+                                                                        style="color:black">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <input type="hidden" name="qid[]" value="<?= $question_id ?>">
+                                                            <?php if ($question['type'] == 'radio_opt'): ?>
+                                                                <?php $options = json_decode($question['frm_option'], true); ?>
+                                                                <?php foreach ($options as $option_id => $option): ?>
+                                                                    <div class="icheck-primary">
+                                                                        <input type="radio" id="option_<?= $option_id ?>"
+                                                                            name="answer[<?= $question_id ?>]"
+                                                                            value="<?= $option_id ?>">
+                                                                        <label for="option_<?= $option_id ?>"
+                                                                            style="color:black"><?= $option ?></label>
+                                                                    </div>
+                                                                <?php endforeach; ?>
+                                                            <?php elseif ($question['type'] == 'check_opt'): ?>
+                                                                <?php $options = json_decode($question['frm_option'], true); ?>
+                                                                <?php foreach ($options as $option_id => $option): ?>
+                                                                    <div class="icheck-primary">
+                                                                        <input type="checkbox" id="option_<?= $option_id ?>"
+                                                                            name="answer[<?= $question_id ?>][]"
+                                                                            value="<?= $option_id ?>">
+                                                                        <label for="option_<?= $option_id ?>"
+                                                                            style="color:black"><?= $option ?></label>
+                                                                    </div>
+                                                                <?php endforeach; ?>
+                                                            <?php elseif ($question['type'] == 'textfield_s'): ?>
+                                                                <div class="form-group">
+                                                                    <textarea name="answer[<?= $question_id ?>]" cols="30"
+                                                                        rows="4" class="form-control"></textarea>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                   
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="box">
+                            <div class="box-header with-border"></div>
+                            <div class="box-body survey-detail">
+                                <center>
+                                    <p><strong>Title</strong><br> <?php echo $title ?></p>
+                                    <p><strong>Description</strong><br> <?php echo $description ?></p>
+                                    <hr>
+                                    <p><strong>Start Date</strong><br> <?php echo $startDate ?></p>
+                                    <p><strong>End Date</strong><br> <?php echo $endDate ?></p>
+                                    <p><strong>Date Created</strong><br> <?php echo $dateCreated ?></p>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+        </div>
+
+        <?php include 'includes/footer.php'; ?>
+        <?php include 'includes/survey_set_edit_modal.php'; ?>
+    </div>
+
+
+
+    <?php include 'includes/scripts.php'; ?>
+    <script>
+        $(document).ready(function () {
+            // Function to fetch question data from the server
+            function fetchQuestionData(id, successCallback, errorCallback) {
+                $.ajax({
+                    url: 'question_row.php',
+                    type: 'GET',
+                    data: { id: id },
+                    dataType: 'json',
+                    success: successCallback,
+                    error: errorCallback
+                });
+            }
+
+            // Open edit modal when edit button is clicked
+            $('.open-modal').click(function () {
+                var id = $(this).data('id');
+
+                // Fetch question data via AJAX
+                fetchQuestionData(id, function (response) {
+                    $('#editId').val(response.survey_set_unique_id);
+                    $('#question_id').val(id);
+                    $('#edit_question').val(response.question);
+                    $('#edit_type').val(response.type);
+                    $('#edit_type').change(); // Trigger the change event to load the preview
+
+                    // Load options for check_opt or radio_opt
+                    if (response.type === 'check_opt' || response.type === 'radio_opt') {
+                        var options = JSON.parse(response.frm_option);
+                        var html = '';
+                        for (var key in options) {
+                            if (options.hasOwnProperty(key)) {
+                                html += `
+                                    <tr>
+                                        <td class="text-center pt-1">
+                                            <div class="icheck-primary d-inline" data-count="${key}">
+                                                <input type="${response.type === 'check_opt' ? 'checkbox' : 'radio'}" id="${key}">
+                                                <label for="${key}"></label>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="text" class="form-control form-control-sm check_inp" name="label[]" value="${options[key]}">
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" onclick="$(this).closest('tr').remove()">
+                                                <span class="fa fa-times"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                `;
+                            }
+                        }
+                        $('#edit_preview').html(html);
+                    }
+
+                    // Show the edit modal after setting the form fields
+                    $('#editModal').modal('show');
+
+                }, function (xhr, status, error) {
+                    console.error('AJAX Error: ' + status + ' ' + error);
+                });
+            });
+
+            // Trigger preview on type change
+            $('#edit_type').change(function () {
+                var type = $(this).val();
+                if (type === 'check_opt') {
+                    $('#edit_preview').html(`
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center pt-1">
+                                        <div class="icheck-primary d-inline">
+                                            <input type="checkbox" id="a">
+                                            <label for="a"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" class="form-control form-control-sm check_inp" name="label[]">
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" onclick="$(this).closest('tr').remove()">
+                                            <span class="fa fa-times"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `);
+                } else if (type === 'radio_opt') {
+                    $('#edit_preview').html(`
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center pt-1">
+                                        <div class="icheck-primary d-inline">
+                                            <input type="radio" id="b">
+                                            <label for="b"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" class="form-control form-control-sm check_inp" name="label[]">
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" onclick="$(this).closest('tr').remove()">
+                                            <span class="fa fa-times"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        
+                    `);
+                } else if (type === 'textfield_s') {
+                    $('#edit_preview').html(`
+                        <textarea class="form-control" rows="3" readonly></textarea>
+                    `);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
+<style>
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+
+    td {
+        padding: 8px !important;
+
+        vertical-align: middle !important;
+        max-width: 200px !important;
+        /* Adjust maximum width as needed */
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+</style>

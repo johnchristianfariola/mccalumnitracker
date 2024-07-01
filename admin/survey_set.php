@@ -76,8 +76,8 @@ if ($id) {
 
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li>Content</li>
-                    <li class="active">News</li>
+                    <li>Survey</li>
+                    <li class="active">Survey Set</li>
                 </ol>
             </section>
             <!-- Main content -->
@@ -116,8 +116,9 @@ if ($id) {
                                     <form action="" id="manage-sort">
                                         <div class="card-body ui-sortable">
                                             <?php foreach ($related_questions as $question_id => $question): ?>
-                                                <div class="callout callout-info">
+                                                <div class="callout callout-info" style="  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
                                                     <div class="row">
+
                                                         <div class="col-md-10" style="color:black">
                                                             <h5><?= $question['question'] ?></h5>
                                                         </div>
@@ -131,9 +132,9 @@ if ($id) {
                                                                 </button>
                                                                 <div class="dropdown-menu"
                                                                     aria-labelledby="dropdownMenuButton">
-                                                                    <a class="dropdown-item edit_question text-dark"
+                                                                    <a class="dropdown-item edit_question text-dark open-modal"
                                                                         href="javascript:void(0)"
-                                                                        style="color:black">Edit</a>
+                                                                        data-id="<?php echo $question_id; ?>" style="color:black">Edit</a>
                                                                     <a class="dropdown-item delete_question text-dark"
                                                                         href="javascript:void(0)"
                                                                         style="color:black">Delete</a>
@@ -202,8 +203,12 @@ if ($id) {
         </div>
 
         <?php include 'includes/footer.php'; ?>
-        <?php include 'includes/survey_set_modal.php'; ?>
+        <?php include 'includes/survey_set_edit_modal.php'; ?>
+        <?php include 'includes/survey_set_add_modal.php'; ?>
     </div>
+
+
+
     <?php include 'includes/scripts.php'; ?>
     <script>
 
@@ -211,38 +216,7 @@ if ($id) {
 </body>
 
 </html>
-<style>
-    [class*=icheck-]>label {
-        padding-left: 29px !important;
-        min-height: 22px;
-        line-height: 22px;
-        display: inline-block;
-        position: relative;
-        vertical-align: top;
-        margin-bottom: 0;
-        font-weight: 400;
-        cursor: pointer
-    }
 
-    @each $name, $color in $theme-colors {
-
-        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):hover+label::before,
-        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):hover+input[type="hidden"]+label::before {
-            border-color: #{$color};
-        }
-
-        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):focus+label::before,
-        .icheck-#{$name}>input:first-child:not(:checked):not(:disabled):focus+input[type="hidden"]+label::before {
-            border-color: #{$color};
-        }
-
-        .icheck-#{$name}>input:first-child:checked+label::before,
-        .icheck-#{$name}>input:first-child:checked+input[type="hidden"]+label::before {
-            background-color: #{$color};
-            border-color: #{$color};
-        }
-    }
-</style>
 
 <style>
     table {
