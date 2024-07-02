@@ -135,9 +135,9 @@ if ($id) {
                                                                     <a class="dropdown-item edit_question text-dark open-modal"
                                                                         href="javascript:void(0)"
                                                                         data-id="<?php echo $question_id; ?>" style="color:black">Edit</a>
-                                                                    <a class="dropdown-item delete_question text-dark"
+                                                                    <a class="dropdown-item delete_question text-dark delete-modal"
                                                                         href="javascript:void(0)"
-                                                                        style="color:black">Delete</a>
+                                                                        style="color:black"  data-id="<?php echo $question_id; ?>">Delete</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -205,6 +205,7 @@ if ($id) {
         <?php include 'includes/footer.php'; ?>
         <?php include 'includes/survey_set_edit_modal.php'; ?>
         <?php include 'includes/survey_set_add_modal.php'; ?>
+        <?php include 'includes/survey_set_delete_modal.php'; ?>
     </div>
 
 

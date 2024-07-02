@@ -1,6 +1,20 @@
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
+<?php
+require_once 'includes/firebaseRDB.php';
 
+// Your Firebase Realtime Database URL
+$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
+
+// Create an instance of the firebaseRDB class
+$firebase = new firebaseRDB($databaseURL);
+
+// Fetch gallery data from Firebase
+$surveyData = $firebase->retrieve("survey_set");
+
+// Decode JSON data into associative arrays
+$survey = json_decode($surveyData, true) ?: [];
+?>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
@@ -61,27 +75,37 @@
                 <div class="row">
                     <div class="col-md-3 py-1 px-1 survey-item">
                         <div class="card card-outline card-primary">
-                            <div class="survey-card">
-                                <div class="survey-detail">
-                                    <h3>Survey 1</h3>
-                                    <p>Test description for Survey 1</p>
+                            <div class="container">
+                                <div class="survey-card">
+                                    <div class="cars-detail">
+                                    <div class="survey_title">
+                                    <h3>TITLE</h3>
+                                    </div>
+                                    <p>DESCRIIPTION</p>
+                                    </div>
+                                    <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
+                                        <a href="" target="_parent" class='btn btn-default btn-class'
+                                            style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none; ">View</a>
+                                    </div>
                                 </div>
-                                <div class="overlay">
-                                    <a href="#" class="btn btn-default btn-class">View</a>
+                                <div class="survey-card">
+                                    <div class="cars-detail">
+                                    <div class="survey_title">
+                                    <h3>TITLE</h3>
+                                    </div>
+                                   
+                                    <p>TITLE</p>
+                                    </div>
+                                    <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
+                                        <a href="" target="_parent" class='btn btn-default btn-class'
+                                            style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none; ">View</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="survey-card">
-                                <div class="survey-detail">
-                                    <h3>Survey 1</h3>
-                                    <p>Test description for Survey 1</p>
-                                </div>
-                                <div class="overlay">
-                                    <a href="#" class="btn btn-default btn-class">View</a>
-                                </div>
+
                             </div>
                         </div>
                     </div>
-                    <!-- Add more survey items as needed -->
+                    <!-- Repeat the above structure for each survey item -->
                 </div>
 
             </section>
@@ -100,40 +124,54 @@
 
 
 <style>
-   .survey-card {
-    position: relative;
-    width: 300px;
-    height: 250px;
-    overflow: hidden;
-    background-color: silver;
-    border-radius: 20px;
-    margin-bottom: 28px; /* Adjust spacing between items */
-}
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 28px;
+        /* Adjust the gap between items */
+    }
 
-.overlay {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .survey-card {
+        position: relative;
+        width: 300px;
+        height: 250px;
+        overflow: hidden;
+        background-color: white;
+        
 
-    transition: top 0.3s ease;
-}
+    }
 
-.survey-card:hover .overlay {
-    top: 0;
-    background-color: #333;
-}
+    .survey_title{
+        border-bottom: 4px solid silver;
+        margin-bottom: 5px;
+    }
+    .cars-detail{
+        padding: 20px;
+    }
+    .overlay {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-.overlay a {
-    text-decoration: none;
-    color: white;
-    background: linear-gradient(to right, #90caf9, #047edf 99%);
-    padding: 10px 20px;
-    border-radius: 5px;
-}
+        transition: top 0.3s ease;
+    }
 
+    .survey-card:hover .overlay {
+        top: 0;
+        background-color: #333;
+    }
+
+    .overlay a {
+        text-decoration: none;
+        color: white;
+        background: linear-gradient(to right, #90caf9, #047edf 99%);
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
 </style>

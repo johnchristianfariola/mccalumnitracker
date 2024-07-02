@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Perform delete for associated questions
         deleteQuestions($firebase, $id);
-        $_SESSION['success'] = 'Survey data and associated questions deleted successfully!';
+        $_SESSION['success'] = 'Survey data deleted successfully!';
     }
 
     // Redirect to the appropriate page (survey.php)
