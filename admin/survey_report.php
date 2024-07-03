@@ -15,6 +15,7 @@ $surveyData = $firebase->retrieve("survey_set");
 // Decode JSON data into associative arrays
 $survey = json_decode($surveyData, true) ?: [];
 ?>
+
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
@@ -72,41 +73,38 @@ $survey = json_decode($surveyData, true) ?: [];
                     unset($_SESSION['success']);
                 }
                 ?>
-                <div class="row">
-                    <div class="col-md-3 py-1 px-1 survey-item">
-                        <div class="card card-outline card-primary">
-                            <div class="container">
-                                <div class="survey-card">
-                                    <div class="cars-detail">
-                                    <div class="survey_title">
-                                    <h3>TITLE</h3>
-                                    </div>
-                                    <p>DESCRIIPTION</p>
-                                    </div>
-                                    <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
-                                        <a href="" target="_parent" class='btn btn-default btn-class'
-                                            style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none; ">View</a>
-                                    </div>
-                                </div>
-                                <div class="survey-card">
-                                    <div class="cars-detail">
-                                    <div class="survey_title">
-                                    <h3>TITLE</h3>
-                                    </div>
-                                   
-                                    <p>TITLE</p>
-                                    </div>
-                                    <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
-                                        <a href="" target="_parent" class='btn btn-default btn-class'
-                                            style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none; ">View</a>
-                                    </div>
-                                </div>
 
+
+                <h1>Active Survey</h1>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box" style="min-height:20px; background: transparent !important; border:none; box-shadow:none">
+                           
+                            <div class="box-body" style="padding:30px; ">
+                                <div class="report-container">
+                                    <!-- Loop through survey data -->
+                                    <?php foreach ($survey as $surveyId => $surveyDetails): ?>
+                                        <div class="report-item">
+                                            <div class="report-box"
+                                                style="background-image: url('../images/bakground.png'); background-size: cover; background-position: center;">
+                                                <img src="../images/school_logo.png" class="report-img" alt="">
+                                                <div class="report-detail">
+                                                    <h4><?php echo htmlspecialchars($surveyDetails['survey_title']); ?></h4>
+                                                    <p><?php echo htmlspecialchars($surveyDetails['survey_desc']); ?></p>
+                                                </div>
+                                                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
+                                                <a href="answer_set.php?id=<?php echo htmlspecialchars($surveyId); ?>" class='btn btn-default btn-class' style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none;">View Report</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Repeat the above structure for each survey item -->
                 </div>
+
 
             </section>
         </div>
@@ -124,54 +122,42 @@ $survey = json_decode($surveyData, true) ?: [];
 
 
 <style>
-    .container {
+    .report-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
         gap: 28px;
+
         /* Adjust the gap between items */
     }
 
-    .survey-card {
+    .report-item {
+        flex: 0 1 calc((100% - 4 * 28px) / 5);
+        /* Adjust width to fit exactly 5 per row considering the gap */
+        box-sizing: border-box;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 20px;
+
+        /* Adjust margin if needed */
+    }
+
+    .report-box {
         position: relative;
-        width: 300px;
+        width: 100%;
         height: 250px;
         overflow: hidden;
         background-color: white;
-        
-
+        border-radius: 5px;
     }
 
-    .survey_title{
-        border-bottom: 4px solid silver;
-        margin-bottom: 5px;
-    }
-    .cars-detail{
-        padding: 20px;
-    }
-    .overlay {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        transition: top 0.3s ease;
-    }
-
-    .survey-card:hover .overlay {
+    .report-box:hover .overlay {
         top: 0;
         background-color: #333;
     }
 
-    .overlay a {
-        text-decoration: none;
-        color: white;
-        background: linear-gradient(to right, #90caf9, #047edf 99%);
-        padding: 10px 20px;
-        border-radius: 5px;
+    .report-img {
+        width: 70%;
+        height: auto;
     }
 </style>
