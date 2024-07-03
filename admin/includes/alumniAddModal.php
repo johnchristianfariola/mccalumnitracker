@@ -476,7 +476,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
         <table id="printTable" class="table table-bordered">
           <thead>
             <tr>
-            <th></th> <!-- Checkbox column -->
+              <th></th> <!-- Checkbox column -->
               <th>Student ID</th>
               <th>Name</th>
               <th>Email</th>
@@ -491,7 +491,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
         </table>
       </div>
       <div class="modal-footer">
-      <button type="button" class="btn btn-danger mb-2" id="removeSelectedButton">Remove Selected</button>
+        <button type="button" class="btn btn-danger mb-2" id="removeSelectedButton">Remove Selected</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="printModalButton">Print</button>
       </div>

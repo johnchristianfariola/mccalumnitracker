@@ -1,4 +1,4 @@
-<div class="main-menu-area mg-tb-40">
+<div class="main-menu-area mg-tb-20">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -17,121 +17,27 @@
     </div>
     <!-- Spinner End -->
 
-
+ 
     <!-- Navbar Start -->
     <?php include 'includes/navbar.php' ?>
     <!-- Navbar End -->
 
 
     <!-- Carousel Start -->
-    <div class="container-fluid p-0 mb-5">
-        <div class="owl-carousel header-carousel position-relative">
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="homepage/img/carousel-1.png" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
-                    style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">
-                                    <?php echo $user['firstname']; ?>
-                                </h5>
-                                <h1 class="display-3 text-white animated slideInDown">Reconnect. Reimagine. Rediscover.
-                                </h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Welcome to the MCC Alumni Network! We are thrilled
-                                    to have you back and eager to help you reconnect with old friends, reimagine your
-                                    future, and rediscover the spirit of our beloved institution.</p>
-                              
-                                <?php
-                                if (isset($_SESSION['alumni'])) {
-                                    echo '
-                                    <a style="display:none" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
-                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
-                                   ';
-                                } else {
-                                    echo '
-                                    <a class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
-                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
-                                ';  
-                                }
-                                ?>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="homepage/img/graduation_carousel_1.png" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
-                    style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                </h5>
-                                <h1 class="display-3 text-white animated slideInDown">Exclusive Events & Career
-                                    Opportunities
-                                </h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Gain access to alumni-only events. Explore
-                                    exclusive job listings, mentorship programs, and career development resources
-                                    tailored just for you. Whether it’s professional networking or social gatherings,
-                                    there’s always something exciting happening. Your success is our pride.</p>
-                                    <?php
-                                if (isset($_SESSION['alumni'])) {
-                                    echo '
-                                    <a style="display:none" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
-                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
-                                   ';
-                                } else {
-                                    echo '
-                                    <a class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
-                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
-                                ';  
-                                }
-                                ?>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="homepage/img/graduation_carousel.png" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
-                    style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                </h5>
-                                <h1 class="display-3 text-white animated slideInDown">Give Back & Stay Informed
-                                </h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Share your experience, volunteer, or contribute to
-                                    our various programs. Receive updates on the latest news, research breakthroughs,
-                                    and achievements from our community. Celebrate the milestones that keep our legacy
-                                    alive. Your involvement can inspire current students and shape the future of our
-                                    institution.</p>
-                                    <?php
-                                if (isset($_SESSION['alumni'])) {
-                                    echo '
-                                    <a style="display:none" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
-                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
-                                   ';
-                                } else {
-                                    echo '
-                                    <a class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" data-toggle="modal"
-                                    data-target="#signInModal"><i class="fa fa-user"></i> Signin</a>
-                                ';  
-                                }
-                                ?>
-
-                            </div>
-                        </div>
-                    </div>
+    <div class="container-fluid p-0 mb-5" style="height: 40%">
+    <div class="position-relative">
+        <img class="img-fluid" src="homepage/img/carousel-1.png" alt="" style="height: 150px; width: 100%; object-fit: cover;">
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+            style="background: rgba(24, 29, 56, .7);">
+            <div class="container">
+                <div class="row justify-content-start">
+                    <!-- Your content here -->
                 </div>
             </div>
         </div>
     </div>
+</div>
+
     <!-- Carousel End -->
 
 
@@ -663,10 +569,9 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="homepage/lib/wow/wow.min.js"></script>
-    <script src="homepage/lib/easing/easing.min.js"></script>
-    <script src="homepage/lib/waypoints/waypoints.min.js"></script>
-    <script src="homepage/lib/owlcarousel/owl.carousel.min.js"></script>
 
+
+  
     <!-- Template Javascript -->
     <script src="homepage/js/main.js"></script>
 

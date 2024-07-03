@@ -61,10 +61,10 @@
                             $image_url = strip_tags($news['image_url']);
                             ?>
 
-                            <div class="sale-statistic-inner notika-shadow mg-tb-30">
+                            <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
                                 <div class="curved-inner-pro">
                                     <div class="curved-ctn">
-                                        <div class="image-section">
+                                        <div class="image-section" >
                                             <img class="profile" src="../admin/<?php echo $admin_image_url; ?>"
                                                 alt="news image">
                                         </div>
@@ -79,7 +79,7 @@
                                     <p class="news-description"><?php echo $news_description; ?></p>
                                     <button class="toggle-button">Show More...</button>
                                 </div>
-                                <img src="../admin/<?php echo $image_url; ?>" class="news_post" alt="news image">
+                                <img style="border-radius: 1rem" src="../admin/<?php echo $image_url; ?>" class="news_post" alt="news image">
                             </div>
 
                             <?php

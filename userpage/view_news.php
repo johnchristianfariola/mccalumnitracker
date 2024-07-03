@@ -77,7 +77,7 @@ if ($data && is_array($data)) {
                                         <p><?php echo $news_description; ?></p>
                                     </div>
                                     <div style="margin-top:20px">
-                                        <a href="visit_news.php?id=<?php echo urlencode($news_id); ?>"
+                                        <a  id="news" href="visit_news.php?id=<?php echo urlencode($news_id); ?>"
                                             class="btn btn-default btn-icon-notika">
                                             <i class="notika-icon notika-next"></i> READ...
                                         </a>
