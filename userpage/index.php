@@ -1,6 +1,19 @@
 <?php include '../includes/session.php'; ?>
 
+<?php
 
+// If the user is not logged in, redirect to the main index page
+if (!isset($_SESSION['alumni'])) {
+    header('location: ../index.php');
+    exit();
+}
+
+// If forms_completed is false, redirect to the alumni profile page
+if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false) {
+    header('location: alumni_profile.php');
+    exit();
+}
+?>
 <!doctype html>
 <html class="no-js" lang="">
 
