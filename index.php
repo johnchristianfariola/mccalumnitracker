@@ -2,7 +2,12 @@
 <?php
 session_start();
 if (isset($_SESSION['alumni'])) {
-	header('location: userpage/index.php');
+    if ($_SESSION['forms_completed'] == false) {
+        header('location: userpage/alumni_profile.php');
+    } else {
+        header('location: userpage/index.php');
+    }
+    exit();
 }
 ?>
 <!DOCTYPE html>

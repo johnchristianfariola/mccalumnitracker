@@ -36,7 +36,14 @@ if (isset($_POST['login'])) {
         // Verify the password (if hashed, use password_verify)
         if ($password === $foundUser['password']) {
             $_SESSION['alumni'] = $username; // Set session alumni ID
-            header('location: userpage/index.php'); // Redirect to alumni home
+            $_SESSION['forms_completed'] = $foundUser['forms_completed']; // Set session forms_completed flag
+
+            // Check if forms_completed flag is false
+            if (!$foundUser['forms_completed']) {
+                header('location: userpage/alumni_profile.php'); // Redirect to profile page
+            } else {
+                header('location: userpage/index.php'); // Redirect to alumni home
+            }
             exit();
         } else {
             $_SESSION['error'] = 'Incorrect password';
