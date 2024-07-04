@@ -221,7 +221,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
           <span aria-hidden="true">&times;</span>
         </button>
         <h2 class="modal-title"><b>Alumni <i class="fa fa-angle-right"></i> Manage Alumni <i
-              class="fa fa-angle-right"></i> Add</b></h2>
+              class="fa fa-angle-right"></i> Edit</b></h2>
         <hr>
       </div>
       <div class="modal-body">
