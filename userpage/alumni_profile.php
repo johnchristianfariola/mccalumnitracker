@@ -13,8 +13,10 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == true)
 	exit();
 }
 
-// Your existing alumni_profile.php code here
+
 ?>
+
+
 
 <?php
 
@@ -49,66 +51,71 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 <body>
 	<div class="container">
 
-		<form action="#">
-			<div class="form first">
+		<form action="update_profile.php" method="POST" class="form">
+			<!-- Hidden fields for alumni ID and CSRF token -->
+			<input type="hidden" name="alumni_id" value="<?php echo htmlspecialchars($user['id']); ?>">
+			<input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token']); ?>">
+			<input type="hidden" name="batch_id" value="<?php echo htmlspecialchars($_SESSION['user']['batch_id']); ?>">
+			<input type="hidden" name="course_id"
+				value="<?php echo htmlspecialchars($_SESSION['user']['course_id']); ?>">
+
+
+			<div class="form-section first">
 				<div class="details personal">
 					<header>
-						<p class="step-icon"><span>01</span></p> Peronal Infomation
+						<p class="step-icon"><span>01</span></p> Personal Information
 					</header>
-					<span class="title">Please correct mistake infomation and proceed to the next step so we can build
-						your
-						accounts.</span>
+					<span class="title">Please correct mistake information and proceed to the next step so we can build
+						your account.</span>
 
 					<div class="fields">
 						<div class="input-field">
 							<label>First Name</label>
-							<input type="text" placeholder="Enter your name" value="<?php echo $alumni['firstname'] ?>"
-								required>
+							<input type="text" name="firstname" placeholder="Enter your name"
+								value="<?php echo htmlspecialchars($user['firstname']); ?>" required>
 						</div>
 
 						<div class="input-field">
 							<label>Middle Name</label>
-							<input type="text" placeholder="Enter your middle"
-								value="<?php echo $alumni['middlename'] ?>" required>
+							<input type="text" name="middlename" placeholder="Enter your middle name"
+								value="<?php echo htmlspecialchars($user['middlename'] ?? ''); ?>">
 						</div>
 
 						<div class="input-field">
 							<label>Last Name</label>
-							<input type="text" placeholder="Enter your lastname"
-								value="<?php echo $alumni['lastname'] ?>" required>
+							<input type="text" name="lastname" placeholder="Enter your lastname"
+								value="<?php echo htmlspecialchars($user['lastname']); ?>" required>
 						</div>
 
 						<div class="input-field">
-							<label>Auxilary Name</label>
-							<input type="text" placeholder="Enter auxilary name"
-								value="<?php echo $alumni['auxiliaryname'] ?>" required>
+							<label>Auxiliary Name</label>
+							<input type="text" name="auxiliaryname" placeholder="Enter auxiliary name"
+								value="<?php echo htmlspecialchars($user['auxiliaryname']); ?>" required>
 						</div>
 
-
-
 						<div class="input-field">
-							<label>Birth of Date</label>
-							<input type="date" value="<?php echo $alumni['birthdate'] ?>" required>
+							<label>Date of Birth</label>
+							<input type="date" name="birthdate"
+								value="<?php echo htmlspecialchars($user['birthdate']); ?>" required>
 						</div>
 
 						<div class="input-field">
 							<label>Sex</label>
-							<select required>
+							<select name="gender" required>
 								<option disabled>Select gender</option>
-								<option value="Male" <?php echo ($alumni['gender'] === 'Male') ? 'selected' : ''; ?>>Male
+								<option value="Male" <?php echo ($user['gender'] === 'Male') ? 'selected' : ''; ?>>Male
 								</option>
-								<option value="Female" <?php echo ($alumni['gender'] === 'Female') ? 'selected' : ''; ?>>
+								<option value="Female" <?php echo ($user['gender'] === 'Female') ? 'selected' : ''; ?>>
 									Female</option>
-								<option value="Others" <?php echo ($alumni['gender'] === 'Others') ? 'selected' : ''; ?>>
+								<option value="Others" <?php echo ($user['gender'] === 'Others') ? 'selected' : ''; ?>>
 									Others</option>
 							</select>
 						</div>
 
-
 						<div class="input-field">
 							<label>Civil Status</label>
-							<input type="text" placeholder="Enter your civil status "
-								value="<?php echo $alumni['civilstatus'] ?>" required>
+							<input type="text" name="civilstatus" placeholder="Enter your civil status"
+								value="<?php echo htmlspecialchars($user['civilstatus']); ?>" required>
 						</div>
 					</div>
 				</div>
@@ -119,136 +126,157 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 					<div class="fields">
 						<div class="input-field">
 							<label>Address</label>
-							<input type="text" placeholder="Enter your address"
-								value="<?php echo $alumni['addressline1'] ?>" required>
+							<input type="text" name="addressline1" placeholder="Enter your address"
+								value="<?php echo htmlspecialchars($user['addressline1']); ?>" required>
 						</div>
 
 						<div class="input-field">
 							<label>City</label>
-							<input type="text" placeholder="Enter your city" value="<?php echo $alumni['city'] ?>"
-								required>
+							<input type="text" name="city" placeholder="Enter your city"
+								value="<?php echo htmlspecialchars($user['city']); ?>" required>
 						</div>
 
 						<div class="input-field">
 							<label>State | Province | Region</label>
-							<input type="text" placeholder="Enter your state" value="<?php echo $alumni['state'] ?>"
-								required>
+							<input type="text" name="state" placeholder="Enter your state"
+								value="<?php echo htmlspecialchars($user['state']); ?>" required>
 						</div>
+
 						<div class="input-field">
 							<label>Zip Code</label>
-							<input type="text" placeholder="Enter your zip code"
-								value="<?php echo $alumni['zipcode'] ?>" required>
+							<input type="text" name="zipcode" placeholder="Enter your zip code"
+								value="<?php echo htmlspecialchars($user['zipcode']); ?>" required>
 						</div>
+
 						<div class="input-field">
 							<label>Email</label>
-							<input type="text" placeholder="Enter your email" value="<?php echo $alumni['email'] ?>"
-								required>
+							<input type="email" name="email" placeholder="Enter your email"
+								value="<?php echo htmlspecialchars($user['email']); ?>" required>
 						</div>
+
 						<div class="input-field">
 							<label>Contact</label>
-							<input type="text" placeholder="Enter your email"
-								value="<?php echo $alumni['contactnumber'] ?>" required>
+							<input type="text" name="contactnumber" placeholder="Enter your contact number"
+								value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
 						</div>
 					</div>
+				</div>
 
-					<button class="nextBtn">
+				<div class="buttons">
+					<button type="button" class="nextBtn">
 						<span class="btnText">Next</span>
 						<i class="uil uil-navigator"></i>
 					</button>
 				</div>
 			</div>
 
-			<div class="form second">
+			<div class="form-section second">
 				<div class="details address">
-					<span class="title">Address Details</span>
+					<header>
+						<p class="step-icon"><span>02</span></p> Additional Information
+					</header>
 
 					<div class="fields">
 						<div class="input-field">
 							<label>Course</label>
-							<input type="text" placeholder="Course Code "
-								value="<?php echo htmlspecialchars($user['course']); ?>" required>
+
+							<select class="form-control" id="course" name="course" required>
+								<option value="<?php echo htmlspecialchars($_SESSION['user']['course_id']); ?>">
+									<?php echo htmlspecialchars($_SESSION['user']['course']); ?>
+									<?php
+									if (is_array($data)) {
+										foreach ($data as $courseId => $details) {
+											$courseCode = isset($details['courCode']) ? htmlspecialchars($details['courCode']) : 'Unknown';
+											echo "<option value=\"" . htmlspecialchars($courseId) . "\">" . $courseCode . "</option>";
+										}
+									}
+									?>
+							</select>
 
 						</div>
 
 						<div class="input-field">
 							<label>Batch</label>
-							<input type="text" placeholder="Course Code "
-								value="<?php echo htmlspecialchars($user['batch']); ?>" required>
+
+							<select class="form-control" id="batch" name="batch" required>
+								<option value="<?php echo htmlspecialchars($_SESSION['user']['batch_id']); ?>">
+									<?php echo htmlspecialchars($_SESSION['user']['batch']); ?>
+								</option>
+								<?php
+								if (!empty($batchYears) && is_array($batchYears)) {
+									foreach ($batchYears as $batchId => $batchDetails) {
+										$batchYear = isset($batchDetails['batch_yrs']) ? htmlspecialchars($batchDetails['batch_yrs']) : 'Unknown';
+										echo "<option value=\"" . htmlspecialchars($batchId) . "\">" . $batchYear . "</option>";
+									}
+								}
+								?>
+							</select>
+
+
 						</div>
+
 
 						<div class="input-field">
 							<label>Current Work Status</label>
-							<select class="form-control" name="work_status" id="work-status">
-								<option value="Select Status">Select Status</option>
+							<select class="form-control" name="work_status" id="work-status" required>
+								<option value="">Select Status</option>
 								<option value="Employed">Employed</option>
 								<option value="Unemployed">Unemployed</option>
 							</select>
 						</div>
 
 						<div class="input-field">
-							<label>District</label>
-							<input type="text" placeholder="Enter your district" required>
+							<label>Date of 1st Employment</label>
+							<input type="date" class="form-control" id="first_employment_date"
+								name="first_employment_date" placeholder="Date of 1st Employment">
 						</div>
 
 						<div class="input-field">
-							<label>Block Number</label>
-							<input type="number" placeholder="Enter block number" required>
+							<label>Date of Current Employment</label>
+							<input type="date" class="form-control" id="date_for_current_employment"
+								name="date_for_current_employment" placeholder="Date of Current Employment">
 						</div>
 
 						<div class="input-field">
-							<label>Ward Number</label>
-							<input type="number" placeholder="Enter ward number" required>
+							<label>Type of Work</label>
+							<input type="text" class="form-control" id="type_of_work" name="type_of_work"
+								placeholder="Type of Work">
 						</div>
+
+						<div class="input-field">
+							<label>Work Position</label>
+							<input type="text" class="form-control" id="work_position" name="work_position"
+								placeholder="Work Position">
+						</div>
+
+						<div class="input-field">
+							<label>Current Monthly Income</label>
+							<input type="number" class="form-control" id="current_monthly_income"
+								name="current_monthly_income" placeholder="Current Monthly Income">
+						</div>
+
+						<div class="input-field">
+							<label style="font-size:10px">Is your job related to your undergraduate program?</label>
+							<select class="form-control" name="work_related" id="work_related">
+								<option value="yes">Yes</option>
+								<option value="no">No</option>
+							</select>
+						</div>
+
+
+
 					</div>
 				</div>
 
-				<div class="details family">
-					<span class="title">Family Details</span>
-
-					<div class="fields">
-						<div class="input-field">
-							<label>Course</label>
-							<input type="text" placeholder="Enter course" required>
-
-						</div>
-
-						<div class="input-field">
-							<label>Mother Name</label>
-							<input type="text" placeholder="Enter mother name" required>
-						</div>
-
-						<div class="input-field">
-							<label>Grandfather</label>
-							<input type="text" placeholder="Enter grandfther name" required>
-						</div>
-
-						<div class="input-field">
-							<label>Spouse Name</label>
-							<input type="text" placeholder="Enter spouse name" required>
-						</div>
-
-						<div class="input-field">
-							<label>Father in Law</label>
-							<input type="text" placeholder="Father in law name" required>
-						</div>
-
-						<div class="input-field">
-							<label>Mother in Law</label>
-							<input type="text" placeholder="Mother in law name" required>
-						</div>
-					</div>
-
-					<div class="buttons">
-						<div class="backBtn">
-							<i class="uil uil-navigator"></i>
-							<span class="btnText">Back</span>
-						</div>
-
-						<button class="sumbit">
-							<span class="btnText">Submit</span>
-							<i class="uil uil-navigator"></i>
-						</button>
-					</div>
+				<div class="buttons">
+					<button type="button" class="backBtn">
+						<i class="uil uil-navigator"></i>
+						<span class="btnText">Back</span>
+					</button>
+					<button type="submit" class="submitBtn">
+						<span class="btnText">Submit</span>
+						<i class="uil uil-navigator"></i>
+					</button>
 				</div>
 			</div>
 		</form>
@@ -259,226 +287,231 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
 </html>
 <style>
-	/* ===== Google Font Import - Poppins ===== */
-	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
-
+	/* Reset default margins and paddings */
 	* {
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
-		font-family: 'Poppins', sans-serif;
 	}
 
+	/* Body styles */
 	body {
-		min-height: 100vh;
+		font-family: Arial, sans-serif;
+		background-color: #f5f5f5;
 		display: flex;
-		align-items: center;
 		justify-content: center;
-		background: #4070f4;
-	}
-
-	.container {
-		position: relative;
-		max-width: 900px;
-		width: 100%;
-		border-radius: 6px;
-		padding: 30px;
-		margin: 30px 15px;
-		background-color: #fff;
-		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-	}
-
-	.container header {
-		position: relative;
-		font-size: 20px;
-		font-weight: 600;
-		color: #333;
-	}
-
-	.container header::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		bottom: -2px;
-		height: 3px;
-		width: 27px;
-		border-radius: 8px;
-		background-color: #4070f4;
-	}
-
-	.container form {
-		position: relative;
-		margin-top: 16px;
-		min-height: 770px;
-		background-color: #fff;
-		overflow: hidden;
-	}
-
-	.container form .form {
-		position: absolute;
-		background-color: #fff;
-		transition: 0.3s ease;
-	}
-
-	.container form .form.second {
-		opacity: 0;
-		pointer-events: none;
-		transform: translateX(100%);
-	}
-
-	form.secActive .form.second {
-		opacity: 1;
-		pointer-events: auto;
-		transform: translateX(0);
-	}
-
-	form.secActive .form.first {
-		opacity: 0;
-		pointer-events: none;
-		transform: translateX(-100%);
-	}
-
-	.container form .title {
-		display: block;
-		margin-bottom: 8px;
-		font-size: 16px;
-		font-weight: 500;
-		margin: 6px 0;
-		color: #333;
-	}
-
-	.container form .fields {
-		display: flex;
 		align-items: center;
-		/* justify-content: space-between;*/
-		gap: 20px;
-		justify-content: flex-start;
-		flex-wrap: wrap;
+		min-height: 100vh;
+		/* Ensure full viewport height */
+		margin: 0;
 	}
 
-	form .fields .input-field {
-		display: flex;
-		width: calc(100% / 3 - 15px);
-		flex-direction: column;
-		margin: 4px 0;
+	/* Container styles */
+	.container {
+		width: 100%;
+		max-width: 900px;
+		/* Adjust max-width as needed */
+		background: -webkit-linear-gradient(136deg, rgb(116, 235, 213) 0%, rgb(63, 43, 150) 100%);
+		border-radius: 8px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		padding: 20px;
+	}
+
+	/* Form styles */
+	.form {
+		background-color: #f9f9f9;
+		padding: 20px;
+		border-radius: 8px;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Section header styles */
+	.details header {
+		font-size: 1.2rem;
+		font-weight: bold;
+		margin-bottom: 10px;
+		color: #333;
+	}
+
+	/* Title styles */
+	.title {
+		margin-bottom: 20px;
+		color: #666;
+		font-size: 0.9rem;
+	}
+
+	/* Fields container styles */
+	.fields {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 20px;
+	}
+
+	/* Input field styles */
+	.input-field {
+		margin-bottom: 15px;
 	}
 
 	.input-field label {
-		font-size: 12px;
-		font-weight: 500;
-		color: #2e2e2e;
+		display: block;
+		margin-bottom: 5px;
+		color: #666;
+		font-size: 0.9rem;
 	}
 
 	.input-field input,
-	select {
-		outline: none;
-		font-size: 14px;
-		font-weight: 400;
-		color: #333;
-		border-radius: 5px;
-		border: 1px solid #aaa;
-		padding: 0 15px;
-		height: 42px;
-		margin: 8px 0;
-	}
-
-	.input-field input :focus,
-	.input-field select:focus {
-		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.13);
-	}
-
-	.input-field select,
-	.input-field input[type="date"] {
-		color: #707070;
-	}
-
-	.input-field input[type="date"]:valid {
-		color: #333;
-	}
-
-	.container form button,
-	.backBtn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 45px;
-		max-width: 200px;
+	.input-field select {
 		width: 100%;
-		border: none;
-		outline: none;
-		color: #fff;
-		border-radius: 5px;
-		margin: 25px 0;
-		background-color: #4070f4;
-		transition: all 0.3s linear;
-		cursor: pointer;
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		font-size: 0.9rem;
 	}
 
-	.container form .btnText {
-		font-size: 14px;
-		font-weight: 400;
-	}
-
-	form button:hover {
-		background-color: #265df2;
-	}
-
-	form button i,
-	form .backBtn i {
-		margin: 0 6px;
-	}
-
-	form .backBtn i {
-		transform: rotate(180deg);
-	}
-
-	form .buttons {
+	/* Button styles */
+	.buttons {
 		display: flex;
+		justify-content: space-between;
 		align-items: center;
+		margin-top: 30px;
 	}
 
-	form .buttons button,
-	.backBtn {
-		margin-right: 14px;
+	.backBtn,
+	.submitBtn,
+	.nextBtn {
+		padding: 12px 24px;
+		background-color: #007bff;
+		color: #fff;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+		transition: background-color 0.3s ease;
 	}
 
-	@media (max-width: 750px) {
-		.container form {
-			overflow-y: scroll;
-		}
-
-		.container form::-webkit-scrollbar {
-			display: none;
-		}
-
-		form .fields .input-field {
-			width: calc(100% / 2 - 15px);
-		}
+	.backBtn:hover,
+	.submitBtn:hover,
+	.backBtn:hover {
+		background-color: #0056b3;
 	}
 
-	@media (max-width: 550px) {
-		form .fields .input-field {
-			width: 100%;
+	.btnText {
+		margin-left: 8px;
+	}
+
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+
+		.container,
+		.form {
+			padding: 15px;
+		}
+
+		.fields {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>
 
 <script>
-	const form = document.querySelector("form"),
+	const form = document.querySelector(".form"),
 		nextBtn = form.querySelector(".nextBtn"),
 		backBtn = form.querySelector(".backBtn"),
-		allInput = form.querySelectorAll(".first input");
+		formSections = form.querySelectorAll(".form-section");
 
+	let currentSection = 0; // Track current section index
 
-	nextBtn.addEventListener("click", () => {
-		allInput.forEach(input => {
-			if (input.value != "") {
-				form.classList.add('secActive');
-			} else {
-				form.classList.remove('secActive');
+	// Initialize form navigation
+	function initializeForm() {
+		// Hide all sections except the first one
+		formSections.forEach((section, index) => {
+			if (index !== currentSection) {
+				section.style.display = "none";
 			}
-		})
-	})
+		});
 
-	backBtn.addEventListener("click", () => form.classList.remove('secActive'));
+		// Show the current section
+		formSections[currentSection].style.display = "block";
+
+		// Add event listeners to navigation buttons
+		nextBtn.addEventListener("click", goToNextSection);
+		backBtn.addEventListener("click", goToPreviousSection);
+	}
+
+	// Function to navigate to the next section
+	function goToNextSection() {
+		// Validate current section inputs if needed
+		const inputsValid = validateInputs(formSections[currentSection]);
+
+		// Proceed to the next section if inputs are valid
+		if (inputsValid) {
+			formSections[currentSection].style.display = "none";
+			currentSection++;
+			formSections[currentSection].style.display = "block";
+		}
+	}
+
+	// Function to navigate to the previous section
+	function goToPreviousSection() {
+		formSections[currentSection].style.display = "none";
+		currentSection--;
+		formSections[currentSection].style.display = "block";
+	}
+
+	// Example input validation function (customize as per your requirements)
+	function validateInputs(section) {
+		const inputs = section.querySelectorAll("input[required]");
+		let isValid = true;
+
+		inputs.forEach(input => {
+			if (!input.value.trim()) {
+				isValid = false;
+				// Optionally show error messages or other validation feedback
+			}
+		});
+
+		return isValid;
+	}
+
+	// Initialize the form
+	initializeForm();
+
+
+
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function () {
+		function toggleEmploymentFields() {
+			const selectedStatus = $('#work-status').val();
+			if (selectedStatus === 'Employed') {
+				$('#first_employment_date').closest('.input-field').show();
+				$('#date_for_current_employment').closest('.input-field').show();
+				$('#type_of_work').closest('.input-field').show();
+				$('#work_position').closest('.input-field').show();
+				$('#current_monthly_income').closest('.input-field').show();
+				$('#work_related').closest('.input-field').show();
+				$('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').attr('required', true);
+			} else {
+				$('#first_employment_date').closest('.input-field').hide();
+				$('#date_for_current_employment').closest('.input-field').hide();
+				$('#type_of_work').closest('.input-field').hide();
+				$('#work_position').closest('.input-field').hide();
+				$('#current_monthly_income').closest('.input-field').hide();
+				$('#work_related').closest('.input-field').hide();
+				$('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').removeAttr('required');
+			}
+		}
+
+		$('#work-status').change(toggleEmploymentFields);
+
+		// Initial toggle based on current value
+		toggleEmploymentFields();
+	});
+
 </script>
