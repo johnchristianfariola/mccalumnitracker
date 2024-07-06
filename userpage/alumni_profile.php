@@ -45,6 +45,8 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 	<!----===== Iconscout CSS ===== -->
 	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
+	<link rel="stylesheet" href="alumni_profile.css" />
+
 	<title>Responsive Regisration Form </title>
 </head>
 
