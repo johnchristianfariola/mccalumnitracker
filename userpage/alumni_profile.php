@@ -12,8 +12,6 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == true)
 	header('location: index.php');
 	exit();
 }
-
-
 ?>
 
 

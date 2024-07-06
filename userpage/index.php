@@ -8,11 +8,6 @@ if (!isset($_SESSION['alumni'])) {
     exit();
 }
 
-// If forms_completed is false, redirect to the alumni profile page
-if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false) {
-    header('location: alumni_profile.php');
-    exit();
-}
 ?>
 <!doctype html>
 <html class="no-js" lang="">

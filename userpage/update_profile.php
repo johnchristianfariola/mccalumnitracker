@@ -53,6 +53,7 @@ $updateData = [
     'course' => $course,
     'batch' => $batch,
     'work_status' => $work_status,
+    'forms_completed' => true,
 ];
 
 // Conditionally add employment-related fields if the status is "Employed"
@@ -79,12 +80,12 @@ try {
     // Update the session data
     $_SESSION['user'] = array_merge($_SESSION['user'], $updateData);
 
-    header('location: alumni_profile.php?success=profile_updated');
+    header('location: index.php');
     exit();
 } catch (Exception $e) {
     // Handle errors during update
     error_log("Error updating profile: " . $e->getMessage());
-    header('location: alumni_profile.php?error=update_failed');
+    header('location: index.php?error=update_failed');
     exit();
 }
 ?>
