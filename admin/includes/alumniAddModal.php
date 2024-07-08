@@ -42,7 +42,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="firstname" class="col-form-label">Firstname</label>
-                    <input type="text" class="form-control" id="firstname" name="firstname" required>
+                    <input type="text" class="form-control" id="firstname" name="firstname" >
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="lastname" class="col-form-label">Lastname</label>
@@ -51,30 +51,30 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
                   <div class="col-sm-6 mb-3">
                     <label for="middlename" class="col-form-label">Middle Name</label>
-                    <input type="text" class="form-control" id="middlename" name="middlename" required>
+                    <input type="text" class="form-control" id="middlename" name="middlename">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="auxillaryname" class="col-form-label">Auxiliary Name</label>
-                    <input type="text" class="form-control" id="auxiliaryname" name="auxiliaryname" required>
+                    <input type="text" class="form-control" id="auxiliaryname" name="auxiliaryname">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="birthdate" class="col-form-label">Birthdate</label>
-                    <input type="date" class="form-control" id="birthdate" name="birthdate" required>
+                    <input type="date" class="form-control" id="birthdate" name="birthdate">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="civilstatus" class="col-form-label">Civil Status</label>
-                    <input type="text" class="form-control" id="civilstatus" name="civilstatus" required>
+                    <input type="text" class="form-control" id="civilstatus" name="civilstatus">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="gender" class="col-form-label">Gender</label><br>
-                    <input type="radio" id="male" name="gender" value="Male" class="gender-radio" required>
+                    <input type="radio" id="male" name="gender" value="Male" class="gender-radio">
                     <label for="male" class="radio-label">Male</label>
 
-                    <input type="radio" id="female" name="gender" value="Female" class="gender-radio" required>
+                    <input type="radio" id="female" name="gender" value="Female" class="gender-radio">
                     <label for="female" class="radio-label">Female</label>
                   </div>
 
@@ -90,31 +90,31 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="addressline1" class="col-form-label">Address Line 1</label>
-                    <input type="text" class="form-control" id="addressline1" name="addressline1" required>
+                    <input type="text" class="form-control" id="addressline1" name="addressline1">
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="city" class="col-form-label">City</label>
-                    <input type="text" class="form-control" id="city" name="city" required>
+                    <input type="text" class="form-control" id="city" name="city">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="state" class="col-form-label">State | Province | Region</label>
-                    <input type="text" class="form-control" id="state" name="state" required>
+                    <input type="text" class="form-control" id="state" name="state">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="zipcode" class="col-form-label">Zip Code</label>
-                    <input type="text" class="form-control" id="zipcode" name="zipcode" required>
+                    <input type="text" class="form-control" id="zipcode" name="zipcode">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="contactnumber" class="col-form-label">Contact Number</label>
-                    <input type="tel" class="form-control" id="contactnumber" name="contactnumber" required>
+                    <input type="tel" class="form-control" id="contactnumber" name="contactnumber">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="email" class="col-form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email">
                   </div>
                 </div>
               </div>
@@ -128,7 +128,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="course" class="col-form-label">Course</label>
-                    <select class="form-control" id="course" name="course" required>
+                    <select class="form-control" id="course" name="course">
                       <option value="">Select Course</option>
                       <?php
                       if (is_array($data)) {
@@ -143,7 +143,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
                   <div class="col-sm-6 mb-3">
                     <label for="batch" class="col-form-label">Batch Year</label>
-                    <select class="form-control" id="batch" name="batch" required>
+                    <select class="form-control" id="batch" name="batch">
                       <option value="">Select Batch Year</option>
                       <?php
                       if (!empty($batchYears) && is_array($batchYears)) {

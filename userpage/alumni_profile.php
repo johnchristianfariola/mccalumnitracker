@@ -14,9 +14,9 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == true)
 }
 
 if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed']) {
-    // Redirect to index.php if forms are completed
-    header('location: index.php');
-    exit();
+	// Redirect to index.php if forms are completed
+	header('location: index.php');
+	exit();
 }
 
 
@@ -46,7 +46,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!----======== CSS ======== -->
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="alumni_profile.css">
 
 	<!----===== Iconscout CSS ===== -->
 	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -57,7 +57,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 <body>
 	<div class="container">
 
-		<form action="update_profile.php" method="POST" class="form">
+		<form action="update_profile.php" method="POST" class="form" enctype="multipart/form-data">
 			<!-- Hidden fields for alumni ID and CSRF token -->
 			<input type="hidden" name="alumni_id" value="<?php echo htmlspecialchars($user['id']); ?>">
 			<input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token']); ?>">
@@ -73,6 +73,14 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 					</header>
 					<span class="title">Please correct mistake information and proceed to the next step so we can build
 						your account.</span>
+					<div class="custom-profile-fields">
+						<div class="custom-profile" id="profileDisplay">
+							<label for="profileImageInput" class="custom-label">Choose Profile Image</label>
+						</div>
+						<input type="file" id="profileImageInput" name="profileImage" accept="image/*"
+							onchange="displayImage(this)">
+					</div>
+
 
 					<div class="fields">
 						<div class="input-field">
@@ -109,7 +117,8 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 							<label>Sex</label>
 							<select name="gender" required>
 								<option disabled>Select gender</option>
-								<option value="Male" <?php echo ($user['gender'] === 'Male') ? 'selected' : ''; ?>>Male
+								<option value="Male" <?php echo ($user['gender'] === 'Male') ? 'selected' : ''; ?>>
+									Male
 								</option>
 								<option value="Female" <?php echo ($user['gender'] === 'Female') ? 'selected' : ''; ?>>
 									Female</option>
@@ -292,135 +301,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 </body>
 
 </html>
-<style>
-	/* Reset default margins and paddings */
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
 
-	/* Body styles */
-	body {
-		font-family: Arial, sans-serif;
-		background-color: #f5f5f5;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		min-height: 100vh;
-		/* Ensure full viewport height */
-		margin: 0;
-	}
-
-	/* Container styles */
-	.container {
-		width: 100%;
-		max-width: 900px;
-		/* Adjust max-width as needed */
-		background: -webkit-linear-gradient(136deg, rgb(116, 235, 213) 0%, rgb(63, 43, 150) 100%);
-		border-radius: 8px;
-		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-		padding: 20px;
-	}
-
-	/* Form styles */
-	.form {
-		background-color: #f9f9f9;
-		padding: 20px;
-		border-radius: 8px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-	}
-
-	/* Section header styles */
-	.details header {
-		font-size: 1.2rem;
-		font-weight: bold;
-		margin-bottom: 10px;
-		color: #333;
-	}
-
-	/* Title styles */
-	.title {
-		margin-bottom: 20px;
-		color: #666;
-		font-size: 0.9rem;
-	}
-
-	/* Fields container styles */
-	.fields {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-		gap: 20px;
-	}
-
-	/* Input field styles */
-	.input-field {
-		margin-bottom: 15px;
-	}
-
-	.input-field label {
-		display: block;
-		margin-bottom: 5px;
-		color: #666;
-		font-size: 0.9rem;
-	}
-
-	.input-field input,
-	.input-field select {
-		width: 100%;
-		padding: 10px;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		font-size: 0.9rem;
-	}
-
-	/* Button styles */
-	.buttons {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-top: 30px;
-	}
-
-	.backBtn,
-	.submitBtn,
-	.nextBtn {
-		padding: 12px 24px;
-		background-color: #007bff;
-		color: #fff;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		display: inline-flex;
-		align-items: center;
-		text-decoration: none;
-		transition: background-color 0.3s ease;
-	}
-
-	.backBtn:hover,
-	.submitBtn:hover,
-	.backBtn:hover {
-		background-color: #0056b3;
-	}
-
-	.btnText {
-		margin-left: 8px;
-	}
-
-
-	/* Responsive adjustments */
-	@media (max-width: 768px) {
-
-		.container,
-		.form {
-			padding: 15px;
-		}
-
-		.fields {
-			grid-template-columns: 1fr;
-		}
-	}
-</style>
 
 <script>
 	const form = document.querySelector(".form"),
@@ -519,5 +400,20 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 		// Initial toggle based on current value
 		toggleEmploymentFields();
 	});
+
+	function displayImage(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				document.getElementById('profileDisplay').style.backgroundImage = `url(${e.target.result})`;
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	document.getElementById('profileImageInput').addEventListener('change', function () {
+		displayImage(this);
+	});
+
 
 </script>

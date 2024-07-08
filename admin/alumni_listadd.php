@@ -7,41 +7,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Invalidate the token after form submission to prevent double submission
         unset($_SESSION['token']);
 
-        // Ensure all form fields are set and not empty
-        if (
-            isset($_POST['firstname']) && !empty($_POST['firstname']) &&
-            isset($_POST['lastname']) && !empty($_POST['lastname']) &&
-            isset($_POST['middlename']) && !empty($_POST['middlename']) &&
-            isset($_POST['auxiliaryname']) && !empty($_POST['auxiliaryname']) &&
-            isset($_POST['birthdate']) && !empty($_POST['birthdate']) &&
-            isset($_POST['civilstatus']) && !empty($_POST['civilstatus']) &&
-            isset($_POST['gender']) && !empty($_POST['gender']) &&
-            isset($_POST['addressline1']) && !empty($_POST['addressline1']) &&
-            isset($_POST['city']) && !empty($_POST['city']) &&
-            isset($_POST['state']) && !empty($_POST['state']) &&
-            isset($_POST['zipcode']) && !empty($_POST['zipcode']) &&
-            isset($_POST['contactnumber']) && !empty($_POST['contactnumber']) &&
-            isset($_POST['email']) && !empty($_POST['email']) &&
-            isset($_POST['course']) && !empty($_POST['course']) &&
-            isset($_POST['batch']) && !empty($_POST['batch']) &&
-            isset($_POST['studentid']) && !empty($_POST['studentid'])
-        ) {
+        // Ensure last name and student ID fields are set and not empty
+        if (isset($_POST['lastname']) && !empty($_POST['lastname']) && isset($_POST['studentid']) && !empty($_POST['studentid'])) {
             // Assign form data to variables
-            $firstname = $_POST['firstname'];
+            $firstname = $_POST['firstname'] ?? '';
             $lastname = $_POST['lastname'];
-            $middlename = $_POST['middlename'];
-            $auxiliaryname = $_POST['auxiliaryname'];
-            $birthdate = $_POST['birthdate'];
-            $civilstatus = $_POST['civilstatus'];
-            $gender = $_POST['gender'];
-            $addressline1 = $_POST['addressline1'];
-            $city = $_POST['city'];
-            $state = $_POST['state'];
-            $zipcode = $_POST['zipcode'];
-            $contactnumber = $_POST['contactnumber'];
-            $email = $_POST['email'];
-            $course = $_POST['course'];
-            $batch = $_POST['batch'];
+            $middlename = $_POST['middlename'] ?? '';
+            $auxiliaryname = $_POST['auxiliaryname'] ?? '';
+            $birthdate = $_POST['birthdate'] ?? '';
+            $civilstatus = $_POST['civilstatus'] ?? '';
+            $gender = $_POST['gender'] ?? '';
+            $addressline1 = $_POST['addressline1'] ?? '';
+            $city = $_POST['city'] ?? '';
+            $state = $_POST['state'] ?? '';
+            $zipcode = $_POST['zipcode'] ?? '';
+            $contactnumber = $_POST['contactnumber'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $course = $_POST['course'] ?? '';
+            $batch = $_POST['batch'] ?? '';
             $studentid = $_POST['studentid'];
 
             // Include Firebase RDB class and initialize
@@ -114,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: alumni.php?course=' . urlencode($course) . '&batch=' . urlencode($batch));
             exit;
         } else {
-            $_SESSION['error'] = 'All fields are required.';
+            $_SESSION['error'] = 'Last name and student ID are required.';
         }
     }
 } else {
@@ -124,3 +107,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Redirect to the appropriate page (alumni.php) on error
 header('Location: alumni.php');
 exit;
+?>

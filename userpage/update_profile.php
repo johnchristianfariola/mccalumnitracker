@@ -35,6 +35,17 @@ $batch = htmlspecialchars($_POST['batch']);
 // New fields
 $work_status = htmlspecialchars($_POST['work_status'] ?? '');
 
+// Handle file upload
+$profileImage = $_FILES['profileImage'];
+$uploadDir = 'uploads/';
+$uploadFile = $uploadDir . basename($profileImage['name']);
+
+if (move_uploaded_file($profileImage['tmp_name'], $uploadFile)) {
+    $profile_url = $uploadFile; // Set the profile URL
+} else {
+    $profile_url = ''; // Default value if file upload fails
+}
+
 // Initialize the update data array with common fields
 $updateData = [
     'firstname' => $firstname,
@@ -53,6 +64,7 @@ $updateData = [
     'course' => $course,
     'batch' => $batch,
     'work_status' => $work_status,
+    'profile_url' => $profile_url, // Add the profile URL to the update data
     'forms_completed' => true,
     'date_responded' => date('F j, Y'),
 ];

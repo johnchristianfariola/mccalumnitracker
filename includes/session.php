@@ -45,7 +45,7 @@ foreach ($alumniData as $id => $alumni) {
         // Alumni user is authenticated, store user data in session
         $user = [
             'id' => $id,
-            'username' => $alumni['username'], // You may want to keep or remove this based on your needs
+          
             'firstname' => $alumni['firstname'],
             'middlename' => $alumni['middlename'],
             'lastname' => $alumni['lastname'],

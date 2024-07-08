@@ -21,21 +21,21 @@
                                     <h2></h2>
                                 </div>
                                 <?php
-                                if (isset($_SESSION['alumni'])) {
-
-                                    echo '
-                                    <div class="hd-message-info hd-task-info">
-                                    <img src="../homepage/img/team-2.jpg" class="profile" alt="Profile Picture">
+                              if (isset($_SESSION['alumni'])) {
+                                echo '
+                                <div class="hd-message-info hd-task-info">
+                                    <img src="'. $alumni['profile_url'].'" class="profile" alt="Profile Picture">
                                     <div class="profile_details">
-                                        <span>' .$alumni['firstname'] . ' ' . substr($alumni['middlename'], 0, 1) . '. ' . $alumni['lastname']. '</span>
+                                        <span>' . $alumni['firstname'] . ' ' . substr($alumni['middlename'], 0, 1) . '. ' . $alumni['lastname'] . '</span>
                                         <span class="mgs-time">2 min ago</span>
                                     </div>
-                                   
                                 </div>
-                                     <div class="button_container"> <a class="btn" id="log">Logout</button></a>
-                                    ';
-                                }
-                                ?>
+                                <div class="button_container">
+                                    <a class="btn" id="log">Logout</a>
+                                </div>';
+                            }
+                            ?>
+                            
                                 
 
 
