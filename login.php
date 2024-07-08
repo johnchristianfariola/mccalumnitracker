@@ -9,7 +9,7 @@ $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
 if (isset($_POST['login'])) {
-    $username = $_POST['username'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
     // Retrieve alumni data from Firebase
@@ -23,10 +23,10 @@ if (isset($_POST['login'])) {
         exit();
     }
 
-    // Search for the username in the retrieved data
+    // Search for the email in the retrieved data
     $foundUser = null;
     foreach ($alumniData as $id => $alumni) {
-        if ($alumni['username'] === $username) {
+        if ($alumni['email'] === $email) {
             $foundUser = $alumni;
             break;
         }
@@ -35,7 +35,7 @@ if (isset($_POST['login'])) {
     if ($foundUser) {
         // Verify the password (if hashed, use password_verify)
         if ($password === $foundUser['password']) {
-            $_SESSION['alumni'] = $username; // Set session alumni ID
+            $_SESSION['alumni'] = $email; // Set session alumni ID
             $_SESSION['forms_completed'] = $foundUser['forms_completed']; // Set session forms_completed flag
 
             // Generate token and store in session
@@ -53,7 +53,7 @@ if (isset($_POST['login'])) {
             $_SESSION['error'] = 'Incorrect password';
         }
     } else {
-        $_SESSION['error'] = 'Cannot find account with the username';
+        $_SESSION['error'] = 'Cannot find account with the email';
     }
 } else {
     $_SESSION['error'] = 'Input Alumni credentials first';
