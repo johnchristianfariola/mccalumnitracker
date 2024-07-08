@@ -26,16 +26,24 @@ if (isset($_POST['login'])) {
     // Search for the email in the retrieved data
     $foundUser = null;
     foreach ($alumniData as $id => $alumni) {
-        if ($alumni['email'] === $email) {
+        if (isset($alumni['email']) && $alumni['email'] === $email) {
             $foundUser = $alumni;
             break;
         }
     }
 
     if ($foundUser) {
-        // Verify the password (if hashed, use password_verify)
-        if ($password === $foundUser['password']) {
-            $_SESSION['alumni'] = $email; // Set session alumni ID
+        // Verify the password using password_verify
+        if (password_verify($password, $foundUser['password'])) {
+            // Check if the user's status is 'notverified'
+            if ($foundUser['status'] === 'notverified') {
+                $_SESSION['error'] = 'Please verify your account';
+                header('location: index.php');
+                exit();
+            }
+
+            // Set session variables
+            $_SESSION['alumni'] = $email; // Set session alumni email
             $_SESSION['forms_completed'] = $foundUser['forms_completed']; // Set session forms_completed flag
 
             // Generate token and store in session

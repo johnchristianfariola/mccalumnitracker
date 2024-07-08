@@ -44,7 +44,7 @@ if (isset($_SESSION['error'])) {
           <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
         </div>
         <span class="form_span">or use your account</span>
-        <input class="form_input" type="email" placeholder="Email" name="username" />
+        <input class="form_input" type="email" placeholder="Email" name="email" />
         <input class="form_input" type="password" placeholder="Password" name="password" />
         <a class="form_link" href="#">Forgot your password?</a>
         <button class="form_button" type="submit" name="login">Sign In</button>

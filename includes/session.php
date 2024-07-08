@@ -14,7 +14,7 @@ if (!isset($_SESSION['alumni']) || trim($_SESSION['alumni']) == '') {
     exit();
 }
 
-$alumniUsername = $_SESSION['alumni'];
+$alumniEmail = $_SESSION['alumni'];
 
 // Retrieve alumni data from Firebase
 try {
@@ -34,10 +34,10 @@ try {
     exit();
 }
 
-// Find the alumni record based on username
+// Find the alumni record based on email
 $authenticated = false;
 foreach ($alumniData as $id => $alumni) {
-    if ($alumni['username'] === $alumniUsername) {
+    if (isset($alumni['email']) && $alumni['email'] === $alumniEmail) {
         // Map batch and course codes using unique IDs
         $batchYear = isset($batchData[$alumni['batch']]['batch_yrs']) ? $batchData[$alumni['batch']]['batch_yrs'] : 'Unknown Batch';
         $courseCode = isset($courseData[$alumni['course']]['courCode']) ? $courseData[$alumni['course']]['courCode'] : 'Unknown Course';
@@ -45,7 +45,7 @@ foreach ($alumniData as $id => $alumni) {
         // Alumni user is authenticated, store user data in session
         $user = [
             'id' => $id,
-            'username' => $alumni['username'],
+            'username' => $alumni['username'], // You may want to keep or remove this based on your needs
             'firstname' => $alumni['firstname'],
             'middlename' => $alumni['middlename'],
             'lastname' => $alumni['lastname'],
