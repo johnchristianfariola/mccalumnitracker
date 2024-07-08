@@ -30,7 +30,7 @@ if (isset($_POST['login'])) {
             $foundUser = $alumni;
             break;
         }
-    }
+    
 
     if ($foundUser) {
         // Verify the password using password_verify
