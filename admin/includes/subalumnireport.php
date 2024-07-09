@@ -43,7 +43,6 @@ foreach ($alumni as $alumniId => $alumniDetails) {
         }
     }
 }
-
 ?>
 <div>
     <div class="alumni-count-container" style="padding-top: 20px">
@@ -64,7 +63,7 @@ foreach ($alumniByBatch as $batchId => $courseIds) {
         if (isset($courses[$courseId])) {
             $courseCode = $courses[$courseId]['courCode'];
             $courseName = $courses[$courseId]['course_name'];
-            echo '<button class="collaps-department transparent" data-course-id="' . htmlspecialchars($courseId) . '">' . htmlspecialchars($courseCode) . '</button>';
+            echo '<button class="collaps-department transparent" data-course-id="' . htmlspecialchars($courseId) . '" data-batch-id="' . htmlspecialchars($batchId) . '">' . htmlspecialchars($courseCode) . '</button>';
         }
     }
 
@@ -75,7 +74,8 @@ foreach ($alumniByBatch as $batchId => $courseIds) {
     document.querySelectorAll('.collaps-department').forEach(button => {
         button.addEventListener('click', function () {
             const courseId = this.getAttribute('data-course-id');
-            window.location.href = `alumni_report.php?course=${courseId}`;
+            const batchId = this.getAttribute('data-batch-id');
+            window.location.href = `alumni_report.php?course=${courseId}&batch=${batchId}`;
         });
     });
 </script>

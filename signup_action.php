@@ -28,6 +28,25 @@ if(isset($_POST['signup'])){
     $data = $firebase->retrieve("alumni");
     $data = json_decode($data, true);
    
+    // Check if email already exists and is verified
+    $email_exists = false;
+    $email_verified = false;
+    foreach ($data as $id => $alumni) {
+        if (isset($alumni['email']) && $alumni['email'] == $email) {
+            $email_exists = true;
+            if (isset($alumni['status']) && $alumni['status'] === 'verified') {
+                $email_verified = true;
+            }
+            break;
+        }
+    }
+
+    if ($email_exists && $email_verified) {
+        $error_message = urlencode("This email is already associated with a verified account.");
+        header("Location: index.php?error=$error_message");
+        exit();
+    }
+
     $alumni_id = null;
     $already_verified = false;
     // Check if there is a match for lastname and studentid

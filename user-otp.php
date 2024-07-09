@@ -41,7 +41,7 @@
     <!-- Carousel End -->
     <div class="unique-container">
   <header class="unique-header">
-    <i class="bx bxs-check-shield"></i>
+    <i class="fa fa-lock"></i>
   </header>
   <h4>Enter OTP Code</h4>
   <form class="unique-form" action="user-otp-action.php" method="post">
@@ -202,3 +202,30 @@
     window.addEventListener("load", () => inputs[0].focus());
   })();
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        <?php if(isset($_GET['error'])): ?>
+        let timerInterval;
+        Swal.fire({
+            title: "Try Again!",
+            html: "<?php echo htmlspecialchars($_GET['error']); ?>",
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+                const timer = Swal.getPopup().querySelector("b");
+                timerInterval = setInterval(() => {
+                    timer.textContent = `${Swal.getTimerLeft()}`;
+                }, 100);
+            },
+            willClose: () => {
+                clearInterval(timerInterval);
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log("Alert was closed by the timer");
+            }
+        });
+        <?php endif; ?>
+    });
+    </script>

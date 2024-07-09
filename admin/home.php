@@ -215,7 +215,7 @@ $courseCodesJson = json_encode(array_keys($courseCounts));
                       <label style="color:white;">Select Year: </label>
                       <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_year">
                         <?php
-                        for ($i = 2015; $i <= 2065; $i++) {
+                        for ($i = 2001; $i <= 2065; $i++) {
                           $selected = ($i == $year) ? 'selected' : '';
                           echo "
                             <option value='" . $i . "' " . $selected . ">" . $i . "</option>

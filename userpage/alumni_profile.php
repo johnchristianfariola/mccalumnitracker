@@ -55,6 +55,14 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 </head>
 
 <body>
+
+
+
+
+<div class="bg"></div>
+<div class="bg bg2"></div>
+<div class="bg bg3"></div>
+
 	<div class="container">
 
 		<form action="update_profile.php" method="POST" class="form" enctype="multipart/form-data">
@@ -285,7 +293,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
 				<div class="buttons">
 					<button type="button" class="backBtn">
-						<i class="uil uil-navigator"></i>
+						<i class=""></i>
 						<span class="btnText">Back</span>
 					</button>
 					<button type="submit" class="submitBtn">
@@ -302,7 +310,6 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
 </html>
 
-
 <script>
 	const form = document.querySelector(".form"),
 		nextBtn = form.querySelector(".nextBtn"),
@@ -316,12 +323,11 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 		// Hide all sections except the first one
 		formSections.forEach((section, index) => {
 			if (index !== currentSection) {
-				section.style.display = "none";
+				section.classList.add("move-from-right");
+			} else {
+				section.classList.add("active");
 			}
 		});
-
-		// Show the current section
-		formSections[currentSection].style.display = "block";
 
 		// Add event listeners to navigation buttons
 		nextBtn.addEventListener("click", goToNextSection);
@@ -335,17 +341,21 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
 		// Proceed to the next section if inputs are valid
 		if (inputsValid) {
-			formSections[currentSection].style.display = "none";
+			formSections[currentSection].classList.remove("active");
+			formSections[currentSection].classList.add("move-from-right");
 			currentSection++;
-			formSections[currentSection].style.display = "block";
+			formSections[currentSection].classList.remove("move-from-right");
+			formSections[currentSection].classList.add("active");
 		}
 	}
 
 	// Function to navigate to the previous section
 	function goToPreviousSection() {
-		formSections[currentSection].style.display = "none";
+		formSections[currentSection].classList.remove("active");
+		formSections[currentSection].classList.add("move-from-right");
 		currentSection--;
-		formSections[currentSection].style.display = "block";
+		formSections[currentSection].classList.remove("move-from-right");
+		formSections[currentSection].classList.add("active");
 	}
 
 	// Example input validation function (customize as per your requirements)
@@ -365,10 +375,6 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
 	// Initialize the form
 	initializeForm();
-
-
-
-
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

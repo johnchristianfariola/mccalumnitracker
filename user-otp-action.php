@@ -29,7 +29,9 @@ if (isset($_POST['check'])) {
     }
 
     if (!$alumni_id) {
-        $errors['otp-error'] = "You've entered incorrect code!";
+        $error = "Incorrect verification code. Please try again.";
+        header("Location: user-otp.php?error=" . urlencode($error));
+        exit();
     } else {
         $code = 0;
         $status = 'verified';
