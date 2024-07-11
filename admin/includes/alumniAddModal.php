@@ -42,7 +42,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="firstname" class="col-form-label">Firstname</label>
-                    <input type="text" class="form-control" id="firstname" name="firstname" >
+                    <input type="text" class="form-control" id="firstname" name="firstname">
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="lastname" class="col-form-label">Lastname</label>
@@ -70,7 +70,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                   </div>
 
                   <div class="col-sm-6 mb-3">
-                    <label for="gender" class="col-form-label">Gender</label><br>
+                    <label for="gender" class="col-form-label">Sex</label><br>
                     <input type="radio" id="male" name="gender" value="Male" class="gender-radio">
                     <label for="male" class="radio-label">Male</label>
 
@@ -98,7 +98,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                   </div>
 
                   <div class="col-sm-6 mb-3">
-                    <label for="state" class="col-form-label">State | Province | Region</label>
+                    <label for="state" class="col-form-label">Province</label>
                     <input type="text" class="form-control" id="state" name="state">
                   </div>
 
@@ -109,7 +109,8 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
                   <div class="col-sm-6 mb-3">
                     <label for="contactnumber" class="col-form-label">Contact Number</label>
-                    <input type="tel" class="form-control" id="contactnumber" name="contactnumber">
+                    <input type="text" class="form-control" id="contactnumber" name="contactnumber" pattern="\d{11}"
+                      maxlength="11" title="Contact number must be 11 digits">
                   </div>
 
                   <div class="col-sm-6 mb-3">
@@ -160,6 +161,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                   <div class="col-sm-6 mb-3">
                     <label for="studentid" class="col-form-label">Student ID</label>
                     <input type="text" class="form-control" id="studentid" name="studentid" required>
+                    <small id="studentidHelp" class="form-text text-muted">Format: 1234-5678</small>
                   </div>
                 </div>
               </div>
@@ -238,7 +240,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="edit_firstname" class="col-form-label">Firstname</label>
-                    <input type="text" class="form-control" id="editFirstname" name="edit_firstname" required>
+                    <input type="text" class="form-control" id="editFirstname" name="edit_firstname">
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="edit_lastname" class="col-form-label">Lastname</label>
@@ -247,30 +249,30 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_middlename" class="col-form-label">Middle Name</label>
-                    <input type="text" class="form-control" id="editMiddlename" name="edit_middlename" required>
+                    <input type="text" class="form-control" id="editMiddlename" name="edit_middlename">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_auxiliaryname" class="col-form-label">Auxiliary Name</label>
-                    <input type="text" class="form-control" id="editAuxiliaryname" name="edit_auxiliaryname" required>
+                    <input type="text" class="form-control" id="editAuxiliaryname" name="edit_auxiliaryname">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_birthdate" class="col-form-label">Birthdate</label>
-                    <input type="date" class="form-control" id="editBirthdate" name="edit_birthdate" required>
+                    <input type="date" class="form-control" id="editBirthdate" name="edit_birthdate">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_civilstatus" class="col-form-label">Civil Status</label>
-                    <input type="text" class="form-control" id="editCivilstatus" name="edit_civilstatus" required>
+                    <input type="text" class="form-control" id="editCivilstatus" name="edit_civilstatus">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_gender" class="col-form-label">Gender</label><br>
-                    <input type="radio" id="editMale" name="edit_gender" value="Male" class="gender-radio" required>
+                    <input type="radio" id="editMale" name="edit_gender" value="Male" class="gender-radio">
                     <label for="edit_male" class="radio-label">Male</label>
 
-                    <input type="radio" id="editMemale" name="edit_gender" value="Female" class="gender-radio" required>
+                    <input type="radio" id="editMemale" name="edit_gender" value="Female" class="gender-radio">
                     <label for="edit_female" class="radio-label">Female</label>
                   </div>
 
@@ -286,31 +288,31 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="edit_addressline1" class="col-form-label">Address Line 1</label>
-                    <input type="text" class="form-control" id="editAddressline1" name="edit_addressline1" required>
+                    <input type="text" class="form-control" id="editAddressline1" name="edit_addressline1">
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="edit_city" class="col-form-label">City</label>
-                    <input type="text" class="form-control" id="editCity" name="edit_city" required>
+                    <input type="text" class="form-control" id="editCity" name="edit_city">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_state" class="col-form-label">State | Province | Region</label>
-                    <input type="text" class="form-control" id="editState" name="edit_state" required>
+                    <input type="text" class="form-control" id="editState" name="edit_state" >
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_zipcode" class="col-form-label">Zip Code</label>
-                    <input type="text" class="form-control" id="editZipcode" name="edit_zipcode" required>
+                    <input type="text" class="form-control" id="editZipcode" name="edit_zipcode">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_contactnumber" class="col-form-label">Contact Number</label>
-                    <input type="tel" class="form-control" id="editContactnumber" name="edit_contactnumber" required>
+                    <input type="tel" class="form-control" id="editContactnumber" name="edit_contactnumber">
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_email" class="col-form-label">Email</label>
-                    <input type="email" class="form-control" id="editEmail" name="edit_email" required>
+                    <input type="email" class="form-control" id="editEmail" name="edit_email" >
                   </div>
                 </div>
               </div>
@@ -324,7 +326,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="edit_course" class="col-form-label">Course</label>
-                    <select class="form-control" id="editCourse" name="edit_course" required>
+                    <select class="form-control" id="editCourse" name="edit_course">
                       <option value="">Select Course</option>
                       <?php
                       if (is_array($data)) {
@@ -339,7 +341,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_batch" class="col-form-label">Batch Year</label>
-                    <select class="form-control" id="editBatch" name="edit_batch" required>
+                    <select class="form-control" id="editBatch" name="edit_batch">
                       <option value="">Select Batch Year</option>
                       <?php
                       if (!empty($batchYears) && is_array($batchYears)) {
@@ -539,6 +541,10 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
   .mb-3 {
     margin-bottom: 30px;
   }
+
+  .error {
+    border-color: red;
+  }
 </style>
 
 <script>
@@ -550,4 +556,35 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
       autoclose: true
     });
   });
+
+  const studentIdInput = document.getElementById('studentid');
+
+  studentIdInput.addEventListener('input', function () {
+    let value = studentIdInput.value.replace(/\D/g, ''); // Remove all non-digit characters
+
+    if (value.length > 8) {
+      value = value.substring(0, 8); // Limit to 8 digits
+    }
+
+    // Format with dash in the middle
+    if (value.length > 4) {
+      value = value.slice(0, 4) + '-' + value.slice(4);
+    }
+
+    studentIdInput.value = value;
+
+    // Add or remove error class based on validation
+    const isValid = /^\d{4}-\d{4}$/.test(value);
+    if (isValid) {
+      studentIdInput.classList.remove('error');
+    } else {
+      studentIdInput.classList.add('error');
+    }
+
+  });
+  document.getElementById('contactnumber').addEventListener('input', function (e) {
+        const input = e.target;
+        input.value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+    });
+
 </script>

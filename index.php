@@ -144,47 +144,48 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- Service Start -->
     
     <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x  fa-newspaper text-primary mb-4"></i>
-                            <h5 class="mb-3">News</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="service-item text-center pt-3">
+                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                        <i class="fa fa-3x fa-newspaper text-primary mb-4"></i>
+                        <h5 class="mb-3">News</h5>
+                        <p>Explore our comprehensive news section to stay informed about the latest events, and updates</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-calendar text-primary mb-4"></i>
-                            <h5 class="mb-3">Event</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="service-item text-center pt-3">
+                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                        <i class="fa fa-3x fa-calendar text-primary mb-4"></i>
+                        <h5 class="mb-3">Event</h5>
+                        <p>Stay engaged with Madridejos Community College's vibrant alumni network. </p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-briefcase text-primary mb-4"></i>
-                            <h5 class="mb-3">Job Opportunities</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="service-item text-center pt-3">
+                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                        <i class="fa fa-3x fa-briefcase text-primary mb-4"></i>
+                        <h5 class="mb-3">Job Opportunities</h5>
+                        <p>Find the latest job openings tailored for our alumni. </p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5 class="mb-3">Gallery Library</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                <div class="service-item text-center pt-3">
+                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                        <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                        <h5 class="mb-3">Gallery Library</h5>
+                        <p>Discover photos, videos, and more from our alumni events and achievements.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
     <!-- Service End -->
 
 
