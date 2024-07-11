@@ -46,7 +46,7 @@
         <ul class="treeview-menu">
           <li><a href="news.php"><i class="fa fa fa-angle-right"></i> News</a></li>
           <li><a href="event.php"><i class="fa fa-angle-right"></i> Events</a></li>
-          <li><a href="gallery.php"><i class="fa fa-angle-right"></i> Galary</a></li>
+          <li><a href="gallery.php"><i class="fa fa-angle-right"></i> Gallery</a></li>
           <li><a href="job.php"><i class="fa fa-angle-right"></i> Job Offer</a></li>
 
         </ul>
