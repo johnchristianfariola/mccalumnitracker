@@ -19,6 +19,8 @@ if (isset($_SESSION['error'])) {
 ?>
 
 
+
+
 <div class="modal " id="uniqueModal">
   <div class="modal_popup_container wow fadeInDown" data-wow-delay="0.1s" id="uniqueContainer">
     <div class="form_container sign_up_container">
