@@ -313,7 +313,7 @@ body {}
 	left:-150px;
 }
 .header-top-menu .nav.notika-top-nav li .message-dd.task-dd{
-	left:-200px;
+	left:0px;
 }
 .header-top-menu .nav.notika-top-nav li .message-dd.chat-dd{
 	left:-250px;
