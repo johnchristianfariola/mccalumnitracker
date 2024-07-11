@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
             </div>
-            <button class="btn" style="float:right" data-toggle="modal" data-target="#signInModal">View All</button>
+            <button class="btn openFormButton" style="float:right">View All</button>
             
         </div>
     </div>
@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
             </div>
-            <button class="btn" style="float:right" data-toggle="modal" data-target="#signInModal">View All</button>
+            <button class="btn openFormButton" style="float:right">View All</button>
             
         </div>
     </div>

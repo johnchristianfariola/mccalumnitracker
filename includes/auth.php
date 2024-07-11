@@ -19,8 +19,8 @@ if (isset($_SESSION['error'])) {
 ?>
 
 
-<div class="modal" id="uniqueModal">
-  <div class="modal_popup_container" id="uniqueContainer">
+<div class="modal " id="uniqueModal">
+  <div class="modal_popup_container wow fadeInDown" data-wow-delay="0.1s" id="uniqueContainer">
     <div class="form_container sign_up_container">
       <form class="form_action" action="signup_action.php" method="POST" autocomplete="">
         <h1 class="form_title" style="font-size:30px">Enter Your Alumni Information</h1>
@@ -39,11 +39,11 @@ if (isset($_SESSION['error'])) {
       <form class="form_action" method="POST" action="login.php">
         <h1 class="form_title">Sign in</h1>
         <div class="social_container">
-         
+
         </div>
 
-        <input class="form_input" type="email" placeholder="Email" name="email" required/>
-        <input class="form_input" type="password" placeholder="Password" name="password" required/>
+        <input class="form_input" type="email" placeholder="Email" name="email" required />
+        <input class="form_input" type="password" placeholder="Password" name="password" required />
         <a class="form_link" href="#">Forgot your password?</a>
         <button class="form_button" type="submit" name="login">Sign In</button>
       </form>
