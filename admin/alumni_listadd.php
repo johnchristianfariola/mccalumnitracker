@@ -33,14 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firebase = new firebaseRDB($databaseURL);
 
             // Function to check if alumni data already exists
-            function isAlumniDataExists($firebase, $firstname, $lastname, $studentid) {
+            function isAlumniDataExists($firebase, $lastname, $studentid) {
                 $table = 'alumni';
                 $result = $firebase->retrieve($table);
                 $result = json_decode($result, true);
                 if ($result) {
                     foreach ($result as $record) {
                         if (
-                            isset($record['firstname']) && $record['firstname'] === $firstname &&
                             isset($record['lastname']) && $record['lastname'] === $lastname &&
                             isset($record['studentid']) && $record['studentid'] === $studentid
                         ) {
@@ -51,10 +50,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 return false;
             }
 
-            // Function to add alumni data
-            function addAlumniData($firebase, $firstname, $lastname, $middlename, $auxiliaryname, $birthdate, $civilstatus, $gender, $addressline1, $city, $state, $zipcode, $contactnumber, $email, $course, $batch, $studentid) {
-                $table = 'alumni';
-                $data = array(
+            // Check if alumni data already exists
+            if (isAlumniDataExists($firebase, $lastname, $studentid)) {
+                $_SESSION['error'] = 'Alumni already exists.';
+            } else {
+                // Function to add alumni data
+                function addAlumniData($firebase, $data) {
+                    $table = 'alumni';
+                    $result = $firebase->insert($table, $data);
+                    return $result;
+                }
+
+                // Prepare alumni data
+                $alumniData = array(
                     'firstname' => $firstname,
                     'lastname' => $lastname,
                     'middlename' => $middlename,
@@ -73,16 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'studentid' => $studentid,
                     'forms_completed' => false
                 );
-                $result = $firebase->insert($table, $data);
-                return $result;
-            }
 
-            // Check if alumni data already exists
-            if (isAlumniDataExists($firebase, $firstname, $lastname, $studentid)) {
-                $_SESSION['error'] = 'Alumni data already exists.';
-            } else {
                 // Add alumni data
-                $result = addAlumniData($firebase, $firstname, $lastname, $middlename, $auxiliaryname, $birthdate, $civilstatus, $gender, $addressline1, $city, $state, $zipcode, $contactnumber, $email, $course, $batch, $studentid);
+                $result = addAlumniData($firebase, $alumniData);
 
                 // Check result
                 if ($result === null) {
@@ -99,6 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $_SESSION['error'] = 'Last name and student ID are required.';
         }
+    } else {
+        $_SESSION['error'] = 'CSRF token validation failed.';
     }
 } else {
     $_SESSION['error'] = 'Invalid request method.';

@@ -19,6 +19,7 @@ $courseData = getFirebaseData($firebase, "course");
 
 $filterCourse = isset($_GET['course']) ? sanitizeInput($_GET['course']) : '';
 $filterBatch = isset($_GET['batch']) ? sanitizeInput($_GET['batch']) : '';
+$filterStatus = isset($_GET['status']) ? sanitizeInput($_GET['status']) : '';
 
 // Check if alumniData is an array before looping through it
 if (is_array($alumniData) && count($alumniData) > 0) {
@@ -29,6 +30,7 @@ if (is_array($alumniData) && count($alumniData) > 0) {
 
         $courseId = $alumni['course'];
         $batchId = $alumni['batch'];
+        $workStatus = $alumni['work_status'];
 
         if ($filterCourse && $filterCourse != $courseId) {
             continue;
@@ -36,12 +38,15 @@ if (is_array($alumniData) && count($alumniData) > 0) {
         if ($filterBatch && $filterBatch != $batchId) {
             continue;
         }
+        if ($filterStatus && $filterStatus != $workStatus) {
+            continue;
+        }
 
         $batchName = isset($batchData[$batchId]['batch_yrs']) ? $batchData[$batchId]['batch_yrs'] : 'Unknown Batch';
         $courseName = isset($courseData[$courseId]['courCode']) ? $courseData[$courseId]['courCode'] : 'Unknown Course';
 
         echo "<tr>
-        <td style='display:none;'><input type='checkbox' class='modal-checkbox'  data-id='$id'></td>
+        <td style='display:none;'><input type='checkbox' class='modal-checkbox' data-id='$id'></td>
         <td>{$alumni['studentid']}</td>
         <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
         <td>{$courseName}</td>
@@ -50,10 +55,8 @@ if (is_array($alumniData) && count($alumniData) > 0) {
         <td>{$alumni['date_responded']}</td>
         <td>
         <a class='btn btn-warning btn-sm btn-flat open-modal' data-id='$id'>VIEW</a>
-
         </td>
         </tr>";
-    } 
-} 
+    }
+}
 ?>
-

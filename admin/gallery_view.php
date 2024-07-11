@@ -98,8 +98,7 @@ $galleries = json_decode($galleryData, true) ?: [];
                                                         </svg>
                                                     </div>
                                                     <div class="dropdown-menu" id="album<?php echo $id; ?>">
-                                                        <div class="dropdown-item" onclick="event.stopPropagation()">Change
-                                                            Cover Photo</div>
+                                                
                                                         <div class="dropdown-item open-modal" data-id="<?php echo htmlspecialchars($id); ?>"
                                                             data-toggle="modal" data-target="#editModal">
                                                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none"

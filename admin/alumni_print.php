@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A4 Document Centered</title>
+  <title>A4 Document</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
   <style>
     body,
@@ -184,10 +184,10 @@
           <tr>
             <th>Student ID</th>
             <th>Name</th>
-            <th>Email</th>
-            <th>Gender</th>
             <th>Course</th>
             <th>Batch</th>
+            <th>Status</th>
+            <th>Date Responded</th>
           </tr>
         </thead>
         <tbody id="printTableBody">

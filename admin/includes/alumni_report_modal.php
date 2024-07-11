@@ -128,6 +128,46 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
     </div>
 </div>
 
+
+
+<!--==============Print File=================-->
+
+<div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dataModalLabel">Alumni Data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table id="printTable" class="table table-bordered">
+          <thead>
+            <tr>
+              <th></th> <!-- Checkbox column -->
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Course</th>
+              <th>Batch</th>
+              <th>Status</th>
+              <th>Date Responded</th>
+            </tr>
+          </thead>
+          <tbody id="modalTableBody">
+            <!-- Data will be copied here -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger mb-2" id="removeSelectedButton">Remove Selected</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="printModalButton">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
     .modal-dialog-centered {
 
