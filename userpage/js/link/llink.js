@@ -13,9 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('home').classList.add('active');
             break;
         case 'view_news.php':
+        case 'visit_news.php':
             document.getElementById('news').classList.add('active');
             break;
-        case 'events.php':
+        case 'event_view.php':
             document.getElementById('event').classList.add('active');
             break;
         case 'jobs.php':

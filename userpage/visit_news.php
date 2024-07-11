@@ -1,5 +1,7 @@
 <?php include '../includes/session.php'; ?>
-
+<style>
+    
+</style>
 
 <!doctype html>
 <html class="no-js" lang="">
@@ -98,7 +100,6 @@
         echo "No news ID provided.";
     }
     ?>
-
 
 
 
