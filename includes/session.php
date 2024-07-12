@@ -45,7 +45,6 @@ foreach ($alumniData as $id => $alumni) {
         // Alumni user is authenticated, store user data in session
         $user = [
             'id' => $id,
-          
             'firstname' => $alumni['firstname'],
             'middlename' => $alumni['middlename'],
             'lastname' => $alumni['lastname'],
@@ -66,6 +65,7 @@ foreach ($alumniData as $id => $alumni) {
             'course_id' => $alumni['course'], // Add course ID for reference
         ];
         $_SESSION['user'] = $user;
+        $_SESSION['alumni_id'] = $id; // Store alumni ID in session
         $authenticated = true;
         break;
     }

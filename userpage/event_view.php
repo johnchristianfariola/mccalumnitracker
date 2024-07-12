@@ -29,43 +29,43 @@
                 <h1 class="mb-5">EVENT</h1>
             </div>
             <?php
-require_once '../includes/firebaseRDB.php';
+            require_once '../includes/firebaseRDB.php';
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-$firebase = new firebaseRDB($databaseURL);
+            $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+            $firebase = new firebaseRDB($databaseURL);
 
-$data = $firebase->retrieve("event");
-$data = json_decode($data, true);
+            $data = $firebase->retrieve("event");
+            $data = json_decode($data, true);
 
-foreach ($data as $eventID => $event) {
-    $eventTitle = $event['event_title'];
-    $eventDate = $event['event_date'];
-    $eventDescription = $event['event_description'];
-    $imageUrl = $event['image_url'];
-    ?>
+            foreach ($data as $eventID => $event) {
+                $eventTitle = $event['event_title'];
+                $eventDate = $event['event_date'];
+                $eventDescription = $event['event_description'];
+                $imageUrl = $event['image_url'];
+                ?>
 
-    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="item">
-            <center>
-                <a href="visit_event.php?id=<?php echo $eventID; ?>" class="probootstrap-featured-news-box">
-                    <figure class="probootstrap-media">
-                        <img src="../admin/<?php echo $imageUrl; ?>" alt="Event Image" class="img-responsive">
-                    </figure>
-                    <div class="probootstrap-text">
-                        <h3><?php echo $eventTitle; ?></h3>
-                        <div class="description"><?php echo $eventDescription; ?></div>
-                        <div class="probootstrap-date">
-                            <i class="icon-calendar"></i><?php echo $eventDate; ?>
-                        </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="item">
+                        <center>
+                            <a href="visit_event.php?id=<?php echo $eventID; ?>" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media">
+                                    <img src="../admin/<?php echo $imageUrl; ?>" alt="Event Image" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3><?php echo $eventTitle; ?></h3>
+                                    <div class="description"><?php echo $eventDescription; ?></div>
+                                    <div class="probootstrap-date">
+                                        <i class="icon-calendar"></i><?php echo $eventDate; ?>
+                                    </div>
+                                </div>
+                            </a>
+                        </center>
                     </div>
-                </a>
-            </center>
-        </div>
-    </div>
+                </div>
 
-    <?php
-}
-?>
+                <?php
+            }
+            ?>
 
 
 
@@ -75,145 +75,6 @@ foreach ($data as $eventID => $event) {
     </div>
 
 
-
-    <style>
-        .description {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            /* Number of lines to show */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            height: calc(1.2em * 3);
-            /* Adjust this value based on line height and number of lines */
-            line-height: 1.2em;
-            /* Line height */
-            max-height: calc(1.2em * 3);
-            /* Adjust this value based on line height and number of lines */
-        }
-
-        .owl-carousel .owl-item img {
-            display: block;
-            width: 100%;
-            object-fit: cover;
-            object-position: center;
-            -webkit-transform-style: preserve-3d;
-        }
-
-        .carousel-inner>.item>a>img,
-        .carousel-inner>.item>img,
-        .img-responsive,
-        .thumbnail a>img,
-        .thumbnail>img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        .fixed-dimension-img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        .probootstrap-media img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        .probootstrap-featured-news-box .probootstrap-media {
-            position: relative;
-            z-index: 1;
-        }
-
-        .probootstrap-featured-news-box .probootstrap-text {
-            min-height: 220px;
-            position: relative;
-            z-index: 2;
-            background: #ffffff;
-            padding: 20px;
-            -webkit-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05);
-            box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05);
-            margin-left: 10px;
-            margin-right: 10px;
-            top: -30px;
-            -webkit-transition: .3s all;
-            transition: .3s all;
-            border-bottom: 3px solid #6a41ed;
-        }
-
-        .probootstrap-featured-news-box .probootstrap-text h3 {
-            font-size: 18px;
-            margin: 0 0 10px 0;
-            line-height: 22px;
-        }
-
-        .probootstrap-featured-news-box .probootstrap-text p {
-            color: #666666;
-        }
-
-        .probootstrap-featured-news-box:hover,
-        .probootstrap-featured-news-box:focus {
-            outline: none;
-        }
-
-        .probootstrap-featured-news-box:hover .probootstrap-text,
-        .probootstrap-featured-news-box:focus .probootstrap-text {
-            background: #6a41ed;
-            top: -40px;
-            -webkit-box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.1);
-            box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.1);
-        }
-
-        .probootstrap-featured-news-box:hover .probootstrap-text h3,
-        .probootstrap-featured-news-box:focus .probootstrap-text h3 {
-            font-size: 18px;
-            margin: 0 0 10px 0;
-            color: #ffffff;
-        }
-
-        .probootstrap-featured-news-box:hover .probootstrap-text p,
-        .probootstrap-featured-news-box:focus .probootstrap-text p {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-date,
-        .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-location,
-        .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-date,
-        .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-location {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-date i,
-        .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-location i,
-        .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-date i,
-        .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-location i {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .probootstrap-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .probootstrap-date {
-            margin-top: auto;
-            /* Pushes the date to the bottom */
-            display: flex;
-            align-items: center;
-            /* Aligns content vertically */
-        }
-
-        .probootstrap-date i {
-            margin-right: 5px;
-            /* Adds space between icon and date */
-        }
-    </style>
 
     <!-- Start Footer area-->
 
