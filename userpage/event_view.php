@@ -28,130 +28,48 @@
 
                 <h1 class="mb-5">EVENT</h1>
             </div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <?php
+require_once '../includes/firebaseRDB.php';
 
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="../homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>Tempora consectetur unde nisi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+$firebase = new firebaseRDB($databaseURL);
 
-                                </div>
-                            </a>
-                        </center>
+$data = $firebase->retrieve("event");
+$data = json_decode($data, true);
+
+foreach ($data as $eventID => $event) {
+    $eventTitle = $event['event_title'];
+    $eventDate = $event['event_date'];
+    $eventDescription = $event['event_description'];
+    $imageUrl = $event['image_url'];
+    ?>
+
+    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="item">
+            <center>
+                <a href="visit_event.php?id=<?php echo $eventID; ?>" class="probootstrap-featured-news-box">
+                    <figure class="probootstrap-media">
+                        <img src="../admin/<?php echo $imageUrl; ?>" alt="Event Image" class="img-responsive">
+                    </figure>
+                    <div class="probootstrap-text">
+                        <h3><?php echo $eventTitle; ?></h3>
+                        <div class="description"><?php echo $eventDescription; ?></div>
+                        <div class="probootstrap-date">
+                            <i class="icon-calendar"></i><?php echo $eventDate; ?>
+                        </div>
                     </div>
+                </a>
+            </center>
+        </div>
+    </div>
 
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+    <?php
+}
+?>
 
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="../homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>Tempora consectetur unde nisi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
 
-                                </div>
-                            </a>
-                        </center>
-                    </div>
 
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
 
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="../homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>Tempora consectetur unde nisi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="../homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>Tempora consectetur unde nisi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="../homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>Tempora consectetur unde nisi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="../homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>Tempora consectetur unde nisi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-
-            </div>
-            <button class="btn" style="float:right" data-toggle="modal" data-target="#signInModal">View All</button>
 
         </div>
     </div>
@@ -159,14 +77,26 @@
 
 
     <style>
+        .description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            /* Number of lines to show */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: calc(1.2em * 3);
+            /* Adjust this value based on line height and number of lines */
+            line-height: 1.2em;
+            /* Line height */
+            max-height: calc(1.2em * 3);
+            /* Adjust this value based on line height and number of lines */
+        }
+
         .owl-carousel .owl-item img {
             display: block;
             width: 100%;
-            /* height: 100%;*/
             object-fit: cover;
-            /* or 'contain' if you want to fit the image within the container without cropping */
             object-position: center;
-            /* Center the image */
             -webkit-transform-style: preserve-3d;
         }
 
@@ -177,36 +107,23 @@
         .thumbnail>img {
             display: block;
             width: 100%;
-            /* or specify a fixed width if needed */
             height: 100%;
-            /* or specify a fixed height if needed */
             object-fit: cover;
-            /* or 'contain' if you want to fit the image within the container without cropping */
             object-position: center;
-            /* Center the image */
         }
 
         .fixed-dimension-img {
             width: 100%;
-            /* Make sure the image takes the full width of its container */
             height: 250px;
-            /* Fixed height */
             object-fit: cover;
-            /* 'cover' will ensure the image covers the entire area */
             object-position: center;
-            /* Center the image */
         }
-
 
         .probootstrap-media img {
             width: 100%;
-            /* Ensure the image takes the full width of its container */
             height: 250px;
-            /* Maintain the aspect ratio */
             object-fit: cover;
-            /* Ensure the image covers the container */
             object-position: center;
-            /* Center the image */
         }
 
         .probootstrap-featured-news-box .probootstrap-media {
@@ -215,6 +132,7 @@
         }
 
         .probootstrap-featured-news-box .probootstrap-text {
+            min-height: 220px;
             position: relative;
             z-index: 2;
             background: #ffffff;
@@ -276,6 +194,24 @@
         .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-date i,
         .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-location i {
             color: rgba(255, 255, 255, 0.4);
+        }
+
+        .probootstrap-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .probootstrap-date {
+            margin-top: auto;
+            /* Pushes the date to the bottom */
+            display: flex;
+            align-items: center;
+            /* Aligns content vertically */
+        }
+
+        .probootstrap-date i {
+            margin-right: 5px;
+            /* Adds space between icon and date */
         }
     </style>
 

@@ -19,12 +19,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Ensure all form fields are set and not empty
     if (
+        isset($_POST['event_date']) && !empty($_POST['event_date']) &&
+        isset($_POST['event_venue']) && !empty($_POST['event_venue']) &&
         isset($_POST['event_title']) && !empty($_POST['event_title']) &&
         isset($_POST['event_author']) && !empty($_POST['event_author']) &&
         isset($_POST['event_description']) && !empty($_POST['event_description']) &&
         isset($_FILES['imageUpload']['name']) && !empty($_FILES['imageUpload']['name'])
     ) {
         $event_title = $_POST['event_title'];
+        $event_venue = $_POST['event_venue'];
+        $event_date = $_POST['event_date'];
         $event_author = $_POST['event_author'];
         $event_description = $_POST['event_description'];
 
@@ -50,10 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $firebase = new firebaseRDB($databaseURL);
 
         // Function to upload image and add event
-        function addEventWithImage($firebase, $event_title, $event_author, $event_description, $image_url) {
+        function addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url) {
             $table = 'event'; // Assuming 'event' is your Firebase database node for even
             $data = array(
                 'event_title' => $event_title,
+                'event_venue' => $event_venue,
+                'event_date' => $event_date,
                 'event_author' => $event_author,
                 'event_description' => $event_description,
                 'image_url' => $image_url,
@@ -72,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image_url = $file_path; // Use $file_path as the image URL
 
             // Add event with image URL to Firebase
-            $result = addEventWithImage($firebase, $event_title, $event_author, $event_description, $image_url);
+            $result = addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url);
 
             // Check result
             if ($result === null) {

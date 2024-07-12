@@ -34,6 +34,13 @@
     $data = $firebase->retrieve("news");
     $data = json_decode($data, true);
 
+    $adminData = $firebase->retrieve("admin/admin");
+    $adminData = json_decode($adminData, true);
+
+    // Extract admin profile image URL
+    $adminFirstName = $adminData['firstname'];
+    $adminLastName = $adminData['lastname'];
+
     // Check if data exists and iterate through each news item
     if ($data && is_array($data)) {
         // Build a new array where keys are preserved
@@ -70,7 +77,7 @@
                                     <div class="news_content">
                                         <h3><?php echo $news_title; ?></h3>
                                         <div class="post_info">
-                                            <p>Posted By <?php echo $news_author; ?></p>
+                                            <p>Author: <?php echo $news_author; ?></p>
                                             <p class="date_posted"><?php echo $news_created; ?></p>
                                         </div>
                                         <div class="news-description" style="margin-top:20px;">

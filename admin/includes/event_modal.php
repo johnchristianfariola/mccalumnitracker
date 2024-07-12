@@ -44,6 +44,18 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="event_title" class="col-sm-2 control-label">Event Date</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="event_date" name="event_date" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="event_title" class="col-sm-2 control-label">Venue</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="event_venue" name="event_venue" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="event_author" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="event_author" name="event_author" required>
@@ -109,6 +121,18 @@
                             <label for="editAuthor" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="editAuthor" name="edit_author" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAuthor" class="col-sm-2 control-label">Event Date</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="editEventDate" name="edit_date" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAuthor" class="col-sm-2 control-label">Event Venue</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="editEventVenue" name="edit_venue" required>
                             </div>
                         </div>
                         <div class="form-group">

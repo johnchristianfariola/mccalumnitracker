@@ -134,6 +134,8 @@
         fetcheventData(id, function (response) {
           $('#editId').val(id);
           $('#editTitle').val(response.event_title);
+          $('#editEventDate').val(response.event_date);
+          $('#editEventVenue').val(response.event_venue);
           $('#editAuthor').val(response.event_author);
           $('#editDesc').val(response.event_description);
 

@@ -3,7 +3,7 @@ session_start(); // Start the session
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure all necessary data is provided and not empty
-    $required_fields = ['id', 'edit_title', 'edit_author', 'edit_description'];
+    $required_fields = ['id', 'edit_title', 'edit_date', 'edit_venue', 'edit_author', 'edit_description'];
 
     $valid = true;
     $missing_fields = [];
@@ -31,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = htmlspecialchars($_POST['id']);
         $updateData = [
             "event_title" => htmlspecialchars($_POST['edit_title']),
+            "event_date" => htmlspecialchars($_POST['edit_date']),
+            "event_venue" => htmlspecialchars($_POST['edit_venue']),
             "event_author" => htmlspecialchars($_POST['edit_author']),
             "event_description" => $purifier->purify($_POST['edit_description']),
         ];
@@ -74,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: event.php');
         exit;
     } else {
-        $_SESSION['error'] = 'All fields are required.';
+        $_SESSION['error'] = 'All fields are required: ' . implode(', ', $missing_fields);
         header('Location: event.php');
         exit;
     }

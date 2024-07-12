@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('news').classList.add('active');
             break;
         case 'event_view.php':
+        case 'visit_event.php':
             document.getElementById('event').classList.add('active');
             break;
         case 'jobs.php':

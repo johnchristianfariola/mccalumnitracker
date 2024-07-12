@@ -37,7 +37,7 @@
         $news_id = $_GET['id'];
 
         // Retrieve the specific news item using the ID
-        $news_data = $firebase->retrieve("news/{$news_id}");
+        $news_data = $firebase->retrieve("event/{$news_id}");
         $news_data = json_decode($news_data, true);
 
         $adminData = $firebase->retrieve("admin/admin");
@@ -51,11 +51,14 @@
         if ($news_data) {
             // Display news details
             $image_url = htmlspecialchars($news_data['image_url']);
-            $news_author = htmlspecialchars($news_data['news_author']);
-            $news_created = htmlspecialchars($news_data['news_created']);
-            // Ensure HTML content in news_description is displayed correctly
-            $news_description = $news_data['news_description'];
-            $news_title = htmlspecialchars($news_data['news_title']);
+            $event_author = htmlspecialchars($news_data['event_author']);
+            $event_created = htmlspecialchars($news_data['event_created']);
+            // Ensure HTML content in event_description is displayed correctly
+            $event_description = $news_data['event_description'];
+            $event_title = htmlspecialchars($news_data['event_title']);
+            $event_date = htmlspecialchars($news_data['event_date']);
+            $event_venue = htmlspecialchars($news_data['event_venue']);
+
             ?>
 
             <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1">
@@ -70,7 +73,7 @@
                                                 <img class="profile" src="../admin/<?php echo $admin_image_url; ?>" alt="">
                                             </div>
                                             <div class="breadcomb-ctn">
-                                                <h2><?php echo $news_title; ?></h2>
+                                                <h2><?php echo $event_title; ?></h2>
                                                 <div class="visited-content">
                                                     <i class="uploader">Posted by: <?php echo $adminFirstName . ' ' . $adminLastName; ?></i>
                                                 </div>
@@ -78,14 +81,17 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <p class="date-uploaded">Date Posted: <?php echo $news_created; ?></p>
+                                    <p class="date-uploaded"><b>Event Date: <?php echo $event_date; ?></b> </p>
+                                        <p class="date-uploaded">Date Posted: <?php echo $event_created; ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div style="background:white; padding: 20px 190px 20px 20px; text-align: justify;">
-                        <?php echo $news_description; ?>
+                    <p><b>Event Venue: <?php echo $event_venue; ?></b></p>
+
+                        <?php echo $event_description; ?>
                     </div>
                     <div class="background">
                         <img style="width:100%; height: 500px; object-fit: cover;" src="../admin/<?php echo $image_url; ?>"
