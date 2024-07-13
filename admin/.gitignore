@@ -1,0 +1,6 @@
+
+
+# Ignore compiled binaries and build directories
+includes/config.php
+
+.htaccess
