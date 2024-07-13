@@ -1,8 +1,9 @@
 <?php
 require_once 'includes/firebaseRDB.php';
+require_once 'includes/config.php'; // Include your config file
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
+
 
 function getFirebaseData($firebase, $path) {
     $data = $firebase->retrieve($path);

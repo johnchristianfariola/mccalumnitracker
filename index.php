@@ -319,8 +319,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </figure>
                             </center>
                             <div class="probootstrap-text">
-                                <h3>Tempora consectetur unde nisi</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                <h3>TITLE</h3>
+                                <p>content</p>
                                 <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                             </div>
                         </a>
@@ -338,8 +338,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </figure>
                             </center>
                             <div class="probootstrap-text">
-                                <h3>Tempora consectetur unde nisi</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                <h3>TITLE</h3>
+                                <p>content</p>
                                 <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                             </div>
                         </a>
@@ -357,8 +357,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </figure>
                             </center>
                             <div class="probootstrap-text">
-                                <h3>Tempora consectetur unde nisi</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                                <h3>TITLE</h3>
+                                <p>content</p>
                                 <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                             </div>
                         </a>
@@ -387,8 +387,8 @@ document.addEventListener('DOMContentLoaded', function() {
                           <a href="#" class="probootstrap-featured-news-box">
                             <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                              <h3>TITLE</h3>
+                              <p>content</p>
                               <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                               
                             </div>
@@ -404,8 +404,8 @@ document.addEventListener('DOMContentLoaded', function() {
                           <a href="#" class="probootstrap-featured-news-box">
                             <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                              <h3>TITLE</h3>
+                              <p>content</p>
                               <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                               
                             </div>
@@ -421,8 +421,8 @@ document.addEventListener('DOMContentLoaded', function() {
                           <a href="#" class="probootstrap-featured-news-box">
                             <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                              <h3>TITLE</h3>
+                              <p>content</p>
                               <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                               
                             </div>
@@ -438,8 +438,8 @@ document.addEventListener('DOMContentLoaded', function() {
                           <a href="#" class="probootstrap-featured-news-box">
                             <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                              <h3>TITLE</h3>
+                              <p>content</p>
                               <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                               
                             </div>
@@ -455,8 +455,8 @@ document.addEventListener('DOMContentLoaded', function() {
                           <a href="#" class="probootstrap-featured-news-box">
                             <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                              <h3>TITLE</h3>
+                              <p>content</p>
                               <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                               
                             </div>
@@ -472,8 +472,8 @@ document.addEventListener('DOMContentLoaded', function() {
                           <a href="#" class="probootstrap-featured-news-box">
                             <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
                             <div class="probootstrap-text">
-                              <h3>Tempora consectetur unde nisi</h3>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, ut.</p>
+                              <h3>TITLE</h3>
+                              <p>content</p>
                               <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
                               
                             </div>
@@ -597,41 +597,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
+                    <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
-                            eos. Clita erat ipsum et lorem et sit.</p>
+                        <p class="mb-0">My experience at Madridejos Community College has been exceptional. The instructors are highly knowledgeable and approachable, always ready to provide extra help when needed. The college's facilities are well-maintained and equipped with the necessary resources, which enhances the learning experience. Being part of this community has given me a sense of belonging and has motivated me to excel in my studies.</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
+                    <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
-                            eos. Clita erat ipsum et lorem et sit.</p>
+                        <p class="mb-0">While the education at Madridejos Community College is of high quality, I feel there could be more extracurricular activities and clubs available for students. Engaging in various interests outside the classroom would help us develop a well-rounded skill set and build stronger connections with our peers. Additionally, expanding the library's resources and incorporating more digital materials would be beneficial for our academic research</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
+                    <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
-                            eos. Clita erat ipsum et lorem et sit.</p>
+                        <p class="mb-0">Studying at Madridejos Community College has been a rewarding experience. The campus atmosphere is peaceful, and the small class sizes allow for more personalized attention from the instructors. However, I believe there is room for improvement in terms of updating the technology used in some of the classrooms. Overall, I am pleased with my education here and confident it will serve me well in my future career</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="homepage/img/profile.jpg"
                         style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
+                    <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et
-                            eos. Clita erat ipsum et lorem et sit.</p>
+                        <p class="mb-0">As an alumnus of Madridejos Community College, I can confidently say that the education and experiences I gained here have been instrumental in shaping my career. The college not only provided a solid academic foundation but also emphasized practical skills and real-world applications, particularly in my BSIT course. The support from the faculty and the strong sense of community among students and alumni have been invaluable. I would recommend MCC to anyone looking for a nurturing and effective learning environment</p>
                     </div>
                 </div>
             </div>
