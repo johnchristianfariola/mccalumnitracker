@@ -2,10 +2,8 @@
 session_start();
 include 'includes/firebaseRDB.php';
 
-// Firebase Realtime Database URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+require_once 'config.php'; // Include your config file
 
-// Instantiate FirebaseRDB object
 $firebase = new firebaseRDB($databaseURL);
 
 // Debugging session values

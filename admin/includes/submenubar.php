@@ -1,10 +1,8 @@
 <?php
 require_once 'includes/firebaseRDB.php';
 
-// Your Firebase Realtime Database URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
+require_once 'config.php'; // Include your config file
 
-// Create an instance of the firebaseRDB class
 $firebase = new firebaseRDB($databaseURL);
 
 // Fetch courses, departments, batch years, and alumni data from Firebase
