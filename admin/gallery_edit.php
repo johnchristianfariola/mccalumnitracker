@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'includes/firebaseRDB.php';
         require_once '../vendor/autoload.php'; // Autoload HTMLPurifier if using Composer
 
-        $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
+        require_once 'includes/config.php'; // Include your config file
         $firebase = new firebaseRDB($databaseURL);
 
         // Extract ID and data to update

@@ -28,9 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Include Firebase RDB class and initialize
             require_once 'includes/firebaseRDB.php';
-            $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
+            require_once 'includes/config.php'; // Include your config file
             $firebase = new firebaseRDB($databaseURL);
-
             // Function to add job
             function addJob($firebase, $job_title, $company_name, $job_description, $status, $work_time) {
                 $table = 'job'; // Assuming 'jobs' is your Firebase database node for job postings

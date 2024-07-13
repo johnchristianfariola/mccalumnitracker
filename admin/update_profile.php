@@ -56,7 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Include FirebaseRDB class and initialize
             require_once 'includes/firebaseRDB.php';
-            $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
+
+            require_once 'includes/config.php'; // Include your config file
             $firebase = new firebaseRDB($databaseURL);
 
             // Define the table variable

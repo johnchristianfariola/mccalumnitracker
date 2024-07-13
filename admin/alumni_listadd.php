@@ -29,9 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Include Firebase RDB class and initialize
             require_once 'includes/firebaseRDB.php';
-            $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
+            require_once 'includes/config.php'; // Include your config file
             $firebase = new firebaseRDB($databaseURL);
-
             // Function to check if alumni data already exists
             function isAlumniDataExists($firebase, $lastname, $studentid) {
                 $table = 'alumni';

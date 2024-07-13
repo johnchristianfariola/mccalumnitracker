@@ -7,9 +7,7 @@ if (isset($_GET['id'])) {
     require_once 'includes/firebaseRDB.php';
 
     // Firebase Realtime Database URL
-    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-
-    // Instantiate FirebaseRDB object
+    require_once 'includes/config.php'; // Include your config file
     $firebase = new firebaseRDB($databaseURL);
 
     // Retrieve specific alumni data

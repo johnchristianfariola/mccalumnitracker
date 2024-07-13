@@ -2,7 +2,7 @@
 session_start(); // Start session if not already started
 require_once 'includes/firebaseRDB.php';
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+require_once 'includes/config.php'; // Include your config file
 $firebase = new firebaseRDB($databaseURL);
 
 $id = isset($_POST['id']) ? $_POST['id'] : '';

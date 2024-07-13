@@ -2,11 +2,7 @@
 <?php include 'includes/header.php'; ?>
 <?php
 require_once 'includes/firebaseRDB.php';
-
-// Your Firebase Realtime Database URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com/";
-
-// Create an instance of the firebaseRDB class
+require_once 'includes/config.php'; // Include your config file
 $firebase = new firebaseRDB($databaseURL);
 
 // Fetch gallery data from Firebase
