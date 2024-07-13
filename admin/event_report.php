@@ -122,12 +122,12 @@
                           <th>Batch</th>
                           <th>Status</th>
                           <th>Date Responded</th>
-                          <th>Tools</th>
+                          <th>Event Particapted</th>
                         </tr>
                       </thead>
                       <tbody>
 
-                        <?php include 'fetch_data/fetch_dataAlumniReport.php' ?>
+                        <?php include 'fetch_data/fetch_dataEventReport.php' ?>
 
 
                       </tbody>
@@ -147,7 +147,7 @@
 
       <!-- Sidebar -->
       <div class="left-div">
-        <?php include 'includes/subalumnireport.php' ?>
+        <?php include 'includes/subeventreport.php' ?>
       </div>
     </div>
 

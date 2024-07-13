@@ -30,7 +30,8 @@
             // Create the data to be inserted
             $participationData = [
                 'event_id' => $event_id,
-                'alumni_id' => $alumni_id
+                'alumni_id' => $alumni_id,
+                'participation' => "Participated"
             ];
 
             // Insert the data into the event_participation rule

@@ -59,9 +59,9 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 
 
 
-<div class="bg"></div>
-<div class="bg bg2"></div>
-<div class="bg bg3"></div>
+	<div class="bg"></div>
+	<div class="bg bg2"></div>
+	<div class="bg bg3"></div>
 
 	<div class="container">
 
