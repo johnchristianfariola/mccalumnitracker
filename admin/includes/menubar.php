@@ -54,7 +54,7 @@
       <li class="treeview">
         <a href="#">
         <i class="fa fa-check-square-o "></i>
-          <span>Survery</span>
+          <span>Survey</span>
           <span class="pull-right-container">
           
             <i class="fa fa-angle-left pull-right"></i>
@@ -62,8 +62,22 @@
         </a>
         <ul class="treeview-menu">
           <li><a href="survey.php"><i class="fa fa-angle-right"></i> Survey List</a></li>
+        </ul>
+      </li>
+      <li class="treeview">
+        <a href="#">
+        <i class="fa fa-check-square-o "></i>
+          <span>Report</span>
+          <span class="pull-right-container">
+          
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
           <li><a href="survey_report.php"><i class="fa fa-angle-right"></i> Survey Report</a></li>
           <li><a href="alumni_report.php"><i class="fa fa-angle-right"></i> Alumni Report</a></li>
+          <li><a href="event_report.php"><i class="fa fa-angle-right"></i> Event Report</a></li>
+
         </ul>
       </li>
     </ul>

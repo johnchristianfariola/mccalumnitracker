@@ -13,7 +13,7 @@ function sanitizeInput($data) {
     return htmlspecialchars(strip_tags($data));
 }
 
-$alumniData = getFirebaseData($firebase, "alumni");
+$alumniData = getFirebaseData($firebase, "event_responses");
 $batchData = getFirebaseData($firebase, "batch_yr");
 $courseData = getFirebaseData($firebase, "course");
 

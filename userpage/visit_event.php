@@ -22,14 +22,36 @@
     <!-- Mobile Menu end -->
     <!-- Main Menu area start-->
     <?php include 'includes/main_menu.php' ?>
-   
-   <?php
 
+
+    <!-- Main Main Content area start-->
+    <?php
     require_once '../includes/firebaseRDB.php';
 
     // Initialize Firebase URL
     $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
     $firebase = new firebaseRDB($databaseURL);
+
+    // Function to calculate time difference in a human-readable format
+    function timeAgo($timestamp)
+    {
+        $currentTime = time();
+        $commentTime = strtotime($timestamp);
+        $difference = $currentTime - $commentTime;
+
+        if ($difference < 60) {
+            return 'Just now';
+        } elseif ($difference >= 60 && $difference < 3600) {
+            $time = round($difference / 60);
+            return $time . ' minute' . ($time > 1 ? 's' : '') . ' ago';
+        } elseif ($difference >= 3600 && $difference < 86400) {
+            $time = round($difference / 3600);
+            return $time . ' hour' . ($time > 1 ? 's' : '') . ' ago';
+        } else {
+            $time = round($difference / 86400);
+            return $time . ' day' . ($time > 1 ? 's' : '') . ' ago';
+        }
+    }
 
     // Get the news ID from the URL
     if (isset($_GET['id'])) {
@@ -52,8 +74,7 @@
             $image_url = htmlspecialchars($event_data['image_url']);
             $event_author = htmlspecialchars($event_data['event_author']);
             $event_created = htmlspecialchars($event_data['event_created']);
-            // Ensure HTML content in event_description is displayed correctly
-            $event_description = $event_data['event_description'];
+            $event_description = $event_data['event_description']; // Ensure HTML content in event_description is displayed correctly
             $event_title = htmlspecialchars($event_data['event_title']);
             $event_date = htmlspecialchars($event_data['event_date']);
             $event_venue = htmlspecialchars($event_data['event_venue']);
@@ -61,6 +82,12 @@
             // Get logged in alumni ID from session
             $alumni_id = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null;
 
+            // Retrieve alumni profile information
+            $alumniData = $firebase->retrieve("alumni/{$alumni_id}");
+            $alumniData = json_decode($alumniData, true);
+            $alumniProfileUrl = $alumniData['profile_url'];
+            $alumniFirstName = $alumniData['firstname']; // Assuming the email is used as the name
+            $alumniLastName = $alumniData['lastname']; // Assuming the email is used as the name
             // Check if the alumni has already participated
             $participationExists = false;
             if ($alumni_id) {
@@ -73,6 +100,19 @@
                             $participationExists = true;
                             break;
                         }
+                    }
+                }
+            }
+
+            // Retrieve existing comments for the event
+            $commentData = $firebase->retrieve("comment");
+            $commentData = json_decode($commentData, true);
+            $eventComments = [];
+            if (is_array($commentData)) {
+                foreach ($commentData as $comment) {
+                    if ($comment['event_id'] === $news_id) {
+                        $comment['date_ago'] = timeAgo($comment['date_commented']);
+                        $eventComments[] = $comment;
                     }
                 }
             }
@@ -99,7 +139,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <p class="date-uploaded"><b>Event Date: <?php echo $event_date; ?></b> </p>
+                                        <p class="date-uploaded"><b>Event Date: <?php echo $event_date; ?></b></p>
                                         <p class="date-uploaded">Date Posted: <?php echo $event_created; ?></p>
                                     </div>
                                 </div>
@@ -108,14 +148,13 @@
                     </div>
                     <div style="background:white; padding: 20px 190px 20px 20px; text-align: justify;">
                         <p><b>Event Venue: <?php echo $event_venue; ?></b></p>
-
                         <?php echo $event_description; ?>
                     </div>
                     <div class="background">
                         <img style="width:100%; height: 500px; object-fit: cover;" src="../admin/<?php echo $image_url; ?>"
                             alt="">
                     </div>
-                    <div class="additional-content" style="width: 100%; background: white; padding: 20px; ">
+                    <div class="additional-content" style="width: 100%; background: white; padding: 20px;">
                         <div style="margin-top:20px pull">
                             <a id="participateBtn" href="javascript:void(0);" data-event-id="<?php echo $news_id; ?>"
                                 data-alumni-id="<?php echo $alumni_id; ?>" class="btn btn-success notika-btn-success" <?php echo $participationExists ? 'disabled' : ''; ?>>
@@ -125,16 +164,56 @@
                         </div>
                         <br><br>
 
+                        <div class="comments-container">
+                            <h1>Comments</h1>
+                            <ul id="comments-list" class="comments-list">
+                                <?php if (empty($eventComments)): ?>
+                                    <li id="no-comments-message" class="center-message">Be the First to Comment</li>
+                                <?php else: ?>
+                                    <?php foreach ($eventComments as $comment): ?>
+                                        <?php
+                                        // Retrieve commenter profile information
+                                        $commenterData = $firebase->retrieve("alumni/{$comment['alumni_id']}");
+                                        $commenterData = json_decode($commenterData, true);
+                                        $commenterProfileUrl = $commenterData['profile_url'];
+                                        $commenterFirstName = $commenterData['firstname']; // Assuming the email is used as the name
+                                        $commenterLasrName = $commenterData['lastname']; // Assuming the email is used as the name
+                                        ?>
+                                        <li>
+                                            <div class="comment-main-level">
+                                                <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
+                                                <div class="comment-box">
+                                                    <div class="comment-head">
+                                                        <h6 class="comment-name by-author"><a
+                                                                href="#"><?php echo $commenterFirstName . ' ' . $commenterLasrName; ?></a>
+                                                        </h6>
+
+                                                        <span><?php echo $comment['date_ago']; ?></span>
+                                                        <i class="fa fa-reply"></i>
+                                                        <i class="fa fa-heart"></i>
+                                                    </div>
+                                                    <div class="comment-content">
+                                                        <?php echo htmlspecialchars($comment['comment']); ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+
                         <div class="container pb-cmnt-container">
                             <div class="row">
                                 <div class="col-md-10 col-md-offset-0">
                                     <div class="panel panel-info">
                                         <div class="panel-body">
-
-                                            <form>
-                                                <textarea placeholder="Write your comment here!"
+                                            <form id="commentForm">
+                                                <textarea name="comment" placeholder="Write your comment here!"
                                                     class="pb-cmnt-textarea"></textarea>
-                                                <button class="btn btn-primary pull-right" type="button">Share</button>
+                                                <button class="btn btn-primary pull-right" type="submit">Share</button>
+                                                <input type="hidden" name="event_id" value="<?php echo $news_id; ?>">
+                                                <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
                                             </form>
                                         </div>
                                     </div>
@@ -142,11 +221,11 @@
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
+
+
+
 
             <?php
         } else {
@@ -243,7 +322,7 @@
 
         .comments-list li {
             margin-bottom: 15px;
-            display: block;
+            /* display: block;*/
             position: relative;
         }
 
@@ -280,6 +359,7 @@
         .comments-list .comment-avatar img {
             width: 100%;
             height: 100%;
+            background: white;
         }
 
         .reply-list .comment-avatar {
@@ -313,25 +393,28 @@
             display: block;
             border-width: 10px 12px 10px 0;
             border-style: solid;
-            border-color: transparent #FCFCFC;
+            border-color: transparent #EEEDEB;
             top: 8px;
             left: -11px;
+
         }
 
         .comments-list .comment-box:before {
             border-width: 11px 13px 11px 0;
             border-color: transparent rgba(0, 0, 0, 0.05);
             left: -12px;
+
         }
 
         .reply-list .comment-box {
             width: 610px;
+
         }
 
         .comment-box .comment-head {
-            background: #FCFCFC;
+            background: #EEEDEB;
             padding: 10px 12px;
-            border-bottom: 1px solid #E5E5E5;
+            border-bottom: 1px solid red;
             overflow: hidden;
             -webkit-border-radius: 4px 4px 0 0;
             -moz-border-radius: 4px 4px 0 0;
@@ -430,6 +513,15 @@
             height: 130px;
             width: 100%;
             border: 1px solid #F2F2F2;
+        }
+
+        .center-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            font-size: 20px;
+            color:
         }
     </style>
 
@@ -530,27 +622,19 @@
                 }
             });
         });
+        // JavaScript for handling participation and commenting
         document.getElementById('participateBtn').addEventListener('click', function () {
-            if (this.hasAttribute('disabled')) {
-                return; // Do nothing if the button is disabled
-            }
-
             var eventId = this.getAttribute('data-event-id');
             var alumniId = this.getAttribute('data-alumni-id');
 
-            if (!alumniId) {
-                alert('You need to be logged in to participate.');
-                return;
-            }
-
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'participate.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     if (xhr.responseText === 'Participation successful!') {
-                        alert('Participation successful!');
-                        location.reload();
+                        document.getElementById('participateBtn').innerText = 'Already Participated';
+                        document.getElementById('participateBtn').setAttribute('disabled', 'disabled');
                     } else {
                         alert(xhr.responseText);
                     }
@@ -558,6 +642,69 @@
             };
             xhr.send('event_id=' + eventId + '&alumni_id=' + alumniId);
         });
+
+        document.getElementById('commentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'comment.php', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (xhr.responseText === 'Comment added!') {
+                        var commentsList = document.getElementById('comments-list');
+                        var noCommentsMessage = document.getElementById('no-comments-message');
+                        if (noCommentsMessage) {
+                            noCommentsMessage.remove();
+                        }
+
+                        var newComment = document.createElement('li');
+                        var now = new Date();
+                        var timestamp = now.toISOString();
+                        newComment.innerHTML = `
+                                <div class="comment-main-level">
+                                    <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                        <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
+                                            <span>${timeAgo(timestamp)}</span>
+                                            <i class="fa fa-reply"></i>
+                                            <i class="fa fa-heart"></i>
+                                        </div>
+                                        <div class="comment-content">
+                                            ${document.querySelector('.pb-cmnt-textarea').value}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        commentsList.appendChild(newComment);
+                        document.querySelector('.pb-cmnt-textarea').value = '';
+                    } else {
+                        alert(xhr.responseText);
+                    }
+                }
+            };
+            xhr.send(formData);
+        });
+
+        // Function to calculate time ago
+        function timeAgo(timestamp) {
+            var now = new Date();
+            var commentTime = new Date(timestamp);
+            var difference = now - commentTime;
+
+            if (difference < 60000) {
+                return 'Just now';
+            } else if (difference < 3600000) {
+                return Math.floor(difference / 60000) + ' minutes ago';
+            } else if (difference < 86400000) {
+                return Math.floor(difference / 3600000) + ' hours ago';
+            } else {
+                var days = Math.floor(difference / 86400000);
+                return days + (days === 1 ? ' day ago' : ' days ago');
+            }
+        }
 
     </script>
 
