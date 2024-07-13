@@ -9,8 +9,8 @@ require_once 'includes/firebaseRDB.php';
 require_once 'includes/config.php'; // Include the config file
 
 // Initialize Firebase URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
+
 
 if(isset($_POST['signup'])){
     $lastname = $_POST['lastname'];

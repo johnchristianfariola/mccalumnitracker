@@ -31,7 +31,7 @@
             <?php
             require_once '../includes/firebaseRDB.php';
 
-            $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+            require_once '../includes/config.php'; // Include your config file
             $firebase = new firebaseRDB($databaseURL);
 
             $data = $firebase->retrieve("event");

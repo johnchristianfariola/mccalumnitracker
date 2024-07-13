@@ -29,9 +29,8 @@
     require_once '../includes/firebaseRDB.php';
 
     // Initialize Firebase URL
-    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+    require_once '../includes/config.php'; // Include your config file
     $firebase = new firebaseRDB($databaseURL);
-
     // Get the news ID from the URL
     if (isset($_GET['id'])) {
         $news_id = $_GET['id'];

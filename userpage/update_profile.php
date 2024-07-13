@@ -3,11 +3,8 @@ session_start();
 include '../includes/firebaseRDB.php';
 
 // Firebase Realtime Database URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-
-// Instantiate FirebaseRDB object
+require_once '../includes/config.php'; // Include your config file
 $firebase = new firebaseRDB($databaseURL);
-
 // Validate the CSRF token
 if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
     header('location: alumni_profile.php?error=invalid_token');
