@@ -29,7 +29,7 @@
     require_once '../includes/firebaseRDB.php';
 
     // Initialize Firebase URL
-    require_once '../includes/config.php'; // Include your config file
+    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
     $firebase = new firebaseRDB($databaseURL);
 
     // Function to calculate time difference in a human-readable format
@@ -117,6 +117,7 @@
                 }
             }
             ?>
+
 
             <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1">
                 <div class="container">
@@ -604,7 +605,7 @@
     <script src="js/dialog/dialog-active.js"></script>
     <!--  Custom JS-->
     <script>
-        $('#log').on('click', function () {
+       $('#log').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",
@@ -705,7 +706,6 @@
                 return days + (days === 1 ? ' day ago' : ' days ago');
             }
         }
-
     </script>
 
 

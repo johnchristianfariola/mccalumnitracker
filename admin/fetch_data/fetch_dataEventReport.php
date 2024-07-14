@@ -1,6 +1,5 @@
 <?php
 require_once 'includes/firebaseRDB.php';
-
 require_once 'includes/config.php'; // Include your config file
 
 $firebase = new firebaseRDB($databaseURL);
@@ -30,9 +29,9 @@ if (is_array($eventParticipationData) && is_array($alumniData) && is_array($even
         $eventId = $eventParticipation['event_id'];
         $participation = $eventParticipation['participation'];
 
-        if ($participation === "Participated") {
-            $participation_html = '<span class="label label-success" style="font-size: 12px !important; padding: 5px 20px !important; background: gold !important; color:black !important; border: 1px solid black !important">PARTICIPATED</span>';
-        }
+        $participation_html = ($participation === "Participated")
+            ? '<span class="label label-success" style="font-size: 12px !important; padding: 5px 20px !important; background: gold !important; color:black !important; border: 1px solid black !important">PARTICIPATED</span>'
+            : '';
 
         if (isset($alumniData[$alumniId]) && isset($eventData[$eventId])) {
             $alumni = $alumniData[$alumniId];
@@ -48,7 +47,7 @@ if (is_array($eventParticipationData) && is_array($alumniData) && is_array($even
 
             if ((!$filterEventId || $eventId == $filterEventId) && (!$filterCourse || $filterCourse == $courseId) && (!$filterBatch || $filterBatch == $batchId)) {
                 echo "<tr>
-                        <td style='display:none;'></td>
+                           <td style='display:none;'><input type='checkbox' class='modal-checkbox' data-id='$id'></td>
                         <td>{$alumni['studentid']}</td>
                         <td>{$alumniName}</td>
                         <td>{$courseName}</td>

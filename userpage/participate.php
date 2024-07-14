@@ -3,9 +3,9 @@
     require_once '../includes/firebaseRDB.php';
 
     // Initialize Firebase URL
-    require_once '../includes/config.php'; // Include your config file
+    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
     $firebase = new firebaseRDB($databaseURL);
-
+    
     if (isset($_POST['event_id']) && isset($_POST['alumni_id'])) {
         $event_id = $_POST['event_id'];
         $alumni_id = $_POST['alumni_id'];
