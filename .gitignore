@@ -1,7 +1,7 @@
 
 
 # Ignore compiled binaries and build directories
-includes/config.php
+!.includes/config.php
 
-admin/.htaccess
+
 
