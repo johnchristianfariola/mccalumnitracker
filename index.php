@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title = "Already Verified";
             footer = '<a href="#">Forgot your password?</a>';
         } else {
-            title = "Error";
+            title = "Oppps..";
            
         }
 
