@@ -25,7 +25,7 @@
               <i class="fa fa-plus-circle"></i>&nbsp;&nbsp; Import
             </a>
 
-           <!-- <a href="#print" data-toggle="modal" id="showModalButton"
+            <!-- <a href="#print" data-toggle="modal" id="showModalButton"
               class="btn-add-class btn btn-primary btn-sm btn-flat">
               <i class="fa fa-print"></i>&nbsp;&nbsp; Print
             </a>-->
@@ -133,8 +133,8 @@
   <script>
 
     $(document).ready(function () {
-      // Open edit modal when edit button is clicked
-      $('.open-modal').click(function () {
+      // Use event delegation to handle edit modal
+      $(document).on('click', '.open-modal', function () {
         var id = $(this).data('id');
         $.ajax({
           url: 'alumni_row.php',
@@ -170,8 +170,8 @@
         });
       });
 
-      // Open delete modal when delete button is clicked
-      $('.open-delete').click(function () {
+      // Use event delegation to handle delete modal
+      $(document).on('click', '.open-delete', function () {
         var id = $(this).data('id');
         $.ajax({
           url: 'alumni_row.php',
@@ -197,6 +197,7 @@
         });
       });
     });
+
 
     // Toggle dropdown menu
     document.getElementById('toggle-button').addEventListener('click', function () {

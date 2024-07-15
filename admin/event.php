@@ -126,8 +126,8 @@
         }
       }
 
-      // Open edit modal when edit button is clicked
-      $('.open-modal').click(function () {
+      // Use event delegation to handle edit modal
+      $(document).on('click', '.open-modal', function () {
         var id = $(this).data('id');
 
         // Fetch event data via AJAX
@@ -169,51 +169,46 @@
         destroyCKEditor('editDesc');
       });
 
+      // Use event delegation to handle delete modal
+      $(document).on('click', '.open-delete', function () {
+        var id = $(this).data('id');
 
-      $(document).ready(function () {
-        // Example of retrieving data from event_row.php
-        $('.open-delete').click(function () {
-          var id = $(this).data('id');
+        // Make an AJAX request to fetch event details
+        $.ajax({
+          url: 'event_row.php',
+          type: 'GET',
+          data: { id: id },
+          dataType: 'json',
+          success: function (response) {
+            // Update the description-container with the retrieved HTML content
+            $('.description-container').html(response.event_description);
 
-          // Make an AJAX request to fetch event details
-          $.ajax({
-            url: 'event_row.php',
-            type: 'GET',
-            data: { id: id },
-            dataType: 'json',
+            // Optionally, update other elements with data from response
+            $('.deleteId').val(id);
+            $('.title').text(response.event_title);
 
-            success: function (response) {
-              // Update the description-container with the retrieved HTML content
-              $('.description-container').html(response.event_description);
-
-              // Optionally, update other elements with data from response
-              $('.deleteId').val(id);
-              $('.title').text(response.event_title);
-
-              if (response.image_url) {
-                $('#imagePreviewImg3').attr('src', response.image_url);
-                $('#imageLink').attr('href', response.image_url);
-                $('#imagePreviewImg3').css('display', 'block'); // Ensure the image is displayed
-              } else {
-                $('#imagePreviewImg3').attr('src', ''); // Clear the image src if no image URL is returned
-                $('#imagePreviewImg3').css('display', 'none'); // Hide the image if no image URL is returned
-              }
-
-              // Show the modal or perform other actions
-              $('#deleteModal').modal('show');
-
-              // Store the ID in a data attribute of the delete button
-              $('.btn-confirm-delete').data('id', id);
-            },
-            error: function (xhr, status, error) {
-              console.error('AJAX Error: ' + status + ' ' + error);
+            if (response.image_url) {
+              $('#imagePreviewImg3').attr('src', response.image_url);
+              $('#imageLink').attr('href', response.image_url);
+              $('#imagePreviewImg3').css('display', 'block'); // Ensure the image is displayed
+            } else {
+              $('#imagePreviewImg3').attr('src', ''); // Clear the image src if no image URL is returned
+              $('#imagePreviewImg3').css('display', 'none'); // Hide the image if no image URL is returned
             }
-          });
+
+            // Show the modal or perform other actions
+            $('#deleteModal').modal('show');
+
+            // Store the ID in a data attribute of the delete button
+            $('.btn-confirm-delete').data('id', id);
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX Error: ' + status + ' ' + error);
+          }
         });
       });
-
-
     });
+
   </script>
 </body>
 

@@ -97,7 +97,9 @@
   </div>
   <?php include 'includes/scripts.php'; ?>
   <script>
-    $(document).ready(function () {
+   
+
+   $(document).ready(function () {
   // Function to fetch content from the server
   function fetchNewsData(id, successCallback, errorCallback) {
     $.ajax({
@@ -148,8 +150,8 @@
     $('#editTitle').focus();
   }
 
-  // Open edit modal when edit button is clicked
-  $('.open-modal').click(function () {
+  // Use event delegation to handle edit modal
+  $(document).on('click', '.open-modal', function () {
     var id = $(this).data('id');
 
     // Fetch news data via AJAX
@@ -161,53 +163,45 @@
     });
   });
 
+  // Use event delegation to handle delete modal
+  $(document).on('click', '.open-delete', function () {
+    var id = $(this).data('id');
 
+    // Make an AJAX request to fetch news details
+    $.ajax({
+      url: 'news_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: function (response) {
+        // Update the description-container with the retrieved HTML content
+        $('.description-container').html(response.news_description);
 
+        // Optionally, update other elements with data from response
+        $('.deleteId').val(id);
+        $('.title').text(response.news_title);
 
-      $(document).ready(function () {
-        // Example of retrieving data from news_row.php
-        $('.open-delete').click(function () {
-          var id = $(this).data('id');
+        if (response.image_url) {
+          $('#imagePreviewImg3').attr('src', response.image_url);
+          $('#imageLink').attr('href', response.image_url);
+          $('#imagePreviewImg3').css('display', 'block'); // Ensure the image is displayed
+        } else {
+          $('#imagePreviewImg3').attr('src', ''); // Clear the image src if no image URL is returned
+          $('#imagePreviewImg3').css('display', 'none'); // Hide the image if no image URL is returned
+        }
 
-          // Make an AJAX request to fetch news details
-          $.ajax({
-            url: 'news_row.php',
-            type: 'GET',
-            data: { id: id },
-            dataType: 'json',
+        // Show the modal or perform other actions
+        $('#deleteModal').modal('show');
 
-            success: function (response) {
-              // Update the description-container with the retrieved HTML content
-              $('.description-container').html(response.news_description);
-
-              // Optionally, update other elements with data from response
-              $('.deleteId').val(id);
-              $('.title').text(response.news_title);
-
-              if (response.image_url) {
-                $('#imagePreviewImg3').attr('src', response.image_url);
-                $('#imageLink').attr('href', response.image_url);
-                $('#imagePreviewImg3').css('display', 'block'); // Ensure the image is displayed
-              } else {
-                $('#imagePreviewImg3').attr('src', ''); // Clear the image src if no image URL is returned
-                $('#imagePreviewImg3').css('display', 'none'); // Hide the image if no image URL is returned
-              }
-
-              // Show the modal or perform other actions
-              $('#deleteModal').modal('show');
-
-              // Store the ID in a data attribute of the delete button
-              $('.btn-confirm-delete').data('id', id);
-            },
-            error: function (xhr, status, error) {
-              console.error('AJAX Error: ' + status + ' ' + error);
-            }
-          });
-        });
-      });
-
-
+        // Store the ID in a data attribute of the delete button
+        $('.btn-confirm-delete').data('id', id);
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX Error: ' + status + ' ' + error);
+      }
     });
+  });
+});
 
 
 
