@@ -47,8 +47,8 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
                 <div class="form-group">
                     <label for="department" class="col-sm-3 control-label">Department</label>
                     <div class="col-sm-9">
-                    <select class="form-control" id="department" name="department">
-                        <option value="">Select a department</option>
+                    <select class="form-control" id="department" name="department" required>
+                        <option value="" disabled>Select a department</option>
                         <?php
                         if (is_array($data)) {
                             foreach ($data as $departmentId => $details) {

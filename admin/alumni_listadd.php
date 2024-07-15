@@ -9,6 +9,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Ensure last name and student ID fields are set and not empty
         if (isset($_POST['lastname']) && !empty($_POST['lastname']) && isset($_POST['studentid']) && !empty($_POST['studentid'])) {
+            $studentid = $_POST['studentid'];
+
+            // Validate the student ID format
+            if (!preg_match('/^\d{4}-\d{4}$/', $studentid)) {
+                $_SESSION['error'] = 'Student ID must be in the format 9033-1499.';
+                header('Location: alumni.php');
+                exit;
+            }
+
             // Assign form data to variables
             $firstname = $_POST['firstname'] ?? '';
             $lastname = $_POST['lastname'];
@@ -25,12 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $course = $_POST['course'] ?? '';
             $batch = $_POST['batch'] ?? '';
-            $studentid = $_POST['studentid'];
 
             // Include Firebase RDB class and initialize
             require_once 'includes/firebaseRDB.php';
             require_once 'includes/config.php'; // Include your config file
             $firebase = new firebaseRDB($databaseURL);
+
             // Function to check if alumni data already exists
             function isAlumniDataExists($firebase, $lastname, $studentid) {
                 $table = 'alumni';
