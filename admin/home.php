@@ -6,7 +6,7 @@ $year = date('Y');
 if (isset($_GET['year'])) {
   $year = $_GET['year'];
 }
- 
+
 require_once 'includes/firebaseRDB.php';
 
 
@@ -235,7 +235,7 @@ $courseCodesJson = json_encode(array_keys($courseCounts));
                 <div class="chart">
                   <br>
                   <div id="legend" class="text-center"></div>
-                  <canvas id="barChart" style="height:350px"></canvas>
+                  <canvas id="barChart" style="height:550px"></canvas>
                 </div>
               </div>
             </div>
@@ -259,42 +259,42 @@ $courseCodesJson = json_encode(array_keys($courseCounts));
     var courseLabels = <?php echo $courseCodesJson; ?>;
     var courseData = <?php echo $courseCountsJson; ?>;
     var data = {
-        labels: courseLabels,
-        datasets: [{
-            label: 'Number of Alumni',
-            data: courseData,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1,
-            fill: false
-        }]
+      labels: courseLabels,
+      datasets: [{
+        label: 'Number of Alumni',
+        data: courseData,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1,
+        fill: false
+      }]
     };
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+      type: 'bar',
+      data: data,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
         }
+      }
     });
 
   </script>

@@ -190,6 +190,7 @@
             <th>Date Responded</th>
             <th>Event Participated</th>
           </tr>
+
         </thead>
         <tbody id="printTableBody">
           <?php

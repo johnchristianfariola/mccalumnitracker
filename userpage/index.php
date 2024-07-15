@@ -36,15 +36,13 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
     <?php include 'includes/main_menu.php' ?>
 
     <!-- End Sale Statistic area-->
-
-        <div class="sale-statistic-area">
+    <div class="sale-statistic-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
                     <?php
                     require_once '../includes/firebaseRDB.php';
-
-                    require_once '../includes/config.php'; // Include your config file
+                    require_once '../includes/config.php';
                     $firebase = new firebaseRDB($databaseURL);
 
                     function sortByDate($a, $b)
@@ -65,9 +63,8 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                     $data = json_decode($data, true);
 
                     if (is_array($data)) {
-                        usort($data, 'sortByDate'); // 
+                        usort($data, 'sortByDate');
                         foreach ($data as $id => $news) {
-                            // Strip HTML tags from news_description and convert newlines to <br> tags
                             $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news['news_description'])));
                             $news_title = strip_tags($news['news_title']);
                             $news_author = strip_tags($news['news_author']);
@@ -78,7 +75,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                             <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
                                 <div class="curved-inner-pro">
                                     <div class="curved-ctn">
-                                        <div class="image-section" >
+                                        <div class="image-section">
                                             <img class="profile" src="../admin/<?php echo $admin_image_url; ?>"
                                                 alt="news image">
                                         </div>
@@ -93,136 +90,112 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                                     <p class="news-description"><?php echo $news_description; ?></p>
                                     <button class="toggle-button">Show More...</button>
                                 </div>
-                                <img style="border-radius: 1rem" src="../admin/<?php echo $image_url; ?>" class="news_post" alt="news image">
+                                <img style="border-radius: 1rem" src="../admin/<?php echo $image_url; ?>" class="news_post"
+                                    alt="news image">
                             </div>
 
                             <?php
                         }
                     }
                     ?>
-
                 </div>
-
-
-                <?php
-
-                $data = $firebase->retrieve("event");
-                $data = json_decode($data, true);
-
-                if (is_array($data)) {
-                    
-                    foreach ($data as $id => $event) {
-                        // Retrieve and sanitize event data
-                        $eventTitle = htmlspecialchars($event['event_title']);
-                        $eventDate = htmlspecialchars($event['event_created']);
-                        $eventDescription = strip_tags($event['event_description']); // Strip HTML tags
-                        $eventImage = htmlspecialchars($event['image_url']);
-
-                        echo '
-                        <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
-                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
-                                <div class="card">
-                                    <img src="../admin/' . $eventImage . '" alt="Event Image" class="event_image">
-                                    <div class="card-content">
-                                        <hr>
-                                        <div class="card-title">' . $eventTitle . '</div>
-                                        <div class="card-date">Posted on ' . $eventDate . '</div>
-                                       
-                                        <div class="btn btn-default btn-icon-notika waves-effect"><i class="notika-icon notika-menu">More</i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                        ';
-                    }
-                }
-                ?>
-
-                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12" style="margin-top:60px">
-                    <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
+                    <div class="right-section">
                     <?php
+        $data = $firebase->retrieve("event");
+        $data = json_decode($data, true);
 
+        if (is_array($data)) {
+            $count = 0; // Initialize counter
 
-                    $data = $firebase->retrieve("job");
-                    $data = json_decode($data, true);
+            foreach ($data as $id => $event) {
+                if ($count >= 5) break; // Limit to 5 events
 
-                    function sortByDateJob($a, $b)
-                    {
-                        $dateA = strtotime($a['job_created']);
-                        $dateB = strtotime($b['job_created']);
-                        return $dateB - $dateA;
-                    }
+                $eventTitle = htmlspecialchars($event['event_title']);
+                $eventDate = htmlspecialchars($event['event_created']);
+                $eventDescription = strip_tags($event['event_description']);
+                $eventImage = htmlspecialchars($event['image_url']);
 
-                    if (is_array($data)) {
-                        usort($data, 'sortByDateJob'); // 
-                        foreach ($data as $id => $job) {
-                            // Check if status is Active
-                            if (isset($job['status']) && $job['status'] == 'Active') {
-                                // Ensure that all required fields are available and strip HTML tags
-                                $jobTitle = isset($job['job_title']) ? strip_tags($job['job_title']) : 'N/A';
-                                $workTime = isset($job['work_time']) ? strip_tags($job['work_time']) : 'N/A';
-                                $company = isset($job['company_name']) ? strip_tags($job['company_name']) : 'N/A';
-                                $jobDate = isset($job['job_created']) ? strip_tags($job['job_created']) : 'N/A';
-
-                                // Set background color based on work time
-                                $backgroundColor = ($workTime == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold';
-                                $color = ($workTime == 'Full-Time') ? 'white' : 'black';
-
-                                echo '
-                    
-                        <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
-                            <div class="card">
-                                <div class="card-content">
-                                    <div class="job-container">
-                                        <div class="job-title">' . $jobTitle . '</div>
-                                        <div class="job-timesced" style="background-color: ' . $backgroundColor . '; color: ' . $color . ';">' . $workTime . '</div>
-                                    </div>
-                                    <hr>
-                                    <div class="card-date">' . $company . '</div>
-                                    <div class="card-date">Posted on ' . $jobDate . '</div>
-                                    
-                                </div>
-                            </div>
+                echo '
+                <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
+                    <div class="card">
+                        <img src="../admin/' . $eventImage . '" alt="Event Image" class="event_image">
+                        <div class="card-content">
+                            <hr>
+                            <div class="card-title">' . $eventTitle . '</div>
+                            <div class="card-date">Posted on ' . $eventDate . '</div>
+                            <a href="visit_event.php?id=' . $id . '" class="btn btn-default btn-icon-notika waves-effect"><i class="notika-icon notika-menu"> More</i></a>
                         </div>
-                   ';
+                    </div>
+                </div>';
+                
+                $count++; // Increment counter
+            }
+        }
+        ?>
+
+                        <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
+
+                        <div class="job-section" style="margin-top:60px">
+                            <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
+                            <?php
+                            $data = $firebase->retrieve("job");
+                            $data = json_decode($data, true);
+
+                            function sortByDateJob($a, $b)
+                            {
+                                $dateA = strtotime($a['job_created']);
+                                $dateB = strtotime($b['job_created']);
+                                return $dateB - $dateA;
                             }
-                        }
-                    }
-                    ?>
 
-                    <div class="" style="margin-top:60px">
-                        <h3><i class="fa fa-wechat"></i> Forum</h3>
-                        <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
-                            data-wow-delay="0.3">
-                            <div class="card">
-                                <div class="card-content">
-                                    
-                                <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
+                            if (is_array($data)) {
+                                usort($data, 'sortByDateJob');
+                                foreach ($data as $id => $job) {
+                                    if (isset($job['status']) && $job['status'] == 'Active') {
+                                        $jobTitle = isset($job['job_title']) ? strip_tags($job['job_title']) : 'N/A';
+                                        $workTime = isset($job['work_time']) ? strip_tags($job['work_time']) : 'N/A';
+                                        $company = isset($job['company_name']) ? strip_tags($job['company_name']) : 'N/A';
+                                        $jobDate = isset($job['job_created']) ? strip_tags($job['job_created']) : 'N/A';
 
+                                        $backgroundColor = ($workTime == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold';
+                                        $color = ($workTime == 'Full-Time') ? 'white' : 'black';
+
+                                        echo '
+                                    <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
+                                        <div class="card">
+                                            <div class="card-content">
+                                                <div class="job-container">
+                                                    <div class="job-title">' . $jobTitle . '</div>
+                                                    <div class="job-timesced" style="background-color: ' . $backgroundColor . '; color: ' . $color . ';">' . $workTime . '</div>
+                                                </div>
+                                                <hr>
+                                                <div class="card-date">' . $company . '</div>
+                                                <div class="card-date">Posted on ' . $jobDate . '</div>
+                                            </div>
+                                        </div>
+                                    </div>';
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+
+                        <div class="forum-section" style="margin-top:60px">
+                            <h3><i class="fa fa-wechat"></i> Forum</h3>
+                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
+                                data-wow-delay="0.3">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
         </div>
-    </div>
-    </div>
     </div>
 
 
