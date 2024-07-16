@@ -20,9 +20,90 @@
         };
         reader.readAsDataURL(event.target.files[0]);
     }
+  
+    function validateAddForm() {
+    var isValid = true;
+
+    // Validate news_title
+    var newsTitle = document.getElementById('news_title').value;
+    var newsTitleError = document.getElementById('news_title_error');
+    if (newsTitle.trim() === "") {
+        newsTitleError.style.display = 'block';
+        isValid = false;
+    } else {
+        newsTitleError.style.display = 'none';
+    }
+
+    // Validate news_author
+    var newsAuthor = document.getElementById('news_author').value;
+    var newsAuthorError = document.getElementById('news_author_error');
+    if (newsAuthor.trim() === "") {
+        newsAuthorError.style.display = 'block';
+        isValid = false;
+    } else {
+        newsAuthorError.style.display = 'none';
+    }
+
+    // Validate description
+    var description = document.getElementById('description').value;
+    var descriptionError = document.getElementById('description_error');
+    if (description.trim() === "") {
+        descriptionError.style.display = 'block';
+        isValid = false;
+    } else {
+        descriptionError.style.display = 'none';
+    }
+
+    // Validate imageUpload
+    var imageUpload = document.getElementById('imageUploadAdd').value;
+    var imageUploadError = document.getElementById('imageUploadAdd_error');
+    if (imageUpload.trim() === "") {
+        imageUploadError.style.display = 'block';
+        isValid = false;
+    } else {
+        imageUploadError.style.display = 'none';
+    }
+
+    return isValid;
+}
+function validateEditForm() {
+    var isValid = true;
+
+    // Validate edit_title
+    var editTitle = document.getElementById('editTitle').value;
+    var editTitleError = document.getElementById('edit_title_error');
+    if (editTitle.trim() === "") {
+        editTitleError.style.display = 'block';
+        isValid = false;
+    } else {
+        editTitleError.style.display = 'none';
+    }
+
+    // Validate edit_author
+    var editAuthor = document.getElementById('editAuthor').value;
+    var editAuthorError = document.getElementById('edit_author_error');
+    if (editAuthor.trim() === "") {
+        editAuthorError.style.display = 'block';
+        isValid = false;
+    } else {
+        editAuthorError.style.display = 'none';
+    }
+
+    // Validate edit_description
+    var editDescription = document.getElementById('editDesc').value;
+    var editDescriptionError = document.getElementById('edit_description_error');
+    if (editDescription.trim() === "") {
+        editDescriptionError.style.display = 'block';
+        isValid = false;
+    } else {
+        editDescriptionError.style.display = 'none';
+    }
+
+    return isValid;
+}
+
 
 </script>
-
 
 <div class="modal fade" id="addnew">
     <div class="modal-dialog custom-modal-width">
@@ -32,37 +113,36 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> News <i
-                            class="fa fa-angle-right"></i> Add</b></h2>
+                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> News <i class="fa fa-angle-right"></i> Add</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="news_add.php"
-                    enctype="multipart/form-data">
+                <form class="form-horizontal flex-container" method="POST" action="news_add.php" enctype="multipart/form-data" onsubmit="return validateAddForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="form-container">
                         <div class="form-group">
                             <label for="news_title" class="col-sm-2 control-label">New Title</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="news_title" name="news_title" required>
+                                <input type="text" class="form-control" id="news_title" name="news_title">
+                                <small class="error-message" id="news_title_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="news_author" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="news_author" name="news_author" required>
+                                <input type="text" class="form-control" id="news_author" name="news_author">
+                                <small class="error-message" id="news_author_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="description" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
                                 <textarea class="form-control" id="description" name="news_description"></textarea>
+                                <small class="error-message" id="description_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-flat pull-right btn-class"
-                                style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
-                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
-                                    class="fa fa-close"></i> Close</button>
+                            <button type="submit" class="btn btn-flat pull-right btn-class" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                         </div>
                     </div>
                     <div class="right-div">
@@ -71,11 +151,12 @@
                                 <img id="imagePreviewImg" src="" alt="Image Preview" style="display:none;">
                                 <div class="upload-controls">
                                     <label for="imageUploadAdd" class="image-upload-label">Edit</label>
-                                    <input type="file" id="imageUploadAdd" name="imageUpload" accept="image/*"
-                                        onchange="previewImage(event, 'imagePreviewImg')" style="display:none;">
+                                    <input type="file" id="imageUploadAdd" name="imageUpload" accept="image/*" onchange="previewImage(event, 'imagePreviewImg')" style="display:none;">
                                 </div>
                             </div>
                             <h5 class="h5">Thumbnail</h5>
+                            <small class="error-message" id="imageUploadAdd_error" style="color:red; display:none;">This field is required.</small>
+
                         </div>
                     </div>
                 </form>
@@ -85,10 +166,8 @@
 </div>
 
 
-
-
-<!-- Edit -->
-<div class='modal fade' id='editModal' tabindex='-1' role='dialog' aria-labelledby='editModalLabel' aria-hidden='true'>
+<!--============EDIT===================-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="box-headerModal"></div>
@@ -96,38 +175,36 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> News <i
-                            class="fa fa-angle-right"></i> Edit</b></h2>
+                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> News <i class="fa fa-angle-right"></i> Edit</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="news_edit.php"
-                    enctype="multipart/form-data">
+                <form class="form-horizontal flex-container" method="POST" action="news_edit.php" enctype="multipart/form-data" onsubmit="return validateEditForm()">
+                    <input type="hidden" name="id" id="editId" value=""> <!-- Hidden input for ID -->
                     <div class="form-container">
-                        <input type="hidden" name="id" id="editId" value=""> <!-- Hidden input for ID -->
                         <div class="form-group">
                             <label for="editTitle" class="col-sm-2 control-label">New Title</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editTitle" name="edit_title" required>
+                                <input type="text" class="form-control" id="editTitle" name="edit_title">
+                                <small class="error-message" id="edit_title_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editAuthor" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editAuthor" name="edit_author" required>
+                                <input type="text" class="form-control" id="editAuthor" name="edit_author">
+                                <small class="error-message" id="edit_author_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editDesc" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="editDesc" name="edit_description"
-                                    required></textarea>
+                                <textarea class="form-control" id="editDesc" name="edit_description"></textarea>
+                                <small class="error-message" id="edit_description_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-flat pull-right btn-class"
-                                style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
-                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
-                                    class="fa fa-close"></i> Close</button>
+                            <button type="submit" class="btn btn-flat pull-right btn-class" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                         </div>
                     </div>
                     <div class="right-div">
@@ -136,11 +213,12 @@
                                 <img id="imagePreviewImg2" src="" alt="Image Preview" style="display:none;">
                                 <div class="upload-controls">
                                     <label for="imageUploadEdit" class="image-upload-label">Edit</label>
-                                    <input type="file" id="imageUploadEdit" name="imageUpload" accept="image/*"
-                                        onchange="previewImage(event, 'imagePreviewImg2')" style="display:none;">
+                                    <input type="file" id="imageUploadEdit" name="imageUpload" accept="image/*" onchange="previewImage(event, 'imagePreviewImg2')" style="display:none;">
                                 </div>
                             </div>
                             <h5 class="h5">Thumbnail</h5>
+                            <small class="error-message" id="imageUploadEdit_error" style="color:red; display:none;">This field is required.</small>
+
                         </div>
                     </div>
                 </form>
@@ -148,7 +226,6 @@
         </div>
     </div>
 </div>
-
 
 
 <!-- Delete -->

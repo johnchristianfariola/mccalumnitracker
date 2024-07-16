@@ -58,6 +58,8 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
 
                     // Extract admin profile image URL
                     $admin_image_url = $adminData['image_url'];
+                    $admin_firstname = $adminData['firstname'];
+                    $admin_lastmame = $adminData['lastname'];
 
                     $data = $firebase->retrieve("news");
                     $data = json_decode($data, true);
@@ -80,7 +82,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                                                 alt="news image">
                                         </div>
                                         <div class="info-section">
-                                            <h2><?php echo $news_author; ?></h2>
+                                            <h2><?php echo $admin_firstname; ?></h2>
                                             <i><?php echo $news_created; ?></i>
                                         </div>
                                     </div>
