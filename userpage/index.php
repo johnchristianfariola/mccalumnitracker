@@ -82,7 +82,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                                                 alt="news image">
                                         </div>
                                         <div class="info-section">
-                                            <h2><?php echo $admin_firstname; ?></h2>
+                                            <h2><?php echo $admin_firstname . ' ' . $admin_lastmame; ?></h2>
                                             <i><?php echo $news_created; ?></i>
                                         </div>
                                     </div>
