@@ -1,7 +1,5 @@
 <?php
 require_once 'includes/firebaseRDB.php';
-
-
 require_once 'config.php'; // Include your config file
 
 $firebase = new firebaseRDB($databaseURL);
@@ -53,7 +51,7 @@ foreach ($eventParticipations as $participationId => $participationDetails) {
 <?php
 foreach ($groupedParticipants as $eventId => $batches) {
     $event = $events[$eventId];
-    echo '<button class="collapsible transparent">' . htmlspecialchars($event['event_title']) . '<i class="fa fa-angle-right arrow"></i></button>';
+    echo '<button class="collapsible transparent"><span>' . htmlspecialchars($event['event_title']) . '</span><i class="fa fa-angle-right arrow"></i></button>';
     echo '<div class="contents">';
 
     foreach ($batches as $batchId => $courseIds) {
@@ -88,7 +86,8 @@ foreach ($groupedParticipants as $eventId => $batches) {
         function toggleContent(className) {
             var coll = document.getElementsByClassName(className);
             for (var i = 0; i < coll.length; i++) {
-                coll[i].addEventListener("click", function () {
+                coll[i].addEventListener("click", function (event) {
+                    event.preventDefault(); // Prevent the default action
                     closeAllExcept(this, className);
                     this.classList.toggle("active");
                     var content = this.nextElementSibling;
