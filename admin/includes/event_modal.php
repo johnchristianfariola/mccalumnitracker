@@ -3,7 +3,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         if (typeof CKEDITOR !== 'undefined' && CKEDITOR.replace) {
-            CKEDITOR.replace('description');
+            CKEDITOR.replace('event_description');
         } else {
             console.error('CKEditor is not defined or replace method is missing.');
         }
@@ -18,8 +18,131 @@
         };
         reader.readAsDataURL(event.target.files[0]);
     }
+   
 
+    function validateAddEventForm() {
+    var isValid = true;
+
+    // Validate event_title
+    var eventTitle = document.getElementById('event_title').value;
+    var eventTitleError = document.getElementById('event_title_error');
+    if (eventTitle.trim() === "") {
+        eventTitleError.style.display = 'block';
+        isValid = false;
+    } else {
+        eventTitleError.style.display = 'none';
+    }
+
+    // Validate event_date
+    var eventDate = document.getElementById('event_date').value;
+    var eventDateError = document.getElementById('event_date_error');
+    if (eventDate.trim() === "") {
+        eventDateError.style.display = 'block';
+        isValid = false;
+    } else {
+        eventDateError.style.display = 'none';
+    }
+
+    // Validate event_venue
+    var eventVenue = document.getElementById('event_venue').value;
+    var eventVenueError = document.getElementById('event_venue_error');
+    if (eventVenue.trim() === "") {
+        eventVenueError.style.display = 'block';
+        isValid = false;
+    } else {
+        eventVenueError.style.display = 'none';
+    }
+
+    // Validate event_author
+    var eventAuthor = document.getElementById('event_author').value;
+    var eventAuthorError = document.getElementById('event_author_error');
+    if (eventAuthor.trim() === "") {
+        eventAuthorError.style.display = 'block';
+        isValid = false;
+    } else {
+        eventAuthorError.style.display = 'none';
+    }
+
+    // Validate event_description
+    var eventDescription = document.getElementById('event_description').value;
+    var eventDescriptionError = document.getElementById('event_description_error');
+    if (eventDescription.trim() === "") {
+        eventDescriptionError.style.display = 'block';
+        isValid = false;
+    } else {
+        eventDescriptionError.style.display = 'none';
+    }
+
+    // Validate imageUploadAdd
+    var imageUploadAdd = document.getElementById('imageUploadAdd').value;
+    var imageUploadAddError = document.getElementById('imageUploadAdd_error');
+    if (imageUploadAdd.trim() === "") {
+        imageUploadAddError.style.display = 'block';
+        isValid = false;
+    } else {
+        imageUploadAddError.style.display = 'none';
+    }
+
+    return isValid;
+}
+
+function validateEditEventForm() {
+    var isValid = true;
+
+    // Validate editTitle
+    var editTitle = document.getElementById('editTitle').value;
+    var editTitleError = document.getElementById('editTitle_error');
+    if (editTitle.trim() === "") {
+        editTitleError.style.display = 'block';
+        isValid = false;
+    } else {
+        editTitleError.style.display = 'none';
+    }
+
+    // Validate editEventDate
+    var editEventDate = document.getElementById('editEventDate').value;
+    var editEventDateError = document.getElementById('editEventDate_error');
+    if (editEventDate.trim() === "") {
+        editEventDateError.style.display = 'block';
+        isValid = false;
+    } else {
+        editEventDateError.style.display = 'none';
+    }
+
+    // Validate editEventVenue
+    var editEventVenue = document.getElementById('editEventVenue').value;
+    var editEventVenueError = document.getElementById('editEventVenue_error');
+    if (editEventVenue.trim() === "") {
+        editEventVenueError.style.display = 'block';
+        isValid = false;
+    } else {
+        editEventVenueError.style.display = 'none';
+    }
+
+    // Validate editAuthor
+    var editAuthor = document.getElementById('editAuthor').value;
+    var editAuthorError = document.getElementById('editAuthor_error');
+    if (editAuthor.trim() === "") {
+        editAuthorError.style.display = 'block';
+        isValid = false;
+    } else {
+        editAuthorError.style.display = 'none';
+    }
+
+    // Validate editDesc
+    var editDesc = document.getElementById('editDesc').value;
+    var editDescError = document.getElementById('editDesc_error');
+    if (editDesc.trim() === "") {
+        editDescError.style.display = 'block';
+        isValid = false;
+    } else {
+        editDescError.style.display = 'none';
+    }
+
+    return isValid;
+}
 </script>
+
 
 <div class="modal fade" id="addnew">
     <div class="modal-dialog custom-modal-width">
@@ -29,49 +152,50 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Event <i
-                            class="fa fa-angle-right"></i> Add</b></h2>
+                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Event <i class="fa fa-angle-right"></i> Add</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="event_add.php"
-                    enctype="multipart/form-data">
+                <form class="form-horizontal flex-container" method="POST" action="event_add.php" enctype="multipart/form-data" onsubmit="return validateAddEventForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="form-container">
                         <div class="form-group">
                             <label for="event_title" class="col-sm-2 control-label">New Title</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="event_title" name="event_title" required>
+                                <input type="text" class="form-control" id="event_title" name="event_title">
+                                <small class="error-message" id="event_title_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="event_title" class="col-sm-2 control-label">Event Date</label>
+                            <label for="event_date" class="col-sm-2 control-label">Event Date</label>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="event_date" name="event_date" required>
+                            <input type="date" class="form-control" id="event_date" name="event_date" min="<?php $currentDate = date('Y-m-d'); echo $currentDate; ?>">
+                                <small class="error-message" id="event_date_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="event_title" class="col-sm-2 control-label">Venue</label>
+                            <label for="event_venue" class="col-sm-2 control-label">Venue</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="event_venue" name="event_venue" required>
+                                <input type="text" class="form-control" id="event_venue" name="event_venue">
+                                <small class="error-message" id="event_venue_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="event_author" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="event_author" name="event_author" required>
+                                <input type="text" class="form-control" id="event_author" name="event_author">
+                                <small class="error-message" id="event_author_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="description" class="col-sm-2 control-label">Description</label>
+                            <label for="event_description" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="description" name="event_description"></textarea>
+                                <textarea class="form-control" id="event_description" name="event_description"></textarea>
+                                <small class="error-message" id="event_description_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-flat pull-right btn-class"
-                                style="background: linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
-                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
-                                    class="fa fa-close"></i> Close</button>
+                            <button type="submit" class="btn btn-flat pull-right btn-class" style="background: linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                         </div>
                     </div>
                     <div class="right-div">
@@ -80,11 +204,12 @@
                                 <img id="imagePreviewImg" src="" alt="Image Preview" style="display:none;">
                                 <div class="upload-controls">
                                     <label for="imageUploadAdd" class="image-upload-label">Edit</label>
-                                    <input type="file" id="imageUploadAdd" name="imageUpload" accept="image/*"
-                                        onchange="previewImage(event, 'imagePreviewImg')" style="display:none;">
+                                    <input type="file" id="imageUploadAdd" name="imageUpload" accept="image/*" onchange="previewImage(event, 'imagePreviewImg')" style="display:none;">
                                 </div>
                             </div>
                             <h5 class="h5">Thumbnail</h5>
+                            <small class="error-message" id="imageUploadAdd_error" style="color:red; display:none;">This field is required.</small>
+
                         </div>
                     </div>
                 </form>
@@ -93,9 +218,8 @@
     </div>
 </div>
 
-
 <!-- Edit -->
-<div class='modal fade' id='editModal' tabindex='-1' role='dialog' aria-labelledby='editModalLabel' aria-hidden='true'>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="box-headerModal"></div>
@@ -103,50 +227,50 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Edit <i
-                            class="fa fa-angle-right"></i> Edit</b></h2>
+                <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Edit <i class="fa fa-angle-right"></i> Edit</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="event_edit.php"
-                    enctype="multipart/form-data">
+                <form class="form-horizontal flex-container" method="POST" action="event_edit.php" enctype="multipart/form-data" onsubmit="return validateEditEventForm()">
                     <div class="form-container">
                         <input type="hidden" name="id" id="editId" value=""> <!-- Hidden input for ID -->
                         <div class="form-group">
                             <label for="editTitle" class="col-sm-2 control-label">New Title</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editTitle" name="edit_title" required>
+                                <input type="text" class="form-control" id="editTitle" name="edit_title">
+                                <small class="error-message" id="editTitle_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editAuthor" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editAuthor" name="edit_author" required>
+                                <input type="text" class="form-control" id="editAuthor" name="edit_author">
+                                <small class="error-message" id="editAuthor_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="editAuthor" class="col-sm-2 control-label">Event Date</label>
+                            <label for="editEventDate" class="col-sm-2 control-label">Event Date</label>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="editEventDate" name="edit_date" required>
+                                <input type="date" class="form-control" id="editEventDate" name="edit_date">
+                                <small class="error-message" id="editEventDate_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="editAuthor" class="col-sm-2 control-label">Event Venue</label>
+                            <label for="editEventVenue" class="col-sm-2 control-label">Event Venue</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editEventVenue" name="edit_venue" required>
+                                <input type="text" class="form-control" id="editEventVenue" name="edit_venue">
+                                <small class="error-message" id="editEventVenue_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editDesc" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="editDesc" name="edit_description"
-                                    required></textarea>
+                                <textarea class="form-control" id="editDesc" name="edit_description"></textarea>
+                                <small class="error-message" id="editDesc_error" style="color:red; display:none;">This field is required.</small>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-flat pull-right btn-class"
-                                style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
-                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
-                                    class="fa fa-close"></i> Close</button>
+                            <button type="submit" class="btn btn-flat pull-right btn-class" style="background: linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                         </div>
                     </div>
                     <div class="right-div">
@@ -155,8 +279,7 @@
                                 <img id="imagePreviewImg2" src="" alt="Image Preview" style="display:none;">
                                 <div class="upload-controls">
                                     <label for="imageUploadEdit" class="image-upload-label">Edit</label>
-                                    <input type="file" id="imageUploadEdit" name="imageUpload" accept="image/*"
-                                        onchange="previewImage(event, 'imagePreviewImg2')" style="display:none;">
+                                    <input type="file" id="imageUploadEdit" name="imageUpload" accept="image/*" onchange="previewImage(event, 'imagePreviewImg2')" style="display:none;">
                                 </div>
                             </div>
                             <h5 class="h5">Thumbnail</h5>
@@ -167,7 +290,6 @@
         </div> 
     </div>
 </div>
-
 <!-- Delete -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
     aria-hidden="true">
