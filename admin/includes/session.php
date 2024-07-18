@@ -1,5 +1,5 @@
 <?php
-session_name('admin_session');
+
 session_start();
 include 'includes/firebaseRDB.php';
 
