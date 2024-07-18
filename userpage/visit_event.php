@@ -474,7 +474,7 @@
         }
 
         .comment-box .comment-name.by-author:after {
-            content: 'autor';
+            content: 'author';
             background: #03658c;
             color: #FFF;
             font-size: 12px;
