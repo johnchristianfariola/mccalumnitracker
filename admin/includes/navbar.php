@@ -1,4 +1,3 @@
-
 <header class="main-header">
   <!-- Logo -->
   <a href="index.php" class="logo">
@@ -38,7 +37,7 @@
                 <a href="#profile" data-toggle="modal" class="btn btn-default btn-flat" id="admin_profile">Update</a>
               </div>
               <div class="pull-right">
-                <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
+                <a href="#" class="btn btn-default btn-flat" id="signout_button">Sign out</a>
               </div>
             </li>
           </ul>
@@ -48,3 +47,20 @@
   </nav>
 </header>
 <?php include 'includes/profile_modal.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('signout_button').addEventListener('click', function(e) {
+  e.preventDefault();
+  Swal.fire({
+    title: 'Are you sure you want to leave this page?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, sign out',
+    cancelButtonText: 'No, stay here'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = 'logout.php';
+    }
+  });
+});
+</script>

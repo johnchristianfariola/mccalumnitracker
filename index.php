@@ -1,6 +1,6 @@
 
 <?php
-session_start();
+include "includes/session.php";
 if (isset($_SESSION['alumni'])) {
     if ($_SESSION['forms_completed'] == false) {
         header('location: userpage/alumni_profile.php');
