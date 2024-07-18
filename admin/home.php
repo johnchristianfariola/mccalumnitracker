@@ -1,5 +1,7 @@
+
 <?php include 'includes/session.php'; ?>
 <?php
+session_name('admin_session');
 include 'includes/timezone.php';
 $today = date('Y-m-d');
 $year = date('Y');
