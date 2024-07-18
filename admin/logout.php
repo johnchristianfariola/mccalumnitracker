@@ -1,6 +1,10 @@
 <?php
-	session_start();
-	session_destroy();
+session_start();
 
-	header('location: index.php');
+// Unset admin-specific session variables
+unset($_SESSION['admin']);
+
+// Redirect to the desired page after logging out
+header('location: index.php');
+exit();
 ?>
