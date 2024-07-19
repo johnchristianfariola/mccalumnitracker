@@ -31,4 +31,6 @@
     <link href="homepage/css/style.css" rel="stylesheet">
     <link href="homepage/css/styles-merged.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="custom.css">
+
 </head>
