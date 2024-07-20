@@ -2,7 +2,7 @@
 require_once 'firebaseRDB.php';
 
 // Initialize Firebase URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+require_once 'config.php'; // Include your config file
 $firebase = new firebaseRDB($databaseURL);
 
 $batchData = $firebase->retrieve("batch_yr"); // Fetch batch data
