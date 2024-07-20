@@ -48,27 +48,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the Course already exists
         if (courseExists($firebase, $courseName, $courCode, $department)) {
-            $_SESSION['error'] = 'Course already exists.';
+            $_SESSION['success'] = 'Course already exists.';
+            $_SESSION['success_type'] = 'error';
         } else {
             // Add Course
             $result = addCourse($firebase, $courseName, $courCode, $department);
 
             // Check result
             if ($result === null) {
-                $_SESSION['error'] = 'Failed to add Course to Firebase.';
+                $_SESSION['success'] = 'Failed to add Course to Firebase.';
+                $_SESSION['success_type'] = 'error';
                 error_log('Firebase error: Failed to insert course data.');
             } else {
                 $_SESSION['success'] = 'Course added successfully!';
+                $_SESSION['success_type'] = 'success';
             }
         }
     } else {
-        $_SESSION['error'] = 'All fields are required.';
+        $_SESSION['success'] = 'All fields are required.';
+        $_SESSION['success_type'] = 'error';
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $_SESSION['success'] = 'Invalid request method.';
+    $_SESSION['success_type'] = 'error';
 }
 
-// Redirect to the appropriate page (alumni.php) regardless of success or failure
-header('Location: alumni.php');
+// Redirect to the appropriate page
+header("Location: alumni.php");
 exit;
 ?>

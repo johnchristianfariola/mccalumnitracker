@@ -103,22 +103,23 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
                     <div class="right-section">
-                    <?php
-        $data = $firebase->retrieve("event");
-        $data = json_decode($data, true);
+                        <?php
+                        $data = $firebase->retrieve("event");
+                        $data = json_decode($data, true);
 
-        if (is_array($data)) {
-            $count = 0; // Initialize counter
+                        if (is_array($data)) {
+                            $count = 0; // Initialize counter
+                        
+                            foreach ($data as $id => $event) {
+                                if ($count >= 5)
+                                    break; // Limit to 5 events
+                        
+                                $eventTitle = htmlspecialchars($event['event_title']);
+                                $eventDate = htmlspecialchars($event['event_created']);
+                                $eventDescription = strip_tags($event['event_description']);
+                                $eventImage = htmlspecialchars($event['image_url']);
 
-            foreach ($data as $id => $event) {
-                if ($count >= 5) break; // Limit to 5 events
-
-                $eventTitle = htmlspecialchars($event['event_title']);
-                $eventDate = htmlspecialchars($event['event_created']);
-                $eventDescription = strip_tags($event['event_description']);
-                $eventImage = htmlspecialchars($event['image_url']);
-
-                echo '
+                                echo '
                 <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
                     <div class="card">
                         <img src="../admin/' . $eventImage . '" alt="Event Image" class="event_image">
@@ -130,11 +131,11 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                         </div>
                     </div>
                 </div>';
-                
-                $count++; // Increment counter
-            }
-        }
-        ?>
+
+                                $count++; // Increment counter
+                            }
+                        }
+                        ?>
 
                         <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
 
