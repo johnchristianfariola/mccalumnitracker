@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['error'] = 'Last name and student ID are required.';
         }
     } else {
-        $_SESSION['error'] = 'CSRF token validation failed.';
+      
     }
 } else {
     $_SESSION['error'] = 'Invalid request method.';

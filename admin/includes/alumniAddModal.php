@@ -14,6 +14,13 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
 
 $batchYears = $firebase->retrieve("batch_yr");
 $batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
+
+$alumniData = $firebase->retrieve("alumni"); // Fetch existing alumni data
+$alumniData = json_decode($alumniData, true);
+
+echo '<script>';
+echo 'var existingAlumni = ' . json_encode($alumniData) . ';';
+echo '</script>';
 ?>
 
 <div class="modal fade" id="addnew">
@@ -29,7 +36,7 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
         <hr>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" method="POST" action="alumni_listadd.php">
+        <form  id="addAlumniForm"  class="form-horizontal" method="POST" action="alumni_listadd.php">
           <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
           <div class="personal_information">
             <div class="form-group row" style="border-bottom: 1px solid silver !important;">
@@ -114,6 +121,9 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                   <div class="col-sm-6 mb-3">
                     <label for="email" class="col-form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email">
+                    <small id="emailErrorMessage" style="display:none; color:red;">
+                      <i class="fa fa-info-circle"></i> This Email Already Exists
+                    </small>
                   </div>
                 </div>
               </div>
@@ -160,6 +170,9 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                     <label for="studentid" class="col-form-label">Student ID</label>
                     <input type="text" class="form-control" id="studentid" name="studentid" required>
                     <small id="studentidHelp" class="form-text text-muted">Format: 1234-5678</small>
+                    <small id="studentidErrorMessage" style="display:none; color:red;">
+                      <i class="fa fa-info-circle"></i> This Student ID Already Exists
+                    </small>
                   </div>
                 </div>
               </div>
@@ -584,5 +597,42 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
         const input = e.target;
         input.value = input.value.replace(/\D/g, ''); // Remove non-digit characters
     });
+
+
+
+document.getElementById('addAlumniForm').addEventListener('submit', function(event) {
+  var email = document.getElementById('email').value.trim();
+  var studentId = document.getElementById('studentid').value.trim();
+
+  var isEmailExisting = false;
+  var isStudentIdExisting = false;
+
+  for (var key in existingAlumni) {
+    if (existingAlumni.hasOwnProperty(key)) {
+      var alumni = existingAlumni[key];
+      if (alumni['email'].toLowerCase() === email.toLowerCase()) {
+        isEmailExisting = true;
+      }
+      if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
+        isStudentIdExisting = true;
+      }
+    }
+  }
+
+  if (isEmailExisting) {
+    event.preventDefault();
+    document.getElementById('emailErrorMessage').style.display = 'block';
+  } else {
+    document.getElementById('emailErrorMessage').style.display = 'none';
+  }
+
+  if (isStudentIdExisting) {
+    event.preventDefault();
+    document.getElementById('studentidErrorMessage').style.display = 'block';
+  } else {
+    document.getElementById('studentidErrorMessage').style.display = 'none';
+  }
+});
+
 
 </script>
