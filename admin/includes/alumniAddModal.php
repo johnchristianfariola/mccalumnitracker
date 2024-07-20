@@ -196,35 +196,6 @@ echo '</script>';
 
 
 
-<!-- Edit
-<div class="modal fade" id="editModal">
-    <div class="modal-dialog" style="width: 80%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Alumni Information</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm" action="alumni_edit.php" method="POST">
-                     Form fields for editing alumni data 
-                    <input type="hidden" id="editId" name="id">
-                    <div class="form-group">
-                        <label for="editFirstname">Firstname</label>
-                        <input type="text" class="form-control" id="editFirstname" name="edit_firstname" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editLastname">Lastname</label>
-                        <input type="text" class="form-control" id="editLastname" name="edit_lastname" required>
-                    </div>
-                     Add more fields as per your requirements 
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-
 <div class='modal fade' id='editModal' tabindex='-1' role='dialog' aria-labelledby='editModalLabel' aria-hidden='true'>
   <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Adjust 'modal-lg' for different screen sizes -->
     <div class="modal-content">
@@ -368,6 +339,7 @@ echo '</script>';
                   <div class="col-sm-6 mb-3">
                     <label for="edit_studentid" class="col-form-label">Student ID</label>
                     <input type="text" class="form-control" id="editStudentid" name="edit_studentid" required>
+                    
                   </div>
                 </div>
               </div>
