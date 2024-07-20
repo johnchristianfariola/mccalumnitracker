@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
 
             // Check for duplicate in the import file
             if (in_array($entryKey, $importedEntries)) {
-                $errors[] = "Error! Duplicate data in import file: $firstname $lastname student-id $studentid";
+                $errors[] = "Reminder Duplicate data in import file: $firstname $lastname student-id $studentid";
                 continue; // Skip this entry if it's a duplicate in the file
             }
 
