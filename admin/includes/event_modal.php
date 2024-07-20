@@ -162,35 +162,35 @@ function validateEditEventForm() {
                             <label for="event_title" class="col-sm-2 control-label">New Title</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="event_title" name="event_title">
-                                <small class="error-message" id="event_title_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="event_title_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="event_date" class="col-sm-2 control-label">Event Date</label>
                             <div class="col-sm-10">
                             <input type="date" class="form-control" id="event_date" name="event_date" min="<?php $currentDate = date('Y-m-d'); echo $currentDate; ?>">
-                                <small class="error-message" id="event_date_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="event_date_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="event_venue" class="col-sm-2 control-label">Venue</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="event_venue" name="event_venue">
-                                <small class="error-message" id="event_venue_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="event_venue_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="event_author" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="event_author" name="event_author">
-                                <small class="error-message" id="event_author_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="event_author_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="event_description" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
                                 <textarea class="form-control" id="event_description" name="event_description"></textarea>
-                                <small class="error-message" id="event_description_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="event_description_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -208,7 +208,7 @@ function validateEditEventForm() {
                                 </div>
                             </div>
                             <h5 class="h5">Thumbnail</h5>
-                            <small class="error-message" id="imageUploadAdd_error" style="color:red; display:none;">This field is required.</small>
+                            <small class="error-message" id="imageUploadAdd_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
 
                         </div>
                     </div>
@@ -237,35 +237,35 @@ function validateEditEventForm() {
                             <label for="editTitle" class="col-sm-2 control-label">New Title</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="editTitle" name="edit_title">
-                                <small class="error-message" id="editTitle_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="editTitle_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editAuthor" class="col-sm-2 control-label">Author</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="editAuthor" name="edit_author">
-                                <small class="error-message" id="editAuthor_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="editAuthor_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editEventDate" class="col-sm-2 control-label">Event Date</label>
                             <div class="col-sm-10">
                                 <input type="date" class="form-control" id="editEventDate" name="edit_date">
-                                <small class="error-message" id="editEventDate_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="editEventDate_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editEventVenue" class="col-sm-2 control-label">Event Venue</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="editEventVenue" name="edit_venue">
-                                <small class="error-message" id="editEventVenue_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="editEventVenue_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="editDesc" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
                                 <textarea class="form-control" id="editDesc" name="edit_description"></textarea>
-                                <small class="error-message" id="editDesc_error" style="color:red; display:none;">This field is required.</small>
+                                <small class="error-message" id="editDesc_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
                         <div class="modal-footer">
