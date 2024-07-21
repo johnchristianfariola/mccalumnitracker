@@ -250,7 +250,7 @@ echo '</script>';
                   </div>
 
                   <div class="col-sm-6 mb-3">
-                    <label for="edit_gender" class="col-form-label">Gender</label><br>
+                    <label for="edit_gender" class="col-form-label">Sex</label><br>
                     <input type="radio" id="editMale" name="edit_gender" value="Male" class="gender-radio">
                     <label for="edit_male" class="radio-label">Male</label>
 
@@ -278,7 +278,7 @@ echo '</script>';
                   </div>
 
                   <div class="col-sm-6 mb-3">
-                    <label for="edit_state" class="col-form-label">State | Province | Region</label>
+                    <label for="edit_state" class="col-form-label">Province</label>
                     <input type="text" class="form-control" id="editState" name="edit_state" >
                   </div>
 
@@ -465,7 +465,7 @@ echo '</script>';
               <th>Student ID</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Gender</th>
+              <th>Sex</th>
               <th>Course</th>
               <th>Batch</th>
             </tr>
