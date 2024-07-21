@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['error'] = 'Failed to update event data in Firebase.';
             error_log('Firebase error: Failed to update event data.');
         } else {
-            $_SESSION['success'] = 'Event data updated successfully!';
+            $_SESSION['success'] = 'Album data updated successfully!';
         }
 
         // Redirect to the appropriate page (gallery.php)

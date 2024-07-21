@@ -1,4 +1,50 @@
+<!-- script Validation -->
+<script>
+    function validateAddGalleryForm() {
+    let isValid = true;
+
+    // Gallery Image validation
+    const galleryImages = document.getElementById("album_images");
+    const galleryImagesError = document.getElementById("add_gallery_image_error");
+    if (galleryImages.files.length === 0) {
+        galleryImagesError.style.display = "block";
+        isValid = false;
+    } else {
+        galleryImagesError.style.display = "none";
+    }
+
+    return isValid;
+}
+function validateEditGalleryForm() {
+    let isValid = true;
+
+    // Validate Image File
+    const imageFile = document.getElementById("imageFile");
+    const imageFileError = document.getElementById("edit_image_file_error");
+    if (imageFile.files.length > 0 && !imageFile.files[0].type.startsWith("image/")) {
+        imageFileError.style.display = "block";
+        isValid = false;
+    } else {
+        imageFileError.style.display = "none";
+    }
+
+    // Validate New File Name
+    const newFileName = document.getElementById("newFileName");
+    const newFileNameError = document.getElementById("edit_new_file_name_error");
+    if (newFileName.value.trim() === "") {
+        newFileNameError.style.display = "block";
+        isValid = false;
+    } else {
+        newFileNameError.style.display = "none";
+    }
+
+    return isValid;
+}
+
+</script>
+
 <!-- Add -->
+
 
 <div class="modal fade" id="addnew">
     <div class="modal-dialog">
@@ -7,35 +53,29 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Gallery <i
-                            class="fa fa-angle-right"></i>
-                        Add</b></h>
+                <h3 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Gallery <i class="fa fa-angle-right"></i> Add</b></h3>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="gallery_view_add.php" enctype="multipart/form-data">
+                <form class="form-horizontal" method="POST" action="gallery_view_add.php" enctype="multipart/form-data" onsubmit="return validateAddGalleryForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <input type="hidden" name="gallery_id" value="<?php echo htmlspecialchars($_GET['id']); ?>">
                     <div class="form-group">
                         <label for="album_images" class="col-sm-3 control-label">Select Images</label>
                         <div class="col-sm-9">
-                            <input type="file" class="form-control" id="album_images" name="album_images[]" multiple
-                                accept="image/*" required>
+                            <input type="file" class="form-control" id="album_images" name="album_images[]" multiple accept="image/*">
+                            <small class="error-message" id="add_gallery_image_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                         </div>
                     </div>
-
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-flat pull-right btn-class" name="addImages"
-                    style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i
-                        class="fa fa-save"></i> Save</button>
-                <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
-                        class="fa fa-close"></i> Close</button>
-
+                <button type="submit" class="btn btn-flat pull-right btn-class" name="addImages" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Edit -->
@@ -51,7 +91,7 @@
             </div>
             <div class="modal-body">
                 <!-- Form for editing gallery item -->
-                <form id="editForm" action="gallery_view_edit.php" method="post" enctype="multipart/form-data">
+                <form id="editForm" action="gallery_view_edit.php" method="post" enctype="multipart/form-data" onsubmit="return validateEditGalleryForm()">
                     <input type="hidden" id="editId" name="id">
 
                     <div class="form-group">
@@ -62,24 +102,19 @@
                     <div class="form-group">
                         <label for="imageFile">Change Image</label>
                         <input type="file" class="form-control" id="imageFile" name="imageFile">
+                        <small class="error-message" id="edit_image_file_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> Please select a valid image file.</small>
                     </div>
 
                     <div class="form-group">
                         <label for="newFileName">New File Name</label>
-                        <input type="text" class="form-control" id="newFileName" name="newFileName"
-                            placeholder="Enter new file name">
+                        <input type="text" class="form-control" id="newFileName" name="newFileName" placeholder="Enter new file name">
+                        <small class="error-message" id="edit_new_file_name_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-flat pull-right btn-class" id="saveChanges"
-                    style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i
-                        class="fa fa-save"></i>
-                    Save</button>
-                <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
-                        class="fa fa-close"></i> Close</button>
-
-           
+                <button type="submit" class="btn btn-flat pull-right btn-class" id="saveChanges" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
             </div>
         </div>
     </div>

@@ -52,28 +52,26 @@
 
         <!-- Main content -->
         <section class="content">
-          <?php
-          if (isset($_SESSION['error'])) {
-            echo "
-            <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-bell'></i> Reminder!</h4>
-              " . $_SESSION['error'] . "
-            </div>
-          ";
-            unset($_SESSION['error']);
-          }
-          if (isset($_SESSION['success'])) {
-            echo "
-            <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-check'></i> Success!</h4>
-              " . $_SESSION['success'] . "
-            </div>
-          ";
-            unset($_SESSION['success']);
-          }
-          ?>
+        <?php
+                if (isset($_SESSION['error'])) {
+                    $errorMessage = addslashes($_SESSION['error']);
+                    echo "<script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        showAlert('error', '{$errorMessage}');
+                    });
+                    </script>";
+                    unset($_SESSION['error']);
+                }
+                if (isset($_SESSION['success'])) {
+                    $successMessage = addslashes($_SESSION['success']);
+                    echo "<script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        showAlert('success', '{$successMessage}');
+                    });
+                    </script>";
+                    unset($_SESSION['success']);
+                }
+                ?>
 
           <div class="row">
             <div class="table-container col-xs-12">
@@ -242,96 +240,104 @@
     });
 
 
-    /*=========Table Modal=============*/
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const modalTableBody = document.getElementById('modalTableBody');
-      const outsideTableBody = document.querySelector('#example1 tbody');
-      const showModalButton = document.getElementById('showModalButton');
-      const printModalButton = document.getElementById('printModalButton');
-      const removeSelectedButton = document.getElementById('removeSelectedButton');
-
-      showModalButton.addEventListener('click', function () {
-        // Clear previous data
-        modalTableBody.innerHTML = '';
-        // Clone rows from outside table and append to modal table
-        Array.from(outsideTableBody.rows).forEach(row => {
-          // Clone the row without the last cell (actions cell)
-          const clonedRow = row.cloneNode(true);
-          clonedRow.deleteCell(-1); // Remove the last cell (actions cell)
-          // Remove any existing checkbox if mistakenly added
-          clonedRow.querySelector('td:first-child input[type="checkbox"]').remove();
-          // Add checkbox to the first cell
-          const checkboxCell = document.createElement('td');
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.className = 'modal-checkbox';
-          checkbox.dataset.id = row.cells[1].textContent.trim(); // Assuming student ID is in the second cell
-          checkboxCell.appendChild(checkbox);
-          clonedRow.insertBefore(checkboxCell, clonedRow.cells[0]);
-          // Append the modified row to modal table
-          modalTableBody.appendChild(clonedRow);
-        });
-        // Show the modal
-        $('#dataModal').modal('show');
-      });
-
-      removeSelectedButton.addEventListener('click', function () {
-        // Remove selected rows from modal table
-        const checkboxes = document.querySelectorAll('.modal-checkbox:checked');
-        checkboxes.forEach(checkbox => {
-          const row = checkbox.closest('tr');
-          row.parentNode.removeChild(row);
-        });
-      });
-
-      printModalButton.addEventListener('click', function () {
-        // Temporarily hide checkboxes
-        const checkboxes = modalTableBody.querySelectorAll('.modal-checkbox');
-        checkboxes.forEach(checkbox => {
-          checkbox.style.display = 'none';
-        });
-
-        // Collect data to be printed
-        const dataToPrint = [];
-        const batchYears = new Set();
-
-        Array.from(modalTableBody.rows).forEach(row => {
-          // Clone the row to manipulate without the first column
-          const clonedRow = row.cloneNode(true);
-          clonedRow.deleteCell(0); // Remove the first cell (first column)
-          const batchYear = row.cells[7].textContent.trim(); // Assuming the batch year is in the 7th cell
-          batchYears.add(batchYear);
-          dataToPrint.push({
-            content: clonedRow.innerHTML,
-            batchYear: batchYear
-          });
-        });
-
-        // Determine if there are mixed batches
-        const isMixedBatch = batchYears.size > 1;
-
-        // Encode the data to be sent via URL
-        const encodedData = encodeURIComponent(JSON.stringify({
-          dataToPrint: dataToPrint,
-          isMixedBatch: isMixedBatch
-        }));
-
-        // Redirect to the print page with the encoded data
-        window.open(`alumni_print.php?data=${encodedData}`, '_blank');
-
-        // Show checkboxes again after the print dialog is opened (optional)
-        checkboxes.forEach(checkbox => {
-          checkbox.style.display = ''; // Restore default display (could be 'block', 'inline', etc.)
-        });
-      });
-
-
-
-    });
 
   </script>
-  
+  <script>
+  $(document).ready(function() {
+    // Handle department form submission
+    $('#addDepartmentForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = $(this).serialize(); // Serialize form data
+
+        $.ajax({
+            type: 'POST',
+            url: 'department_add.php', // The URL of your PHP script for department
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    // Handle course form submission
+    $('#addCourseForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = $(this).serialize(); // Serialize form data
+
+        $.ajax({
+            type: 'POST',
+            url: 'course_add.php', // The URL of your PHP script for course
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    // Handle batch form submission
+    $('#addBatchForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = $(this).serialize(); // Serialize form data
+
+        $.ajax({
+            type: 'POST',
+            url: 'batch_add.php', // The URL of your PHP script for batch
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    function showAlert(type, message) {
+        Swal.fire({
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            willClose: () => {
+                if (type === 'success') {
+                    location.reload(); // Reload the page after the success message
+                }
+            }
+        });
+    }
+});
+
+
+
+
+  </script>
+
 </body>
 
 </html>

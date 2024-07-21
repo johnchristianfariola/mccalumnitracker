@@ -54,24 +54,53 @@ echo '</script>';
     });
   });
 
-  document.getElementById('addBatchForm').addEventListener('submit', function(event) {
-    var batchYear = document.getElementById('bacthName').value.trim();
-    var isBatchExisting = false;
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle form submission
+    document.getElementById('addBatchForm').addEventListener('submit', function(event) {
+        var batchYear = document.getElementById('bacthName').value.trim();
+        var isBatchExisting = false;
 
-    for (var key in existingBatches) {
-      if (existingBatches.hasOwnProperty(key)) {
-        if (existingBatches[key]['batch_yrs'].toLowerCase() === batchYear.toLowerCase()) {
-          isBatchExisting = true;
-          break;
+        // Check if batch year exists
+        for (var key in existingBatches) {
+            if (existingBatches.hasOwnProperty(key)) {
+                if (existingBatches[key]['batch_yrs'].toLowerCase() === batchYear.toLowerCase()) {
+                    isBatchExisting = true;
+                    break;
+                }
+            }
         }
-      }
-    }
 
-    if (isBatchExisting) {
-      event.preventDefault();
-      document.getElementById('batchErrorMessage').style.display = 'block';
-    } else {
-      document.getElementById('batchErrorMessage').style.display = 'none';
-    }
-  });
+        // Show or hide error message based on batch existence
+        if (isBatchExisting) {
+            event.preventDefault();
+            document.getElementById('batchErrorMessage').style.display = 'block';
+        } else {
+            document.getElementById('batchErrorMessage').style.display = 'none';
+        }
+    });
+
+    // Hide error message on input
+    document.getElementById('bacthName').addEventListener('input', function() {
+        var batchYear = this.value.trim();
+        var isBatchExisting = false;
+
+        // Check if batch year exists
+        for (var key in existingBatches) {
+            if (existingBatches.hasOwnProperty(key)) {
+                if (existingBatches[key]['batch_yrs'].toLowerCase() === batchYear.toLowerCase()) {
+                    isBatchExisting = true;
+                    break;
+                }
+            }
+        }
+
+        // Hide or show error message based on current input
+        if (isBatchExisting) {
+            document.getElementById('batchErrorMessage').style.display = 'block';
+        } else {
+            document.getElementById('batchErrorMessage').style.display = 'none';
+        }
+    });
+});
+
 </script>

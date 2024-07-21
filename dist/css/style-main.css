@@ -361,3 +361,18 @@ section.content-header.box-header-background.box-padding > ol.breadcrumb {
   font-size: 15px;
  
 }
+
+/*==========Custom Sweet Alert Start here===========*/
+
+
+.swal2-popup .swal-title {
+  font-size: 24px !important; /* Adjust title font size */
+}
+
+.swal2-popup .swal-text {
+  font-size: 18px !important; /* Adjust text font size */
+}
+
+.swal2-popup .swal-button {
+  font-size: 16px !important; /* Adjust button font size */
+}

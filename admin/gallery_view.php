@@ -2,14 +2,20 @@
 <?php include 'includes/header.php'; ?>
 <?php
 require_once 'includes/firebaseRDB.php';
-
 require_once 'includes/config.php'; // Include your config file
+
 $firebase = new firebaseRDB($databaseURL);
+
+// Retrieve the unique ID from the query string
+$uniqueId = isset($_GET['id']) ? $_GET['id'] : '';
+
 // Fetch gallery data from Firebase
 $galleryData = $firebase->retrieve("gallery_view");
-
-// Decode JSON data into associative arrays
 $galleries = json_decode($galleryData, true) ?: [];
+
+// Fetch the specific album data
+$albumData = $firebase->retrieve("gallery/$uniqueId");
+$album = json_decode($albumData, true) ?: [];
 ?>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -23,18 +29,22 @@ $galleries = json_decode($galleryData, true) ?: [];
             <!-- Content Header (Page header) -->
             <section class="content-header box-header-background">
                 <h1>
-                    Content <i class="fa fa-angle-right"></i> Gallery
+                    Content <i class="fa fa-angle-right"></i> Gallery <i class="fa fa-angle-right"></i>
+                    <?php echo htmlspecialchars($album['gallery_name']); ?>
                 </h1>
                 <div class="box-inline ">
 
                     <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
                             class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
 
-                
+
                     <div class="search-container">
-                        <input type="text" class="search-input" id="search-input" placeholder="Search by album title...">
+                        <input type="text" class="search-input" id="search-input"
+                            placeholder="Search by album title...">
                         <button class="search-button" onclick="filterGallery()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-search">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
@@ -52,23 +62,21 @@ $galleries = json_decode($galleryData, true) ?: [];
             <section class="content">
                 <?php
                 if (isset($_SESSION['error'])) {
-                    echo "
-                        <div class='alert alert-danger alert-dismissible'>
-                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-                            <h4><i class='icon fa fa-warning'></i> Reminder</h4>
-                            " . $_SESSION['error'] . "
-                        </div>
-                    ";
+                    $errorMessage = $_SESSION['error'];
+                    echo "<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showAlert('error', '" . addslashes($errorMessage) . "');
+    });
+    </script>";
                     unset($_SESSION['error']);
                 }
                 if (isset($_SESSION['success'])) {
-                    echo "
-                        <div class='alert alert-success alert-dismissible'>
-                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-                            <h4><i class='icon fa fa-check'></i> Success!</h4>
-                            " . $_SESSION['success'] . "
-                        </div>
-                    ";
+                    $successMessage = $_SESSION['success'];
+                    echo "<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showAlert('success', '" . addslashes($successMessage) . "');
+    });
+    </script>";
                     unset($_SESSION['success']);
                 }
                 ?>
@@ -93,10 +101,11 @@ $galleries = json_decode($galleryData, true) ?: [];
                                                                 stroke-width="2" stroke-linecap="round" />
                                                         </svg>
                                                     </div>
-                                                    <div class="dropdown-menu" id="album<?php echo $id; ?>">
-                                                
-                                                        <div class="dropdown-item open-modal" data-id="<?php echo htmlspecialchars($id); ?>"
-                                                            data-toggle="modal" data-target="#editModal">
+                                                    <div class="dropdown-album-menu" id="album<?php echo $id; ?>">
+
+                                                        <div class="dropdown-item open-modal"
+                                                            data-id="<?php echo htmlspecialchars($id); ?>" data-toggle="modal"
+                                                            data-target="#editModal">
                                                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
                                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                                 stroke-linejoin="round">
@@ -106,7 +115,8 @@ $galleries = json_decode($galleryData, true) ?: [];
                                                             </svg>
                                                             Edit
                                                         </div>
-                                                        <div class="dropdown-item open-delete" data-id="<?php echo htmlspecialchars($id); ?>">
+                                                        <div class="dropdown-item open-delete"
+                                                            data-id="<?php echo htmlspecialchars($id); ?>">
                                                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
                                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                                 stroke-linejoin="round">
@@ -154,7 +164,7 @@ $galleries = json_decode($galleryData, true) ?: [];
     function toggleDropdown(event, dropdownId) {
         event.stopPropagation();
         const dropdown = document.getElementById(dropdownId);
-        const otherDropdowns = document.querySelectorAll('.dropdown-menu');
+        const otherDropdowns = document.querySelectorAll('.dropdown-album-menu');
 
         // Hide all other dropdowns except the one clicked
         otherDropdowns.forEach(dropdown => {
@@ -168,7 +178,7 @@ $galleries = json_decode($galleryData, true) ?: [];
     }
 
     document.addEventListener('click', () => {
-        const dropdowns = document.querySelectorAll('.dropdown-menu');
+        const dropdowns = document.querySelectorAll('.dropdown-album-menu');
         dropdowns.forEach(dropdown => {
             dropdown.style.display = 'none';
         });
@@ -221,25 +231,36 @@ $galleries = json_decode($galleryData, true) ?: [];
 
         // Confirm delete
         $('.btn-confirm-delete').click(function () {
-            var id = $('#deleteAlbumId').val();
-            $.ajax({
-                url: 'gallery_view_delete.php',
-                type: 'POST',
-                data: { id: id },
-                success: function () {
-                    $('#deleteModal').modal('hide');
-                    location.reload(); // Reload the page to see the changes
-                },
-                error: function (xhr, status, error) {
-                    $('#deleteModal').modal('hide');
-                    // Display session error message if any
-                    var errorMessage = xhr.status === 400 ? 'ID is required.' :
-                        xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
-                            'Invalid request method.';
-                    console.error('AJAX Error: ' + errorMessage);
-                    $('#errorMessage').text(errorMessage).show();
-                }
-            });
+        var id = $('#deleteAlbumId').val();
+        $.ajax({
+            url: 'gallery_view_delete.php',
+            type: 'POST',
+            data: { id: id },
+            success: function () {
+                $('#deleteModal').modal('hide');
+                // Show SweetAlert success message
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Gallery item deleted successfully.",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    // Optional: Refresh the page or perform additional actions
+                    window.location.reload();
+                });
+            },
+            error: function (xhr, status, error) {
+                $('#deleteModal').modal('hide');
+                // Display session error message if any
+                var errorMessage = xhr.status === 400 ? 'ID is required.' :
+                    xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
+                        'Invalid request method.';
+                console.error('AJAX Error: ' + errorMessage);
+                $('#errorMessage').text(errorMessage).show();
+            }
+        });
+
         });
 
         // Save changes when the save button is clicked in the edit modal
@@ -257,12 +278,29 @@ $galleries = json_decode($galleryData, true) ?: [];
                         location.reload(); // Reload the page to see the changes
                     } else {
                         console.error('AJAX Error: ' + response.message);
-                        alert('Error: ' + response.message);
+                        // Show SweetAlert error dialog
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Oops...',
+                            text: response.message,
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                title: 'swal-title',
+                                htmlContainer: 'swal-text',
+                                confirmButton: 'swal-button'
+                            }
+                        });
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX Error: ' + status + ' ' + error);
-                    alert('AJAX Error: ' + status + ' ' + error);
+                    // Show SweetAlert error dialog
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'AJAX Error',
+                        text: 'Status: ' + status + ' Error: ' + error,
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         });
@@ -285,6 +323,19 @@ $galleries = json_decode($galleryData, true) ?: [];
 
         // Initial filtering on page load (in case there's an initial value in the search input)
         filterGallery();
-    });
-</script>
 
+
+
+
+    });
+
+    function showAlert(type, message) {
+        Swal.fire({
+            position: "top-end",
+            icon: type === 'error' ? 'error' : 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 2500
+        });
+    }
+</script>

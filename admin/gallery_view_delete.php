@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once 'includes/firebaseRDB.php';
     require_once 'includes/config.php'; // Include your config file
     $firebase = new firebaseRDB($databaseURL);
+
     // Extract ID
     $id = htmlspecialchars($_POST['id']);
 

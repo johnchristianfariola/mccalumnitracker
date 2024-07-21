@@ -1,6 +1,10 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json'); // Set content type to JSON
+
+$response = array(); // Initialize response array
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure all form fields are set and not empty
     if (
@@ -22,11 +26,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $table = 'course'; // Assuming 'course' is your Firebase database node for courses
             $existingCourses = $firebase->retrieve($table);
             $courses = json_decode($existingCourses, true);
+
+            // Debugging output to verify retrieved courses
+            error_log('Retrieved Courses: ' . print_r($courses, true));
+
             foreach ($courses as $course) {
+                // Debugging output to verify comparison
+                error_log('Checking Course: ' . print_r($course, true));
+
                 if (
-                    $course['course_name'] === $courseName &&
-                    $course['courCode'] === $courCode &&
-                    $course['department'] === $department
+                    ($course['course_name'] === $courseName && $course['department'] === $department) ||
+                    ($course['courCode'] === $courCode && $course['department'] === $department)
                 ) {
                     return true;
                 }
@@ -48,32 +58,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the Course already exists
         if (courseExists($firebase, $courseName, $courCode, $department)) {
-            $_SESSION['success'] = 'Course already exists.';
-            $_SESSION['success_type'] = 'error';
+            $response['status'] = 'error';
+            $response['message'] = 'Course name or code already exists in this department.';
         } else {
             // Add Course
             $result = addCourse($firebase, $courseName, $courCode, $department);
 
             // Check result
             if ($result === null) {
-                $_SESSION['success'] = 'Failed to add Course to Firebase.';
-                $_SESSION['success_type'] = 'error';
+                $response['status'] = 'error';
+                $response['message'] = 'Failed to add Course to Firebase.';
                 error_log('Firebase error: Failed to insert course data.');
             } else {
-                $_SESSION['success'] = 'Course added successfully!';
-                $_SESSION['success_type'] = 'success';
+                $response['status'] = 'success';
+                $response['message'] = 'Course added successfully!';
             }
         }
     } else {
-        $_SESSION['success'] = 'All fields are required.';
-        $_SESSION['success_type'] = 'error';
+        $response['status'] = 'error';
+        $response['message'] = 'All fields are required.';
     }
 } else {
-    $_SESSION['success'] = 'Invalid request method.';
-    $_SESSION['success_type'] = 'error';
+    $response['status'] = 'error';
+    $response['message'] = 'Invalid request method.';
 }
 
-// Redirect to the appropriate page
-header("Location: alumni.php");
-exit;
+// Output the JSON response
+echo json_encode($response);
 ?>

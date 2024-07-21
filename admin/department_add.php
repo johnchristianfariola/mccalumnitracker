@@ -1,5 +1,8 @@
 <?php
 session_start(); // Start the session
+header('Content-Type: application/json'); // Set content type to JSON
+
+$response = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure departmentName is set and not empty
@@ -36,29 +39,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if department already exists
         if (departmentExists($firebase, $departmentName)) {
-            $_SESSION['error'] = 'Department already exists.';
+            $response['status'] = 'error';
+            $response['message'] = 'Department already exists.';
         } else {
             // Add department
             $result = addDepartment($firebase, $departmentName);
 
-            // Check result (you can handle errors or success as needed)
+            // Check result
             if ($result === 'null') {
-                $_SESSION['error'] = 'Failed to add department.';
+                $response['status'] = 'error';
+                $response['message'] = 'Failed to add department.';
             } else {
-                $_SESSION['success'] = 'Department added successfully!';
-                // Redirect back to the form page or any other desired page
-                header('Location: alumni.php');
-                exit; // Ensure that code below is not executed after redirection
+                $response['status'] = 'success';
+                $response['message'] = 'Department added successfully!';
             }
         }
     } else {
-        $_SESSION['error'] = 'Department name is required.';
+        $response['status'] = 'error';
+        $response['message'] = 'Department name is required.';
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $response['status'] = 'error';
+    $response['message'] = 'Invalid request method.';
 }
 
-// Redirect to the appropriate page (department_form.php) if there was an error
-header('Location: alumni.php');
+echo json_encode($response);
 exit;
 ?>

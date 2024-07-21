@@ -22,6 +22,7 @@ echo '</script>';
 
 ?>
 <!-- Modal -->
+<!-- Modal -->
 <div class="modal fade" id="course-modal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -69,11 +70,11 @@ echo '</script>';
           </div>
 
           <div class="modal-footer">
-          <button type="submit" class="btn btn-flat pull-right btn-class" name="add"
-          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i>
-          Save</button>
-        <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
-            class="fa fa-close"></i> Close</button>
+            <button type="submit" class="btn btn-flat pull-right btn-class" name="add"
+              style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i
+                class="fa fa-save"></i> Save</button>
+            <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i
+                class="fa fa-close"></i> Close</button>
           </div>
         </form>
       </div>
@@ -81,7 +82,35 @@ echo '</script>';
   </div>
 </div>
 
+
 <script>
+  function fetchDepartments() {
+    $.ajax({
+      url: 'department_row.php',
+      method: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        var departmentSelect = $('#department');
+        departmentSelect.empty(); // Clear existing options
+        departmentSelect.append('<option value="" disabled>Select a department</option>');
+
+        $.each(data, function (departmentId, details) {
+          var departmentName = details['Department Name'] || 'Unknown';
+          departmentSelect.append('<option value="' + departmentId + '">' + departmentName + '</option>');
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error('Error fetching departments:', error);
+      }
+    });
+  }
+
+  // Fetch departments initially
+  fetchDepartments();
+
+  // Set interval to fetch departments periodically (e.g., every 30 seconds)
+  setInterval(fetchDepartments, 10000);
+
   document.getElementById('addCourseForm').addEventListener('submit', function (event) {
     var courseName = document.getElementById('course_name').value.trim();
     var courCode = document.getElementById('courCode').value.trim();
@@ -118,4 +147,20 @@ echo '</script>';
       document.getElementById('codeErrorMessage').style.display = 'none';
     }
   });
+
+  // Add event listeners for input fields to hide error messages
+  document.getElementById('course_name').addEventListener('input', function () {
+    document.getElementById('courseErrorMessage').style.display = 'none';
+  });
+
+  document.getElementById('courCode').addEventListener('input', function () {
+    document.getElementById('codeErrorMessage').style.display = 'none';
+  });
+
+  document.getElementById('department').addEventListener('change', function () {
+    document.getElementById('courseErrorMessage').style.display = 'none';
+    document.getElementById('codeErrorMessage').style.display = 'none';
+  });
+
+
 </script>

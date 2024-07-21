@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Function to handle redirection to the gallery page
 function redirectToGalleryPage() {
-    header('Location: gallery.php');
+    header('Location: gallery_view.php');
     exit;
 }
 

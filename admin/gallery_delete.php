@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $firebase->delete($galleryTable, $id);
 
         // Check and delete from gallery_view
-        $viewData = $firebase->get($viewTable); // Fetch all data from gallery_view
+        $viewData = json_decode($firebase->get($viewTable), true); // Fetch all data from gallery_view
         if ($viewData) {
             foreach ($viewData as $key => $item) {
                 if (isset($item['gallery_id']) && $item['gallery_id'] === $id) {

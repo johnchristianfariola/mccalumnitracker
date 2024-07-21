@@ -1,6 +1,8 @@
 <?php
 session_start(); // Start the session
 
+$response = array('status' => 'error', 'message' => ''); // Initialize response array
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure Batch is set and not empty
     if (isset($_POST['bacthName']) && !empty($_POST['bacthName'])) {
@@ -23,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             return false;
         }
-
+ 
         // Function to add a Batch
         function addBatch($firebase, $batchName) {
             $table = 'batch_yr';
@@ -34,31 +36,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the Batch already exists
         if (batchExists($firebase, $batchName)) {
-            $_SESSION['error'] = 'Batch year already exists.';
-          
+            $response['message'] = 'Batch year already exists.';
         } else {
             // Add Batch
             $result = addBatch($firebase, $batchName);
 
             // Check result
             if ($result === null) {
-                $_SESSION['error'] = 'Failed to add Batch.';
-              
+                $response['message'] = 'Failed to add Batch.';
             } else {
-                $_SESSION['success'] = 'Batch added successfully!';
-                $_SESSION['success_type'] = 'success';
+                $response['status'] = 'success';
+                $response['message'] = 'Batch added successfully!';
             }
         }
     } else {
-        $_SESSION['error'] = 'Batch name is required.';
-      
+        $response['message'] = 'Batch name is required.';
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
-  
+    $response['message'] = 'Invalid request method.';
 }
 
-// Redirect back to the alumni page
-header('Location: alumni.php');
+// Return JSON response
+header('Content-Type: application/json');
+echo json_encode($response);
 exit;
 ?>
