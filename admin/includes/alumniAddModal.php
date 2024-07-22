@@ -438,9 +438,9 @@ echo '</script>';
                 </div>
               </div>
             </div>
-            <div class="progress" style="display: none; margin-top: 10px;">
-              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0"
-                aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-container">
+              <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+              </div>
             </div>
             <div id="uploadStatus" style="margin-top: 10px;"></div>
           </div>
@@ -538,6 +538,43 @@ echo '</script>';
 
   .error {
     border-color: red;
+  }
+
+  .progress-container {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 5px;
+    background: #f3f3f3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .progress-bar {
+    height: 20px;
+    line-height: 20px;
+    background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: width 0.4s ease-in-out;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Add some animation to make it look smoother */
+  @keyframes progress-animation {
+    0% {
+      width: 0;
+    }
+
+    100% {
+      width: 100%;
+    }
+  }
+
+  /* Apply the animation to the progress bar */
+  #progress-bar {
+    animation: progress-animation 2s ease-in-out;
   }
 </style>
 
