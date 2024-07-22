@@ -231,35 +231,35 @@ $album = json_decode($albumData, true) ?: [];
 
         // Confirm delete
         $('.btn-confirm-delete').click(function () {
-        var id = $('#deleteAlbumId').val();
-        $.ajax({
-            url: 'gallery_view_delete.php',
-            type: 'POST',
-            data: { id: id },
-            success: function () {
-                $('#deleteModal').modal('hide');
-                // Show SweetAlert success message
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Gallery item deleted successfully.",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    // Optional: Refresh the page or perform additional actions
-                    window.location.reload();
-                });
-            },
-            error: function (xhr, status, error) {
-                $('#deleteModal').modal('hide');
-                // Display session error message if any
-                var errorMessage = xhr.status === 400 ? 'ID is required.' :
-                    xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
-                        'Invalid request method.';
-                console.error('AJAX Error: ' + errorMessage);
-                $('#errorMessage').text(errorMessage).show();
-            }
-        });
+            var id = $('#deleteAlbumId').val();
+            $.ajax({
+                url: 'gallery_view_delete.php',
+                type: 'POST',
+                data: { id: id },
+                success: function () {
+                    $('#deleteModal').modal('hide');
+                    // Show SweetAlert success message
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Gallery item deleted successfully.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Optional: Refresh the page or perform additional actions
+                        window.location.reload();
+                    });
+                },
+                error: function (xhr, status, error) {
+                    $('#deleteModal').modal('hide');
+                    // Display session error message if any
+                    var errorMessage = xhr.status === 400 ? 'ID is required.' :
+                        xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
+                            'Invalid request method.';
+                    console.error('AJAX Error: ' + errorMessage);
+                    $('#errorMessage').text(errorMessage).show();
+                }
+            });
 
         });
 
