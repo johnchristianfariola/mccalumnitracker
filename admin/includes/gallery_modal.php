@@ -45,7 +45,6 @@ function validateEditGalleryForm() {
 
 <!-- Add -->
 
-
 <div class="modal fade" id="addnew">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -56,7 +55,7 @@ function validateEditGalleryForm() {
                 <h3 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Gallery <i class="fa fa-angle-right"></i> Add</b></h3>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="gallery_view_add.php" enctype="multipart/form-data" onsubmit="return validateAddGalleryForm()">
+                <form class="form-horizontal" id="uploadForm" method="POST" action="gallery_view_add.php" enctype="multipart/form-data">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <input type="hidden" name="gallery_id" value="<?php echo htmlspecialchars($_GET['id']); ?>">
                     <div class="form-group">
@@ -66,15 +65,25 @@ function validateEditGalleryForm() {
                             <small class="error-message" id="add_gallery_image_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
                         </div>
                     </div>
+                    <!-- Progress bar -->
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div id="progress-container" style="display:none;">
+                                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+                                <span id="progress-text">0% Complete</span>
+                            </div>
+                        </div>
+                    </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-flat pull-right btn-class" name="addImages" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                <button type="button" class="btn btn-flat pull-right btn-class" id="uploadButton" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
                 <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -155,3 +164,65 @@ function validateEditGalleryForm() {
         </div>
     </div>
 </div>
+<script>
+document.getElementById('uploadButton').addEventListener('click', function(event) {
+    event.preventDefault();
+    
+    var form = document.getElementById('uploadForm');
+    var formData = new FormData(form);
+    
+    var progressContainer = document.getElementById('progress-container');
+    var progressBar = document.getElementById('progress-bar');
+    var progressText = document.getElementById('progress-text');
+    
+    // Show progress container
+    progressContainer.style.display = 'block';
+    
+    var xhr = new XMLHttpRequest();
+    
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            var percentComplete = (e.loaded / e.total) * 100;
+            var slowProgress = percentComplete * 0.5; // Adjust slow down factor if needed
+            progressBar.style.width = slowProgress + '%';
+            progressText.textContent = Math.round(slowProgress) + '% Complete';
+        }
+    }, false);
+    
+    xhr.addEventListener('load', function() {
+        if (xhr.status === 200) {
+            progressBar.style.width = '100%';
+            progressText.textContent = 'Upload Complete';
+            // Optionally handle response or redirect if needed
+            setTimeout(() => window.location.reload(), 2000); // Reload or redirect after 2 seconds
+        } else {
+            progressText.textContent = 'Upload Failed: ' + xhr.responseText;
+        }
+    });
+    
+    xhr.addEventListener('error', function() {
+        progressText.textContent = 'Upload Error';
+    });
+    
+    xhr.open('POST', 'gallery_view_add.php', true);
+    xhr.send(formData);
+});
+</script>
+<style>
+#progress-container {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    background: #f3f3f3;
+}
+
+#progress-bar {
+    height: 20px;
+    line-height: 20px;
+    background: #76c7c0;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+}
+</style>

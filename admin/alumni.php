@@ -52,26 +52,26 @@
 
         <!-- Main content -->
         <section class="content">
-        <?php
-                if (isset($_SESSION['error'])) {
-                    $errorMessage = addslashes($_SESSION['error']);
-                    echo "<script>
+          <?php
+          if (isset($_SESSION['error'])) {
+            $errorMessage = addslashes($_SESSION['error']);
+            echo "<script>
                     document.addEventListener('DOMContentLoaded', function() {
                         showAlert('error', '{$errorMessage}');
                     });
                     </script>";
-                    unset($_SESSION['error']);
-                }
-                if (isset($_SESSION['success'])) {
-                    $successMessage = addslashes($_SESSION['success']);
-                    echo "<script>
+            unset($_SESSION['error']);
+          }
+          if (isset($_SESSION['success'])) {
+            $successMessage = addslashes($_SESSION['success']);
+            echo "<script>
                     document.addEventListener('DOMContentLoaded', function() {
                         showAlert('success', '{$successMessage}');
                     });
                     </script>";
-                    unset($_SESSION['success']);
-                }
-                ?>
+            unset($_SESSION['success']);
+          }
+          ?>
 
           <div class="row">
             <div class="table-container col-xs-12">
@@ -244,16 +244,16 @@
 
   </script>
   <script>
-  $(document).ready(function() {
-    // Handle department form submission
-    $('#addDepartmentForm').on('submit', function(event) {
+    $(document).ready(function() {
+    // Handle alumni delete form submission
+    $('#deleteModal form').on('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
 
         var formData = $(this).serialize(); // Serialize form data
 
         $.ajax({
             type: 'POST',
-            url: 'department_add.php', // The URL of your PHP script for department
+            url: 'alumni_delete.php', // The URL of your PHP script for deleting alumni
             data: formData,
             dataType: 'json',
             success: function(response) {
@@ -262,6 +262,7 @@
                 } else {
                     showAlert('error', response.message);
                 }
+                $('#deleteModal').modal('hide'); // Hide the modal after the operation
             },
             error: function() {
                 showAlert('error', 'An unexpected error occurred.');
@@ -269,54 +270,7 @@
         });
     });
 
-    // Handle course form submission
-    $('#addCourseForm').on('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        var formData = $(this).serialize(); // Serialize form data
-
-        $.ajax({
-            type: 'POST',
-            url: 'course_add.php', // The URL of your PHP script for course
-            data: formData,
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    showAlert('success', response.message);
-                } else {
-                    showAlert('error', response.message);
-                }
-            },
-            error: function() {
-                showAlert('error', 'An unexpected error occurred.');
-            }
-        });
-    });
-
-    // Handle batch form submission
-    $('#addBatchForm').on('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        var formData = $(this).serialize(); // Serialize form data
-
-        $.ajax({
-            type: 'POST',
-            url: 'batch_add.php', // The URL of your PHP script for batch
-            data: formData,
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    showAlert('success', response.message);
-                } else {
-                    showAlert('error', response.message);
-                }
-            },
-            error: function() {
-                showAlert('error', 'An unexpected error occurred.');
-            }
-        });
-    });
-
+    // Function to display SweetAlert messages
     function showAlert(type, message) {
         Swal.fire({
             position: 'top-end',
@@ -331,10 +285,177 @@
             }
         });
     }
+
+    // Existing form submissions (for add operations)
+    $('#addAlumniForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = $(this).serialize(); // Serialize form data
+
+        $.ajax({
+            type: 'POST',
+            url: 'alumni_listadd.php', // The URL of your PHP script for alumni
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    $('#editAlumniForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = $(this).serialize(); // Serialize form data
+
+        $.ajax({
+            type: 'POST',
+            url: 'alumni_edit.php', // The URL of your PHP script for editing alumni
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else if (response.status === 'info') {
+                    showAlertEdit('info', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    $('#addDepartmentForm').on('submit', function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: 'department_add.php',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    $('#addCourseForm').on('submit', function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: 'course_add.php',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    $('#addBatchForm').on('submit', function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: 'batch_add.php',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    // New import file form submission
+    $('#importFileForm').on('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = new FormData(this); // Use FormData to handle file uploads
+    var uploadStatus = $('#uploadStatus'); // Get the status message element
+
+    // Set status message to "Uploading..."
+    uploadStatus.text('Uploading...');
+
+    $.ajax({
+        type: 'POST',
+        url: 'import_file.php', // The URL of your PHP script for importing files
+        data: formData,
+        contentType: false, // Prevent jQuery from setting Content-Type
+        processData: false, // Prevent jQuery from processing data
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                uploadStatus.text('Upload Completed'); // Set status message to "Upload Completed"
+                showAlert('success', response.message);
+            } else {
+                uploadStatus.text(''); // Clear status message on error
+                showAlert('error', response.message);
+            }
+        },
+        error: function() {
+            uploadStatus.text(''); // Clear status message on error
+            showAlert('error', 'An unexpected error occurred.');
+        }
+    });
 });
 
 
+    function showAlertEdit(type, message) {
+        let iconType = 'info';
+        let title = 'Oops...';
 
+        switch (type) {
+            case 'info':
+                iconType = 'info';
+                title = 'Oops...';
+                break;
+        }
+
+        Swal.fire({
+            icon: iconType,
+            title: title,
+            text: message,
+            confirmButtonText: 'OK',
+            customClass: {
+                title: 'swal-title',
+                htmlContainer: 'swal-text',
+                confirmButton: 'swal-button'
+            }
+        });
+    }
+});
 
   </script>
 

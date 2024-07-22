@@ -1,11 +1,16 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json'); // Set the content type to JSON
+
+$response = array(); // Initialize response array
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure ID is provided
     if (!isset($_POST['id']) || empty($_POST['id'])) {
-        $_SESSION['error'] = 'ID is required.';
-        header('Location: alumni.php');
+        $response['status'] = 'error';
+        $response['message'] = 'ID is required.';
+        echo json_encode($response);
         exit;
     }
 
@@ -30,20 +35,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check result
     if ($result === null) {
-        $_SESSION['error'] = 'Failed to delete alumni data in Firebase.';
+        $response['status'] = 'error';
+        $response['message'] = 'Failed to delete alumni data in Firebase.';
         error_log('Firebase error: Failed to delete alumni data.');
     } else {
-        $_SESSION['success'] = 'Alumni data deleted successfully!';
+        $response['status'] = 'success';
+        $response['message'] = 'Alumni data deleted successfully!';
     }
-
-    // Redirect to the appropriate page (alumni.php)
-    header('Location: alumni.php');
-    exit;
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $response['status'] = 'error';
+    $response['message'] = 'Invalid request method.';
 }
 
-// Redirect to the appropriate page (alumni.php) on error
-header('Location: alumni.php');
-exit;
+// Output JSON response
+echo json_encode($response);
 ?>

@@ -1,6 +1,10 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json'); // Set the response format to JSON
+
+$response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure the necessary data (lastname and studentid) is provided and not empty
     $required_fields = ['edit_lastname', 'edit_studentid'];
@@ -11,6 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $valid = false;
             break;
         }
+    }
+
+    // Validate student ID format
+    $studentid = $_POST['edit_studentid'];
+    if (!preg_match('/^\d{4}-\d{4}$/', $studentid)) {
+        $response['message'] = 'Student ID must be in the format 1234-5678';
+        echo json_encode($response);
+        exit;
     }
 
     if ($valid) {
@@ -37,38 +49,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "email" => $_POST['edit_email'] ?? '',
             "course" => $_POST['edit_course'] ?? '',
             "batch" => $_POST['edit_batch'] ?? '',
-            "studentid" => $_POST['edit_studentid']
+            "studentid" => $studentid
         ];
 
-        // Function to update alumni data
-        function updateAlumniData($firebase, $id, $updateData) {
-            $table = 'alumni'; // Assuming 'alumni' is your Firebase database node for alumni data
-            $result = $firebase->update($table, $id, $updateData);
-            return $result;
+        // Function to check if alumni data already exists with the same studentid
+        function isStudentIdExists($firebase, $studentid, $excludeId) {
+            $table = 'alumni';
+            $result = $firebase->retrieve($table);
+            $result = json_decode($result, true);
+            if ($result) {
+                foreach ($result as $key => $record) {
+                    if ($key !== $excludeId && isset($record['studentid']) && $record['studentid'] === $studentid) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
-        // Perform update
-        $result = updateAlumniData($firebase, $id, $updateData);
+        // Function to get existing data
+        function getExistingData($firebase, $id) {
+            $table = 'alumni';
+            $result = $firebase->retrieve($table . '/' . $id);
+            return json_decode($result, true);
+        }
 
-        // Check result
-        if ($result === null) {
-            $_SESSION['error'] = 'Failed to update alumni data in Firebase.';
-            error_log('Firebase error: Failed to update alumni data.');
+        // Get existing data
+        $existingData = getExistingData($firebase, $id);
+
+        // Check if the student ID is changing and if the new student ID already exists
+        if ($existingData['studentid'] !== $updateData['studentid'] && isStudentIdExists($firebase, $updateData['studentid'], $id)) {
+            $response['message'] = 'Student ID already exists.';
         } else {
-            $_SESSION['success'] = 'Alumni data updated successfully!';
-        }
+            // Check if there are actual changes
+            $isChanged = false;
+            foreach ($updateData as $key => $value) {
+                if (isset($existingData[$key]) && $existingData[$key] !== $value) {
+                    $isChanged = true;
+                    break;
+                }
+            }
 
-        // Redirect to the appropriate page (alumni.php) with preserved filter criteria
-        header('Location: alumni.php?course=' . urlencode($_POST['edit_course']) . '&batch=' . urlencode($_POST['edit_batch']));
-        exit;
+            if (!$isChanged) {
+                $response['status'] = 'info';
+                $response['message'] = 'No data has been updated.';
+            } else {
+                // Function to update alumni data
+                function updateAlumniData($firebase, $id, $updateData) {
+                    $table = 'alumni'; // Assuming 'alumni' is your Firebase database node for alumni data
+                    $result = $firebase->update($table, $id, $updateData);
+                    return $result;
+                }
+
+                // Perform update
+                $result = updateAlumniData($firebase, $id, $updateData);
+
+                // Check result
+                if ($result === null) {
+                    $response['message'] = 'Failed to update alumni data in Firebase.';
+                    error_log('Firebase error: Failed to update alumni data.');
+                } else {
+                    $response['status'] = 'success';
+                    $response['message'] = 'Alumni data updated successfully!';
+                }
+            }
+        }
     } else {
-        $_SESSION['error'] = 'Last name and student ID are required.';
+        $response['message'] = 'Last name and student ID are required.';
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $response['message'] = 'Invalid request method.';
 }
 
-// Redirect to the appropriate page (alumni.php) on error
-header('Location: alumni.php');
-exit;
+// Return the JSON response
+echo json_encode($response);
 ?>
