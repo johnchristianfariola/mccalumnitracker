@@ -400,53 +400,59 @@
 
       // New import file form submission
       $('#importFileForm').on('submit', function (event) {
-  event.preventDefault();
-  var formData = new FormData(this);
-  var uploadStatus = $('#uploadStatus');
-  var progressBar = $('.progress-bar');
-  var progressContainer = $('.progress');
+        event.preventDefault();
+        var formData = new FormData(this);
+        var uploadStatus = $('#uploadStatus');
+        var progressBar = $('.progress-bar');
+        var progressContainer = $('.progress');
 
-  uploadStatus.text('');
-  progressContainer.show();
-  progressBar.css('width', '0%').attr('aria-valuenow', 0).text('0%');
+        uploadStatus.text('');
+        progressContainer.show();
+        progressBar.css('width', '0%').attr('aria-valuenow', 0).text('0%');
 
-  $.ajax({
-    type: 'POST',
-    url: 'import_file.php',
-    data: formData,
-    contentType: false,
-    processData: false,
-    dataType: 'json',
-    xhr: function() {
-      var xhr = new window.XMLHttpRequest();
-      xhr.upload.addEventListener("progress", function(evt) {
-        if (evt.lengthComputable) {
-          var percentComplete = evt.loaded / evt.total;
-          var percentVal = Math.round(percentComplete * 0); // Cap at 99%
-          progressBar.css('width', percentVal + '%').attr('aria-valuenow', percentVal).text(percentVal + '%');
-        }
-      }, false);
-      return xhr;
-    },
-    success: function (response) {
-      if (response.status === 'success') {
-        progressBar.css('width', '100%').attr('aria-valuenow', 100).text('100%');
-        progressBar.removeClass('progress-bar-animated').addClass('bg-success');
-        uploadStatus.text('Upload Completed');
-        showAlert('success', response.message);
-      } else {
-        progressContainer.hide();
-        uploadStatus.text('Upload Failed');
-        showAlert('error', response.message);
-      }
-    },
-    error: function () {
-      progressContainer.hide();
-      uploadStatus.text('Upload Failed');
-      showAlert('error', 'An unexpected error occurred.');
-    }
-  });
-});
+        var progress = 0;
+        var intervalId = setInterval(function () {
+          if (progress < 90) {
+            progress += 1;
+            progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+          }
+        }, 100); // Update every 100ms
+
+        $.ajax({
+          type: 'POST',
+          url: 'import_file.php',
+          data: formData,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          success: function (response) {
+            clearInterval(intervalId);
+            if (response.status === 'success') {
+              var completeProgress = setInterval(function () {
+                if (progress < 100) {
+                  progress += 1;
+                  progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+                } else {
+                  clearInterval(completeProgress);
+                  progressBar.removeClass('progress-bar-animated').addClass('bg-success');
+                  uploadStatus.text('Upload Completed');
+                  showAlert('success', response.message);
+                }
+              }, 50);
+            } else {
+              progressContainer.hide();
+              uploadStatus.text('Upload Failed');
+              showAlert('error', response.message);
+            }
+          },
+          error: function () {
+            clearInterval(intervalId);
+            progressContainer.hide();
+            uploadStatus.text('Upload Failed');
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
 
 
       function showAlertEdit(type, message) {

@@ -36,8 +36,8 @@ echo '</script>';
         <hr>
       </div>
       <div class="modal-body">
-        <form  id="addAlumniForm"  class="form-horizontal" method="POST" action="alumni_listadd.php"
-          <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+        <form id="addAlumniForm" class="form-horizontal" method="POST" action="alumni_listadd.php" <input type="hidden"
+          name="token" value="<?php echo $_SESSION['token']; ?>">
           <div class="personal_information">
             <div class="form-group row" style="border-bottom: 1px solid silver !important;">
               <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
@@ -51,7 +51,7 @@ echo '</script>';
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="lastname" class="col-form-label">Lastname</label>
-                    <input type="text" class="form-control" id="lastname" name="lastname" >
+                    <input type="text" class="form-control" id="lastname" name="lastname">
                     <small id="studentlastnameErrorMessage" style="display:none; color:red;">
                       <i class="fa fa-info-circle"></i> This field is required
                     </small>
@@ -282,7 +282,7 @@ echo '</script>';
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_state" class="col-form-label">Province</label>
-                    <input type="text" class="form-control" id="editState" name="edit_state" >
+                    <input type="text" class="form-control" id="editState" name="edit_state">
                   </div>
 
                   <div class="col-sm-6 mb-3">
@@ -297,7 +297,7 @@ echo '</script>';
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_email" class="col-form-label">Email</label>
-                    <input type="email" class="form-control" id="editEmail" name="edit_email" >
+                    <input type="email" class="form-control" id="editEmail" name="edit_email">
                   </div>
                 </div>
               </div>
@@ -346,7 +346,7 @@ echo '</script>';
                     <small id="editstudentidErrorMessage" style="display:none; color:red;">
                       <i class="fa fa-info-circle"></i> This Student ID Already Exists
                     </small>
-                    
+
                   </div>
                 </div>
               </div>
@@ -372,35 +372,37 @@ echo '</script>';
 
 
 <!-- Delete -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="box-headerModal"></div>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title"><b>Deleting...</b></h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" id="deleteAlumniForm" method="POST">
-                    <input type="hidden" class="deleteId" name="id">
-                    <div class="text-center">
-                        <p>School ID: <span class="editStudentid"></span></p>
-                        <h2 class="editFirstname editMiddlename editLastname"></h2>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-default pull-right btn-flat btn-class" form="deleteAlumniForm" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
-                    <i class="fa fa-trash"></i> Delete
-                </button>
-                <button type="button" class="btn btn-flat btn-class" data-dismiss="modal">
-                    <i class="fa fa-close"></i> Close
-                </button>
-            </div>
-        </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="box-headerModal"></div>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title"><b>Deleting...</b></h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="deleteAlumniForm" method="POST">
+          <input type="hidden" class="deleteId" name="id">
+          <div class="text-center">
+            <p>School ID: <span class="editStudentid"></span></p>
+            <h2 class="editFirstname editMiddlename editLastname"></h2>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default pull-right btn-flat btn-class" form="deleteAlumniForm"
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+        <button type="button" class="btn btn-flat btn-class" data-dismiss="modal">
+          <i class="fa fa-close"></i> Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 
@@ -420,37 +422,39 @@ echo '</script>';
       </div>
 
       <div class="modal-body">
-      <form id="importFileForm" class="form-horizontal" method="POST" action="import_file.php" enctype="multipart/form-data">
-  <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-  <div class="personal_information">
-    <div class="form-group row">
-      <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
-        <h4>Import Information</h4>
-      </label>
-      <div class="col-sm-6">
-        <div class="row">
-          <div class="col-sm-12">
-            <input type="file" name="import_file" class="form-control" required />
+        <form id="importFileForm" class="form-horizontal" method="POST" action="import_file.php"
+          enctype="multipart/form-data">
+          <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+          <div class="personal_information">
+            <div class="form-group row">
+              <label for="firstname" class="col-sm-3 col-form-label text-sm-end">
+                <h4>Import Information</h4>
+              </label>
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <input type="file" name="import_file" class="form-control" required />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="progress" style="display: none; margin-top: 10px;">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div id="uploadStatus" style="margin-top: 10px;"></div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="progress" style="display: none; margin-top: 10px;">
-      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-    <div id="uploadStatus" style="margin-top: 10px;"></div>
-  </div>
-  <div class="modal-footer" style="margin-top:30px">
-    <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn"
-      style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
-      <i class="fa fa-save"></i> Save
-    </button>
-  </div>
-</form>
+          <div class="modal-footer" style="margin-top:30px">
+            <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn"
+              style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+              <i class="fa fa-save"></i> Save
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-</div>    
+</div>
 
 
 <!--==============Print File=================-->
@@ -539,148 +543,148 @@ echo '</script>';
 
 <script>
   $(document).ready(function () {
-  $('.datepicker-year').datepicker({
-    format: 'yyyy',
-    viewMode: 'years',
-    minViewMode: 'years',
-    autoclose: true
-  });
+    $('.datepicker-year').datepicker({
+      format: 'yyyy',
+      viewMode: 'years',
+      minViewMode: 'years',
+      autoclose: true
+    });
 
-  const studentIdInput = document.getElementById('studentid');
-  const editStudentIdInput = document.getElementById('editStudentid');
-  
-  studentIdInput.addEventListener('input', function () {
-    let value = studentIdInput.value.replace(/\D/g, ''); // Remove all non-digit characters
+    const studentIdInput = document.getElementById('studentid');
+    const editStudentIdInput = document.getElementById('editStudentid');
 
-    if (value.length > 8) {
-      value = value.substring(0, 8); // Limit to 8 digits
-    }
+    studentIdInput.addEventListener('input', function () {
+      let value = studentIdInput.value.replace(/\D/g, ''); // Remove all non-digit characters
 
-    // Format with dash in the middle
-    if (value.length > 4) {
-      value = value.slice(0, 4) + '-' + value.slice(4);
-    }
+      if (value.length > 8) {
+        value = value.substring(0, 8); // Limit to 8 digits
+      }
 
-    studentIdInput.value = value;
+      // Format with dash in the middle
+      if (value.length > 4) {
+        value = value.slice(0, 4) + '-' + value.slice(4);
+      }
 
-    // Add or remove error class based on validation
-    const isValid = /^\d{4}-\d{4}$/.test(value);
-    if (isValid) {
-      studentIdInput.classList.remove('error');
-    } else {
-      studentIdInput.classList.add('error');
-    }
-  });
+      studentIdInput.value = value;
 
-  editStudentIdInput.addEventListener('input', function () {
-    let value = editStudentIdInput.value.replace(/\D/g, ''); // Remove all non-digit characters
+      // Add or remove error class based on validation
+      const isValid = /^\d{4}-\d{4}$/.test(value);
+      if (isValid) {
+        studentIdInput.classList.remove('error');
+      } else {
+        studentIdInput.classList.add('error');
+      }
+    });
 
-    if (value.length > 8) {
-      value = value.substring(0, 8); // Limit to 8 digits
-    }
+    editStudentIdInput.addEventListener('input', function () {
+      let value = editStudentIdInput.value.replace(/\D/g, ''); // Remove all non-digit characters
 
-    // Format with dash in the middle
-    if (value.length > 4) {
-      value = value.slice(0, 4) + '-' + value.slice(4);
-    }
+      if (value.length > 8) {
+        value = value.substring(0, 8); // Limit to 8 digits
+      }
 
-    editStudentIdInput.value = value;
+      // Format with dash in the middle
+      if (value.length > 4) {
+        value = value.slice(0, 4) + '-' + value.slice(4);
+      }
 
-    // Add or remove error class based on validation
-    const isEditValid = /^\d{4}-\d{4}$/.test(value);
-    if (isEditValid) {
-      editStudentIdInput.classList.remove('error');
-    } else {
-      editStudentIdInput.classList.add('error');
-    }
-  });
+      editStudentIdInput.value = value;
 
-  document.getElementById('contactnumber').addEventListener('input', function (e) {
-    const input = e.target;
-    input.value = input.value.replace(/\D/g, ''); // Remove non-digit characters
-  });
+      // Add or remove error class based on validation
+      const isEditValid = /^\d{4}-\d{4}$/.test(value);
+      if (isEditValid) {
+        editStudentIdInput.classList.remove('error');
+      } else {
+        editStudentIdInput.classList.add('error');
+      }
+    });
 
- // Handle form submission for adding alumni
-document.getElementById('addAlumniForm').addEventListener('submit', function(event) {
-    var email = document.getElementById('email').value.trim();
-    var studentId = document.getElementById('studentid').value.trim();
+    document.getElementById('contactnumber').addEventListener('input', function (e) {
+      const input = e.target;
+      input.value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+    });
 
-    var isEmailExisting = false;
-    var isStudentIdExisting = false;
+    // Handle form submission for adding alumni
+    document.getElementById('addAlumniForm').addEventListener('submit', function (event) {
+      var email = document.getElementById('email').value.trim();
+      var studentId = document.getElementById('studentid').value.trim();
 
-    // Ensure existingAlumni is defined
-    if (typeof existingAlumni !== 'undefined') {
+      var isEmailExisting = false;
+      var isStudentIdExisting = false;
+
+      // Ensure existingAlumni is defined
+      if (typeof existingAlumni !== 'undefined') {
         for (var key in existingAlumni) {
-            if (existingAlumni.hasOwnProperty(key)) {
-                var alumni = existingAlumni[key];
-                if (alumni['email'].toLowerCase() === email.toLowerCase()) {
-                    isEmailExisting = true;
-                }
-                if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
-                    isStudentIdExisting = true;
-                }
+          if (existingAlumni.hasOwnProperty(key)) {
+            var alumni = existingAlumni[key];
+            if (alumni['email'].toLowerCase() === email.toLowerCase()) {
+              isEmailExisting = true;
             }
+            if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
+              isStudentIdExisting = true;
+            }
+          }
         }
-    }
+      }
 
-    // Display error messages and prevent form submission if needed
-    if (isEmailExisting) {
+      // Display error messages and prevent form submission if needed
+      if (isEmailExisting) {
         event.preventDefault();
         document.getElementById('emailErrorMessage').style.display = 'block';
-    } else {
+      } else {
         document.getElementById('emailErrorMessage').style.display = 'none';
-    }
+      }
 
-    if (isStudentIdExisting) {
+      if (isStudentIdExisting) {
         event.preventDefault();
         document.getElementById('studentidErrorMessage').style.display = 'block';
-    } else {
+      } else {
         document.getElementById('studentidErrorMessage').style.display = 'none';
-    }
-});
+      }
+    });
 
-// Handle form submission for editing alumni
-document.getElementById('editAlumniForm').addEventListener('submit', function(event) {
-    var email = document.getElementById('email').value.trim();
-    var studentId = document.getElementById('studentid').value.trim();
+    // Handle form submission for editing alumni
+    document.getElementById('editAlumniForm').addEventListener('submit', function (event) {
+      var email = document.getElementById('email').value.trim();
+      var studentId = document.getElementById('studentid').value.trim();
 
-    var isEditEmailExisting = false;
-    var isEditStudentIdExisting = false;
+      var isEditEmailExisting = false;
+      var isEditStudentIdExisting = false;
 
-    // Ensure existingAlumni is defined
-    if (typeof existingAlumni !== 'undefined') {
+      // Ensure existingAlumni is defined
+      if (typeof existingAlumni !== 'undefined') {
         for (var key in existingAlumni) {
-            if (existingAlumni.hasOwnProperty(key)) {
-                var alumni = existingAlumni[key];
-                if (alumni['email'].toLowerCase() === email.toLowerCase()) {
-                    isEditEmailExisting = true;
-                }
-                if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
-                    isEditStudentIdExisting = true;
-                }
+          if (existingAlumni.hasOwnProperty(key)) {
+            var alumni = existingAlumni[key];
+            if (alumni['email'].toLowerCase() === email.toLowerCase()) {
+              isEditEmailExisting = true;
             }
+            if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
+              isEditStudentIdExisting = true;
+            }
+          }
         }
-    }
+      }
 
-    // Display error messages and prevent form submission if needed
-    if (isEditEmailExisting) {
+      // Display error messages and prevent form submission if needed
+      if (isEditEmailExisting) {
         event.preventDefault();
         document.getElementById('emailErrorMessage').style.display = 'block';
-    } else {
+      } else {
         document.getElementById('emailErrorMessage').style.display = 'none';
-    }
+      }
 
-    if (isEditStudentIdExisting) {
+      if (isEditStudentIdExisting) {
         event.preventDefault();
         document.getElementById('editstudentidErrorMessage').style.display = 'block';
-    } else {
+      } else {
         document.getElementById('editstudentidErrorMessage').style.display = 'none';
-    }
-});
+      }
+    });
 
 
- 
-});
+
+  });
 
 
 </script>
