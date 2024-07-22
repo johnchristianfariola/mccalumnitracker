@@ -422,7 +422,7 @@
       xhr.upload.addEventListener("progress", function(evt) {
         if (evt.lengthComputable) {
           var percentComplete = evt.loaded / evt.total;
-          var percentVal = Math.round(percentComplete * 99); // Cap at 99%
+          var percentVal = Math.round(percentComplete * 0); // Cap at 99%
           progressBar.css('width', percentVal + '%').attr('aria-valuenow', percentVal).text(percentVal + '%');
         }
       }, false);
