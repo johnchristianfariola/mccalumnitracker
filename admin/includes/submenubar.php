@@ -1,6 +1,5 @@
 <?php
 require_once 'includes/firebaseRDB.php';
-
 require_once 'config.php'; // Include your config file
 
 $firebase = new firebaseRDB($databaseURL);
@@ -37,6 +36,9 @@ foreach ($courses as $courseId => $course) {
         foreach ($batchYears as $batchId => $batch) {
             $courseBatchYears[$batchId] = $batch['batch_yrs'];
         }
+
+        // Sort batch years in ascending order
+        asort($courseBatchYears);
 
         // Build the filtered course data
         $filteredCourses[$departmentName][] = [
