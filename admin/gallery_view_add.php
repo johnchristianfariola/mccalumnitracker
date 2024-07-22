@@ -1,6 +1,13 @@
 <?php
 session_start(); // Start the session
 
+// Function to send JSON response
+function sendJsonResponse($success, $message) {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => $success, $success ? 'success' : 'error' => $message]);
+    exit;
+}
+
 // Generate a new token if one does not exist
 if (empty($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
@@ -41,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     return $result;
                 }
 
+                $uploadedCount = 0;
+                $totalCount = count($_FILES['album_images']['tmp_name']);
+
                 foreach ($_FILES['album_images']['tmp_name'] as $key => $imageTmpName) {
                     $imageName = $_FILES['album_images']['name'][$key];
                     $imagePath = $imageDir . $imageName;
@@ -51,45 +61,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $result = addImage($firebase, $galleryId, $imagePath);
 
                         // Check result
-                        if ($result === null) {
-                            $_SESSION['error'] = 'Failed to add image to Firebase.';
-                            error_log('Firebase error: Failed to insert image data.');
-                            redirectToGalleryPage();
+                        if ($result !== null) {
+                            $uploadedCount++;
+                        } else {
+                            error_log('Firebase error: Failed to insert image data for ' . $imageName);
                         }
-                    } else {
-                        $_SESSION['error'] = 'Failed to upload images.';
-                        redirectToGalleryPage();
                     }
                 }
 
-                $_SESSION['success'] = 'Images added successfully!';
-                redirectToGalleryViewPage($galleryId);
+                if ($uploadedCount > 0) {
+                    if ($uploadedCount == $totalCount) {
+                        sendJsonResponse(true, 'All ' . $uploadedCount . ' images uploaded successfully!');
+                    } else {
+                        sendJsonResponse(true, $uploadedCount . ' out of ' . $totalCount . ' images uploaded successfully.');
+                    }
+                } else {
+                    sendJsonResponse(false, 'Failed to upload any images.');
+                }
             } else {
-                $_SESSION['error'] = 'No images selected.';
-                redirectToGalleryPage();
+                sendJsonResponse(false, 'No images selected.');
             }
         } else {
-            $_SESSION['error'] = 'Gallery ID is required.';
-            redirectToGalleryPage();
+            sendJsonResponse(false, 'Gallery ID is required.');
         }
     } else {
-     
-        redirectToGalleryPage();
+        sendJsonResponse(false, 'Invalid token.');
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
-    redirectToGalleryPage();
-}
-
-// Function to handle redirection to the gallery page
-function redirectToGalleryPage() {
-    header('Location: gallery_view.php');
-    exit;
-}
-
-// Function to handle redirection to the gallery view page
-function redirectToGalleryViewPage($galleryId) {
-    header('Location: gallery_view.php?id=' . $galleryId);
-    exit;
+    sendJsonResponse(false, 'Invalid request method.');
 }
 ?>

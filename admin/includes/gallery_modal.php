@@ -165,6 +165,16 @@ function validateEditGalleryForm() {
     </div>
 </div>
 <script>
+function showAlert(type, message) {
+    Swal.fire({
+        position: "top-end",
+        icon: type === 'error' ? 'error' : 'success',
+        title: message,
+        showConfirmButton: false,
+        timer: 2500
+    });
+}
+
 document.getElementById('uploadButton').addEventListener('click', function(event) {
     event.preventDefault();
     
@@ -193,15 +203,32 @@ document.getElementById('uploadButton').addEventListener('click', function(event
         if (xhr.status === 200) {
             progressBar.style.width = '100%';
             progressText.textContent = 'Upload Complete';
+            
+            // Parse the response to get the message
+            try {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    showAlert('success', response.success);
+                } else if (response.error) {
+                    showAlert('error', response.error);
+                } else {
+                    showAlert('success', 'Upload Successful!');
+                }
+            } catch (e) {
+                showAlert('success', 'Upload Successful!');
+            }
+            
             // Optionally handle response or redirect if needed
-            setTimeout(() => window.location.reload(), 2000); // Reload or redirect after 2 seconds
+            setTimeout(() => window.location.reload(), 2500); // Reload or redirect after 2.5 seconds (matching SweetAlert timer)
         } else {
             progressText.textContent = 'Upload Failed: ' + xhr.responseText;
+            showAlert('error', 'Upload Failed: ' + xhr.responseText);
         }
     });
     
     xhr.addEventListener('error', function() {
         progressText.textContent = 'Upload Error';
+        showAlert('error', 'Upload Error');
     });
     
     xhr.open('POST', 'gallery_view_add.php', true);
