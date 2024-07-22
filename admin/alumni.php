@@ -422,7 +422,7 @@
       xhr.upload.addEventListener("progress", function(evt) {
         if (evt.lengthComputable) {
           var percentComplete = evt.loaded / evt.total;
-          var percentVal = Math.round(percentComplete * 100);
+          var percentVal = Math.round(percentComplete * 99); // Cap at 99%
           progressBar.css('width', percentVal + '%').attr('aria-valuenow', percentVal).text(percentVal + '%');
         }
       }, false);
@@ -430,6 +430,7 @@
     },
     success: function (response) {
       if (response.status === 'success') {
+        progressBar.css('width', '100%').attr('aria-valuenow', 100).text('100%');
         progressBar.removeClass('progress-bar-animated').addClass('bg-success');
         uploadStatus.text('Upload Completed');
         showAlert('success', response.message);
