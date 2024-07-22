@@ -400,26 +400,52 @@
 
       // New import file form submission
       $('#importFileForm').on('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
+  event.preventDefault();
+  var formData = new FormData(this);
+  var uploadStatus = $('#uploadStatus');
+  var progressBar = $('.progress-bar');
+  var progressContainer = $('.progress');
 
-        var formData = $(this).serialize();
-        $.ajax({
-          type: 'POST',
-          url: 'import_file.php',
-          data: formData,
-          dataType: 'json',
-          success: function (response) {
-            if (response.status === 'success') {
-              showAlert('success', response.message);
-            } else {
-              showAlert('error', response.message);
-            }
-          },
-          error: function () {
-            showAlert('error', 'An unexpected error occurred.');
-          }
-        });
-      });
+  uploadStatus.text('');
+  progressContainer.show();
+  progressBar.css('width', '0%').attr('aria-valuenow', 0).text('0%');
+
+  $.ajax({
+    type: 'POST',
+    url: 'import_file.php',
+    data: formData,
+    contentType: false,
+    processData: false,
+    dataType: 'json',
+    xhr: function() {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function(evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = evt.loaded / evt.total;
+          var percentVal = Math.round(percentComplete * 100);
+          progressBar.css('width', percentVal + '%').attr('aria-valuenow', percentVal).text(percentVal + '%');
+        }
+      }, false);
+      return xhr;
+    },
+    success: function (response) {
+      if (response.status === 'success') {
+        progressBar.removeClass('progress-bar-animated').addClass('bg-success');
+        uploadStatus.text('Upload Completed');
+        showAlert('success', response.message);
+      } else {
+        progressContainer.hide();
+        uploadStatus.text('Upload Failed');
+        showAlert('error', response.message);
+      }
+    },
+    error: function () {
+      progressContainer.hide();
+      uploadStatus.text('Upload Failed');
+      showAlert('error', 'An unexpected error occurred.');
+    }
+  });
+});
 
 
       function showAlertEdit(type, message) {
