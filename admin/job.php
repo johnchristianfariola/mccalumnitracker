@@ -3,7 +3,6 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
-
     <?php include 'includes/navbar.php'; ?>
     <?php include 'includes/menubar.php'; ?>
 
@@ -14,10 +13,8 @@
         <h1>
           Content <i class="fa fa-angle-right"></i> Job
         </h1>
-        <div class="box-inline ">
-
+        <div class="box-inline">
           <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
-
           <div class="search-container">
             <input type="text" class="search-input" id="search-input" placeholder="Search...">
             <button class="search-button" onclick="filterTable()">
@@ -28,7 +25,6 @@
             </button>
           </div>
         </div>
-
         <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
           <li>Content</li>
@@ -39,23 +35,23 @@
       <section class="content">
         <?php
         if (isset($_SESSION['error'])) {
-          echo "
-            <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-warning'></i> Reminder</h4>
-              " . $_SESSION['error'] . "
-            </div>
-          ";
+          echo "<script>
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '" . $_SESSION['error'] . "',
+                  });
+                </script>";
           unset($_SESSION['error']);
         }
         if (isset($_SESSION['success'])) {
-          echo "
-            <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-              <h4><i class='icon fa fa-check'></i> Success!</h4>
-              " . $_SESSION['success'] . "
-            </div>
-          ";
+          echo "<script>
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '" . $_SESSION['success'] . "',
+                  });
+                </script>";
           unset($_SESSION['success']);
         }
         ?>
@@ -64,10 +60,9 @@
             <div class="box">
               <div class="box-header with-border"></div>
               <div class="box-body">
-                <div class="table-responsive"> <!-- Add this div for responsive behavior -->
+                <div class="table-responsive">
                   <table id="example1" class="table table-bordered">
                     <thead>
-
                       <th>Status</th>
                       <th width="15%">Work Type</th>
                       <th>Job Title</th>
@@ -93,66 +88,77 @@
   </div>
   <?php include 'includes/scripts.php'; ?>
   <script>
-    $(document).ready(function () {
-      var originalData = {};
+  $(document).ready(function () {
+  var originalData = {};
+  var currentEditor = null;
 
-      // Function to fetch content from the server
-      function fetcheventData(id, successCallback, errorCallback) {
-        $.ajax({
-          url: 'job_row.php',
-          type: 'GET',
-          data: { id: id },
-          dataType: 'json',
-          success: successCallback,
-          error: errorCallback
-        });
+  function fetcheventData(id, successCallback, errorCallback) {
+    $.ajax({
+      url: 'job_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: successCallback,
+      error: errorCallback
+    });
+  }
+
+  function initializeCKEditor(elementId) {
+    if (window.CKEDITOR && CKEDITOR.replace) {
+      // Destroy existing instance if it exists
+      if (currentEditor) {
+        currentEditor.destroy();
       }
+      // Create new instance
+      currentEditor = CKEDITOR.replace(elementId);
+    } else {
+      console.error('CKEditor is not defined or replace method is missing.');
+    }
+  }
 
-      // Function to initialize CKEditor
-      function initializeCKEditor(elementId) {
-        if (window.CKEDITOR && CKEDITOR.replace) {
-          CKEDITOR.replace(elementId);
-        } else {
-          console.error('CKEditor is not defined or replace method is missing.');
-        }
-      }
+  $('.open-modal').click(function () {
+    var id = $(this).data('id');
+    fetcheventData(id, function (response) {
+      $('#editId').val(id);
+      $('#edit_job_title').val(response.job_title);
+      $('#edit_company_name').val(response.company_name);
+      $('#edit_parttime').prop('checked', response.work_time === 'Part-Time');
+      $('#edit_fulltime').prop('checked', response.work_time === 'Full-Time');
+      $('#edit_statusActive').prop('checked', response.status === 'Active');
+      $('#edit_statusArchive').prop('checked', response.status === 'Archive');
+      
+      // Set the textarea value before initializing CKEditor
+      $('#edit_description').val(response.job_description);
+      
+      originalData = {
+        job_title: response.job_title,
+        company_name: response.company_name,
+        work_time: response.work_time,
+        status: response.status,
+        job_description: response.job_description
+      };
 
-      // Open edit modal when edit button is clicked
-      $('.open-modal').click(function () {
-        var id = $(this).data('id');
+      $('#editModal').modal('show');
 
-        // Fetch event data via AJAX
-        fetcheventData(id, function (response) {
-          $('#editId').val(id);
-          $('#edit_job_title').val(response.job_title);
-          $('#edit_company_name').val(response.company_name);
-          $('#edit_parttime').prop('checked', response.work_time === 'Part-Time');
-          $('#edit_fulltime').prop('checked', response.work_time === 'Full-Time');
-          $('#edit_statusActive').prop('checked', response.status === 'Active');
-          $('#edit_statusArchive').prop('checked', response.status === 'Archive');
-          $('#edit_description').val(response.job_description);
+      // Use a setTimeout to ensure the modal is fully shown before initializing CKEditor
+      setTimeout(function() {
+        initializeCKEditor('edit_description');
+      }, 100);
+    }, function (xhr, status, error) {
+      console.error('AJAX Error: ' + status + ' ' + error);
+    });
+  });
 
-          // Store original data
-          originalData = {
-            job_title: response.job_title,
-            company_name: response.company_name,
-            work_time: response.work_time,
-            status: response.status,
-            job_description: response.job_description
-          };
+  $('#editModal').on('hidden.bs.modal', function () {
+    // Destroy the CKEditor instance when the modal is closed
+    if (currentEditor) {
+      currentEditor.destroy();
+      currentEditor = null;
+    }
+  });
 
-          // Show the edit modal after setting the form fields
-          $('#editModal').modal('show');
-
-          // Initialize CKEditor after modal is shown
-          initializeCKEditor('edit_description');
-        }, function (xhr, status, error) {
-          console.error('AJAX Error: ' + status + ' ' + error);
-        });
-      });
-
-         // Open delete modal when delete button is clicked
-         $(document).ready(function () {
+  // Open delete modal when delete button is clicked
+  $(document).ready(function () {
         // Open delete confirmation modal
         $('.open-delete').click(function () {
           var id = $(this).data('id');
@@ -185,56 +191,17 @@
       });
 
 
-      // Function to compare form data with original data
-      function hasDataChanged(formData) {
-        var changed = false;
-        formData.forEach(function (value, key) {
-          if (originalData[key] !== undefined && originalData[key] != value) {
-            changed = true;
-          }
-        });
-        return changed;
-      }
+  $('#addJobForm').on('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
 
-      $('#editJobForm').on('submit', function (event) {
-        event.preventDefault();
+    var formData = new FormData(this); // Create FormData object
 
-        var formData = new FormData(this);
-
-        if (!hasDataChanged(formData)) {
-          showAlertEdit('info', "You haven't changed anything. Data remains unchanged.");
-          return;
-        }
-
-        $.ajax({
-          type: 'POST',
-          url: 'job_edit.php',
-          data: formData,
-          contentType: false,
-          processData: false,
-          dataType: 'json',
-          success: function (response) {
-            if (response.status === 'success') {
-              showAlert('success', response.message);
-            } else if (response.status === 'info' || response.status === 'error') {
-              showAlertEdit(response.status, response.message);
-            }
-          },
-          error: function () {
-            showAlertEdit('error', 'An unexpected error occurred.');
-          }
-        });
-      });
-
-      $('#addJobForm').on('submit', function (event) {
-    event.preventDefault();
-    var formData = new FormData(this);
     $.ajax({
       type: 'POST',
-      url: 'job_add.php',
+      url: 'job_add.php', // The URL of your PHP script for adding news
       data: formData,
-      contentType: false,
-      processData: false,
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
       dataType: 'json',
       success: function (response) {
         if (response.status === 'success') {
@@ -248,16 +215,19 @@
       }
     });
   });
+
 
   $('#deleteJobForm').on('submit', function (event) {
-    event.preventDefault();
-    var formData = new FormData(this);
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = new FormData(this); // Create FormData object
+
     $.ajax({
       type: 'POST',
-      url: 'job_delete.php',
+      url: 'job_delete.php', // The URL of your PHP script for adding news
       data: formData,
-      contentType: false,
-      processData: false,
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
       dataType: 'json',
       success: function (response) {
         if (response.status === 'success') {
@@ -272,39 +242,61 @@
     });
   });
 
-
-      function showAlert(type, message) {
-        Swal.fire({
-          position: 'top-end',
-          icon: type,
-          title: message,
-          showConfirmButton: false,
-          timer: 2500,
-          willClose: () => {
-            if (type === 'success') {
-              location.reload();
-            }
-          }
-        });
+  $('#editJobForm').on('submit', function (event) {
+    event.preventDefault();
+    var formData = new FormData(this);
+    $.ajax({
+      type: 'POST',
+      url: 'job_edit.php',
+      data: formData,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else if (response.status === 'info') {
+          showAlertEdit(response.status, response.message);
+        } 
+        else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
       }
-
-      function showAlertEdit(type, message) {
-        Swal.fire({
-          icon: type,
-          title: type === 'info' ? 'Information' : 'Error',
-          text: message,
-          confirmButtonText: 'OK',
-          customClass: {
-            title: 'swal-title',
-            htmlContainer: 'swal-text',
-            confirmButton: 'swal-button'
-          }
-        });
-      }
-
     });
+  });
+
+  function showAlert(type, message) {
+    Swal.fire({
+      position: 'top-end',
+      icon: type,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      willClose: () => {
+        if (type === 'success') {
+          location.reload();
+        }
+      }
+    });
+  }
+
+  function showAlertEdit(type, message) {
+    Swal.fire({
+      icon: type,
+      title: type === 'info' ? 'Information' : 'Error',
+      text: message,
+      confirmButtonText: 'OK',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-text',
+        confirmButton: 'swal-button'
+      }
+    });
+  }
+});
   </script>
 </body>
-
 </html>
-
