@@ -155,7 +155,7 @@ function validateEditEventForm() {
                 <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Event <i class="fa fa-angle-right"></i> Add</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="event_add.php" enctype="multipart/form-data" onsubmit="return validateAddEventForm()">
+                <form id="addEventForm" class="form-horizontal flex-container" method="POST" action="event_add.php" enctype="multipart/form-data" onsubmit="return validateAddEventForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="form-container">
                         <div class="form-group">
@@ -230,7 +230,7 @@ function validateEditEventForm() {
                 <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Edit <i class="fa fa-angle-right"></i> Edit</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="event_edit.php" enctype="multipart/form-data" onsubmit="return validateEditEventForm()">
+                <form id="editEventForm" class="form-horizontal flex-container" method="POST" action="event_edit.php" enctype="multipart/form-data" onsubmit="return validateEditEventForm()">
                     <div class="form-container">
                         <input type="hidden" name="id" id="editId" value=""> <!-- Hidden input for ID -->
                         <div class="form-group">
@@ -302,7 +302,7 @@ function validateEditEventForm() {
                 <h4 class="modal-title"><b>Deleting...</b></h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="event_delete.php">
+                <form id="deleteEventForm" class="form-horizontal" method="POST" action="event_delete.php">
                     <input type="hidden" class="deleteId" name="id">
                     <div class="text-center">
                         <!-- event Image -->

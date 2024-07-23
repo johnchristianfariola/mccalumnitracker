@@ -376,3 +376,23 @@ section.content-header.box-header-background.box-padding > ol.breadcrumb {
 .swal2-popup .swal-button {
   font-size: 16px !important; /* Adjust button font size */
 }
+
+
+/*===========CUSTOM TABLE==================*/
+
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+
+td {
+  padding: 8px !important;
+
+  vertical-align: middle !important;
+  max-width: 200px !important;
+  /* Adjust maximum width as needed */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}

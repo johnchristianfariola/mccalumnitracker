@@ -1,22 +1,15 @@
 <?php
 session_start(); // Start the session
 
-// Generate a CSRF token if one is not present
-if (!isset($_SESSION['token'])) {
-    $_SESSION['token'] = bin2hex(random_bytes(32));
+header('Content-Type: application/json'); // Set the content type to JSON
+
+// Function to send a JSON response
+function sendResponse($status, $message) {
+    echo json_encode(['status' => $status, 'message' => $message]);
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF token
-    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-      
-        header('Location: event.php');
-        exit;
-    }
-
-    // Unset the token to prevent reuse
-    unset($_SESSION['token']);
-
     // Ensure all form fields are set and not empty
     if (
         isset($_POST['event_date']) && !empty($_POST['event_date']) &&
@@ -43,9 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $extensions = array("jpeg", "jpg", "png", "gif");
 
         if (in_array($file_ext, $extensions) === false) {
-            $_SESSION['error'] = "Extension not allowed, please choose a JPEG, JPG, PNG, or GIF file.";
-            header('Location: event.php');
-            exit;
+            sendResponse('error', 'Extension not allowed, please choose a JPEG, JPG, PNG, or GIF file.');
         }
 
         // Include Firebase RDB class and initialize
@@ -55,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Function to upload image and add event
         function addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url) {
-            $table = 'event'; // Assuming 'event' is your Firebase database node for even
+            $table = 'event'; // Assuming 'event' is your Firebase database node for event
             $data = array(
                 'event_title' => $event_title,
                 'event_venue' => $event_venue,
@@ -65,8 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'image_url' => $image_url,
                 'event_created' => date('F j, Y')
             );
-            $result = $firebase->insert($table, $data);
-            return $result;
+            return $firebase->insert($table, $data);
         }
 
         // Upload image to server
@@ -82,23 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Check result
             if ($result === null) {
-                $_SESSION['error'] = 'Failed to add event to Firebase.';
-                error_log('Firebase error: Failed to insert event data.');
+                sendResponse('error', 'Failed to add event to Firebase.');
             } else {
-                $_SESSION['success'] = 'Event added successfully!';
+                sendResponse('success', 'Event added successfully!');
             }
         } else {
-            $_SESSION['error'] = 'Failed to upload image.';
+            sendResponse('error', 'Failed to upload image.');
         }
     } else {
-        $_SESSION['error'] = 'All fields are required.';
+        sendResponse('error', 'All fields are required.');
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    sendResponse('error', 'Invalid request method.');
 }
-
-// Redirect to the appropriate page (event.php) regardless of success or failure
-header('Location: event.php');
-exit;
-
 ?>

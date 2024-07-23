@@ -398,65 +398,63 @@
         });
       });
 
-     // New import file form submission
-$('#importFileForm').on('submit', function (event) {
-  event.preventDefault();
-  var formData = new FormData(this);
-  var uploadStatus = $('#uploadStatus');
-  var progressBar = $('.progress-bar');
-  var progressContainer = $('.progress-container');
+      // New import file form submission
+      $('#importFileForm').on('submit', function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        var uploadStatus = $('#uploadStatus');
+        var progressBar = $('.progress-bar');
+        var progressContainer = $('.progress-container');
 
-  uploadStatus.text('');
-  progressContainer.show();
-  progressBar.css('width', '0%').attr('aria-valuenow', 0).text('0%');
+        uploadStatus.text('');
+        progressContainer.show();
+        progressBar.css('width', '0%').attr('aria-valuenow', 0).text('0%');
 
-  var progress = 0;
-  var intervalId = setInterval(function () {
-    if (progress < 90) {
-      progress += 1;
-      progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
-    }
-  }, 100); // Update every 100ms
-
-  $.ajax({
-    type: 'POST',
-    url: 'import_file.php',
-    data: formData,
-    contentType: false,
-    processData: false,
-    dataType: 'json',
-    success: function (response) {
-      clearInterval(intervalId);
-      if (response.status === 'success') {
-        var completeProgress = setInterval(function () {
-          if (progress < 100) {
+        var progress = 0;
+        var intervalId = setInterval(function () {
+          if (progress < 90) {
             progress += 1;
             progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
-          } else {
-            clearInterval(completeProgress);
-            progressBar.removeClass('progress-bar-animated').addClass('bg-success');
-            uploadStatus.text('Upload Completed');
-            progressContainer.hide(); // Hide the progress container
-            showAlert('success', response.message);
           }
-        }, 50);
-      } else {
-        clearInterval(intervalId);
-        progressContainer.hide(); // Hide the progress container
-        uploadStatus.text('Upload Failed');
-        showAlert('error', response.message);
-      }
-    },
-    error: function () {
-      clearInterval(intervalId);
-      progressContainer.hide(); // Hide the progress container
-      uploadStatus.text('Upload Failed');
-      showAlert('error', 'An unexpected error occurred.');
-    }
-  });
-});
+        }, 100); // Update every 100ms
 
-
+        $.ajax({
+          type: 'POST',
+          url: 'import_file.php',
+          data: formData,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          success: function (response) {
+            clearInterval(intervalId);
+            if (response.status === 'success') {
+              var completeProgress = setInterval(function () {
+                if (progress < 100) {
+                  progress += 1;
+                  progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+                } else {
+                  clearInterval(completeProgress);
+                  progressBar.removeClass('progress-bar-animated').addClass('bg-success');
+                  uploadStatus.text('Upload Completed');
+                  progressContainer.hide(); // Hide the progress container
+                  showAlert('success', response.message);
+                }
+              }, 50);
+            } else {
+              clearInterval(intervalId);
+              progressContainer.hide(); // Hide the progress container
+              uploadStatus.text('Upload Failed');
+              showAlert('error', response.message);
+            }
+          },
+          error: function () {
+            clearInterval(intervalId);
+            progressContainer.hide(); // Hide the progress container
+            uploadStatus.text('Upload Failed');
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
 
       function showAlertEdit(type, message) {
         let iconType = 'info';

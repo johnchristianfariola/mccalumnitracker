@@ -119,7 +119,7 @@ function validateEditForm() {
                 <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> News <i class="fa fa-angle-right"></i> Add</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="news_add.php" enctype="multipart/form-data" onsubmit="return validateAddForm()">
+                <form id="addNewsForm" class="form-horizontal flex-container" method="POST" action="news_add.php" enctype="multipart/form-data" onsubmit="return validateAddForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="form-container">
                         <div class="form-group">
@@ -181,7 +181,7 @@ function validateEditForm() {
                 <h2 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> News <i class="fa fa-angle-right"></i> Edit</b></h2>
             </div>
             <div class="modal-body" style="padding: 0 !important;">
-                <form class="form-horizontal flex-container" method="POST" action="news_edit.php" enctype="multipart/form-data" onsubmit="return validateEditForm()">
+                <form id="editNewsForm" class="form-horizontal flex-container" method="POST" action="news_edit.php" enctype="multipart/form-data" onsubmit="return validateEditForm()">
                     <input type="hidden" name="id" id="editId" value=""> <!-- Hidden input for ID -->
                     <div class="form-container">
                         <div class="form-group">
@@ -244,7 +244,7 @@ function validateEditForm() {
                 <h4 class="modal-title"><b>Deleting...</b></h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="news_delete.php">
+                <form id="deleteNewsForm" class="form-horizontal" method="POST" action="news_delete.php">
                     <input type="hidden" class="deleteId" name="id">
                     <div class="text-center">
                         <!-- News Image -->

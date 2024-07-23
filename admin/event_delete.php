@@ -1,12 +1,18 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json'); // Set the content type to JSON
+
+// Function to send a JSON response
+function sendResponse($status, $message) {
+    echo json_encode(['status' => $status, 'message' => $message]);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure ID is provided
     if (!isset($_POST['id']) || empty($_POST['id'])) {
-        $_SESSION['error'] = 'ID is required.';
-        header('Location: event.php');
-        exit;
+        sendResponse('error', 'ID is required.');
     }
 
     // Include FirebaseRDB class and initialize
@@ -20,8 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Function to delete event data
     function deleteEventData($firebase, $id) {
         $table = 'event'; // Assuming 'event' is your Firebase database node for event data
-        $result = $firebase->delete($table, $id);
-        return $result;
+        return $firebase->delete($table, $id);
     }
 
     // Perform delete
@@ -29,20 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check result
     if ($result === null) {
-        $_SESSION['error'] = 'Failed to delete event data in Firebase.';
-        error_log('Firebase error: Failed to delete event data.');
+        sendResponse('error', 'Failed to delete event data in Firebase.');
     } else {
-        $_SESSION['success'] = 'Event data deleted successfully!';
+        sendResponse('success', 'Event data deleted successfully!');
     }
-
-    // Redirect to the appropriate page (event.php)
-    header('Location: event.php');
-    exit;
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    sendResponse('error', 'Invalid request method.');
 }
-
-// Redirect to the appropriate page (event.php) on error
-header('Location: event.php');
-exit;
 ?>

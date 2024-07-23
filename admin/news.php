@@ -14,8 +14,7 @@
         <h1>
           Content <i class="fa fa-angle-right"></i> News
         </h1>
-        <div class="box-inline ">
-
+        <div class="box-inline">
           <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
               class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
 
@@ -66,18 +65,17 @@
           <div class="col-xs-12">
             <div class="box">
               <div class="box-header with-border">
-
+                <!-- Add any additional header content here -->
               </div>
               <div class="box-body">
                 <div class="table-responsive">
                   <table id="example1" class="table table-bordered">
                     <thead>
-                      <th>Thumnails</th>
+                      <th>Thumbnails</th>
                       <th>Title</th>
                       <th>Author</th>
                       <th width="30%">Description</th>
                       <th width="10%">Date Posted</th>
-
                       <th width="10%">Tools</th>
                     </thead>
                     <tbody>
@@ -97,9 +95,9 @@
   </div>
   <?php include 'includes/scripts.php'; ?>
   <script>
-   
+  $(document).ready(function () {
+  var originalValues = {};
 
-   $(document).ready(function () {
   // Function to fetch content from the server
   function fetchNewsData(id, successCallback, errorCallback) {
     $.ajax({
@@ -124,37 +122,51 @@
     }
   }
 
-  // Function to handle modal display and data population
+  // Function to handle modal display and data population for edit
   function openEditModal(response, id) {
     $('#editId').val(id);
     $('#editTitle').val(response.news_title);
     $('#editAuthor').val(response.news_author);
     $('#editDesc').val(response.news_description);
 
-    // Display the fetched image in the edit modal
     if (response.image_url && response.image_url.trim() !== '') {
-      $('#imagePreviewImg2').attr('src', response.image_url);
-      $('#imagePreviewImg2').css('display', 'block'); // Ensure the image is displayed
+      $('#imagePreviewImg2').attr('src', response.image_url).show();
     } else {
-      $('#imagePreviewImg2').attr('src', ''); // Clear the image src if no image URL is returned
-      $('#imagePreviewImg2').css('display', 'none'); // Hide the image if no image URL is returned
+      $('#imagePreviewImg2').hide();
     }
 
-    // Show the edit modal after setting the form fields
+    // Capture original values
+    captureOriginalValues();
     $('#editModal').modal('show');
 
-    // Initialize CKEditor after modal is shown
     initializeCKEditor('editDesc');
 
-    // Set focus to the first input field for accessibility
     $('#editTitle').focus();
+  }
+
+  function captureOriginalValues() {
+    originalValues = {};
+    $('#editNewsForm').find('input, textarea').each(function () {
+      var $input = $(this);
+      originalValues[$input.attr('name')] = $input.val();
+    });
+  }
+
+  function hasChanges() {
+    var hasChanges = false;
+    $('#editNewsForm').find('input, textarea').each(function () {
+      var $input = $(this);
+      if ($input.val() !== originalValues[$input.attr('name')]) {
+        hasChanges = true;
+        return false; // Break out of the loop
+      }
+    });
+    return hasChanges;
   }
 
   // Use event delegation to handle edit modal
   $(document).on('click', '.open-modal', function () {
     var id = $(this).data('id');
-
-    // Fetch news data via AJAX
     fetchNewsData(id, function (response) {
       openEditModal(response, id);
     }, function (xhr, status, error) {
@@ -163,37 +175,110 @@
     });
   });
 
+  $('#editNewsForm').on('submit', function (event) {
+    event.preventDefault();
+
+    if (!hasChanges()) {
+      showAlertEdit('info', 'No changes were detected. Data remains unchanged.');
+      return; // Prevent form submission
+    }
+
+    var formData = new FormData(this);
+
+    $.ajax({
+      type: 'POST',
+      url: 'news_edit.php',
+      data: formData,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else if (response.status === 'info') {
+          showAlertEdit('info', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+  $('#addNewsForm').on('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = new FormData(this); // Create FormData object
+
+    $.ajax({
+      type: 'POST',
+      url: 'news_add.php', // The URL of your PHP script for adding news
+      data: formData,
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+
+  $('#deleteNewsForm').on('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = new FormData(this); // Create FormData object
+
+    $.ajax({
+      type: 'POST',
+      url: 'news_delete.php', // The URL of your PHP script for adding news
+      data: formData,
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
   // Use event delegation to handle delete modal
   $(document).on('click', '.open-delete', function () {
     var id = $(this).data('id');
 
-    // Make an AJAX request to fetch news details
     $.ajax({
       url: 'news_row.php',
       type: 'GET',
       data: { id: id },
       dataType: 'json',
       success: function (response) {
-        // Update the description-container with the retrieved HTML content
         $('.description-container').html(response.news_description);
-
-        // Optionally, update other elements with data from response
         $('.deleteId').val(id);
         $('.title').text(response.news_title);
 
         if (response.image_url) {
-          $('#imagePreviewImg3').attr('src', response.image_url);
-          $('#imageLink').attr('href', response.image_url);
-          $('#imagePreviewImg3').css('display', 'block'); // Ensure the image is displayed
+          $('#imagePreviewImg3').attr('src', response.image_url).show();
         } else {
-          $('#imagePreviewImg3').attr('src', ''); // Clear the image src if no image URL is returned
-          $('#imagePreviewImg3').css('display', 'none'); // Hide the image if no image URL is returned
+          $('#imagePreviewImg3').hide();
         }
 
-        // Show the modal or perform other actions
         $('#deleteModal').modal('show');
-
-        // Store the ID in a data attribute of the delete button
         $('.btn-confirm-delete').data('id', id);
       },
       error: function (xhr, status, error) {
@@ -201,33 +286,60 @@
       }
     });
   });
+
+  // Confirm delete action
+  $(document).on('click', '.btn-confirm-delete', function () {
+    var id = $(this).data('id');
+
+    $.ajax({
+      url: 'news_delete.php',
+      type: 'POST',
+      data: { id: id },
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+        $('#deleteModal').modal('hide');
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+  function showAlert(type, message) {
+    Swal.fire({
+      position: 'top-end',
+      icon: type,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      willClose: () => {
+        if (type === 'success') {
+          location.reload();
+        }
+      }
+    });
+  }
+
+  function showAlertEdit(type, message) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Oops...',
+      text: message,
+      confirmButtonText: 'OK',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-text',
+        confirmButton: 'swal-button'
+      }
+    });
+  }
 });
-
-
-
-
 
   </script>
 </body>
-
 </html>
-
-
-<style>
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-  }
-
-
-  td {
-    padding: 8px !important;
-
-    vertical-align: middle !important;
-    max-width: 200px !important;
-    /* Adjust maximum width as needed */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
-</style>

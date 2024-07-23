@@ -1,11 +1,15 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json');
+
+$response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure ID is provided
     if (!isset($_POST['id']) || empty($_POST['id'])) {
-        $_SESSION['error'] = 'ID is required.';
-        header('Location: news.php');
+        $response['message'] = 'ID is required.';
+        echo json_encode($response);
         exit;
     }
 
@@ -29,20 +33,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check result
     if ($result === null) {
-        $_SESSION['error'] = 'Failed to delete news data in Firebase.';
+        $response['message'] = 'Failed to delete news data in Firebase.';
         error_log('Firebase error: Failed to delete news data.');
     } else {
-        $_SESSION['success'] = 'News data deleted successfully!';
+        $response['status'] = 'success';
+        $response['message'] = 'News data deleted successfully!';
     }
 
-    // Redirect to the appropriate page (news.php)
-    header('Location: news.php');
+    echo json_encode($response);
     exit;
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $response['message'] = 'Invalid request method.';
+    echo json_encode($response);
+    exit;
 }
-
-// Redirect to the appropriate page (news.php) on error
-header('Location: news.php');
-exit;
 ?>

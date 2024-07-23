@@ -1,23 +1,7 @@
 <?php
-
-
 session_start(); // Start the session
 
-// Generate a CSRF token if one is not present
-if (!isset($_SESSION['token'])) {
-    $_SESSION['token'] = bin2hex(random_bytes(32));
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF token
-    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-        header('Location: news.php');
-        exit;
-    }
-
-    // Unset the token to prevent reuse
-    unset($_SESSION['token']);
-
     // Ensure all form fields are set and not empty
     if (
         isset($_POST['news_title']) && !empty($_POST['news_title']) &&
@@ -40,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $extensions = array("jpeg", "jpg", "png", "gif");
 
         if (in_array($file_ext, $extensions) === false) {
-            $_SESSION['error'] = "Extension not allowed, please choose a JPEG, JPG, PNG, or GIF file.";
-            header('Location: news.php');
+            $response = array('status' => 'error', 'message' => "Extension not allowed, please choose a JPEG, JPG, PNG, or GIF file.");
+            echo json_encode($response);
             exit;
         }
 
@@ -49,10 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'includes/firebaseRDB.php';
         require_once 'includes/config.php'; // Include your config file
         $firebase = new firebaseRDB($databaseURL);
-        // Function to upload image and add news
 
         date_default_timezone_set('Asia/Manila');
-
 
         function addNewsWithImage($firebase, $news_title, $news_author, $news_description, $image_url) {
             $table = 'news'; // Assuming 'news' is your Firebase database node for news
@@ -80,22 +62,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Check result
             if ($result === null) {
-                $_SESSION['error'] = 'Failed to add news to Firebase.';
+                $response = array('status' => 'error', 'message' => 'Failed to add news to Firebase.');
                 error_log('Firebase error: Failed to insert news data.');
             } else {
-                $_SESSION['success'] = 'News added successfully!';
+                $response = array('status' => 'success', 'message' => 'News added successfully!');
             }
         } else {
-            $_SESSION['error'] = 'Failed to upload image.';
+            $response = array('status' => 'error', 'message' => 'Failed to upload image.');
         }
     } else {
-        $_SESSION['error'] = 'All fields are required.';
+        $response = array('status' => 'error', 'message' => 'All fields are required.');
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $response = array('status' => 'error', 'message' => 'Invalid request method.');
 }
 
-// Redirect to the appropriate page (news.php) regardless of success or failure
-header('Location: news.php');
+// Output the JSON response
+echo json_encode($response);
 exit;
 ?>

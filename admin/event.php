@@ -98,137 +98,253 @@
   <?php include 'includes/scripts.php'; ?>
   <script>
     $(document).ready(function () {
-      // Function to fetch content from the server
-      function fetcheventData(id, successCallback, errorCallback) {
+    var originalEventData = {};
+
+    // Function to fetch content from the server
+    function fetchEventData(id, successCallback, errorCallback) {
         $.ajax({
-          url: 'event_row.php',
-          type: 'GET',
-          data: { id: id },
-          dataType: 'json',
-          success: successCallback,
-          error: errorCallback
+            url: 'event_row.php',
+            type: 'GET',
+            data: { id: id },
+            dataType: 'json',
+            success: successCallback,
+            error: errorCallback
         });
-      }
+    }
 
-      // Function to initialize CKEditor
-      function initializeCKEditor(elementId) {
-        if (window.CKEDITOR && CKEDITOR.replace) {
-          CKEDITOR.replace(elementId);
-        } else {
-          console.error('CKEditor is not defined or replace method is missing.');
-        }
-      }
-
-      // Function to destroy CKEditor instance
-      function destroyCKEditor(elementId) {
+    // Function to initialize CKEditor
+    function initializeCKEditor(elementId) {
         if (window.CKEDITOR && CKEDITOR.instances[elementId]) {
-          CKEDITOR.instances[elementId].destroy(true);
+            CKEDITOR.instances[elementId].destroy(true);
         }
-      }
+        if (window.CKEDITOR && CKEDITOR.replace) {
+            CKEDITOR.replace(elementId);
+        } else {
+            console.error('CKEditor is not defined or replace method is missing.');
+        }
+    }
 
-      // Use event delegation to handle edit modal
-      $(document).on('click', '.open-modal', function () {
-        var id = $(this).data('id');
+    // Function to handle modal display and data population for edit
+    function openEditModal(response, id) {
+        $('#editId').val(id);
+        $('#editTitle').val(response.event_title);
+        $('#editEventDate').val(response.event_date);
+        $('#editEventVenue').val(response.event_venue);
+        $('#editAuthor').val(response.event_author);
+        $('#editDesc').val(response.event_description);
 
-        // Fetch event data via AJAX
-        fetcheventData(id, function (response) {
-          $('#editId').val(id);
-          $('#editTitle').val(response.event_title);
-          $('#editEventDate').val(response.event_date);
-          $('#editEventVenue').val(response.event_venue);
-          $('#editAuthor').val(response.event_author);
-          $('#editDesc').val(response.event_description);
+        if (response.image_url && response.image_url.trim() !== '') {
+            $('#imagePreviewImg2').attr('src', response.image_url).show();
+        } else {
+            $('#imagePreviewImg2').hide();
+        }
 
-          // Display the fetched image in the edit modal
-          if (response.image_url) {
-            $('#imagePreviewImg2').attr('src', response.image_url);
-            $('#imagePreviewImg2').css('display', 'block'); // Ensure the image is displayed
-          } else {
-            $('#imagePreviewImg2').attr('src', ''); // Clear the image src if no image URL is returned
-            $('#imagePreviewImg2').css('display', 'none'); // Hide the image if no image URL is returned
-          }
+        // Capture original values
+        captureOriginalValues();
+        $('#editModal').modal('show');
 
-          // Show the edit modal after setting the form fields
-          $('#editModal').modal('show');
+        initializeCKEditor('editDesc');
 
-          // Destroy any existing CKEditor instance before initializing a new one
-          destroyCKEditor('editDesc');
+        $('#editTitle').focus();
+    }
 
-          // Initialize CKEditor after modal is shown
-          $('#editModal').on('shown.bs.modal', function () {
-            initializeCKEditor('editDesc');
-          });
-
-        }, function (xhr, status, error) {
-          console.error('AJAX Error: ' + status + ' ' + error);
+    function captureOriginalValues() {
+        originalEventData = {};
+        $('#editEventForm').find('input, textarea').each(function () {
+            var $input = $(this);
+            originalEventData[$input.attr('name')] = $input.val();
         });
-      });
+    }
 
-      // Destroy CKEditor instance when modal is hidden
-      $('#editModal').on('hidden.bs.modal', function () {
-        destroyCKEditor('editDesc');
-      });
-
-      // Use event delegation to handle delete modal
-      $(document).on('click', '.open-delete', function () {
-        var id = $(this).data('id');
-
-        // Make an AJAX request to fetch event details
-        $.ajax({
-          url: 'event_row.php',
-          type: 'GET',
-          data: { id: id },
-          dataType: 'json',
-          success: function (response) {
-            // Update the description-container with the retrieved HTML content
-            $('.description-container').html(response.event_description);
-
-            // Optionally, update other elements with data from response
-            $('.deleteId').val(id);
-            $('.title').text(response.event_title);
-
-            if (response.image_url) {
-              $('#imagePreviewImg3').attr('src', response.image_url);
-              $('#imageLink').attr('href', response.image_url);
-              $('#imagePreviewImg3').css('display', 'block'); // Ensure the image is displayed
-            } else {
-              $('#imagePreviewImg3').attr('src', ''); // Clear the image src if no image URL is returned
-              $('#imagePreviewImg3').css('display', 'none'); // Hide the image if no image URL is returned
+    function hasChanges() {
+        var hasChanges = false;
+        $('#editEventForm').find('input, textarea').each(function () {
+            var $input = $(this);
+            if ($input.val() !== originalEventData[$input.attr('name')]) {
+                hasChanges = true;
+                return false; // Break out of the loop
             }
-
-            // Show the modal or perform other actions
-            $('#deleteModal').modal('show');
-
-            // Store the ID in a data attribute of the delete button
-            $('.btn-confirm-delete').data('id', id);
-          },
-          error: function (xhr, status, error) {
-            console.error('AJAX Error: ' + status + ' ' + error);
-          }
         });
-      });
+        return hasChanges;
+    }
+
+    // Use event delegation to handle edit modal
+    $(document).on('click', '.open-modal', function () {
+        var id = $(this).data('id');
+        fetchEventData(id, function (response) {
+            openEditModal(response, id);
+        }, function (xhr, status, error) {
+            console.error('AJAX Error: ' + status + ' ' + error);
+            alert('Failed to fetch event data. Please try again later.');
+        });
     });
+
+    $('#editEventForm').on('submit', function (event) {
+        event.preventDefault();
+
+        if (!hasChanges()) {
+            showAlertEdit('info', 'No changes were detected. Data remains unchanged.');
+            return; // Prevent form submission
+        }
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            type: 'POST',
+            url: 'event_edit.php',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else if (response.status === 'info') {
+                    showAlertEdit('info', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function () {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    $('#addEventForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            type: 'POST',
+            url: 'event_add.php',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function () {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    $('#deleteEventForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            type: 'POST',
+            url: 'event_delete.php',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+            },
+            error: function () {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    // Use event delegation to handle delete modal
+    $(document).on('click', '.open-delete', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+            url: 'event_row.php',
+            type: 'GET',
+            data: { id: id },
+            dataType: 'json',
+            success: function (response) {
+                $('.description-container').html(response.event_description);
+                $('.deleteId').val(id);
+                $('.title').text(response.event_title);
+
+                if (response.image_url) {
+                    $('#imagePreviewImg3').attr('src', response.image_url).show();
+                } else {
+                    $('#imagePreviewImg3').hide();
+                }
+
+                $('#deleteModal').modal('show');
+                $('.btn-confirm-delete').data('id', id);
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error: ' + status + ' ' + error);
+            }
+        });
+    });
+
+    // Confirm delete action
+    $(document).on('click', '.btn-confirm-delete', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+            url: 'event_delete.php',
+            type: 'POST',
+            data: { id: id },
+            dataType: 'json',
+            success: function (response) {
+                if (response.status === 'success') {
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('error', response.message);
+                }
+                $('#deleteModal').modal('hide');
+            },
+            error: function () {
+                showAlert('error', 'An unexpected error occurred.');
+            }
+        });
+    });
+
+    function showAlert(type, message) {
+        Swal.fire({
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            willClose: () => {
+                if (type === 'success') {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function showAlertEdit(type, message) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Oops...',
+            text: message,
+            confirmButtonText: 'OK',
+            customClass: {
+                title: 'swal-title',
+                htmlContainer: 'swal-text',
+                confirmButton: 'swal-button'
+            }
+        });
+    }
+});
 
   </script>
 </body>
 
 </html>
 
-<style>
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-  }
-
-
-  td {
-    padding: 8px !important;
-
-    vertical-align: middle !important;
-    max-width: 200px !important;
-    /* Adjust maximum width as needed */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
-</style>

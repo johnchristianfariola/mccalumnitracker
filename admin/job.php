@@ -16,15 +16,12 @@
         </h1>
         <div class="box-inline ">
 
-          <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
-              class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
+          <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
 
           <div class="search-container">
             <input type="text" class="search-input" id="search-input" placeholder="Search...">
             <button class="search-button" onclick="filterTable()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="feather feather-search">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
@@ -97,6 +94,8 @@
   <?php include 'includes/scripts.php'; ?>
   <script>
     $(document).ready(function () {
+      var originalData = {};
+
       // Function to fetch content from the server
       function fetcheventData(id, successCallback, errorCallback) {
         $.ajax({
@@ -133,6 +132,14 @@
           $('#edit_statusArchive').prop('checked', response.status === 'Archive');
           $('#edit_description').val(response.job_description);
 
+          // Store original data
+          originalData = {
+            job_title: response.job_title,
+            company_name: response.company_name,
+            work_time: response.work_time,
+            status: response.status,
+            job_description: response.job_description
+          };
 
           // Show the edit modal after setting the form fields
           $('#editModal').modal('show');
@@ -144,9 +151,8 @@
         });
       });
 
-
-      // Open delete modal when delete button is clicked
-      $(document).ready(function () {
+         // Open delete modal when delete button is clicked
+         $(document).ready(function () {
         // Open delete confirmation modal
         $('.open-delete').click(function () {
           var id = $(this).data('id');
@@ -178,28 +184,127 @@
         });
       });
 
+
+      // Function to compare form data with original data
+      function hasDataChanged(formData) {
+        var changed = false;
+        formData.forEach(function (value, key) {
+          if (originalData[key] !== undefined && originalData[key] != value) {
+            changed = true;
+          }
+        });
+        return changed;
+      }
+
+      $('#editJobForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        if (!hasDataChanged(formData)) {
+          showAlertEdit('info', "You haven't changed anything. Data remains unchanged.");
+          return;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: 'job_edit.php',
+          data: formData,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else if (response.status === 'info' || response.status === 'error') {
+              showAlertEdit(response.status, response.message);
+            }
+          },
+          error: function () {
+            showAlertEdit('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+      $('#addJobForm').on('submit', function (event) {
+    event.preventDefault();
+    var formData = new FormData(this);
+    $.ajax({
+      type: 'POST',
+      url: 'job_add.php',
+      data: formData,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+  $('#deleteJobForm').on('submit', function (event) {
+    event.preventDefault();
+    var formData = new FormData(this);
+    $.ajax({
+      type: 'POST',
+      url: 'job_delete.php',
+      data: formData,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+
+      function showAlert(type, message) {
+        Swal.fire({
+          position: 'top-end',
+          icon: type,
+          title: message,
+          showConfirmButton: false,
+          timer: 2500,
+          willClose: () => {
+            if (type === 'success') {
+              location.reload();
+            }
+          }
+        });
+      }
+
+      function showAlertEdit(type, message) {
+        Swal.fire({
+          icon: type,
+          title: type === 'info' ? 'Information' : 'Error',
+          text: message,
+          confirmButtonText: 'OK',
+          customClass: {
+            title: 'swal-title',
+            htmlContainer: 'swal-text',
+            confirmButton: 'swal-button'
+          }
+        });
+      }
+
     });
   </script>
 </body>
 
 </html>
 
-
-<style>
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-  }
-
-
-  td {
-    padding: 8px !important;
-
-    vertical-align: middle !important;
-    max-width: 200px !important;
-    /* Adjust maximum width as needed */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
-</style>

@@ -34,7 +34,7 @@
             </div>
             <div class="modal-body">
 
-                <form class="form-horizontal" method="POST" action="job_add.php" enctype="multipart/form-data">
+                <form id="addJobForm" class="form-horizontal" method="POST" action="job_add.php" enctype="multipart/form-data">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="personal_information">
                         <div class="form-group row" style="border-bottom: 1px solid silver !important;">
@@ -125,7 +125,7 @@
                 <hr>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="job_edit.php" enctype="multipart/form-data">
+                <form id="editJobForm" class="form-horizontal" method="POST" action="job_edit.php" enctype="multipart/form-data">
                     <input type="hidden" id="editId" name="id">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="personal_information">
@@ -200,7 +200,6 @@
         </div>
     </div>
 </div>
->
 
 <!-- Delete -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
@@ -215,7 +214,7 @@
                 <h4 class="modal-title"><b>Deleting...</b></h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="job_delete.php">
+                <form id="deleteJobForm" class="form-horizontal" method="POST" action="job_delete.php">
                     <input type="hidden" class="deleteId" name="id">
                     <div class="text-center">
                         <p>Are you sure you want to delete this Job?</p>
