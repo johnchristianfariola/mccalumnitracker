@@ -97,7 +97,7 @@
   </div>
   <?php include 'includes/scripts.php'; ?>
   <script>
-    $(document).ready(function () {
+   $(document).ready(function () {
     var originalEventData = {};
 
     // Function to fetch content from the server
@@ -330,7 +330,7 @@
 
     function showAlertEdit(type, message) {
         Swal.fire({
-            icon: 'info',
+            icon: type,
             title: 'Oops...',
             text: message,
             confirmButtonText: 'OK',
@@ -342,6 +342,7 @@
         });
     }
 });
+
 
   </script>
 </body>
