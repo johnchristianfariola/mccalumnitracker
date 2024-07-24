@@ -241,7 +241,7 @@ if ($id) {
             
 
 
-            $('#').on('submit', function (event) {
+            $('#editQuestionForm').on('submit', function (event) {
                 event.preventDefault();
                 var formData = $(this).serialize();
 
