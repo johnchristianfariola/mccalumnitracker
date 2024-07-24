@@ -1,9 +1,11 @@
 <?php
 session_start(); // Start the session
 require_once 'includes/firebaseRDB.php';
-
 require_once 'includes/config.php'; // Include your config file
+
 $firebase = new firebaseRDB($databaseURL);
+$response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
     $question_id = isset($_POST['question_id']) ? $_POST['question_id'] : '';
@@ -11,9 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $question = isset($_POST['question']) ? $_POST['question'] : '';
     $type = isset($_POST['type']) ? $_POST['type'] : '';
     $labels = isset($_POST['label']) ? $_POST['label'] : [];
-    
+
     // Validate the data
     if ($question_id && $survey_set_unique_id && $question && $type) {
+        // Retrieve the current data from Firebase
+        $current_data = $firebase->retrieve("questions/$question_id");
+        $current_data = json_decode($current_data, true);
+
         // Create formatted options
         $frm_option = [];
         foreach ($labels as $label) {
@@ -30,22 +36,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'date_create' => date('Y-m-d H:i:s') // Update creation date
         ];
 
-        // Update data in Firebase
-        $response = $firebase->update($table, "questions/$question_id", $update_data);
-
-        if ($response) {
-            $_SESSION['success'] = 'Question updated successfully.';
+        // Check if the data has changed
+        if ($update_data['question'] == $current_data['question'] &&
+            $update_data['frm_option'] == $current_data['frm_option'] &&
+            $update_data['type'] == $current_data['type'] &&
+            $update_data['survey_set_unique_id'] == $current_data['survey_set_unique_id']) {
+            $response = array('status' => 'info', 'message' => 'No data change.');
         } else {
-            $_SESSION['error'] = 'Failed to update question.';
+            // Update data in Firebase
+            $update_response = $firebase->update("questions", $question_id, $update_data);
+
+            if ($update_response) {
+                $response = array('status' => 'success', 'message' => 'Question updated successfully.');
+            } else {
+                $response['message'] = 'Failed to update question.';
+            }
         }
     } else {
-        $_SESSION['error'] = 'Invalid data.';
+        $response['message'] = 'Invalid data.';
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $response['message'] = 'Invalid request method.';
 }
 
-// Redirect back to the form page or any other desired page
-header('Location: survey_set.php?id=' . $survey_set_unique_id);
+header('Content-Type: application/json');
+echo json_encode($response);
 exit;
 ?>

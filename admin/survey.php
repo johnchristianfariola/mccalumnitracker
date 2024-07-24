@@ -73,12 +73,12 @@
 
                       <th>Title</th>
                       <th>Description</th>
-                      <th  width="15%">Start Date</th>
-                      <th  width="15%">End Date</th>
-                      <th  width="15%">Tools</th>
+                      <th width="15%">Start Date</th>
+                      <th width="15%">End Date</th>
+                      <th width="15%">Tools</th>
                     </thead>
                     <tbody>
-                    <?php include 'fetch_data/fetch_dataSurvey.php'; ?>
+                      <?php include 'fetch_data/fetch_dataSurvey.php'; ?>
                     </tbody>
                   </table>
                 </div>
@@ -125,7 +125,7 @@
           // Show the edit modal after setting the form fields
           $('#editModal').modal('show');
 
-          
+
         }, function (xhr, status, error) {
           console.error('AJAX Error: ' + status + ' ' + error);
         });
@@ -167,26 +167,122 @@
 
     });
   </script>
+  <script>
+    $(document).ready(function () {
+      $('#addSurveyForm').on('submit', function (event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+          type: 'POST',
+          url: 'survey_add.php',
+          data: formData,
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else {
+              showAlert('error', response.message);
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Error details:', textStatus, errorThrown);
+            console.log('Response Text:', jqXHR.responseText);
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+      $('#editSurveyForm').on('submit', function (event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+          type: 'POST',
+          url: 'survey_edit.php',
+          data: formData,
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else if (response.status === 'info') {
+              showAlertEdit('info', response.message);
+            } else {
+              showAlert('error', response.message);
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Error details:', textStatus, errorThrown);
+            console.log('Response Text:', jqXHR.responseText);
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+      $('#deleteSurveyForm').on('submit', function (event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+          type: 'POST',
+          url: 'survey_delete.php',
+          data: formData,
+          dataType: 'json',
+          success: function (response) {
+            console.log('Raw response:', response);
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else {
+              showAlert('error', response.message);
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Error details:', textStatus, errorThrown);
+            console.log('Response Text:', jqXHR.responseText);
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+
+      function showAlert(type, message) {
+        Swal.fire({
+          position: 'top-end',
+          icon: type,
+          title: message,
+          showConfirmButton: false,
+          timer: 2500,
+          willClose: () => {
+            if (type === 'success') {
+              location.reload();
+            }
+          }
+        });
+      }
+
+      function showAlertEdit(type, message) {
+        let iconType = 'info';
+        let title = 'Oops...';
+
+        switch (type) {
+          case 'info':
+            iconType = 'info';
+            title = 'Oops...';
+            break;
+        }
+
+        Swal.fire({
+          icon: iconType,
+          title: title,
+          text: message,
+          confirmButtonText: 'OK',
+          customClass: {
+            title: 'swal-title',
+            htmlContainer: 'swal-text',
+            confirmButton: 'swal-button'
+          }
+        });
+      }
+    });
+  </script>
+
 </body>
 
 </html>
-
-
-<style>
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-  }
-
-
-  td {
-    padding: 8px !important;
-
-    vertical-align: middle !important;
-    max-width: 200px !important;
-    /* Adjust maximum width as needed */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
-</style>

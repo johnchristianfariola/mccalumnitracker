@@ -1,18 +1,50 @@
 <?php
-session_start(); // Start session if not already started
-require_once 'includes/firebaseRDB.php';
+session_start(); // Start the session
 
-require_once 'includes/config.php'; // Include your config file
-$firebase = new firebaseRDB($databaseURL);
+header('Content-Type: application/json');
 
-$id = isset($_POST['id']) ? $_POST['id'] : '';
+$response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
 
-if ($id) {
-    $firebase->delete($table, "questions/$id");
-    $_SESSION['success'] = 'Question deleted successfully.';
-    echo json_encode(['status' => 'success']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ensure ID is provided
+    if (!isset($_POST['id']) || empty($_POST['id'])) {
+        $response['message'] = 'ID is required.';
+        echo json_encode($response);
+        exit;
+    }
+
+    // Include FirebaseRDB class and initialize
+    require_once 'includes/firebaseRDB.php';
+    require_once 'includes/config.php'; // Include your config file
+    $firebase = new firebaseRDB($databaseURL);
+
+    // Extract ID to delete
+    $id = $_POST['id'];
+
+    // Function to delete survey data
+    function deleteSurveySetData($firebase, $id) {
+        $table = 'questions'; // Assuming 'survey' is your Firebase database node for survey data
+        $result = $firebase->delete($table, $id);
+        return $result;
+    }
+
+    // Perform delete
+    $result = deleteSurveySetData($firebase, $id);
+
+    // Check result
+    if ($result === null) {
+        $response['message'] = 'Failed to delete questions data in Firebase.';
+        error_log('Firebase error: Failed to delete questions data.');
+    } else {
+        $response['status'] = 'success';
+        $response['message'] = 'questions data deleted successfully!';
+    }
+
+    echo json_encode($response);
+    exit;
 } else {
-    $_SESSION['error'] = 'Invalid ID'; // Setting session error message
-    echo json_encode(['status' => 'error', 'message' => 'Invalid ID']);
+    $response['message'] = 'Invalid request method.';
+    echo json_encode($response);
+    exit;
 }
 ?>

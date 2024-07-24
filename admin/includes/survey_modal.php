@@ -102,7 +102,7 @@ function validateEditForm() {
                 <hr>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="survey_add.php" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <form id="addSurveyForm" class="form-horizontal" method="POST" action="survey_add.php" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="personal_information">
                         <div class="form-group row" style="border-bottom: 1px solid silver !important;">
@@ -173,7 +173,7 @@ function validateEditForm() {
                 <hr>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="survey_edit.php" enctype="multipart/form-data" onsubmit="return validateEditForm()">
+                <form id="editSurveyForm" class="form-horizontal" method="POST" action="survey_edit.php" enctype="multipart/form-data" onsubmit="return validateEditForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <input type="hidden" name="id" id="editId" value="">
                     <div class="personal_information">
@@ -245,7 +245,7 @@ function validateEditForm() {
                 <h4 class="modal-title"><b>Deleting...</b></h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="survey_delete.php">
+                <form id="deleteSurveyForm" class="form-horizontal" method="POST" action="survey_delete.php">
                     <input type="hidden" class="deleteId" name="id">
                     <div class="text-center">
                         <p>Are you sure you want to delete this Survey?</p>

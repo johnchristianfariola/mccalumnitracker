@@ -13,7 +13,7 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form action="survey_set_add.php" id="manage-question" method="POST">
+                    <form id="addSurveySetForm" action="survey_set_add.php" id="manage-question" method="POST">
                         <input type="hidden" name="survey_set_id" value="<?= $id; ?>">
                         <div class="row">
                             <div class="col-md-6 border-right">
@@ -79,13 +79,13 @@
                 <tr class="">
                     <td class="text-center">
                         <div class="icheck-primary d-inline" data-count="1">
-                            <input type="checkbox" id="checkboxPrimary1" checked="">
+                            <input type="checkbox" id="checkboxPrimary1" checked="" required>
                             <label for="checkboxPrimary1">
                             </label>
                         </div>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm check_inp" name="label[]">
+                        <input type="text" class="form-control form-control-sm check_inp" name="label[]" required>
                     </td>
                     <td class="text-center"></td>
                 </tr>
@@ -98,7 +98,7 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm check_inp" name="label[]">
+                        <input type="text" class="form-control form-control-sm check_inp" name="label[]" required>
                     </td>
                     <td class="text-center"></td>
                 </tr>
@@ -134,13 +134,13 @@
                 <tr class="">
                     <td class="text-center">
                         <div class="icheck-primary d-inline" data-count="1">
-                            <input type="radio" id="radioPrimary1" name="radio" checked="">
+                            <input type="radio" id="radioPrimary1" name="radio" checked="" required>
                             <label for="radioPrimary1">
                             </label>
                         </div>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm check_inp" name="label[]">
+                        <input type="text" class="form-control form-control-sm check_inp" name="label[]" required>
                     </td>
                     <td class="text-center"></td>
                 </tr>
@@ -153,7 +153,7 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <input type="text" class="form-control form-control-sm check_inp" name="label[]">
+                        <input type="text" class="form-control form-control-sm check_inp" name="label[]" required>
                     </td>
                     <td class="text-center"></td>
                 </tr>
@@ -183,7 +183,7 @@
         <tr>
             <td class="text-center pt-1">
                 <div class="icheck-primary d-inline" data-count="${count}">
-                    <input type="checkbox" id="checkboxPrimary${count}">
+                    <input type="checkbox" id="checkboxPrimary${count}" required>
                     <label for="checkboxPrimary${count}"></label>
                 </div>
             </td>
@@ -207,7 +207,7 @@
         <tr>
             <td class="text-center pt-1">
                 <div class="icheck-primary d-inline" data-count="${count}">
-                    <input type="radio" id="radioPrimary${count}" name="radio">
+                    <input type="radio" id="radioPrimary${count}" name="radio" required>
                     <label for="radioPrimary${count}"></label>
                 </div>
             </td>

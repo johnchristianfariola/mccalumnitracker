@@ -116,7 +116,8 @@ if ($id) {
                                     <form action="" id="manage-sort">
                                         <div class="card-body ui-sortable">
                                             <?php foreach ($related_questions as $question_id => $question): ?>
-                                                <div class="callout callout-info" style="  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
+                                                <div class="callout callout-info"
+                                                    style="  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
                                                     <div class="row">
 
                                                         <div class="col-md-10" style="color:black">
@@ -134,10 +135,11 @@ if ($id) {
                                                                     aria-labelledby="dropdownMenuButton">
                                                                     <a class="dropdown-item edit_question text-dark open-modal"
                                                                         href="javascript:void(0)"
-                                                                        data-id="<?php echo $question_id; ?>" style="color:black">Edit</a>
+                                                                        data-id="<?php echo $question_id; ?>"
+                                                                        style="color:black">Edit</a>
                                                                     <a class="dropdown-item delete_question text-dark delete-modal"
-                                                                        href="javascript:void(0)"
-                                                                        style="color:black"  data-id="<?php echo $question_id; ?>">Delete</a>
+                                                                        href="javascript:void(0)" style="color:black"
+                                                                        data-id="<?php echo $question_id; ?>">Delete</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -212,8 +214,129 @@ if ($id) {
 
     <?php include 'includes/scripts.php'; ?>
     <script>
+        $(document).ready(function () {
+            $('#addSurveySetForm').on('submit', function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'survey_set_add.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            showAlert('success', response.message);
+                        } else {
+                            showAlert('error', response.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('Error details:', textStatus, errorThrown);
+                        console.log('Response Text:', jqXHR.responseText);
+                        showAlert('error', 'An unexpected error occurred.');
+                    }
+                });
+            });
 
+            
+
+
+            $('#').on('submit', function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'survey_set_edit.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            showAlert('success', response.message);
+                        } else if (response.status === 'info') {
+                            showAlert('info', response.message); // Handle 'info' status for no data change
+                        } else {
+                            showAlert('error', response.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('Error details:', textStatus, errorThrown);
+                        console.log('Response Text:', jqXHR.responseText);
+                        showAlert('error', 'An unexpected error occurred.');
+                    }
+                });
+            });
+
+
+
+
+            $('#manage-delete-question').on('submit', function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'survey_set_delete.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log('Raw response:', response);
+                        if (response.status === 'success') {
+                            showAlert('success', response.message);
+                        } else {
+                            showAlert('error', response.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('Error details:', textStatus, errorThrown);
+                        console.log('Response Text:', jqXHR.responseText);
+                        showAlert('error', 'An unexpected error occurred.');
+                    }
+                });
+            });
+
+
+            function showAlert(type, message) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: type,
+                    title: message,
+                    showConfirmButton: false,
+                    timer: 2500,
+                    willClose: () => {
+                        if (type === 'success') {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+
+            function showAlertEdit(type, message) {
+                let iconType = 'info';
+                let title = 'Oops...';
+
+                switch (type) {
+                    case 'info':
+                        iconType = 'info';
+                        title = 'Oops...';
+                        break;
+                }
+
+                Swal.fire({
+                    icon: iconType,
+                    title: title,
+                    text: message,
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        title: 'swal-title',
+                        htmlContainer: 'swal-text',
+                        confirmButton: 'swal-button'
+                    }
+                });
+            }
+        });
     </script>
+
+
 </body>
 
 </html>

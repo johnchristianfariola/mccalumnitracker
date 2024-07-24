@@ -1,45 +1,54 @@
 <?php
 session_start(); // Start the session
 require_once 'includes/firebaseRDB.php';
-
 require_once 'includes/config.php'; // Include your config file
 $firebase = new firebaseRDB($databaseURL);
 
+header('Content-Type: application/json'); // Set header to return JSON response
+
+$response = [
+    'status' => 'error',
+    'message' => 'Invalid request method.'
+];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
-    $survey_set_id = $_POST['survey_set_id'];
-    $question = $_POST['question'];
-    $type = $_POST['type'];
+    $survey_set_id = isset($_POST['survey_set_id']) ? trim($_POST['survey_set_id']) : null;
+    $question = isset($_POST['question']) ? trim($_POST['question']) : null;
+    $type = isset($_POST['type']) ? trim($_POST['type']) : null;
     $labels = isset($_POST['label']) ? $_POST['label'] : [];
     
-    // Create formatted options
-    $frm_option = [];
-    foreach ($labels as $label) {
-        $frm_option[uniqid()] = $label; // Using uniqid() for unique IDs
-    }
-    $frm_option_json = json_encode($frm_option);
-
-    // Create data array
-    $data = [
-        'question' => $question,
-        'frm_option' => $frm_option_json,
-        'type' => $type,
-        'survey_set_unique_id' => $survey_set_id,
-        'date_create' => date('Y-m-d H:i:s')
-    ];
-
-    // Insert data into Firebase
-    $response = $firebase->insert("questions", $data);
-    if ($response) {
-        $_SESSION['success'] = 'Question added successfully.';
+    // Validate required fields
+    if (empty($survey_set_id) || empty($question) || empty($type) || empty($labels)) {
+        $response['message'] = 'All fields are required.';
     } else {
-        $_SESSION['error'] = 'Failed to add question.';
+        // Create formatted options
+        $frm_option = [];
+        foreach ($labels as $label) {
+            $frm_option[uniqid()] = $label; // Using uniqid() for unique IDs
+        }
+        $frm_option_json = json_encode($frm_option);
+
+        // Create data array
+        $data = [
+            'question' => $question,
+            'frm_option' => $frm_option_json,
+            'type' => $type,
+            'survey_set_unique_id' => $survey_set_id,
+            'date_create' => date('Y-m-d H:i:s')
+        ];
+
+        // Insert data into Firebase
+        $firebase_response = $firebase->insert("questions", $data);
+        if ($firebase_response) {
+            $response['status'] = 'success';
+            $response['message'] = 'Question added successfully.';
+        } else {
+            $response['message'] = 'Failed to add question.';
+        }
     }
-} else {
-    $_SESSION['error'] = 'Invalid request method.';
 }
 
-// Redirect back to the form page or any other desired page
-header('Location: survey_set.php?id=' . $_POST['survey_set_id']);
+echo json_encode($response);
 exit;
 ?>

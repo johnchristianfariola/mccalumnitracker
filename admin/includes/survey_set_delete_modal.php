@@ -40,27 +40,6 @@
             $('#deleteModal').modal('show');
         });
 
-        // Handle form submission
-        $('#manage-delete-question').submit(function (e) {
-            e.preventDefault();
-            var id = $('#deleteId').val();
 
-            $.ajax({
-                url: 'survey_set_delete.php', // Change to your delete handler URL
-                type: 'POST',
-                data: { id: id },
-                success: function (response) {
-                    // Handle successful deletion
-                    $('#deleteModal').modal('hide');
-
-                    // Reload the page or redirect as needed
-                    location.reload(); // Reload the page to reflect changes
-                },
-                error: function (xhr, status, error) {
-                    // Handle errors
-                    console.error('AJAX Error: ' + status + ' ' + error);
-                }
-            });
-        });
     });
 </script>

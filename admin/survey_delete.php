@@ -1,60 +1,50 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json');
+
+$response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure ID is provided
     if (!isset($_POST['id']) || empty($_POST['id'])) {
-        $_SESSION['error'] = 'ID is required.';
-        header('Location: survey.php');
+        $response['message'] = 'ID is required.';
+        echo json_encode($response);
         exit;
     }
-
-    // Sanitize ID input
-    $id = filter_var($_POST['id'], FILTER_SANITIZE_STRING);
 
     // Include FirebaseRDB class and initialize
     require_once 'includes/firebaseRDB.php';
     require_once 'includes/config.php'; // Include your config file
     $firebase = new firebaseRDB($databaseURL);
 
+    // Extract ID to delete
+    $id = $_POST['id'];
+
     // Function to delete survey data
     function deleteSurveyData($firebase, $id) {
-        $table = 'survey_set'; // Assuming 'survey_set' is your Firebase database node for survey data
+        $table = 'survey_set'; // Assuming 'survey' is your Firebase database node for survey data
         $result = $firebase->delete($table, $id);
         return $result;
     }
 
-    // Function to delete questions associated with the survey
-    function deleteQuestions($firebase, $surveyId) {
-        $questions = $firebase->retrieve('questions');
-        $questions = json_decode($questions, true);
-
-        foreach ($questions as $questionId => $questionData) {
-            if ($questionData['survey_set_unique_id'] === $surveyId) {
-                $firebase->delete('questions', $questionId);
-            }
-        }
-    }
-
-    // Perform delete for survey data
+    // Perform delete
     $result = deleteSurveyData($firebase, $id);
 
-    // Check result for survey deletion
+    // Check result
     if ($result === null) {
-        $_SESSION['error'] = 'Failed to delete survey data in Firebase.';
+        $response['message'] = 'Failed to delete survey data in Firebase.';
         error_log('Firebase error: Failed to delete survey data.');
     } else {
-        // Perform delete for associated questions
-        deleteQuestions($firebase, $id);
-        $_SESSION['success'] = 'Survey data deleted successfully!';
+        $response['status'] = 'success';
+        $response['message'] = 'survey data deleted successfully!';
     }
 
-    // Redirect to the appropriate page (survey.php)
-    header('Location: survey.php');
+    echo json_encode($response);
     exit;
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
-    header('Location: survey.php');
+    $response['message'] = 'Invalid request method.';
+    echo json_encode($response);
     exit;
 }
 ?>

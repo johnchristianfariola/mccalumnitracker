@@ -95,251 +95,252 @@
   </div>
   <?php include 'includes/scripts.php'; ?>
   <script>
-  $(document).ready(function () {
-  var originalValues = {};
+    $(document).ready(function () {
+      var originalValues = {};
 
-  // Function to fetch content from the server
-  function fetchNewsData(id, successCallback, errorCallback) {
-    $.ajax({
-      url: 'news_row.php',
-      type: 'GET',
-      data: { id: id },
-      dataType: 'json',
-      success: successCallback,
-      error: errorCallback
-    });
-  }
-
-  // Function to initialize CKEditor
-  function initializeCKEditor(elementId) {
-    if (window.CKEDITOR && CKEDITOR.instances[elementId]) {
-      CKEDITOR.instances[elementId].destroy(true);
-    }
-    if (window.CKEDITOR && CKEDITOR.replace) {
-      CKEDITOR.replace(elementId);
-    } else {
-      console.error('CKEditor is not defined or replace method is missing.');
-    }
-  }
-
-  // Function to handle modal display and data population for edit
-  function openEditModal(response, id) {
-    $('#editId').val(id);
-    $('#editTitle').val(response.news_title);
-    $('#editAuthor').val(response.news_author);
-    $('#editDesc').val(response.news_description);
-
-    if (response.image_url && response.image_url.trim() !== '') {
-      $('#imagePreviewImg2').attr('src', response.image_url).show();
-    } else {
-      $('#imagePreviewImg2').hide();
-    }
-
-    // Capture original values
-    captureOriginalValues();
-    $('#editModal').modal('show');
-
-    initializeCKEditor('editDesc');
-
-    $('#editTitle').focus();
-  }
-
-  function captureOriginalValues() {
-    originalValues = {};
-    $('#editNewsForm').find('input, textarea').each(function () {
-      var $input = $(this);
-      originalValues[$input.attr('name')] = $input.val();
-    });
-  }
-
-  function hasChanges() {
-    var hasChanges = false;
-    $('#editNewsForm').find('input, textarea').each(function () {
-      var $input = $(this);
-      if ($input.val() !== originalValues[$input.attr('name')]) {
-        hasChanges = true;
-        return false; // Break out of the loop
+      // Function to fetch content from the server
+      function fetchNewsData(id, successCallback, errorCallback) {
+        $.ajax({
+          url: 'news_row.php',
+          type: 'GET',
+          data: { id: id },
+          dataType: 'json',
+          success: successCallback,
+          error: errorCallback
+        });
       }
-    });
-    return hasChanges;
-  }
 
-  // Use event delegation to handle edit modal
-  $(document).on('click', '.open-modal', function () {
-    var id = $(this).data('id');
-    fetchNewsData(id, function (response) {
-      openEditModal(response, id);
-    }, function (xhr, status, error) {
-      console.error('AJAX Error: ' + status + ' ' + error);
-      alert('Failed to fetch news data. Please try again later.');
-    });
-  });
-
-  $('#editNewsForm').on('submit', function (event) {
-    event.preventDefault();
-
-    if (!hasChanges()) {
-      showAlertEdit('info', 'No changes were detected. Data remains unchanged.');
-      return; // Prevent form submission
-    }
-
-    var formData = new FormData(this);
-
-    $.ajax({
-      type: 'POST',
-      url: 'news_edit.php',
-      data: formData,
-      contentType: false,
-      processData: false,
-      dataType: 'json',
-      success: function (response) {
-        if (response.status === 'success') {
-          showAlert('success', response.message);
-        } else if (response.status === 'info') {
-          showAlertEdit('info', response.message);
+      // Function to initialize CKEditor
+      function initializeCKEditor(elementId) {
+        if (window.CKEDITOR && CKEDITOR.instances[elementId]) {
+          CKEDITOR.instances[elementId].destroy(true);
+        }
+        if (window.CKEDITOR && CKEDITOR.replace) {
+          CKEDITOR.replace(elementId);
         } else {
-          showAlert('error', response.message);
+          console.error('CKEditor is not defined or replace method is missing.');
         }
-      },
-      error: function () {
-        showAlert('error', 'An unexpected error occurred.');
       }
-    });
-  });
 
-  $('#addNewsForm').on('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission
+      // Function to handle modal display and data population for edit
+      function openEditModal(response, id) {
+        $('#editId').val(id);
+        $('#editTitle').val(response.news_title);
+        $('#editAuthor').val(response.news_author);
+        $('#editDesc').val(response.news_description);
 
-    var formData = new FormData(this); // Create FormData object
-
-    $.ajax({
-      type: 'POST',
-      url: 'news_add.php', // The URL of your PHP script for adding news
-      data: formData,
-      contentType: false, // Important for file upload
-      processData: false, // Important for file upload
-      dataType: 'json',
-      success: function (response) {
-        if (response.status === 'success') {
-          showAlert('success', response.message);
+        if (response.image_url && response.image_url.trim() !== '') {
+          $('#imagePreviewImg2').attr('src', response.image_url).show();
         } else {
-          showAlert('error', response.message);
-        }
-      },
-      error: function () {
-        showAlert('error', 'An unexpected error occurred.');
-      }
-    });
-  });
-
-
-  $('#deleteNewsForm').on('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    var formData = new FormData(this); // Create FormData object
-
-    $.ajax({
-      type: 'POST',
-      url: 'news_delete.php', // The URL of your PHP script for adding news
-      data: formData,
-      contentType: false, // Important for file upload
-      processData: false, // Important for file upload
-      dataType: 'json',
-      success: function (response) {
-        if (response.status === 'success') {
-          showAlert('success', response.message);
-        } else {
-          showAlert('error', response.message);
-        }
-      },
-      error: function () {
-        showAlert('error', 'An unexpected error occurred.');
-      }
-    });
-  });
-
-  // Use event delegation to handle delete modal
-  $(document).on('click', '.open-delete', function () {
-    var id = $(this).data('id');
-
-    $.ajax({
-      url: 'news_row.php',
-      type: 'GET',
-      data: { id: id },
-      dataType: 'json',
-      success: function (response) {
-        $('.description-container').html(response.news_description);
-        $('.deleteId').val(id);
-        $('.title').text(response.news_title);
-
-        if (response.image_url) {
-          $('#imagePreviewImg3').attr('src', response.image_url).show();
-        } else {
-          $('#imagePreviewImg3').hide();
+          $('#imagePreviewImg2').hide();
         }
 
-        $('#deleteModal').modal('show');
-        $('.btn-confirm-delete').data('id', id);
-      },
-      error: function (xhr, status, error) {
-        console.error('AJAX Error: ' + status + ' ' + error);
+        // Capture original values
+        captureOriginalValues();
+        $('#editModal').modal('show');
+
+        initializeCKEditor('editDesc');
+
+        $('#editTitle').focus();
       }
-    });
-  });
 
-  // Confirm delete action
-  $(document).on('click', '.btn-confirm-delete', function () {
-    var id = $(this).data('id');
+      function captureOriginalValues() {
+        originalValues = {};
+        $('#editNewsForm').find('input, textarea').each(function () {
+          var $input = $(this);
+          originalValues[$input.attr('name')] = $input.val();
+        });
+      }
 
-    $.ajax({
-      url: 'news_delete.php',
-      type: 'POST',
-      data: { id: id },
-      dataType: 'json',
-      success: function (response) {
-        if (response.status === 'success') {
-          showAlert('success', response.message);
-        } else {
-          showAlert('error', response.message);
+      function hasChanges() {
+        var hasChanges = false;
+        $('#editNewsForm').find('input, textarea').each(function () {
+          var $input = $(this);
+          if ($input.val() !== originalValues[$input.attr('name')]) {
+            hasChanges = true;
+            return false; // Break out of the loop
+          }
+        });
+        return hasChanges;
+      }
+
+      // Use event delegation to handle edit modal
+      $(document).on('click', '.open-modal', function () {
+        var id = $(this).data('id');
+        fetchNewsData(id, function (response) {
+          openEditModal(response, id);
+        }, function (xhr, status, error) {
+          console.error('AJAX Error: ' + status + ' ' + error);
+          alert('Failed to fetch news data. Please try again later.');
+        });
+      });
+
+      $('#editNewsForm').on('submit', function (event) {
+        event.preventDefault();
+
+        if (!hasChanges()) {
+          showAlertEdit('info', 'No changes were detected. Data remains unchanged.');
+          return; // Prevent form submission
         }
-        $('#deleteModal').modal('hide');
-      },
-      error: function () {
-        showAlert('error', 'An unexpected error occurred.');
-      }
-    });
-  });
 
-  function showAlert(type, message) {
-    Swal.fire({
-      position: 'top-end',
-      icon: type,
-      title: message,
-      showConfirmButton: false,
-      timer: 2500,
-      willClose: () => {
-        if (type === 'success') {
-          location.reload();
-        }
-      }
-    });
-  }
+        var formData = new FormData(this);
 
-  function showAlertEdit(type, message) {
-    Swal.fire({
-      icon: 'info',
-      title: 'Oops...',
-      text: message,
-      confirmButtonText: 'OK',
-      customClass: {
-        title: 'swal-title',
-        htmlContainer: 'swal-text',
-        confirmButton: 'swal-button'
+        $.ajax({
+          type: 'POST',
+          url: 'news_edit.php',
+          data: formData,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else if (response.status === 'info') {
+              showAlertEdit('info', response.message);
+            } else {
+              showAlert('error', response.message);
+            }
+          },
+          error: function () {
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+      $('#addNewsForm').on('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData(this); // Create FormData object
+
+        $.ajax({
+          type: 'POST',
+          url: 'news_add.php', // The URL of your PHP script for adding news
+          data: formData,
+          contentType: false, // Important for file upload
+          processData: false, // Important for file upload
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else {
+              showAlert('error', response.message);
+            }
+          },
+          error: function () {
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+
+      $('#deleteNewsForm').on('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData(this); // Create FormData object
+
+        $.ajax({
+          type: 'POST',
+          url: 'news_delete.php', // The URL of your PHP script for adding news
+          data: formData,
+          contentType: false, // Important for file upload
+          processData: false, // Important for file upload
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else {
+              showAlert('error', response.message);
+            }
+          },
+          error: function () {
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+      // Use event delegation to handle delete modal
+      $(document).on('click', '.open-delete', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+          url: 'news_row.php',
+          type: 'GET',
+          data: { id: id },
+          dataType: 'json',
+          success: function (response) {
+            $('.description-container').html(response.news_description);
+            $('.deleteId').val(id);
+            $('.title').text(response.news_title);
+
+            if (response.image_url) {
+              $('#imagePreviewImg3').attr('src', response.image_url).show();
+            } else {
+              $('#imagePreviewImg3').hide();
+            }
+
+            $('#deleteModal').modal('show');
+            $('.btn-confirm-delete').data('id', id);
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX Error: ' + status + ' ' + error);
+          }
+        });
+      });
+
+      // Confirm delete action
+      $(document).on('click', '.btn-confirm-delete', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+          url: 'news_delete.php',
+          type: 'POST',
+          data: { id: id },
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else {
+              showAlert('error', response.message);
+            }
+            $('#deleteModal').modal('hide');
+          },
+          error: function () {
+            showAlert('error', 'An unexpected error occurred.');
+          }
+        });
+      });
+
+      function showAlert(type, message) {
+        Swal.fire({
+          position: 'top-end',
+          icon: type,
+          title: message,
+          showConfirmButton: false,
+          timer: 2500,
+          willClose: () => {
+            if (type === 'success') {
+              location.reload();
+            }
+          }
+        });
+      }
+
+      function showAlertEdit(type, message) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Oops...',
+          text: message,
+          confirmButtonText: 'OK',
+          customClass: {
+            title: 'swal-title',
+            htmlContainer: 'swal-text',
+            confirmButton: 'swal-button'
+          }
+        });
       }
     });
-  }
-});
 
   </script>
 </body>
+
 </html>

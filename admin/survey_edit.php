@@ -1,6 +1,10 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json'); // Set the content type to JSON
+
+$response = array('status' => 'error', 'message' => 'An unknown error occurred');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure all necessary data is provided and not empty
     $required_fields = ['id', 'edit_survey_title', 'edit_survey_desc', 'edit_survey_start', 'edit_survey_end'];
@@ -18,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'includes/firebaseRDB.php';
         require_once 'includes/config.php'; // Include your config file
         $firebase = new firebaseRDB($databaseURL);
+        
         // Extract ID and data to update
         $id = $_POST['id'];
         $updateData = [
@@ -25,36 +30,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "survey_desc" => $_POST['edit_survey_desc'],
             "survey_start" => $_POST['edit_survey_start'],
             "survey_end" => $_POST['edit_survey_end'],
-     
         ];
 
-        // Function to update alumni data
-        function updateSurveyData($firebase, $id, $updateData) {
-            $table = 'survey_set'; // Assuming 'alumni' is your Firebase database node for alumni data
-            $result = $firebase->update($table, $id, $updateData);
-            return $result;
+        // Function to get existing survey data
+        function getSurveyData($firebase, $id) {
+            $table = 'survey_set';
+            $result = $firebase->retrieve("$table/$id");
+            return json_decode($result, true);
         }
 
-        // Perform update
-        $result = updateSurveyData($firebase, $id, $updateData);
+        // Get existing survey data
+        $existingData = getSurveyData($firebase, $id);
 
-        // Check result
-        if ($result === null) {
-            $_SESSION['error'] = 'Failed to update survey data in database.';
-            error_log('Firebase error: Failed to update survey data.');
+        // Check if the data has changed
+        $dataChanged = false;
+        foreach ($updateData as $key => $value) {
+            if ($existingData[$key] !== $value) {
+                $dataChanged = true;
+                break;
+            }
+        }
+
+        if (!$dataChanged) {
+            $response['status'] = 'info';
+            $response['message'] = 'No changes were made.';
         } else {
-            $_SESSION['success'] = 'survey data updated successfully!';
+            // Function to update survey data
+            function updateSurveyData($firebase, $id, $updateData) {
+                $table = 'survey_set';
+                $result = $firebase->update($table, $id, $updateData);
+                return $result;
+            }
+
+            // Perform update
+            $result = updateSurveyData($firebase, $id, $updateData);
+
+            // Check result
+            if ($result === null) {
+                $response['message'] = 'Failed to update survey data in the database.';
+                error_log('Firebase error: Failed to update survey data.');
+            } else {
+                $response['status'] = 'success';
+                $response['message'] = 'Survey data updated successfully!';
+            }
         }
-		header('Location: survey.php');
-        exit;
     } else {
-        $_SESSION['error'] = 'All fields are required.';
+        $response['message'] = 'All fields are required.';
     }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
+    $response['message'] = 'Invalid request method.';
 }
 
-// Redirect to the appropriate page (alumni.php) on error
-
-exit;
+echo json_encode($response); // Return JSON response
 ?>
