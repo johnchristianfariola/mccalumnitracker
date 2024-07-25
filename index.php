@@ -22,7 +22,7 @@ $eventData = $firebase->retrieve("event");
 $eventData = json_decode($eventData, true);
 
 // Sort data by date in descending order
-usort($data, function($a, $b) {
+usort($data, function ($a, $b) {
     return strtotime($b['news_created']) - strtotime($a['news_created']);
 });
 
@@ -324,65 +324,83 @@ $data = array_slice($data, 0, 5);
 
 
     <!-- News Start -->
-<style>
-    .probootstrap-text {
-        display: flex;
-        flex-direction: column;
+    <style>
+        .probootstrap-text {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding: 15px;
+        }
+
+        .news-title {
+            height: 2.4em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 10px;
+        }
+
+        .news-description {
+            height: 3em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 10px;
+        }
+        .event-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .event-description {
         flex-grow: 1;
-        padding: 15px;
-    }
-
-    .news-title {
-        height: 2.4em;
         overflow: hidden;
+        text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 3; /* Number of lines to display */
         -webkit-box-orient: vertical;
-        margin-bottom: 10px;
     }
-
-    .news-description {
-        height: 3em;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        margin-bottom: 10px;
-    }
-</style>
+    </style>
 
 
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
-            <h6 class="section-title bg-white text-center px-3">News</h6>
-            <h1 class="mb-5">News</h1>
-        </div>
-        <div class="owl-carousel testimonial-carousel position-relative">
-            <?php foreach ($data as $key => $news): ?>
-                <div class="testimonial-item">
-                    <div class="item">
-                        <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media">
-                                <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image" class="img-responsive fixed-dimension-img">
-                            </figure>
-                            <div class="probootstrap-text">
-                                <h3 class="news-title"><?php echo $news['news_title']; ?></h3>
-                                <p class="news-description"><?php echo strip_tags($news['news_description']); ?></p>
-                                <span class="probootstrap-date"><i class="icon-calendar"></i><?php echo $news['news_created']; ?></span>
-                            </div>
-                        </a>
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
+                <h6 class="section-title bg-white text-center px-3">News</h6>
+                <h1 class="mb-5">News</h1>
+            </div>
+            <div class="owl-carousel testimonial-carousel position-relative">
+                <?php foreach ($data as $key => $news): ?>
+                    <div class="testimonial-item">
+                        <div class="item">
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media">
+                                    <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image"
+                                        class="img-responsive fixed-dimension-img">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3 class="news-title"><?php echo $news['news_title']; ?></h3>
+                                    <p class="news-description"><?php echo strip_tags($news['news_description']); ?></p>
+                                    <span class="probootstrap-date"><i
+                                            class="icon-calendar"></i><?php echo $news['news_created']; ?></span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+            <button class="btn openFormButton" style="float:right">View All</button>
         </div>
-        <button class="btn openFormButton" style="float:right">View All</button>
     </div>
-</div>
-<!-- News End -->
+    <!-- News End -->
 
 
-<!-- Event Start -->
+    <!-- Event Start -->
+    
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -396,7 +414,8 @@ $data = array_slice($data, 0, 5);
                         <center>
                             <a href="#" class="probootstrap-featured-news-box">
                                 <figure class="probootstrap-media">
-                                    <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image" class="img-responsive fixed-dimension-img">
+                                    <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
+                                         class="img-responsive fixed-dimension-img">
                                 </figure>
                                 <div class="probootstrap-text">
                                     <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
@@ -412,7 +431,9 @@ $data = array_slice($data, 0, 5);
         <button class="btn openFormButton" style="float:right">View All</button>
     </div>
 </div>
-<!-- Event End -->
+
+
+    <!-- Event End -->
 
 
     <!-- Team Start -->
