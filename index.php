@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 if (isset($_SESSION['alumni'])) {
@@ -13,35 +12,35 @@ if (isset($_SESSION['alumni'])) {
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var error = urlParams.get('error');
-    if (error) {
-        var decodedError = decodeURIComponent(error);
-        var title, footer;
-        
-        if (decodedError.includes("No matching alumni found")) {
-            title = "No Match Found";
-           
-        } else if (decodedError.includes("already verified")) {
-            title = "Already Verified";
-            footer = '<a href="#">Forgot your password?</a>';
-        } else {
-            title = "Oppps..";
-           
+    document.addEventListener('DOMContentLoaded', function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var error = urlParams.get('error');
+        if (error) {
+            var decodedError = decodeURIComponent(error);
+            var title, footer;
+
+            if (decodedError.includes("No matching alumni found")) {
+                title = "No Match Found";
+
+            } else if (decodedError.includes("already verified")) {
+                title = "Already Verified";
+                footer = '<a href="#">Forgot your password?</a>';
+            } else {
+                title = "Oppps..";
+
+            }
+
+            Swal.fire({
+                icon: "error",
+                title: title,
+                text: decodedError,
+                footer: footer
+            });
+
+            // Remove the error parameter from the URL
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
-
-        Swal.fire({
-            icon: "error",
-            title: title,
-            text: decodedError,
-            footer: footer
-        });
-
-        // Remove the error parameter from the URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-});
+    });
 </script>
 
 <!DOCTYPE html>
@@ -84,7 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="fs-5 text-white mb-4 pb-2">Welcome to the MCC Alumni Network! We are thrilled
                                     to have you back and eager to help you reconnect with old friends, reimagine your
                                     future, and rediscover the spirit of our beloved institution.</p>
-                                    <button class="popup_form btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft openFormButton">Signin</button>
+                                <button
+                                    class="popup_form btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft openFormButton">Signin</button>
 
                             </div>
                         </div>
@@ -106,7 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     exclusive job listings, mentorship programs, and career development resources
                                     tailored just for you. Whether it’s professional networking or social gatherings,
                                     there’s always something exciting happening. Your success is our pride.</p>
-                                    <button class="popup_form btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft openFormButton">Signin</button>
+                                <button
+                                    class="popup_form btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft openFormButton">Signin</button>
 
                             </div>
                         </div>
@@ -129,7 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     and achievements from our community. Celebrate the milestones that keep our legacy
                                     alive. Your involvement can inspire current students and shape the future of our
                                     institution.</p>
-                                    <button class="popup_form btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft openFormButton">Signin</button>
+                                <button
+                                    class="popup_form btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft openFormButton">Signin</button>
 
                             </div>
                         </div>
@@ -142,49 +144,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     <!-- Service Start -->
-    
+
     <div class="container-xxl py-5">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="service-item text-center pt-3">
-                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
-                        <i class="fa fa-3x fa-newspaper text-primary mb-4"></i>
-                        <h5 class="mb-3">News</h5>
-                        <p>Explore our comprehensive news section to stay informed about the latest events, and updates</p>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                            <i class="fa fa-3x fa-newspaper text-primary mb-4"></i>
+                            <h5 class="mb-3">News</h5>
+                            <p>Explore our comprehensive news section to stay informed about the latest events, and
+                                updates</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="service-item text-center pt-3">
-                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
-                        <i class="fa fa-3x fa-calendar text-primary mb-4"></i>
-                        <h5 class="mb-3">Event</h5>
-                        <p>Stay engaged with Madridejos Community College's vibrant alumni network. </p>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                            <i class="fa fa-3x fa-calendar text-primary mb-4"></i>
+                            <h5 class="mb-3">Event</h5>
+                            <p>Stay engaged with Madridejos Community College's vibrant alumni network. </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                <div class="service-item text-center pt-3">
-                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
-                        <i class="fa fa-3x fa-briefcase text-primary mb-4"></i>
-                        <h5 class="mb-3">Job Opportunities</h5>
-                        <p>Find the latest job openings tailored for our alumni. </p>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                            <i class="fa fa-3x fa-briefcase text-primary mb-4"></i>
+                            <h5 class="mb-3">Job Opportunities</h5>
+                            <p>Find the latest job openings tailored for our alumni. </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                <div class="service-item text-center pt-3">
-                    <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
-                        <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                        <h5 class="mb-3">Gallery Library</h5>
-                        <p>Discover photos, videos, and more from our alumni events and achievements.</p>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <div class="p-2" style="height: 250px;"> <!-- Adjust height as needed -->
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5 class="mb-3">Gallery Library</h5>
+                            <p>Discover photos, videos, and more from our alumni events and achievements.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- Service End -->
 
@@ -196,7 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
                         <img class="img-fluid position-absolute w-100 h-100"
-                            src="homepage/img/Community-College-Madridejos-ee8b60f4.jpeg" alt="" style="object-fit: cover;">
+                            src="homepage/img/Community-College-Madridejos-ee8b60f4.jpeg" alt=""
+                            style="object-fit: cover;">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -299,77 +303,81 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     <!-- News Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
-                <h6 class="section-title bg-white text-center px-3">News</h6>
-                <h1 class="mb-5">News</h1>
-            </div>
-            <div class="owl-carousel testimonial-carousel position-relative">
-                
+    <?php
+    require_once 'includes/firebaseRDB.php';
 
-                <div class="testimonial-item">
+    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+    $firebase = new firebaseRDB($databaseURL);
 
-                    <div class="item">
-                        <a href="#" class="probootstrap-featured-news-box">
-                            <center>
-                                <figure class="probootstrap-media">
-                                    <img src="homepage/img/carousel-1.png" alt="Free Bootstrap Template by ProBootstrap.com"
-                                        class="img-responsive fixed-dimension-img">
-                                </figure>
-                            </center>
-                            <div class="probootstrap-text">
-                                <h3>TITLE</h3>
-                                <p>content</p>
-                                <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+    $data = $firebase->retrieve("news");
+    $data = json_decode($data, true);
 
-                 <div class="testimonial-item">
+    // Sort data by date in descending order
+    usort($data, function($a, $b) {
+        return strtotime($b['news_created']) - strtotime($a['news_created']);
+    });
 
-                    <div class="item">
-                        <a href="#" class="probootstrap-featured-news-box">
-                            <center>
-                                <figure class="probootstrap-media">
-                                    <img src="user\img\graduation_carousel.png" alt="Free Bootstrap Template by ProBootstrap.com"
-                                        class="img-responsive fixed-dimension-img">
-                                </figure>
-                            </center>
-                            <div class="probootstrap-text">
-                                <h3>TITLE</h3>
-                                <p>content</p>
-                                <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+    // Slice to get only the first 5 items
+    $data = array_slice($data, 0, 5);
+?>
 
-                <div class="testimonial-item">
+<style>
+    .probootstrap-text {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 15px;
+    }
 
-                    <div class="item">
-                        <a href="#" class="probootstrap-featured-news-box">
-                            <center>
-                                <figure class="probootstrap-media">
-                                    <img src="homepage/img/graduation_carousel_1.png" alt="Free Bootstrap Template by ProBootstrap.com"
-                                        class="img-responsive fixed-dimension-img">
-                                </figure>
-                            </center>
-                            <div class="probootstrap-text">
-                                <h3>TITLE</h3>
-                                <p>content</p>
-                                <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+    .news-title {
+        height: 2.4em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin-bottom: 10px;
+    }
 
-            </div>
-            <button class="btn openFormButton" style="float:right">View All</button>
-            
+    .news-description {
+        height: 3em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
+            <h6 class="section-title bg-white text-center px-3">News</h6>
+            <h1 class="mb-5">News</h1>
         </div>
+        <div class="owl-carousel testimonial-carousel position-relative">
+            <?php foreach ($data as $key => $news): ?>
+                <div class="testimonial-item">
+                    <div class="item">
+                        <a href="#" class="probootstrap-featured-news-box">
+                            <figure class="probootstrap-media">
+                                <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image"
+                                    class="img-responsive fixed-dimension-img">
+                            </figure>
+                            <div class="probootstrap-text">
+                                <h3 class="news-title"><?php echo $news['news_title']; ?></h3>
+                                <p class="news-description"><?php echo strip_tags($news['news_description']); ?></p>
+                                <span class="probootstrap-date"><i
+                                        class="icon-calendar"></i><?php echo $news['news_created']; ?></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <button class="btn openFormButton" style="float:right">View All</button>
     </div>
+</div>
+
     <!-- News End -->
 
     <!--Event Start -->
@@ -381,111 +389,129 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>TITLE</h3>
-                              <p>content</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>TITLE</h3>
+                                    <p>content</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>TITLE</h3>
-                              <p>content</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>TITLE</h3>
+                                    <p>content</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>TITLE</h3>
-                              <p>content</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>TITLE</h3>
+                                    <p>content</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>TITLE</h3>
-                              <p>content</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>TITLE</h3>
+                                    <p>content</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>TITLE</h3>
-                              <p>content</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>TITLE</h3>
+                                    <p>content</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-                 
+
                     <div class="item">
                         <center>
-                          <a href="#" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg" alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive"></figure>
-                            <div class="probootstrap-text">
-                              <h3>TITLE</h3>
-                              <p>content</p>
-                              <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-                              
-                            </div>
-                          </a>
-                          </center>
-                        </div>
-                    
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media"><img
+                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3>TITLE</h3>
+                                    <p>content</p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
+
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+
                 </div>
-                
+
             </div>
             <button class="btn openFormButton" style="float:right">View All</button>
-            
+
         </div>
     </div>
     <!-- Event End -->
@@ -600,7 +626,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">My experience at Madridejos Community College has been exceptional. The instructors are highly knowledgeable and approachable, always ready to provide extra help when needed. The college's facilities are well-maintained and equipped with the necessary resources, which enhances the learning experience. Being part of this community has given me a sense of belonging and has motivated me to excel in my studies.</p>
+                        <p class="mb-0">My experience at Madridejos Community College has been exceptional. The
+                            instructors are highly knowledgeable and approachable, always ready to provide extra help
+                            when needed. The college's facilities are well-maintained and equipped with the necessary
+                            resources, which enhances the learning experience. Being part of this community has given me
+                            a sense of belonging and has motivated me to excel in my studies.</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
@@ -609,7 +639,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">While the education at Madridejos Community College is of high quality, I feel there could be more extracurricular activities and clubs available for students. Engaging in various interests outside the classroom would help us develop a well-rounded skill set and build stronger connections with our peers. Additionally, expanding the library's resources and incorporating more digital materials would be beneficial for our academic research</p>
+                        <p class="mb-0">While the education at Madridejos Community College is of high quality, I feel
+                            there could be more extracurricular activities and clubs available for students. Engaging in
+                            various interests outside the classroom would help us develop a well-rounded skill set and
+                            build stronger connections with our peers. Additionally, expanding the library's resources
+                            and incorporating more digital materials would be beneficial for our academic research</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
@@ -618,7 +652,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">Studying at Madridejos Community College has been a rewarding experience. The campus atmosphere is peaceful, and the small class sizes allow for more personalized attention from the instructors. However, I believe there is room for improvement in terms of updating the technology used in some of the classrooms. Overall, I am pleased with my education here and confident it will serve me well in my future career</p>
+                        <p class="mb-0">Studying at Madridejos Community College has been a rewarding experience. The
+                            campus atmosphere is peaceful, and the small class sizes allow for more personalized
+                            attention from the instructors. However, I believe there is room for improvement in terms of
+                            updating the technology used in some of the classrooms. Overall, I am pleased with my
+                            education here and confident it will serve me well in my future career</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
@@ -627,7 +665,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="mb-0">Student Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">As an alumnus of Madridejos Community College, I can confidently say that the education and experiences I gained here have been instrumental in shaping my career. The college not only provided a solid academic foundation but also emphasized practical skills and real-world applications, particularly in my BSIT course. The support from the faculty and the strong sense of community among students and alumni have been invaluable. I would recommend MCC to anyone looking for a nurturing and effective learning environment</p>
+                        <p class="mb-0">As an alumnus of Madridejos Community College, I can confidently say that the
+                            education and experiences I gained here have been instrumental in shaping my career. The
+                            college not only provided a solid academic foundation but also emphasized practical skills
+                            and real-world applications, particularly in my BSIT course. The support from the faculty
+                            and the strong sense of community among students and alumni have been invaluable. I would
+                            recommend MCC to anyone looking for a nurturing and effective learning environment</p>
                     </div>
                 </div>
             </div>
@@ -637,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     <!-- Footer Start -->
-    <?php include 'includes/footer.php'?>
+    <?php include 'includes/footer.php' ?>
     <!-- Footer End -->
 
 
@@ -655,9 +698,9 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="homepage/js/main.js"></script>
 
 
-     <!-- Modal -->
-     <?php include 'includes/auth.php'?>
-    
+    <!-- Modal -->
+    <?php include 'includes/auth.php' ?>
+
 </body>
 
 </html>

@@ -331,6 +331,7 @@ $galleries = json_decode($galleryData, true) ?: [];
         });
     }
 
+  
 
 
 </script>
