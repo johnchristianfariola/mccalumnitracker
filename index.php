@@ -361,7 +361,7 @@ $data = array_slice($data, 0, 5);
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 3; /* Number of lines to display */
+        -webkit-line-clamp: 5; /* Number of lines to display */
         -webkit-box-orient: vertical;
     }
     </style>
