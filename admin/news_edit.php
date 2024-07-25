@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$dataChanged) {
             $response['status'] = 'info';
-            $response['message'] = 'No changes were detected. Data remains unchanged.';
+            $response['message'] = 'You have not made any changes';
         } else {
             // Perform update
             $result = $firebase->update('news', $id, $updateData);

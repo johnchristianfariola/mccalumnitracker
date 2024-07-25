@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$dataChanged) {
             $response['status'] = 'info';
-            $response['message'] = 'No changes were made.';
+            $response['message'] = 'You have not made any changes';
         } else {
             // Function to update survey data
             function updateSurveyData($firebase, $id, $updateData) {

@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!$isChanged) {
                 $response['status'] = 'info';
-                $response['message'] = 'No data has been updated.';
+                $response['message'] = 'You have not made any changes';
             } else {
                 // Function to update alumni data
                 function updateAlumniData($firebase, $id, $updateData) {
