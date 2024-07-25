@@ -422,8 +422,7 @@ $data = array_slice($data, 0, 5);
                                         <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
                                             class="img-responsive fixed-dimension-img">
                                     </figure>
-                                    <div class="probootstrap-text">
-                                        <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
+                                    <div class="probootstrap-text" style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">                                        <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
                                         <p class="event-description"><?php echo strip_tags($event['event_description']); ?>
                                         </p>
                                         <span class="probootstrap-date" style="font-size:14px"><i
