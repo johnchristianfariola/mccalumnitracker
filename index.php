@@ -349,21 +349,26 @@ $data = array_slice($data, 0, 5);
             -webkit-box-orient: vertical;
             margin-bottom: 10px;
         }
+
         .event-title {
-        font-size: 1.25rem;
-        font-weight: bold;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .event-description {
-        flex-grow: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 5; /* Number of lines to display */
-        -webkit-box-orient: vertical;
-    }
+            font-size: 1.25rem;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .event-description {
+            flex-grow: 1;
+            overflow: hidden;
+            text-align: justify;
+            padding: 5px;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            /* Number of lines to display */
+            -webkit-box-orient: vertical;
+        }
     </style>
 
 
@@ -400,37 +405,39 @@ $data = array_slice($data, 0, 5);
 
 
     <!-- Event Start -->
-    
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center px-3">EVENT</h6>
-            <h1 class="mb-5">EVENT</h1>
-        </div>
-        <div class="row g-4 justify-content-center">
-            <?php foreach ($eventData as $key => $event): ?>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media">
-                                    <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
-                                         class="img-responsive fixed-dimension-img">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
-                                    <p class="event-description"><?php echo strip_tags($event['event_description']); ?></p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i><?php echo $event['event_created']; ?></span>
-                                </div>
-                            </a>
-                        </center>
+
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center px-3">EVENT</h6>
+                <h1 class="mb-5">EVENT</h1>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <?php foreach ($eventData as $key => $event): ?>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="item">
+                            <center>
+                                <a href="#" class="probootstrap-featured-news-box">
+                                    <figure class="probootstrap-media">
+                                        <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
+                                            class="img-responsive fixed-dimension-img">
+                                    </figure>
+                                    <div class="probootstrap-text">
+                                        <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
+                                        <p class="event-description"><?php echo strip_tags($event['event_description']); ?>
+                                        </p>
+                                        <span class="probootstrap-date" style="font-size:14px"><i
+                                                class="icon-calendar"></i><b>Date Posted:</b> <?php echo $event['event_created']; ?> | <b>Date of Event:</b>   <?php echo $event['event_date']; ?></span>
+                                    </div>
+                                </a>
+                            </center>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+            <button class="btn openFormButton" style="float:right">View All</button>
         </div>
-        <button class="btn openFormButton" style="float:right">View All</button>
     </div>
-</div>
 
 
     <!-- Event End -->
