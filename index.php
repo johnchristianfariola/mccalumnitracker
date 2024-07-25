@@ -9,6 +9,27 @@ if (isset($_SESSION['alumni'])) {
     exit();
 }
 ?>
+<?php
+require_once 'includes/firebaseRDB.php';
+
+$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+$firebase = new firebaseRDB($databaseURL);
+
+$data = $firebase->retrieve("news");
+$data = json_decode($data, true);
+
+$eventData = $firebase->retrieve("event");
+$eventData = json_decode($eventData, true);
+
+// Sort data by date in descending order
+usort($data, function($a, $b) {
+    return strtotime($b['news_created']) - strtotime($a['news_created']);
+});
+
+// Slice to get only the first 5 items
+$data = array_slice($data, 0, 5);
+
+?>
 
 <script>
 
@@ -303,24 +324,6 @@ if (isset($_SESSION['alumni'])) {
 
 
     <!-- News Start -->
-    <?php
-    require_once 'includes/firebaseRDB.php';
-
-    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-    $firebase = new firebaseRDB($databaseURL);
-
-    $data = $firebase->retrieve("news");
-    $data = json_decode($data, true);
-
-    // Sort data by date in descending order
-    usort($data, function($a, $b) {
-        return strtotime($b['news_created']) - strtotime($a['news_created']);
-    });
-
-    // Slice to get only the first 5 items
-    $data = array_slice($data, 0, 5);
-?>
-
 <style>
     .probootstrap-text {
         display: flex;
@@ -348,6 +351,7 @@ if (isset($_SESSION['alumni'])) {
     }
 </style>
 
+
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
@@ -360,14 +364,12 @@ if (isset($_SESSION['alumni'])) {
                     <div class="item">
                         <a href="#" class="probootstrap-featured-news-box">
                             <figure class="probootstrap-media">
-                                <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image"
-                                    class="img-responsive fixed-dimension-img">
+                                <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image" class="img-responsive fixed-dimension-img">
                             </figure>
                             <div class="probootstrap-text">
                                 <h3 class="news-title"><?php echo $news['news_title']; ?></h3>
                                 <p class="news-description"><?php echo strip_tags($news['news_description']); ?></p>
-                                <span class="probootstrap-date"><i
-                                        class="icon-calendar"></i><?php echo $news['news_created']; ?></span>
+                                <span class="probootstrap-date"><i class="icon-calendar"></i><?php echo $news['news_created']; ?></span>
                             </div>
                         </a>
                     </div>
@@ -377,145 +379,40 @@ if (isset($_SESSION['alumni'])) {
         <button class="btn openFormButton" style="float:right">View All</button>
     </div>
 </div>
+<!-- News End -->
 
-    <!-- News End -->
 
-    <!--Event Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center px-3">EVENT</h6>
-                <h1 class="mb-5">EVENT</h1>
-            </div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>TITLE</h3>
-                                    <p>content</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>TITLE</h3>
-                                    <p>content</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>TITLE</h3>
-                                    <p>content</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>TITLE</h3>
-                                    <p>content</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>TITLE</h3>
-                                    <p>content</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-
-                    <div class="item">
-                        <center>
-                            <a href="#" class="probootstrap-featured-news-box">
-                                <figure class="probootstrap-media"><img
-                                        src="homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
-                                        alt="Free Bootstrap Template by ProBootstrap.com" class="img-responsive">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3>TITLE</h3>
-                                    <p>content</p>
-                                    <span class="probootstrap-date"><i class="icon-calendar"></i>July 9, 2017</span>
-
-                                </div>
-                            </a>
-                        </center>
-                    </div>
-
-                </div>
-
-            </div>
-            <button class="btn openFormButton" style="float:right">View All</button>
-
+<!-- Event Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center px-3">EVENT</h6>
+            <h1 class="mb-5">EVENT</h1>
         </div>
+        <div class="row g-4 justify-content-center">
+            <?php foreach ($eventData as $key => $event): ?>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="item">
+                        <center>
+                            <a href="#" class="probootstrap-featured-news-box">
+                                <figure class="probootstrap-media">
+                                    <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image" class="img-responsive fixed-dimension-img">
+                                </figure>
+                                <div class="probootstrap-text">
+                                    <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
+                                    <p class="event-description"><?php echo strip_tags($event['event_description']); ?></p>
+                                    <span class="probootstrap-date"><i class="icon-calendar"></i><?php echo $event['event_created']; ?></span>
+                                </div>
+                            </a>
+                        </center>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <button class="btn openFormButton" style="float:right">View All</button>
     </div>
-    <!-- Event End -->
-
+</div>
+<!-- Event End -->
 
 
     <!-- Team Start -->
