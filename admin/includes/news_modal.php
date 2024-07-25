@@ -64,7 +64,17 @@
         imageUploadError.style.display = 'none';
     }
 
+     // Your validation logic here
+
+     if (isValid) {
+        document.getElementById('submitButton').disabled = true;
+    }
+
     return isValid;
+
+
+
+
 }
 function validateEditForm() {
     var isValid = true;
@@ -144,7 +154,7 @@ function validateEditForm() {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-flat pull-right btn-class" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                            <button type="submit" id="submitButton" class="btn btn-flat pull-right btn-class" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
                             <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                         </div>
                     </div>

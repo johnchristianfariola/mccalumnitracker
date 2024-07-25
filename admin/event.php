@@ -183,7 +183,7 @@
         event.preventDefault();
 
         if (!hasChanges()) {
-            showAlertEdit('info', 'No changes were detected. Data remains unchanged.');
+            showAlertEdit('info', 'You have not made any changes');
             return; // Prevent form submission
         }
 

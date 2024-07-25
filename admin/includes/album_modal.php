@@ -24,6 +24,10 @@
         albumImageError.style.display = "none";
     }
 
+    if (isValid) {
+        document.getElementById('submitButton').disabled = true;
+    }
+
     return isValid;
 }
 function validateEditGalleryForm() {
@@ -66,7 +70,7 @@ function validateEditGalleryForm() {
                 <h3 class="modal-title"><b>Content <i class="fa fa-angle-right"></i> Gallery <i class="fa fa-angle-right"></i> Add</b></h3>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="gallery_add.php" enctype="multipart/form-data" onsubmit="return validateGalleryForm()">
+                <form id="addAlbumForm" class="form-horizontal" method="POST" action="gallery_add.php" enctype="multipart/form-data" onsubmit="return validateGalleryForm()">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="form-group">
                         <label for="album_name" class="col-sm-3 control-label">Album Name</label>
@@ -84,7 +88,7 @@ function validateEditGalleryForm() {
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-flat pull-right btn-class" name="add" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
+                <button type="submit" id="submitButton"  class="btn btn-flat pull-right btn-class" name="add" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;"><i class="fa fa-save"></i> Save</button>
                 <button type="button" class="btn btn-default btn-flat btn-class" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                 </form>
             </div>

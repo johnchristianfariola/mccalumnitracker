@@ -50,26 +50,8 @@ $galleries = json_decode($galleryData, true) ?: [];
 
             <section class="content">
 
-                <?php
-                if (isset($_SESSION['error'])) {
-                    $errorMessage = addslashes($_SESSION['error']);
-                    echo "<script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        showAlert('error', '{$errorMessage}');
-                    });
-                    </script>";
-                    unset($_SESSION['error']);
-                }
-                if (isset($_SESSION['success'])) {
-                    $successMessage = addslashes($_SESSION['success']);
-                    echo "<script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        showAlert('success', '{$successMessage}');
-                    });
-                    </script>";
-                    unset($_SESSION['success']);
-                }
-                ?>
+
+
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="box" style="min-height:20px">
@@ -215,6 +197,48 @@ $galleries = json_decode($galleryData, true) ?: [];
             }
         });
 
+        $('#addAlbumForm').on('submit', function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: 'POST',
+                url: 'gallery_add.php',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        showAlert('success', response.message);
+                    } else {
+                        showAlert('error', response.message);
+                    }
+                },
+                error: function () {
+                    showAlert('error', 'An unexpected error occurred.');
+                }
+            });
+        });
+
+        function showAlert(type, message) {
+            Swal.fire({
+                position: 'top-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 2500,
+                willClose: () => {
+                    if (type === 'success') {
+                        location.reload();
+                    }
+                }
+            });
+        }
+
+
+
         // Open delete modal when delete button is clicked
         $('.open-delete').click(function () {
             var id = $(this).data('id');
@@ -224,88 +248,88 @@ $galleries = json_decode($galleryData, true) ?: [];
 
         // Confirm delete
         $('.btn-confirm-delete').click(function () {
-        var id = $('#deleteAlbumId').val();
-        $.ajax({
-            url: 'gallery_delete.php',
-            type: 'POST',
-            data: { id: id },
-            success: function () {
-                $('#deleteModal').modal('hide');
-                // Show SweetAlert success message
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Gallery item deleted successfully.",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    // Optional: Refresh the page or perform additional actions
-                    window.location.reload();
-                });
-            },
-            error: function (xhr, status, error) {
-                $('#deleteModal').modal('hide');
-                // Display session error message if any
-                var errorMessage = xhr.status === 400 ? 'ID is required.' :
-                    xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
-                        'Invalid request method.';
-                console.error('AJAX Error: ' + errorMessage);
-                $('#errorMessage').text(errorMessage).show();
+            var id = $('#deleteAlbumId').val();
+            $.ajax({
+                url: 'gallery_delete.php',
+                type: 'POST',
+                data: { id: id },
+                success: function () {
+                    $('#deleteModal').modal('hide');
+                    // Show SweetAlert success message
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Gallery item deleted successfully.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Optional: Refresh the page or perform additional actions
+                        window.location.reload();
+                    });
+                },
+                error: function (xhr, status, error) {
+                    $('#deleteModal').modal('hide');
+                    // Display session error message if any
+                    var errorMessage = xhr.status === 400 ? 'ID is required.' :
+                        xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
+                            'Invalid request method.';
+                    console.error('AJAX Error: ' + errorMessage);
+                    $('#errorMessage').text(errorMessage).show();
+                }
+            });
+        });
+
+    });
+
+    function toggleDropdown(event, dropdownId) {
+        event.stopPropagation();
+        const dropdown = document.getElementById(dropdownId);
+        const otherDropdowns = document.querySelectorAll('.dropdown-album-menu');
+
+        // Hide all other dropdowns except the one clicked
+        otherDropdowns.forEach(dropdown => {
+            if (dropdown.id !== dropdownId) {
+                dropdown.style.display = 'none';
             }
         });
-    });
 
-    });
+        // Toggle the display of the clicked dropdown
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
 
-        function toggleDropdown(event, dropdownId) {
-            event.stopPropagation();
-            const dropdown = document.getElementById(dropdownId);
-            const otherDropdowns = document.querySelectorAll('.dropdown-album-menu');
-
-            // Hide all other dropdowns except the one clicked
-            otherDropdowns.forEach(dropdown => {
-                if (dropdown.id !== dropdownId) {
-                    dropdown.style.display = 'none';
-                }
-            });
-
-            // Toggle the display of the clicked dropdown
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-
-        document.addEventListener('click', () => {
-            const dropdowns = document.querySelectorAll('.dropdown-album-menu');
-            dropdowns.forEach(dropdown => {
-                dropdown.style.display = 'none';
-            });
+    document.addEventListener('click', () => {
+        const dropdowns = document.querySelectorAll('.dropdown-album-menu');
+        dropdowns.forEach(dropdown => {
+            dropdown.style.display = 'none';
         });
+    });
 
-        function filterGallery() {
-            const input = document.getElementById('search-input').value.toLowerCase();
-            const albums = document.querySelectorAll('.album-container .album-item');
+    function filterGallery() {
+        const input = document.getElementById('search-input').value.toLowerCase();
+        const albums = document.querySelectorAll('.album-container .album-item');
 
-            albums.forEach(album => {
-                const title = album.querySelector('.album-title').textContent.toLowerCase();
-                if (title.includes(input)) {
-                    album.style.display = 'block';
-                } else {
-                    album.style.display = 'none';
-                }
-            });
-        }
+        albums.forEach(album => {
+            const title = album.querySelector('.album-title').textContent.toLowerCase();
+            if (title.includes(input)) {
+                album.style.display = 'block';
+            } else {
+                album.style.display = 'none';
+            }
+        });
+    }
 
-        // Optional: Filter as you type
-        document.getElementById('search-input').addEventListener('input', filterGallery);
+    // Optional: Filter as you type
+    document.getElementById('search-input').addEventListener('input', filterGallery);
 
-        function showAlert(type, message) {
-            Swal.fire({
-                position: "top-end",
-                icon: type === 'error' ? 'error' : 'success',
-                title: message,
-                showConfirmButton: false,
-                timer: 2500
-            });
-        }
+    function showAlert(type, message) {
+        Swal.fire({
+            position: "top-end",
+            icon: type === 'error' ? 'error' : 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 2500
+        });
+    }
 
 
 

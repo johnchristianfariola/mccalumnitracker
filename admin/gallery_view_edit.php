@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $_SESSION['error'] = 'No data to update.';
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => 'No data to update.']);
+            echo json_encode(['status' => 'error', 'message' => 'You have not made any changes']);
             exit;
         }
     } else {

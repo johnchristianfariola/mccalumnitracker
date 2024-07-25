@@ -1,6 +1,8 @@
 <?php
 session_start(); // Start the session
 
+header('Content-Type: application/json');
+
 // Generate a new token if one does not exist
 if (empty($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
@@ -8,9 +10,7 @@ if (empty($_SESSION['token'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verify the token
-    if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']) {
-        // Invalidate the token to prevent reuse
-        unset($_SESSION['token']);
+
 
         // Ensure album_name and album_image are set and not empty
         if (
@@ -55,32 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Check result
                 if ($result === null) {
-                    $_SESSION['error'] = 'Failed to add album to Firebase.';
+                    echo json_encode(['status' => 'error', 'message' => 'Failed to add album to Firebase.']);
                     error_log('Firebase error: Failed to insert album data.');
                 } else {
-                    $_SESSION['success'] = 'Album added successfully!';
-                    redirectToGalleryPage();
+                    echo json_encode(['status' => 'success', 'message' => 'Album added successfully!']);
                 }
             } else {
-                $_SESSION['error'] = 'Failed to upload image.';
-                redirectToGalleryPage();
+                echo json_encode(['status' => 'error', 'message' => 'Failed to upload image.']);
             }
         } else {
-            $_SESSION['error'] = 'Album name and image are required.';
-            redirectToGalleryPage();
+            echo json_encode(['status' => 'error', 'message' => 'Album name and image are required.']);
         }
-    } else {
-       
-        redirectToGalleryPage();
-    }
+   
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
-    redirectToGalleryPage();
-}
-
-// Function to handle redirection to the gallery page
-function redirectToGalleryPage() {
-    header('Location: gallery.php');
-    exit;
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
 }
 ?>

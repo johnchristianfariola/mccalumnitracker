@@ -305,6 +305,9 @@ $album = json_decode($albumData, true) ?: [];
             });
         });
 
+
+       
+
         // Filter function to filter gallery items based on input value
         function filterGallery() {
             var searchTerm = $('#search-input').val().toLowerCase();

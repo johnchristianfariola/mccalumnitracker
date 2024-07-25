@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            echo json_encode(['status' => 'info', 'message' => 'No changes detected in job data.']);
+            echo json_encode(['status' => 'info', 'message' => 'You have not made any changes']);
             exit;
         }
     } else {
