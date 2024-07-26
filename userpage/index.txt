@@ -245,7 +245,82 @@ if (isset($_GET['id'])) {
                                     <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
                                     <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
                                 </form>
+                                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#submitComment').click(function() {
+        var formData = $('#commentForm').serialize();
+        var commentContent = $('.pb-cmnt-textarea').val();
+        
+        $.ajax({
+            type: 'POST',
+            url: 'comment.php',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    var commentsList = $('#comments-list');
+                    var noCommentsMessage = $('#no-comments-message');
+                    if (noCommentsMessage.length) {
+                        noCommentsMessage.remove();
+                    }
 
+                    var now = new Date();
+                    var timestamp = now.toISOString();
+                    var newComment = `
+                        <li>
+                            <div class="comment-main-level">
+                                <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
+                                        <span>${timeAgo(timestamp)}</span>
+                                        <i class="fa fa-reply"></i>
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div class="comment-content">
+                                        ${commentContent}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    `;
+                    commentsList.append(newComment);
+                    $('#commentForm')[0].reset(); // Clear the form
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert('Error submitting comment!');
+            }
+        });
+    });
+});
+
+// Helper function to format the timestamp
+function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const secondsPast = (now.getTime() - date.getTime()) / 1000;
+
+    if (secondsPast < 60) {
+        return 'just now';
+    }
+    if (secondsPast < 3600) {
+        return Math.round(secondsPast / 60) + 'm ago';
+    }
+    if (secondsPast <= 86400) {
+        return Math.round(secondsPast / 3600) + 'h ago';
+    }
+    if (secondsPast > 86400) {
+        const day = date.getDate();
+        const month = date.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
+        const year = date.getFullYear() == now.getFullYear() ? "" : " " + date.getFullYear();
+        return day + " " + month + year;
+    }
+}
+</script>
 
                                     </div>
                                 </div>
@@ -338,8 +413,6 @@ if (isset($_GET['id'])) {
     <!--Dialog JS ============================================ -->
     <script src="js/dialog/sweetalert2.min.js"></script>
     <script src="js/dialog/dialog-active.js"></script>
-
-
     <!--  Custom JS-->
     <script>
        $('#log').on('click', function () {
@@ -381,88 +454,66 @@ if (isset($_GET['id'])) {
             xhr.send('event_id=' + eventId + '&alumni_id=' + alumniId);
         });
 
-    </script>
-    <script>
-                
-        $(document).ready(function() {
-            $('#submitComment').click(function() {
-                var $submitButton = $(this);
-                var formData = $('#commentForm').serialize();
-                var commentContent = $('.pb-cmnt-textarea').val();
-                
-                // Disable the button
-                $submitButton.prop('disabled', true).text('Submitting...');
-                
-                $.ajax({
-                    type: 'POST',
-                    url: 'comment.php',
-                    data: formData,
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            var commentsList = $('#comments-list');
-                            var noCommentsMessage = $('#no-comments-message');
-                            if (noCommentsMessage.length) {
-                                noCommentsMessage.remove();
-                            }
+       /* document.getElementById('commentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
 
-                            var now = new Date();
-                            var timestamp = now.toISOString();
-                            var newComment = `
-                                <li>
-                                    <div class="comment-main-level">
-                                        <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
-                                        <div class="comment-box">
-                                            <div class="comment-head">
-                                                <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
-                                                <span>${timeAgo(timestamp)}</span>
-                                                <i class="fa fa-reply"></i>
-                                                <i class="fa fa-heart"></i>
-                                            </div>
-                                            <div class="comment-content">
-                                                ${commentContent}
-                                            </div>
+            var formData = new FormData(this);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'comment.php', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (xhr.responseText === 'Comment added!') {
+                        var commentsList = document.getElementById('comments-list');
+                        var noCommentsMessage = document.getElementById('no-comments-message');
+                        if (noCommentsMessage) {
+                            noCommentsMessage.remove();
+                        }
+
+                        var newComment = document.createElement('li');
+                        var now = new Date();
+                        var timestamp = now.toISOString();
+                        newComment.innerHTML = `
+                                <div class="comment-main-level">
+                                    <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                        <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
+                                            <span>${timeAgo(timestamp)}</span>
+                                            <i class="fa fa-reply"></i>
+                                            <i class="fa fa-heart"></i>
+                                        </div>
+                                        <div class="comment-content">
+                                            ${document.querySelector('.pb-cmnt-textarea').value}
                                         </div>
                                     </div>
-                                </li>
+                                </div>
                             `;
-                            commentsList.append(newComment);
-                            $('#commentForm')[0].reset(); // Clear the form
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Error submitting comment!');
-                    },
-                    complete: function() {
-                        // Re-enable the button and restore its text
-                        $submitButton.prop('disabled', false).text('Share');
+                        commentsList.appendChild(newComment);
+                        document.querySelector('.pb-cmnt-textarea').value = '';
+                    } else {
+                        alert(xhr.responseText);
                     }
-                });
-            });
-        });
+                }
+            };
+            xhr.send(formData);
+        });*/
 
-        // Helper function to format the timestamp
-        function timeAgo(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const secondsPast = (now.getTime() - date.getTime()) / 1000;
+        // Function to calculate time ago
+        function timeAgo(timestamp) {
+            var now = new Date();
+            var commentTime = new Date(timestamp);
+            var difference = now - commentTime;
 
-            if (secondsPast < 60) {
-                return 'just now';
-            }
-            if (secondsPast < 3600) {
-                return Math.round(secondsPast / 60) + 'm ago';
-            }
-            if (secondsPast <= 86400) {
-                return Math.round(secondsPast / 3600) + 'h ago';
-            }
-            if (secondsPast > 86400) {
-                const day = date.getDate();
-                const month = date.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
-                const year = date.getFullYear() == now.getFullYear() ? "" : " " + date.getFullYear();
-                return day + " " + month + year;
+            if (difference < 60000) {
+                return 'Just now';
+            } else if (difference < 3600000) {
+                return Math.floor(difference / 60000) + ' minutes ago';
+            } else if (difference < 86400000) {
+                return Math.floor(difference / 3600000) + ' hours ago';
+            } else {
+                var days = Math.floor(difference / 86400000);
+                return days + (days === 1 ? ' day ago' : ' days ago');
             }
         }
     </script>

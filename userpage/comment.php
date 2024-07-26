@@ -22,11 +22,11 @@ if (isset($_POST['event_id']) && isset($_POST['alumni_id']) && isset($_POST['com
     $insert = $firebase->insert("comment", $commentData);
 
     if ($insert) {
-        echo 'Comment added!';
+        echo json_encode(['status' => 'success', 'message' => 'Comment added!']);
     } else {
-        echo 'Error adding comment!';
+        echo json_encode(['status' => 'error', 'message' => 'Error adding comment!']);
     }
 } else {
-    echo 'All fields are required!';
+    echo json_encode(['status' => 'error', 'message' => 'All fields are required!']);
 }
 ?>

@@ -37,8 +37,7 @@
  
   <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
 
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
 
   <script src="../bower_components/datepicker/bootstrap-datepicker.min.js"></script>

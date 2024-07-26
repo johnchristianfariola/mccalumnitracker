@@ -17,13 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         isset($_POST['event_title']) && !empty($_POST['event_title']) &&
         isset($_POST['event_author']) && !empty($_POST['event_author']) &&
         isset($_POST['event_description']) && !empty($_POST['event_description']) &&
-        isset($_FILES['imageUpload']['name']) && !empty($_FILES['imageUpload']['name'])
+        isset($_FILES['imageUpload']['name']) && !empty($_FILES['imageUpload']['name']) &&
+        isset($_POST['event_invited']) && !empty($_POST['event_invited'])
     ) {
         $event_title = $_POST['event_title'];
         $event_venue = $_POST['event_venue'];
         $event_date = $_POST['event_date'];
         $event_author = $_POST['event_author'];
         $event_description = $_POST['event_description'];
+        $event_invited = $_POST['event_invited']; // This will be an array of selected values
+
+        // Convert the array to a JSON string to store in the database
+        $event_invited_json = json_encode($event_invited);
 
         // File upload variables
         $file_name = $_FILES['imageUpload']['name'];
@@ -45,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $firebase = new firebaseRDB($databaseURL);
 
         // Function to upload image and add event
-        function addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url) {
+        function addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url, $event_invited_json) {
             $table = 'event'; // Assuming 'event' is your Firebase database node for event
             $data = array(
                 'event_title' => $event_title,
@@ -54,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'event_author' => $event_author,
                 'event_description' => $event_description,
                 'image_url' => $image_url,
+                'event_invited' => $event_invited_json,
                 'event_created' => date('F j, Y')
             );
             return $firebase->insert($table, $data);
@@ -68,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image_url = $file_path; // Use $file_path as the image URL
 
             // Add event with image URL to Firebase
-            $result = addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url);
+            $result = addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url, $event_invited_json);
 
             // Check result
             if ($result === null) {
