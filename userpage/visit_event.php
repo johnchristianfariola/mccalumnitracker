@@ -424,87 +424,84 @@
 
     </script>
    <script>
-    $(document).ready(function() {
-        $('#submitComment').click(function() {
-            var $submitButton = $(this);
-            var formData = $('#commentForm').serialize();
-            var commentContent = $('.pb-cmnt-textarea').val().trim();
+$(document).ready(function() {
+    var isReplyBoxOpen = false;
 
-            if (commentContent === "") {
-                swal({
-                    title: 'Oops...',
-                    text: 'Please enter a comment before sharing.',
-                    type: 'warning',
-                    timer: 5000,
-                    onOpen: function () {
-                        swal.showLoading()
-                    }
-                    }).then(
-                    function () {},
-                    // handling the promise rejection
-                    function (dismiss) {
-                        if (dismiss === 'timer') {
+    $('#submitComment').click(function() {
+        var $submitButton = $(this);
+        var formData = $('#commentForm').serialize();
+        var commentContent = $('.pb-cmnt-textarea').val().trim();
+
+        if (commentContent === "") {
+            swal({
+                title: 'Oops...',
+                text: 'Please enter a comment before sharing.',
+                type: 'warning',
+                timer: 5000,
+                onOpen: function () {
+                    swal.showLoading()
+                }
+            }).then(
+                function () {},
+                function (dismiss) {
+                    if (dismiss === 'timer') {
                         console.log('I was closed by the timer')
-                        }
                     }
-                    )
-                return; // Exit the function if the comment is empty
-            }
+                }
+            )
+            return;
+        }
 
-            // Disable the button
-            $submitButton.prop('disabled', true).text('Submitting...');
+        $submitButton.prop('disabled', true).text('Submitting...');
 
-            $.ajax({
-                type: 'POST',
-                url: 'comment.php',
-                data: formData,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        var commentsList = $('#comments-list');
-                        var noCommentsMessage = $('#no-comments-message');
-                        if (noCommentsMessage.length) {
-                            noCommentsMessage.remove();
-                        }
+        $.ajax({
+            type: 'POST',
+            url: 'comment.php',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    var commentsList = $('#comments-list');
+                    var noCommentsMessage = $('#no-comments-message');
+                    if (noCommentsMessage.length) {
+                        noCommentsMessage.remove();
+                    }
 
-                        var now = new Date();
-                        var timestamp = now.toISOString();
-                        var newComment = `
-                            <li>
-                                <div class="comment-main-level">
-                                    <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
-                                    <div class="comment-box">
-                                        <div class="comment-head">
-                                            <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
-                                            <span>${timeAgo(timestamp)}</span>
-                                            <i class="fa fa-reply"></i>
-                                            <i class="fa fa-heart"></i>
-                                        </div>
-                                        <div class="comment-content">
-                                            ${commentContent}
-                                        </div>
+                    var now = new Date();
+                    var timestamp = now.toISOString();
+                    var newComment = `
+                        <li>
+                            <div class="comment-main-level">
+                                <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
+                                        <span>${timeAgo(timestamp)}</span>
+                                        <i class="fa fa-reply reply-button"></i>
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div class="comment-content">
+                                        ${commentContent}
                                     </div>
                                 </div>
-                            </li>
-                        `;
-                        commentsList.append(newComment);
-                        $('#commentForm')[0].reset(); // Clear the form
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function() {
-                    alert('Error submitting comment!');
-                },
-                complete: function() {
-                    // Re-enable the button and restore its text
-                    $submitButton.prop('disabled', false).text('Share');
+                            </div>
+                        </li>
+                    `;
+                    commentsList.append(newComment);
+                    $('#commentForm')[0].reset();
+                } else {
+                    alert(response.message);
                 }
-            });
+            },
+            error: function() {
+                alert('Error submitting comment!');
+            },
+            complete: function() {
+                $submitButton.prop('disabled', false).text('Share');
+            }
         });
     });
 
-    // Helper function to format the timestamp
     function timeAgo(dateString) {
         const date = new Date(dateString);
         const now = new Date();
@@ -526,33 +523,29 @@
             return day + " " + month + year;
         }
     }
-</script>
 
-<script>
-$(document).ready(function() {
-    // Handle reply button click
     $(document).on('click', '.reply-button', function() {
         var $commentItem = $(this).closest('li');
         var commentId = $commentItem.data('comment-id');
         var $replyContainer = $commentItem.find('.reply-container');
         
-        // Toggle reply form visibility
         if ($replyContainer.is(':empty')) {
             var replyForm = `
                 <form class="reply-form">
                     <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
                     <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                
+                    <button type="button" class="btn btn-secondary cancel-reply">Cancel</button>
                     <input type="hidden" name="parent_comment_id" value="${commentId}">
                 </form>
             `;
             $replyContainer.html(replyForm).show();
+            isReplyBoxOpen = true;
         } else {
             $replyContainer.toggle();
+            isReplyBoxOpen = $replyContainer.is(':visible');
         }
     });
 
-    // Handle reply submission
     $(document).on('submit', '.reply-form', function(e) {
         e.preventDefault();
         var $form = $(this);
@@ -564,7 +557,6 @@ $(document).ready(function() {
             return;
         }
 
-        // AJAX call to submit reply
         $.ajax({
             type: 'POST',
             url: 'submit_reply.php',
@@ -594,6 +586,7 @@ $(document).ready(function() {
                     $form.closest('li').find('.reply-list').append(newReply);
                     $form.find('.reply-textarea').val('');
                     $form.parent().hide();
+                    isReplyBoxOpen = false;
                 } else {
                     alert(response.message);
                 }
@@ -604,15 +597,42 @@ $(document).ready(function() {
         });
     });
 
-    // Handle reply cancellation
     $(document).on('click', '.cancel-reply', function() {
         $(this).closest('.reply-container').hide();
+        isReplyBoxOpen = false;
     });
+
+    function refreshComments() {
+        if (!isReplyBoxOpen) {
+            $.ajax({
+                url: 'get_comments.php',
+                type: 'GET',
+                data: { event_id: '<?php echo $event_id; ?>' },
+                success: function(response) {
+                    var openReplyForms = $('.reply-form:visible');
+                    var savedInputs = openReplyForms.find('textarea').map(function() {
+                        return $(this).val();
+                    }).get();
+
+                    $('#comments-list').html(response);
+
+                    if (savedInputs.length > 0) {
+                        $('.reply-form:visible').each(function(index) {
+                            $(this).find('textarea').val(savedInputs[index]);
+                        });
+                    }
+                },
+                error: function() {
+                    console.log('Error refreshing comments');
+                }
+            });
+        }
+    }
+
+    // Set interval to refresh comments every 5 seconds
+    setInterval(refreshComments, 5000);
 });
 </script>
-
-
-
 </body>
 
 </html>
