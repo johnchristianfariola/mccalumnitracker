@@ -542,7 +542,7 @@ $(document).ready(function() {
                 <form class="reply-form">
                     <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
                     <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                    <button type="button" class="btn btn-secondary cancel-reply">Cancel</button>
+                
                     <input type="hidden" name="parent_comment_id" value="${commentId}">
                 </form>
             `;
