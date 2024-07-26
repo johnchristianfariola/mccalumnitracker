@@ -666,20 +666,107 @@ body {
   border-radius: 3px;
 }
 
-/** =====================
-* Responsive
-========================*/
+
+/* New styles for reply functionality */
+/* Reply form styles */
+.reply-container {
+  margin-left: 88px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.reply-form {
+  background: #f7f9fa;
+  border-radius: 4px;
+  padding: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.reply-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: border-color 0.3s ease;
+}
+
+.reply-textarea:focus {
+  outline: none;
+  border-color: #03658c;
+}
+
+.reply-form-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.reply-form button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-reply {
+  background-color: #03658c;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.submit-reply:hover {
+  background-color: #024e6a;
+}
+
+.cancel-reply {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.cancel-reply:hover {
+  background-color: #d0d0d0;
+}
+
+/* Adjustments for reply list */
+.reply-list {
+  margin-top: 15px;
+}
+
+.reply-list .comment-box {
+  width: 610px;
+  background: #f9f9f9;
+}
+
+.reply-list .comment-box:before,
+.reply-list .comment-box:after {
+  border-color: transparent #f9f9f9;
+}
+
+.reply-list .comment-box .comment-head {
+  background: #f0f0f0;
+}
+
+/* Responsive adjustments */
 @media only screen and (max-width: 766px) {
   .comments-container {
-      width: 480px;
+    width: 100%;
+    padding: 0 15px;
   }
 
-  .comments-list .comment-box {
-      width: 390px;
-  }
-
+  .comments-list .comment-box,
   .reply-list .comment-box {
-      width: 320px;
+    width: calc(100% - 75px);
+  }
+
+  .reply-container {
+    margin-left: 65px;
   }
 }
 
@@ -716,4 +803,98 @@ body {
 
 .my-custom-content {
   color: #721c24; /* Dark red color for the content */
+}
+/* Unique CSS for the comment chatbox */
+#uniquePanelInfo {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#uniquePanelBody {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+#uniqueCommentTextarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    resize: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#uniqueCommentTextarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+    outline: none;
+}
+
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+#uniqueCommentList {
+    list-style: none;
+    padding: 0;
+}
+
+#uniqueCommentList li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+#uniqueCommentMainLevel {
+    display: flex;
+    align-items: flex-start;
+}
+
+#uniqueCommentAvatar img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+#uniqueCommentBox {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+}
+
+#uniqueCommentHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#uniqueCommentName {
+    font-weight: bold;
+    color: #333;
+}
+
+#uniqueCommentContent {
+    color: #666;
 }
