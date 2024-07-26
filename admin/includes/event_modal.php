@@ -214,7 +214,7 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="event_venue" class="col-sm-2 control-label">Venue</label>
+                            <label for="event_venue" class="col-sm-2 control-label">Event Venue</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="event_venue" name="event_venue">
                                 <small class="error-message" id="event_venue_error" style="color:red; display:none;"><i
@@ -230,9 +230,7 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="course_invited" class="col-sm-2 control-label">Invited</label>
-
-
+                            <label for="course_invited" class="col-sm-2 control-label">Course Invited</label>
                             <div class="bootstrap-select col-sm-10">
                                 <select class="selectpicker form-control" id="course_invited" name="course_invited[]"
                                     multiple title="Choose Course....">
@@ -252,9 +250,7 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
                                 required.</small>
                         </div>
                         <div class="form-group">
-                            <label for="event_invited" class="col-sm-2 control-label">Invited</label>
-
-
+                            <label for="event_invited" class="col-sm-2 control-label">Batch Invited</label>
                             <div class="bootstrap-select col-sm-10">
                                 <select class="selectpicker form-control" id="event_invited" name="event_invited[]"
                                     multiple title="Choose Batch....">
@@ -339,14 +335,7 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
                                         class="fa fa-info-circle"></i> This field is required.</small>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="editAuthor" class="col-sm-2 control-label">Author</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="editAuthor" name="edit_author">
-                                <small class="error-message" id="editAuthor_error" style="color:red; display:none;"><i
-                                        class="fa fa-info-circle"></i> This field is required.</small>
-                            </div>
-                        </div>
+
                         <div class="form-group">
                             <label for="editEventDate" class="col-sm-2 control-label">Event Date</label>
                             <div class="col-sm-10">
@@ -365,6 +354,47 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
                                     required.</small>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="editAuthor" class="col-sm-2 control-label">Author</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="editAuthor" name="edit_author">
+                                <small class="error-message" id="editAuthor_error" style="color:red; display:none;"><i
+                                        class="fa fa-info-circle"></i> This field is required.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+    <label for="edit_course_invited" class="col-sm-2 control-label">Course Invited</label>
+    <div class="bootstrap-select col-sm-10">
+        <select class="selectpicker form-control" id="edit_course_invited" name="edit_course_invited[]" multiple title="Choose Course....">
+            <?php
+            if (is_array($data)) {
+                foreach ($data as $courseId => $details) {
+                    $courseCode = isset($details['courCode']) ? htmlspecialchars($details['courCode']) : 'Unknown';
+                    echo "<option value=\"" . htmlspecialchars($courseId) . "\" data-content=\"" . $courseCode . "\">" . $courseCode . "</option>";
+                }
+            }
+            ?>
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="edit_event_invited" class="col-sm-2 control-label">Batch Invited</label>
+    <div class="bootstrap-select col-sm-10">
+        <select class="selectpicker form-control" id="edit_event_invited" name="edit_event_invited[]" multiple title="Choose Batch....">
+            <?php
+            if (!empty($batchYears) && is_array($batchYears)) {
+                foreach ($batchYears as $batchId => $batchDetails) {
+                    $batchYear = isset($batchDetails['batch_yrs']) ? $batchDetails['batch_yrs'] : 'Unknown';
+                    echo "<option value=\"" . htmlspecialchars($batchId) . "\" data-content=\"" . $batchYear . "\">" . $batchYear . "</option>";
+                }
+            }
+            ?>
+        </select>
+    </div>
+</div>
+
+
                         <div class="form-group">
                             <label for="editDesc" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">

@@ -48,6 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "event_description" => $purifier->purify($_POST['edit_description']),
         ];
 
+        // Process invited courses and batches
+        $updateData['event_invited'] = isset($_POST['edit_event_invited']) && !empty($_POST['edit_event_invited']) 
+            ? json_encode(array_values($_POST['edit_event_invited'])) 
+            : json_encode([]);
+
+        $updateData['course_invited'] = isset($_POST['edit_course_invited']) && !empty($_POST['edit_course_invited']) 
+            ? json_encode(array_values($_POST['edit_course_invited'])) 
+            : json_encode([]);
+
         // Fetch current event data
         $currentEvent = json_decode($firebase->retrieve("event", $id), true);
 
@@ -59,7 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $changesDetected = false;
         $changes = [];
         foreach ($updateData as $key => $value) {
-            if (!isset($currentEvent[$key]) || $currentEvent[$key] !== $value) {
+            if ($key === 'event_invited' || $key === 'course_invited') {
+                $currentValue = isset($currentEvent[$key]) ? json_decode($currentEvent[$key], true) : [];
+                $newValue = json_decode($value, true);
+                if ($currentValue != $newValue) {
+                    $changesDetected = true;
+                    $changes[$key] = ['old' => $currentValue, 'new' => $newValue];
+                }
+            } elseif (!isset($currentEvent[$key]) || $currentEvent[$key] !== $value) {
                 $changesDetected = true;
                 $changes[$key] = ['old' => $currentEvent[$key] ?? null, 'new' => $value];
             }
