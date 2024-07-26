@@ -96,7 +96,7 @@
   <?php include 'includes/scripts.php'; ?>
   <script>
     $(document).ready(function () {
-      var originalValues = {};
+     
 
       // Function to fetch content from the server
       function fetchNewsData(id, successCallback, errorCallback) {
@@ -121,6 +121,8 @@
           console.error('CKEditor is not defined or replace method is missing.');
         }
       }
+
+      let originalValues = {};
 
       // Function to handle modal display and data population for edit
       function openEditModal(response, id) {

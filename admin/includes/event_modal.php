@@ -363,37 +363,38 @@ $data = json_decode($data, true); // Decode JSON data into associative arrays
                             </div>
                         </div>
                         <div class="form-group">
-    <label for="edit_course_invited" class="col-sm-2 control-label">Course Invited</label>
-    <div class="bootstrap-select col-sm-10">
-        <select class="selectpicker form-control" id="edit_course_invited" name="edit_course_invited[]" multiple title="Choose Course....">
-            <?php
-            if (is_array($data)) {
-                foreach ($data as $courseId => $details) {
-                    $courseCode = isset($details['courCode']) ? htmlspecialchars($details['courCode']) : 'Unknown';
-                    echo "<option value=\"" . htmlspecialchars($courseId) . "\" data-content=\"" . $courseCode . "\">" . $courseCode . "</option>";
-                }
-            }
-            ?>
-        </select>
-    </div>
-</div>
+                            <label for="edit_course_invited" class="col-sm-2 control-label">Course Invited</label>
+                            <div class="bootstrap-select col-sm-10">
+                                <select class="selectpicker form-control" id="edit_course_invited"
+                                    name="edit_course_invited[]" multiple title="Choose Course....">
+                                    <?php
+                                    if (is_array($data)) {
+                                        foreach ($data as $courseId => $details) {
+                                            $courseCode = isset($details['courCode']) ? htmlspecialchars($details['courCode']) : 'Unknown';
+                                            echo "<option value=\"" . htmlspecialchars($courseId) . "\" data-content=\"" . $courseCode . "\">" . $courseCode . "</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
 
-<div class="form-group">
-    <label for="edit_event_invited" class="col-sm-2 control-label">Batch Invited</label>
-    <div class="bootstrap-select col-sm-10">
-        <select class="selectpicker form-control" id="edit_event_invited" name="edit_event_invited[]" multiple title="Choose Batch....">
-            <?php
-            if (!empty($batchYears) && is_array($batchYears)) {
-                foreach ($batchYears as $batchId => $batchDetails) {
-                    $batchYear = isset($batchDetails['batch_yrs']) ? $batchDetails['batch_yrs'] : 'Unknown';
-                    echo "<option value=\"" . htmlspecialchars($batchId) . "\" data-content=\"" . $batchYear . "\">" . $batchYear . "</option>";
-                }
-            }
-            ?>
-        </select>
-    </div>
-</div>
-
+                        <div class="form-group">
+                            <label for="edit_event_invited" class="col-sm-2 control-label">Batch Invited</label>
+                            <div class="bootstrap-select col-sm-10">
+                                <select class="selectpicker form-control" id="edit_event_invited"
+                                    name="edit_event_invited[]" multiple title="Choose Batch....">
+                                    <?php
+                                    if (!empty($batchYears) && is_array($batchYears)) {
+                                        foreach ($batchYears as $batchId => $batchDetails) {
+                                            $batchYear = isset($batchDetails['batch_yrs']) ? $batchDetails['batch_yrs'] : 'Unknown';
+                                            echo "<option value=\"" . htmlspecialchars($batchId) . "\" data-content=\"" . $batchYear . "\">" . $batchYear . "</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label for="editDesc" class="col-sm-2 control-label">Description</label>
