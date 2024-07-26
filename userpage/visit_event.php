@@ -208,7 +208,7 @@
                 <br><br>
 
                 <div class="comments-container">
-    <h1>Comments</h1>
+    <h1><i class="fa fa-wechat"></i> Comments</h1>
     <ul id="comments-list" class="comments-list">
         <?php if (empty($eventComments)): ?>
             <li id="no-comments-message" class="center-message">Be the First to Comment</li>
