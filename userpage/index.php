@@ -36,6 +36,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
     <?php include 'includes/main_menu.php' ?>
 
     <!-- End Sale Statistic area-->
+    <div class="main-content"></div>
     <div class="sale-statistic-area">
         <div class="container">
             <div class="row">
@@ -200,7 +201,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
             </div>
         </div>
     </div>
-
+</div>
 
 
 

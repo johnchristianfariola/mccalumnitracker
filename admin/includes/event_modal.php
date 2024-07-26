@@ -171,6 +171,13 @@ $batchYears = $firebase->retrieve("batch_yr");
 $batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
 
 
+
+// Fetch data from Firebase
+$courseKey = "course"; // Replace with your actual Firebase path or key for courses
+
+$data = $firebase->retrieve($courseKey);
+$data = json_decode($data, true); // Decode JSON data into associative arrays
+
 ?>
 
 <div class="modal fade" id="addnew">
@@ -223,6 +230,28 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="course_invited" class="col-sm-2 control-label">Invited</label>
+
+
+                            <div class="bootstrap-select col-sm-10">
+                                <select class="selectpicker form-control" id="course_invited" name="course_invited[]"
+                                    multiple title="Choose Course....">
+                                    <?php
+                                    if (is_array($data)) {
+                                        foreach ($data as $courseId => $details) {
+                                            $courseCode = isset($details['courCode']) ? htmlspecialchars($details['courCode']) : 'Unknown';
+                                            echo "<option value=\"" . htmlspecialchars($courseId) . "\">" . $courseCode . "</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <small class="error-message" id="event_invited_error" style="color:red; display:none;"><i
+                                    class="fa fa-info-circle"></i> This field is
+                                required.</small>
+                        </div>
+                        <div class="form-group">
                             <label for="event_invited" class="col-sm-2 control-label">Invited</label>
 
 
@@ -239,8 +268,6 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
                                     ?>
                                 </select>
                             </div>
-
-
 
                             <small class="error-message" id="event_invited_error" style="color:red; display:none;"><i
                                     class="fa fa-info-circle"></i> This field is

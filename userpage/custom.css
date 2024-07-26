@@ -704,3 +704,16 @@ body {
   font-size: 20px;
 }
 
+.my-custom-popup {
+  background-color: #f8d7da; /* Light red background color */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px;
+}
+
+.my-custom-title {
+  color: #721c24; /* Dark red color for the title */
+}
+
+.my-custom-content {
+  color: #721c24; /* Dark red color for the content */
+}

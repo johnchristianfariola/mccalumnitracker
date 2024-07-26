@@ -25,7 +25,7 @@
 
 
     <!-- Main Main Content area start-->
-   <?php
+    <?php
 require_once '../includes/firebaseRDB.php';
 
 // Initialize Firebase URL
@@ -157,28 +157,40 @@ if (isset($_GET['id'])) {
                 </div>
                 <div class="additional-content" style="width: 100%; background: white; padding: 20px;">
                     <?php
-                    // Get the alumni's batch ID
+                    // Get the alumni's batch ID and course ID
                     $alumni_batch_id = isset($alumniData['batch']) ? $alumniData['batch'] : null;
+                    $alumni_course_id = isset($alumniData['course']) ? $alumniData['course'] : null;
 
                     // Check if the alumni's batch ID is in the event's invited array
-                    $is_invited = false;
+                    $is_batch_invited = false;
+                    $is_course_invited = false;
+
                     if (isset($event_data['event_invited'])) {
                         // Parse the event_invited string into an array
-                        $invited_array = json_decode($event_data['event_invited'], true);
+                        $invited_batches = json_decode($event_data['event_invited'], true);
                         
                         // Check if parsing was successful and the result is an array
-                        if (json_last_error() !== JSON_ERROR_NONE) {
-                            error_log("Error parsing event_invited JSON: " . json_last_error_msg());
-                        }
-                        if (is_array($invited_array)) {
-                            $is_invited = in_array($alumni_batch_id, $invited_array);
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($invited_batches)) {
+                            $is_batch_invited = in_array($alumni_batch_id, $invited_batches);
                         } else {
-                            error_log("event_invited is not an array after parsing");
+                            error_log("Error parsing event_invited JSON or it's not an array");
                         }
                     }
 
-                    // Only show the participation button if the alumni is invited
-                    if ($is_invited) {
+                    if (isset($event_data['course_invited'])) {
+                        // Parse the course_invited string into an array
+                        $invited_courses = json_decode($event_data['course_invited'], true);
+                        
+                        // Check if parsing was successful and the result is an array
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($invited_courses)) {
+                            $is_course_invited = in_array($alumni_course_id, $invited_courses);
+                        } else {
+                            error_log("Error parsing course_invited JSON or it's not an array");
+                        }
+                    }
+
+                    // Only show the participation button if both batch and course are invited
+                    if ($is_batch_invited && $is_course_invited) {
                     ?>
                         <div style="margin-top:20px pull">
                             <a id="participateBtn" href="javascript:void(0);" 
@@ -208,7 +220,7 @@ if (isset($_GET['id'])) {
                                     $commenterData = json_decode($commenterData, true);
                                     $commenterProfileUrl = $commenterData['profile_url'];
                                     $commenterFirstName = $commenterData['firstname'];
-                                    $commenterLasrName = $commenterData['lastname'];
+                                    $commenterLastName = $commenterData['lastname'];
                                     ?>
                                     <li>
                                         <div class="comment-main-level">
@@ -216,7 +228,7 @@ if (isset($_GET['id'])) {
                                             <div class="comment-box">
                                                 <div class="comment-head">
                                                     <h6 class="comment-name by-author">
-                                                           <a href="#"><?php echo $commenterFirstName . ' ' . $commenterLasrName; ?></a>
+                                                           <a href="#"><?php echo $commenterFirstName . ' ' . $commenterLastName; ?></a>
                                                     </h6>
 
                                                     <span><?php echo $comment['date_ago']; ?></span>
@@ -235,23 +247,119 @@ if (isset($_GET['id'])) {
                     </div>
 
                     <div class="container pb-cmnt-container">
-                        <div class="row">
-                            <div class="col-md-10 col-md-offset-0">
-                                <div class="panel panel-info">
-                                    <div class="panel-body">
-                                    <form id="commentForm" method="POST" action="comment.php">
-                                    <textarea name="comment" placeholder="Write your comment here!" class="pb-cmnt-textarea"></textarea>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-0">
+                <div id="uniquePanelInfo" class="panel panel-info">
+                    <div id="uniquePanelBody" class="panel-body">
+                    <form id="commentForm" method="POST" action="comment.php">
+                                    <textarea name="comment" placeholder="Write your comment here!" class="pb-cmnt-textarea" id="uniqueCommentTextarea"></textarea>
                                     <button class="btn btn-primary pull-right" type="button" id="submitComment">Share</button>
                                     <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
                                     <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
                                 </form>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Comment list (for display purposes) -->
+                        <ul id="uniqueCommentList"></ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <style>
+        /* Unique CSS for the comment chatbox */
+        #uniquePanelInfo {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #uniquePanelBody {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        #uniqueCommentTextarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            resize: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #uniqueCommentTextarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+            outline: none;
+        }
+
+        
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+
+        #uniqueCommentList {
+            list-style: none;
+            padding: 0;
+        }
+
+        #uniqueCommentList li {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        #uniqueCommentMainLevel {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        #uniqueCommentAvatar img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        #uniqueCommentBox {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+        }
+
+        #uniqueCommentHead {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        #uniqueCommentName {
+            font-weight: bold;
+            color: #333;
+        }
+
+        #uniqueCommentContent {
+            color: #666;
+        }
+    </style>
                 </div>
             </div>
         </div>
@@ -382,90 +490,111 @@ if (isset($_GET['id'])) {
         });
 
     </script>
-    <script>
-                
-        $(document).ready(function() {
-            $('#submitComment').click(function() {
-                var $submitButton = $(this);
-                var formData = $('#commentForm').serialize();
-                var commentContent = $('.pb-cmnt-textarea').val();
-                
-                // Disable the button
-                $submitButton.prop('disabled', true).text('Submitting...');
-                
-                $.ajax({
-                    type: 'POST',
-                    url: 'comment.php',
-                    data: formData,
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            var commentsList = $('#comments-list');
-                            var noCommentsMessage = $('#no-comments-message');
-                            if (noCommentsMessage.length) {
-                                noCommentsMessage.remove();
-                            }
+   <script>
+    $(document).ready(function() {
+        $('#submitComment').click(function() {
+            var $submitButton = $(this);
+            var formData = $('#commentForm').serialize();
+            var commentContent = $('.pb-cmnt-textarea').val().trim();
 
-                            var now = new Date();
-                            var timestamp = now.toISOString();
-                            var newComment = `
-                                <li>
-                                    <div class="comment-main-level">
-                                        <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
-                                        <div class="comment-box">
-                                            <div class="comment-head">
-                                                <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
-                                                <span>${timeAgo(timestamp)}</span>
-                                                <i class="fa fa-reply"></i>
-                                                <i class="fa fa-heart"></i>
-                                            </div>
-                                            <div class="comment-content">
-                                                ${commentContent}
-                                            </div>
+            if (commentContent === "") {
+                swal({
+                    title: 'Oops...',
+                    text: 'Please enter a comment before sharing.',
+                    type: 'warning',
+                    timer: 5000,
+                    onOpen: function () {
+                        swal.showLoading()
+                    }
+                    }).then(
+                    function () {},
+                    // handling the promise rejection
+                    function (dismiss) {
+                        if (dismiss === 'timer') {
+                        console.log('I was closed by the timer')
+                        }
+                    }
+                    )
+                return; // Exit the function if the comment is empty
+            }
+
+            // Disable the button
+            $submitButton.prop('disabled', true).text('Submitting...');
+
+            $.ajax({
+                type: 'POST',
+                url: 'comment.php',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        var commentsList = $('#comments-list');
+                        var noCommentsMessage = $('#no-comments-message');
+                        if (noCommentsMessage.length) {
+                            noCommentsMessage.remove();
+                        }
+
+                        var now = new Date();
+                        var timestamp = now.toISOString();
+                        var newComment = `
+                            <li>
+                                <div class="comment-main-level">
+                                    <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                            <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
+                                            <span>${timeAgo(timestamp)}</span>
+                                            <i class="fa fa-reply"></i>
+                                            <i class="fa fa-heart"></i>
+                                        </div>
+                                        <div class="comment-content">
+                                            ${commentContent}
                                         </div>
                                     </div>
-                                </li>
-                            `;
-                            commentsList.append(newComment);
-                            $('#commentForm')[0].reset(); // Clear the form
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Error submitting comment!');
-                    },
-                    complete: function() {
-                        // Re-enable the button and restore its text
-                        $submitButton.prop('disabled', false).text('Share');
+                                </div>
+                            </li>
+                        `;
+                        commentsList.append(newComment);
+                        $('#commentForm')[0].reset(); // Clear the form
+                    } else {
+                        alert(response.message);
                     }
-                });
+                },
+                error: function() {
+                    alert('Error submitting comment!');
+                },
+                complete: function() {
+                    // Re-enable the button and restore its text
+                    $submitButton.prop('disabled', false).text('Share');
+                }
             });
         });
+    });
 
-        // Helper function to format the timestamp
-        function timeAgo(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const secondsPast = (now.getTime() - date.getTime()) / 1000;
+    // Helper function to format the timestamp
+    function timeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const secondsPast = (now.getTime() - date.getTime()) / 1000;
 
-            if (secondsPast < 60) {
-                return 'just now';
-            }
-            if (secondsPast < 3600) {
-                return Math.round(secondsPast / 60) + 'm ago';
-            }
-            if (secondsPast <= 86400) {
-                return Math.round(secondsPast / 3600) + 'h ago';
-            }
-            if (secondsPast > 86400) {
-                const day = date.getDate();
-                const month = date.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
-                const year = date.getFullYear() == now.getFullYear() ? "" : " " + date.getFullYear();
-                return day + " " + month + year;
-            }
+        if (secondsPast < 60) {
+            return 'just now';
         }
-    </script>
+        if (secondsPast < 3600) {
+            return Math.round(secondsPast / 60) + 'm ago';
+        }
+        if (secondsPast <= 86400) {
+            return Math.round(secondsPast / 3600) + 'h ago';
+        }
+        if (secondsPast > 86400) {
+            const day = date.getDate();
+            const month = date.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
+            const year = date.getFullYear() == now.getFullYear() ? "" : " " + date.getFullYear();
+            return day + " " + month + year;
+        }
+    }
+</script>
+
 
 
 
