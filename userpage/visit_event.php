@@ -213,65 +213,63 @@
         <?php if (empty($eventComments)): ?>
             <li id="no-comments-message" class="center-message">Be the First to Comment</li>
         <?php else: ?>
-            <?php foreach ($eventComments as $commentId => $comment): ?>
-                <li data-comment-id="<?php echo $commentId; ?>">
-                    <div class="comment-main-level">
-                        <?php
-                        $commenterData = $firebase->retrieve("alumni/{$comment['alumni_id']}");
-                        $commenterData = json_decode($commenterData, true);
-                        ?>
-                        <div class="comment-avatar">
-                            <img src="<?php echo $commenterData['profile_url']; ?>" alt="">
-                        </div>
-                        <div class="comment-box">
-                            <div class="comment-head">
-                                <h6 class="comment-name <?php echo $comment['alumni_id'] === $alumni_id ? 'by-author' : ''; ?>">
-                                    <a href="#"><?php echo $commenterData['firstname'] . ' ' . $commenterData['lastname']; ?></a>
-                                </h6>
-                                <span><?php echo timeAgo($comment['date_commented']); ?></span>
-                                <i class="fa fa-reply reply-button"></i>
-                                <i class="fa fa-heart"></i>
+            <?php foreach ($commentData as $commentId => $comment): ?>
+                <?php if ($comment['event_id'] === $event_id): ?>
+                    <?php
+                    $commenterData = $firebase->retrieve("alumni/{$comment['alumni_id']}");
+                    $commenterData = json_decode($commenterData, true);
+                    $commenterProfileUrl = $commenterData['profile_url'];
+                    $commenterFirstName = $commenterData['firstname'];
+                    $commenterLastName = $commenterData['lastname'];
+                    ?>
+                    <li data-comment-id="<?php echo $commentId; ?>">
+                        <div class="comment-main-level">
+                            <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name by-author">
+                                        <a href="#"><?php echo $commenterFirstName . ' ' . $commenterLastName; ?></a>
+                                    </h6>
+                                    <span><?php echo timeAgo($comment['date_commented']); ?></span>
+                                    <i class="fa fa-reply reply-button"></i>
+                                    <i class="fa fa-heart"></i>
+                                </div>
+                                <div class="comment-content">
+                                    <?php echo htmlspecialchars($comment['comment']); ?>
+                                </div>
                             </div>
-                            <div class="comment-content">
-                                <?php echo htmlspecialchars($comment['comment']); ?>
-                            </div>
                         </div>
-                    </div>
-                    <div class="reply-container" style="display: none;"></div>
-                    <ul class="comments-list reply-list">
-                        <?php if (isset($comment['replies'])): ?>
-                            <?php foreach ($comment['replies'] as $replyId => $reply): ?>
-                                <?php
-                                $replyAuthorData = $firebase->retrieve("alumni/{$reply['alumni_id']}");
-                                $replyAuthorData = json_decode($replyAuthorData, true);
-                                ?>
-                                <li>
-                                    <div class="comment-avatar">
-                                        <img src="<?php echo $replyAuthorData['profile_url']; ?>" alt="">
-                                    </div>
-                                    <div class="comment-box">
-                                        <div class="comment-head">
-                                            <h6 class="comment-name">
-                                                <a href="#"><?php echo $replyAuthorData['firstname'] . ' ' . $replyAuthorData['lastname']; ?></a>
-                                            </h6>
-                                            <span><?php echo timeAgo($reply['date_replied']); ?></span>
-                                            <i class="fa fa-reply"></i>
-                                            <i class="fa fa-heart"></i>
+                        <div class="reply-container" style="display: none;"></div>
+                        <ul class="comments-list reply-list">
+                            <?php if (isset($comment['replies'])): ?>
+                                <?php foreach ($comment['replies'] as $replyId => $reply): ?>
+                                    <?php
+                                    $replyAuthorData = $firebase->retrieve("alumni/{$reply['alumni_id']}");
+                                    $replyAuthorData = json_decode($replyAuthorData, true);
+                                    ?>
+                                    <li>
+                                        <div class="comment-avatar"><img src="<?php echo $replyAuthorData['profile_url']; ?>" alt=""></div>
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <h6 class="comment-name by-author">
+                                                    <a href="#"><?php echo $replyAuthorData['firstname'] . ' ' . $replyAuthorData['lastname']; ?></a>
+                                                </h6>
+                                                <span><?php echo timeAgo($reply['date_replied']); ?></span>
+                                            </div>
+                                            <div class="comment-content">
+                                                <?php echo htmlspecialchars($reply['comment']); ?>
+                                            </div>
                                         </div>
-                                        <div class="comment-content">
-                                            <?php echo htmlspecialchars($reply['comment']); ?>
-                                        </div>
-                                    </div>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </ul>
-                </li>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                <?php endif; ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </ul>
 </div>
-
 
                 <div class="container pb-cmnt-container">
                     <div class="row">
@@ -536,7 +534,7 @@ $(document).ready(function() {
     $(document).on('click', '.reply-button', function() {
         var $commentItem = $(this).closest('li');
         var commentId = $commentItem.data('comment-id');
-        var $replyContainer = $commentItem.find('.reply-container').first();
+        var $replyContainer = $commentItem.find('.reply-container');
         
         // Toggle reply form visibility
         if ($replyContainer.is(':empty')) {
@@ -581,17 +579,11 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     var newReply = `
                         <li>
-                            <div class="comment-avatar">
-                                <img src="<?php echo $alumniProfileUrl; ?>" alt="">
-                            </div>
+                            <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
                             <div class="comment-box">
                                 <div class="comment-head">
-                                    <h6 class="comment-name">
-                                        <a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a>
-                                    </h6>
+                                    <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
                                     <span>Just now</span>
-                                    <i class="fa fa-reply"></i>
-                                    <i class="fa fa-heart"></i>
                                 </div>
                                 <div class="comment-content">
                                     ${replyContent}
@@ -618,6 +610,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
 
 
 </body>
