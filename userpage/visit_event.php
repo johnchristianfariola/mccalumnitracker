@@ -296,10 +296,10 @@
 
     <?php
         } else {
-            echo "News item not found.";
+            echo "Event item not found.";
         }
     } else {
-        echo "No news ID provided.";
+        echo "No Event ID provided.";
     }
     ?>
 </body>

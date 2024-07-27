@@ -6,8 +6,8 @@ header('Content-Type: application/json'); // Set the content type to JSON
 $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ensure last name and student ID fields are set and not empty
-    if (isset($_POST['lastname']) && !empty($_POST['lastname']) && isset($_POST['studentid']) && !empty($_POST['studentid'])) {
+    // Ensure student ID field is set and not empty
+    if (isset($_POST['studentid']) && !empty($_POST['studentid'])) {
         $studentid = $_POST['studentid'];
 
         // Validate the student ID format
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Assign form data to variables
         $firstname = $_POST['firstname'] ?? '';
-        $lastname = $_POST['lastname'];
+        $lastname = $_POST['lastname'] ?? '';
         $middlename = $_POST['middlename'] ?? '';
         $auxiliaryname = $_POST['auxiliaryname'] ?? '';
         $birthdate = $_POST['birthdate'] ?? '';
@@ -40,17 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'includes/config.php'; // Include your config file
         $firebase = new firebaseRDB($databaseURL);
 
-        // Function to check if alumni data already exists
-        function isAlumniDataExists($firebase, $lastname, $studentid) {
+        // Function to check if student ID already exists
+        function isStudentIdExists($firebase, $studentid) {
             $table = 'alumni';
             $result = $firebase->retrieve($table);
             $result = json_decode($result, true);
             if ($result) {
                 foreach ($result as $record) {
-                    if (
-                        isset($record['lastname']) && $record['lastname'] === $lastname &&
-                        isset($record['studentid']) && $record['studentid'] === $studentid
-                    ) {
+                    if (isset($record['studentid']) && $record['studentid'] === $studentid) {
                         return true;
                     }
                 }
@@ -58,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return false;
         }
 
-        // Check if alumni data already exists
-        if (isAlumniDataExists($firebase, $lastname, $studentid)) {
+        // Check if student ID already exists
+        if (isStudentIdExists($firebase, $studentid)) {
             $response['status'] = 'error';
-            $response['message'] = 'Alumni with this last name and student ID already exists.';
+            $response['message'] = 'Student ID already exists. It cannot be reused.';
         } else {
             // Function to add alumni data
             function addAlumniData($firebase, $data) {
@@ -109,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } else {
         $response['status'] = 'error';
-        $response['message'] = 'Last name and student ID are required.';
+        $response['message'] = 'Student ID is required.';
         echo json_encode($response);
         exit;
     }
