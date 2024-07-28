@@ -24,20 +24,20 @@
             echo '
     <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="index.php" class="nav-item nav-link active">Home</a>
-            <a href="about.html" class="nav-item nav-link">About</a>
-            <a href="courses.html" class="nav-item nav-link">Courses</a>
+            <a href="404.php" class="nav-item nav-link">About</a>
+            <a href="404.php" class="nav-item nav-link">Courses</a>
            
 
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                 <div class="dropdown-menu fade-down m-0">
-                    <a href="team.html" class="dropdown-item">In Memoriam</a>
-                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                    <a href="404.php" class="dropdown-item">In Memoriam</a>
+                    <a href="404.php" class="dropdown-item">Testimonial</a>
                 </div>
             </div>
 
-            <a href="contact.html" class="nav-item nav-link">Gallery</a>
-            <a href="contact.html" class="nav-item nav-link">Contact</a>
+            <a href="404.php" class="nav-item nav-link">Gallery</a>
+            <a href="404.php" class="nav-item nav-link">Contact</a>
           
     ';
         }
