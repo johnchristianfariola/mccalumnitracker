@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     // Insert reply into Firebase as a sub-comment
-    $result = $firebase->insert("comment/{$parent_comment_id}/replies", $replyData);
+    $result = $firebase->insert("event_comments/{$parent_comment_id}/replies", $replyData);
 
     if ($result) {
         echo json_encode(['status' => 'success', 'message' => 'Reply submitted successfully']);

@@ -19,7 +19,7 @@ if (isset($_POST['event_id']) && isset($_POST['alumni_id']) && isset($_POST['com
     ];
 
     // Insert the data into the comment rule
-    $insert = $firebase->insert("comment", $commentData);
+    $insert = $firebase->insert("event_comments", $commentData);
 
     if ($insert) {
         echo json_encode(['status' => 'success', 'message' => 'Comment added!']);

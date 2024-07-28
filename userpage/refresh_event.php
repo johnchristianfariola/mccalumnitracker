@@ -7,7 +7,7 @@ $firebase = new firebaseRDB($databaseURL);
 $event_id = $_GET['event_id'];
 
 // Fetch comments for the event
-$commentData = $firebase->retrieve("comment");
+$commentData = $firebase->retrieve("event_comments");
 $commentData = json_decode($commentData, true);
 
 // Check if there are any comments

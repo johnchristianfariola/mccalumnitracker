@@ -108,7 +108,7 @@
             }
 
             // Retrieve existing comments for the event
-            $commentData = $firebase->retrieve("comment");
+            $commentData = $firebase->retrieve("event_comments");
             $commentData = json_decode($commentData, true);
             $eventComments = [];
             if (is_array($commentData)) {
@@ -276,7 +276,7 @@
                         <div class="col-md-10 col-md-offset-0">
                             <div id="uniquePanelInfo" class="panel panel-info">
                                 <div id="uniquePanelBody" class="panel-body">
-                                    <form id="commentForm" method="POST" action="comment.php">
+                                    <form id="commentForm" method="POST" action="comment_event.php">
                                         <textarea name="comment" placeholder="Write your comment here!" class="pb-cmnt-textarea" id="uniqueCommentTextarea"></textarea>
                                         <button class="btn btn-primary pull-right" type="button" id="submitComment">Share</button>
                                         <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
@@ -456,7 +456,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: 'comment.php',
+            url: 'comment_event.php',
             data: formData,
             dataType: 'json',
             success: function(response) {
@@ -558,7 +558,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: 'submit_reply.php',
+            url: 'reply_event.php',
             data: {
                 comment: replyContent,
                 parent_comment_id: parentCommentId,
@@ -604,7 +604,7 @@ $(document).ready(function() {
     function refreshComments() {
         if (!isReplyBoxOpen) {
             $.ajax({
-                url: 'get_comments.php',
+                url: 'refresh_event.php',
                 type: 'GET',
                 data: { event_id: '<?php echo $event_id; ?>' },
                 success: function(response) {
