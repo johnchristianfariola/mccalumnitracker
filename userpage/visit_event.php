@@ -696,7 +696,7 @@ $(document).ready(function() {
             var commentId = $heart.data('comment-id');
             
             $.ajax({
-                url: 'get_heart_status.php',
+                url: 'get_event_heart_status.php',
                 method: 'GET',
                 data: { 
                     comment_id: commentId,

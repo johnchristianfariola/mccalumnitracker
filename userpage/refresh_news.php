@@ -5,6 +5,7 @@ require_once '../includes/firebaseRDB.php';
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 $news_id = $_GET['news_id'];
+$current_user_id = $_GET['alumni_id']; // Make sure to pass this from your JavaScript
 
 // Fetch comments for the news article
 $commentData = $firebase->retrieve("news_comments");
@@ -24,6 +25,10 @@ if (empty($commentData) || !is_array($commentData)) {
             $commenterFirstName = $commenterData['firstname'] ?? 'Unknown';
             $commenterLastName = $commenterData['lastname'] ?? 'User';
 
+            $isLiked = in_array($current_user_id, $comment['liked_by'] ?? []);
+            $likedClass = $isLiked ? 'liked' : '';
+            $heartCount = isset($comment['heart_count']) ? $comment['heart_count'] : 0;
+            
             $html .= '<li data-comment-id="' . $commentId . '">
                 <div class="comment-main-level">
                     <div class="comment-avatar"><img src="' . $commenterProfileUrl . '" alt=""></div>
@@ -34,7 +39,8 @@ if (empty($commentData) || !is_array($commentData)) {
                             </h6>
                             <span>' . timeAgo($comment['date_commented']) . '</span>
                             <i class="fa fa-reply reply-button"></i>
-                            <i class="fa fa-heart"></i>
+                             <i class="fa fa-heart ' . $likedClass . '" data-comment-id="' . $commentId . '"></i>
+                            <span style="float:right;" class="heart-count">' . $heartCount . '</span>
                         </div>
                         <div class="comment-content">
                             ' . htmlspecialchars($comment['comment']) . '

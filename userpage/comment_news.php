@@ -15,7 +15,8 @@ if (isset($_POST['news_id']) && isset($_POST['alumni_id']) && isset($_POST['comm
         'news_id' => $news_id,
         'alumni_id' => $alumni_id,
         'comment' => $comment,
-        'date_commented' => date('F j, Y H:i:s')  // Include current date and time
+        'date_commented' => date('F j, Y H:i:s'),  // Include current date and time
+        'heart_count' => 0
     ];
 
     // Insert the data into the news_comments rule
