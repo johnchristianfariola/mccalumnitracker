@@ -306,21 +306,170 @@
     </script>
   <script>
     $(document).ready(function() {
-        var openReplyFormId = null;
-        var refreshInterval = 5000;
-        var lastUpdate = Date.now();
-        var currentOpenReplyContent = '';
-        var caretPosition = 0;
+    var openReplyFormId = null;
+    var refreshInterval = 5000;
+    var lastUpdate = Date.now();
+    var currentOpenReplyContent = '';
+    var caretPosition = 0;
+    var isReplyFormOpen = false;
 
-        $('#submitComment').click(function() {
-            var $submitButton = $(this);
-            var formData = $('#commentForm').serialize();
-            var commentContent = $('.pb-cmnt-textarea').val().trim();
+    $('#submitComment').click(function() {
+        var $submitButton = $(this);
+        var $form = $('#commentForm');
+        var $textarea = $('.pb-cmnt-textarea');
+        var commentContent = $textarea.val().trim();
 
-            if (commentContent === "") {
+        if (commentContent === "") {
+            swal({
+                title: 'Oops...',
+                text: 'Please enter a comment before sharing.',
+                type: 'warning',
+                timer: 5000,
+                onOpen: function () {
+                    swal.showLoading()
+                }
+            }).then(
+                function () {},
+                function (dismiss) {
+                    if (dismiss === 'timer') {
+                        console.log('I was closed by the timer')
+                    }
+                }
+            )
+            return;
+        }
+
+        // Disable the button temporarily to prevent double-clicking
+        $submitButton.prop('disabled', true);
+
+        // Prepare the form data
+        var formData = $form.serialize();
+
+        // Clear the textarea and re-enable the button immediately
+        $textarea.val('');
+        $submitButton.prop('disabled', false);
+
+        // Show a temporary "Submitting..." message
+        var $tempMessage = $('<div class="temp-message">Submitting your comment...</div>');
+        $form.after($tempMessage);
+
+        $.ajax({
+            type: 'POST',
+            url: 'comment_news.php',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                $tempMessage.remove();
+                if (response.status === 'success') {
+                    refreshComments();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Your comment has been added.',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.message,
+                        icon: 'error'
+                    });
+                }
+            },
+            error: function() {
+                $tempMessage.remove();
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while submitting your comment.',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+
+    function refreshComments() {
+        if (isReplyFormOpen) {
+            return; // Skip refresh if a reply form is open
+        }
+
+        if (openReplyFormId) {
+            var $currentOpenReplyForm = $(`#comments-list li[data-comment-id="${openReplyFormId}"] .reply-container`);
+            var $currentTextarea = $currentOpenReplyForm.find('.reply-textarea');
+            currentOpenReplyContent = $currentTextarea.val();
+            caretPosition = $currentTextarea[0].selectionStart;
+        }
+
+        $.ajax({
+            url: 'refresh_news.php',
+            type: 'GET',
+            data: { news_id: '<?php echo $news_id; ?>', last_update: lastUpdate },
+            success: function(response) {
+                var $commentsList = $('#comments-list');
+
+                if (response.trim() !== '') {
+                    $commentsList.html(response);
+                    lastUpdate = Date.now();
+                }
+
+                if (openReplyFormId) {
+                    var $newReplyContainer = $commentsList.find(`li[data-comment-id="${openReplyFormId}"] .reply-container`);
+                    $newReplyContainer.html(`
+                        <form class="reply-form">
+                            <textarea class="reply-textarea" placeholder="Write your reply here...">${currentOpenReplyContent}</textarea>
+                            <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                            <input type="hidden" name="parent_comment_id" value="${openReplyFormId}">
+                        </form>
+                    `).show();
+                    
+                    var $newTextarea = $newReplyContainer.find('.reply-textarea');
+                    $newTextarea.focus();
+                    $newTextarea[0].setSelectionRange(caretPosition, caretPosition);
+                }
+
+                attachEventListeners();
+            },
+            error: function() {
+                console.log('Error refreshing comments');
+            }
+        });
+    }
+
+    function attachEventListeners() {
+        $(document).off('click', '.reply-button').on('click', '.reply-button', function() {
+            var $commentItem = $(this).closest('li');
+            var commentId = $commentItem.data('comment-id');
+            var $replyContainer = $commentItem.find('.reply-container');
+
+            if ($replyContainer.is(':empty')) {
+                var replyForm = `
+                    <form class="reply-form">
+                        <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
+                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                        <input type="hidden" name="parent_comment_id" value="${commentId}">
+                    </form>
+                `;
+                $replyContainer.html(replyForm).show();
+                openReplyFormId = commentId;
+                isReplyFormOpen = true;
+            } else {
+                $replyContainer.toggle();
+                isReplyFormOpen = $replyContainer.is(':visible');
+                openReplyFormId = isReplyFormOpen ? commentId : null;
+            }
+        });
+
+        $(document).off('submit', '.reply-form').on('submit', '.reply-form', function(e) {
+            e.preventDefault();
+            var $form = $(this);
+            var $replyTextarea = $form.find('.reply-textarea');
+            var replyContent = $replyTextarea.val().trim();
+            var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
+
+            if (replyContent === "") {
                 Swal.fire({
                     title: 'Oops...',
-                    text: 'Please enter a comment before sharing.',
+                    text: 'Please enter a reply before submitting.',
                     icon: 'warning',
                     timer: 5000,
                     timerProgressBar: true
@@ -328,20 +477,32 @@
                 return;
             }
 
-            $submitButton.prop('disabled', true).text('Submitting...');
+            // Clear the textarea immediately
+            $replyTextarea.val('');
+
+            // Show a temporary "Submitting..." message
+            var $tempMessage = $('<div class="temp-message">Submitting your reply...</div>');
+            $form.after($tempMessage);
 
             $.ajax({
                 type: 'POST',
-                url: 'comment_news.php',
-                data: formData,
+                url: 'reply_news.php',
+                data: {
+                    comment: replyContent,
+                    parent_comment_id: parentCommentId,
+                    news_id: '<?php echo $news_id; ?>',
+                    alumni_id: '<?php echo $alumni_id; ?>'
+                },
                 dataType: 'json',
                 success: function(response) {
+                    $tempMessage.remove();
                     if (response.status === 'success') {
+                        isReplyFormOpen = false;
                         refreshComments();
-                        $('#commentForm')[0].reset();
+                        openReplyFormId = null;
                         Swal.fire({
                             title: 'Success!',
-                            text: 'Your comment has been added.',
+                            text: 'Your reply has been added.',
                             icon: 'success',
                             timer: 2000,
                             timerProgressBar: true
@@ -355,148 +516,28 @@
                     }
                 },
                 error: function() {
+                    $tempMessage.remove();
                     Swal.fire({
                         title: 'Error',
-                        text: 'An error occurred while submitting your comment.',
+                        text: 'An error occurred while submitting your reply.',
                         icon: 'error'
                     });
-                },
-                complete: function() {
-                    $submitButton.prop('disabled', false).text('Share');
                 }
             });
         });
+    }
 
-        function refreshComments() {
-            if (openReplyFormId) {
-                var $currentOpenReplyForm = $(`#comments-list li[data-comment-id="${openReplyFormId}"] .reply-container`);
-                var $currentTextarea = $currentOpenReplyForm.find('.reply-textarea');
-                currentOpenReplyContent = $currentTextarea.val();
-                caretPosition = $currentTextarea[0].selectionStart;
-            }
+    // Initial attachment of event listeners
+    attachEventListeners();
 
-            $.ajax({
-                url: 'refresh_news.php',
-                type: 'GET',
-                data: { news_id: '<?php echo $news_id; ?>', last_update: lastUpdate },
-                success: function(response) {
-                    var $commentsList = $('#comments-list');
-
-                    if (response.trim() !== '') {
-                        $commentsList.html(response);
-                        lastUpdate = Date.now();
-                    }
-
-                    if (openReplyFormId) {
-                        var $newReplyContainer = $commentsList.find(`li[data-comment-id="${openReplyFormId}"] .reply-container`);
-                        $newReplyContainer.html(`
-                            <form class="reply-form">
-                                <textarea class="reply-textarea" placeholder="Write your reply here...">${currentOpenReplyContent}</textarea>
-                                <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                                <input type="hidden" name="parent_comment_id" value="${openReplyFormId}">
-                            </form>
-                        `).show();
-                        
-                        var $newTextarea = $newReplyContainer.find('.reply-textarea');
-                        $newTextarea.focus();
-                        $newTextarea[0].setSelectionRange(caretPosition, caretPosition);
-                    }
-
-                    attachEventListeners();
-                },
-                error: function() {
-                    console.log('Error refreshing comments');
-                }
-            });
+    // Set interval to refresh comments every 5 seconds
+    setInterval(function() {
+        if (!isReplyFormOpen) {
+            refreshComments();
         }
-
-        function attachEventListeners() {
-            $(document).off('click', '.reply-button').on('click', '.reply-button', function() {
-                var $commentItem = $(this).closest('li');
-                var commentId = $commentItem.data('comment-id');
-                var $replyContainer = $commentItem.find('.reply-container');
-
-                if ($replyContainer.is(':empty')) {
-                    var replyForm = `
-                        <form class="reply-form">
-                            <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
-                            <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                            <input type="hidden" name="parent_comment_id" value="${commentId}">
-                        </form>
-                    `;
-                    $replyContainer.html(replyForm).show();
-                    openReplyFormId = commentId;
-                } else {
-                    $replyContainer.toggle();
-                    openReplyFormId = $replyContainer.is(':visible') ? commentId : null;
-                }
-            });
-
-            $(document).off('submit', '.reply-form').on('submit', '.reply-form', function(e) {
-                e.preventDefault();
-                var $form = $(this);
-                var replyContent = $form.find('.reply-textarea').val().trim();
-                var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
-
-                if (replyContent === "") {
-                    Swal.fire({
-                        title: 'Oops...',
-                        text: 'Please enter a reply before submitting.',
-                        icon: 'warning',
-                        timer: 5000,
-                        timerProgressBar: true
-                    });
-                    return;
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'reply_news.php',
-                    data: {
-                        comment: replyContent,
-                        parent_comment_id: parentCommentId,
-                        news_id: '<?php echo $news_id; ?>',
-                        alumni_id: '<?php echo $alumni_id; ?>'
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            refreshComments();
-                            openReplyFormId = null;
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Your reply has been added.',
-                                icon: 'success',
-                                timer: 2000,
-                                timerProgressBar: true
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: response.message,
-                                icon: 'error'
-                            });
-                        }
-                    },
-                    error: function() {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while submitting your reply.',
-                            icon: 'error'
-                        });
-                    }
-                });
-            });
-        }
-
-        // Initial attachment of event listeners
-        attachEventListeners();
-
-        // Set interval to refresh comments every 5 seconds
-        setInterval(refreshComments, refreshInterval);
-    });
-</script>
-
+    }, refreshInterval);
+});
+  </script>
 </body>
 
 </html>
