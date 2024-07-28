@@ -1,22 +1,19 @@
-<?php include '../includes/session.php'; ?>
+<?php include "../includes/session.php"; ?>
 <!doctype html>
 <html class="no-js" lang="">
 
 <head>
-    <?php include 'includes/header.php' ?>
-    <style>
-        /* Add your custom styles here */
-    </style>
+    <?php include "includes/header.php"; ?>
 </head>
 
 <body>
-    <?php include 'includes/navbar.php' ?>
-    <?php include 'includes/mobile_view.php' ?>
-    <?php include 'includes/main_menu.php' ?>
+    <?php include "includes/navbar.php"; ?>
+    <?php include "includes/mobile_view.php"; ?>
+    <?php include "includes/main_menu.php"; ?>
 
     <?php
-    require_once '../includes/firebaseRDB.php';
-    require_once '../includes/config.php';
+    require_once "../includes/firebaseRDB.php";
+    require_once "../includes/config.php";
     $firebase = new firebaseRDB($databaseURL);
 
     function timeAgo($timestamp)
@@ -26,21 +23,21 @@
         $difference = $currentTime - $commentTime;
 
         if ($difference < 60) {
-            return 'Just now';
+            return "Just now";
         } elseif ($difference >= 60 && $difference < 3600) {
             $time = round($difference / 60);
-            return $time . ' minute' . ($time > 1 ? 's' : '') . ' ago';
+            return $time . " minute" . ($time > 1 ? "s" : "") . " ago";
         } elseif ($difference >= 3600 && $difference < 86400) {
             $time = round($difference / 3600);
-            return $time . ' hour' . ($time > 1 ? 's' : '') . ' ago';
+            return $time . " hour" . ($time > 1 ? "s" : "") . " ago";
         } else {
             $time = round($difference / 86400);
-            return $time . ' day' . ($time > 1 ? 's' : '') . ' ago';
+            return $time . " day" . ($time > 1 ? "s" : "") . " ago";
         }
     }
 
-    if (isset($_GET['id'])) {
-        $news_id = $_GET['id'];
+    if (isset($_GET["id"])) {
+        $news_id = $_GET["id"];
         $news_data = $firebase->retrieve("news/{$news_id}");
         $news_data = json_decode($news_data, true);
 
@@ -48,30 +45,37 @@
         $adminData = json_decode($adminData, true);
 
         if ($news_data) {
-            $image_url = htmlspecialchars($news_data['image_url']);
-            $news_author = htmlspecialchars($news_data['news_author']);
-            $news_created = htmlspecialchars($news_data['news_created']);
-            $news_description = $news_data['news_description'];
-            $news_title = htmlspecialchars($news_data['news_title']);
 
-            $alumni_id = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null;
+            $image_url = htmlspecialchars($news_data["image_url"]);
+            $news_author = htmlspecialchars($news_data["news_author"]);
+            $news_created = htmlspecialchars($news_data["news_created"]);
+            $news_description = $news_data["news_description"];
+            $news_title = htmlspecialchars($news_data["news_title"]);
+
+            $alumni_id = isset($_SESSION["user"]["id"])
+                ? $_SESSION["user"]["id"]
+                : null;
 
             $alumniData = $firebase->retrieve("alumni/{$alumni_id}");
             $alumniData = json_decode($alumniData, true);
-            $alumniProfileUrl = $alumniData['profile_url'];
-            $alumniFirstName = $alumniData['firstname'];
-            $alumniLastName = $alumniData['lastname'];
+            $alumniProfileUrl = $alumniData["profile_url"];
+            $alumniFirstName = $alumniData["firstname"];
+            $alumniLastName = $alumniData["lastname"];
 
             $commentData = $firebase->retrieve("news_comments");
             $commentData = json_decode($commentData, true);
             $newsComments = [];
             if (is_array($commentData)) {
                 foreach ($commentData as $commentId => $comment) {
-                    if ($comment['news_id'] === $news_id) {
-                        $comment['date_ago'] = timeAgo($comment['date_commented']);
+                    if ($comment["news_id"] === $news_id) {
+                        $comment["date_ago"] = timeAgo(
+                            $comment["date_commented"],
+                        );
                         $newsComments[$commentId] = $comment;
-                        $isLiked = in_array($alumni_id, $comment['liked_by'] ?? []);
-
+                        $isLiked = in_array(
+                            $alumni_id,
+                            $comment["liked_by"] ?? [],
+                        );
                     }
                 }
             }
@@ -86,14 +90,22 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="breadcomb-wp">
                                             <div class="breadcomb-icon">
-                                                <img class="profile" src="../admin/<?php echo $adminData['image_url']; ?>"
+                                                <img class="profile" src="../admin/<?php echo $adminData[
+                                                    "image_url"
+                                                ]; ?>"
                                                     alt="">
                                             </div>
                                             <div class="breadcomb-ctn">
                                                 <h2><?php echo $news_title; ?></h2>
                                                 <div class="visited-content">
                                                     <i class="uploader">Posted by:
-                                                        <?php echo $adminData['firstname'] . ' ' . $adminData['lastname']; ?></i>
+                                                        <?php echo $adminData[
+                                                            "firstname"
+                                                        ] .
+                                                            " " .
+                                                            $adminData[
+                                                                "lastname"
+                                                            ]; ?></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,13 +134,24 @@
                                 <?php if (empty($newsComments)): ?>
                                     <li id="no-comments-message" class="center-message">Be the First to Comment</li>
                                 <?php else: ?>
-                                    <?php foreach ($newsComments as $commentId => $comment): ?>
+                                    <?php foreach (
+                                        $newsComments
+                                        as $commentId => $comment
+                                    ): ?>
                                         <?php
-                                        $commenterData = $firebase->retrieve("alumni/{$comment['alumni_id']}");
-                                        $commenterData = json_decode($commenterData, true);
-                                        $commenterProfileUrl = $commenterData['profile_url'];
-                                        $commenterFirstName = $commenterData['firstname'];
-                                        $commenterLastName = $commenterData['lastname'];
+                                        $commenterData = $firebase->retrieve(
+                                            "alumni/{$comment["alumni_id"]}",
+                                        );
+                                        $commenterData = json_decode(
+                                            $commenterData,
+                                            true,
+                                        );
+                                        $commenterProfileUrl =
+                                            $commenterData["profile_url"];
+                                        $commenterFirstName =
+                                            $commenterData["firstname"];
+                                        $commenterLastName =
+                                            $commenterData["lastname"];
                                         ?>
                                         <li data-comment-id="<?php echo $commentId; ?>">
                                             <div class="comment-main-level">
@@ -137,17 +160,38 @@
                                                     <div class="comment-head">
                                                         <h6 class="comment-name by-author">
                                                             <a
-                                                                href="#"><?php echo $commenterFirstName . ' ' . $commenterLastName; ?></a>
+                                                                href="#"><?php echo $commenterFirstName .
+                                                                    " " .
+                                                                    $commenterLastName; ?></a>
                                                         </h6>
-                                                        <span><?php echo $comment['date_ago']; ?></span>
+                                                        <span><?php echo $comment[
+                                                            "date_ago"
+                                                        ]; ?></span>
                                                         <i class="fa fa-reply reply-button"></i>
                                                         <i class="fa fa-heart heart-icon" data-comment-id="<?php echo $commentId; ?>"
-                                                            data-liked="<?php echo in_array($currentUserId, $comment['liked_by'] ?? []) ? 'true' : 'false'; ?>"></i>
+                                                            data-liked="<?php echo in_array(
+                                                                $currentUserId,
+                                                                $comment[
+                                                                    "liked_by"
+                                                                ] ?? [],
+                                                            )
+                                                                ? "true"
+                                                                : "false"; ?>"></i>
                                                         <span
-                                                            class="heart-count"><?php echo isset($comment['heart_count']) ? $comment['heart_count'] : 0; ?></span>
+                                                            class="heart-count"><?php echo isset(
+                                                                $comment[
+                                                                    "heart_count"
+                                                                ],
+                                                            )
+                                                                ? $comment[
+                                                                    "heart_count"
+                                                                ]
+                                                                : 0; ?></span>
                                                     </div>
                                                     <div class="comment-content">
-                                                        <?php echo htmlspecialchars($comment['comment']); ?>
+                                                        <?php echo htmlspecialchars(
+                                                            $comment["comment"],
+                                                        ); ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -160,25 +204,51 @@
                                                 </form>
                                             </div>
                                             <ul class="comments-list reply-list">
-                                                <?php if (isset($comment['replies'])): ?>
-                                                    <?php foreach ($comment['replies'] as $replyId => $reply): ?>
+                                                <?php if (
+                                                    isset($comment["replies"])
+                                                ): ?>
+                                                    <?php foreach (
+                                                        $comment["replies"]
+                                                        as $replyId => $reply
+                                                    ): ?>
                                                         <?php
-                                                        $replyAuthorData = $firebase->retrieve("alumni/{$reply['alumni_id']}");
-                                                        $replyAuthorData = json_decode($replyAuthorData, true);
+                                                        $replyAuthorData = $firebase->retrieve(
+                                                            "alumni/{$reply["alumni_id"]}",
+                                                        );
+                                                        $replyAuthorData = json_decode(
+                                                            $replyAuthorData,
+                                                            true,
+                                                        );
                                                         ?>
                                                         <li>
                                                             <div class="comment-avatar"><img
-                                                                    src="<?php echo $replyAuthorData['profile_url']; ?>" alt=""></div>
+                                                                    src="<?php echo $replyAuthorData[
+                                                                        "profile_url"
+                                                                    ]; ?>" alt=""></div>
                                                             <div class="comment-box">
                                                                 <div class="comment-head">
                                                                     <h6 class="comment-name by-author">
                                                                         <a
-                                                                            href="#"><?php echo $replyAuthorData['firstname'] . ' ' . $replyAuthorData['lastname']; ?></a>
+                                                                            href="#"><?php echo $replyAuthorData[
+                                                                                "firstname"
+                                                                            ] .
+                                                                                " " .
+                                                                                $replyAuthorData[
+                                                                                    "lastname"
+                                                                                ]; ?></a>
                                                                     </h6>
-                                                                    <span><?php echo timeAgo($reply['date_replied']); ?></span>
+                                                                    <span><?php echo timeAgo(
+                                                                        $reply[
+                                                                            "date_replied"
+                                                                        ],
+                                                                    ); ?></span>
                                                                 </div>
                                                                 <div class="comment-content">
-                                                                    <?php echo htmlspecialchars($reply['comment']); ?>
+                                                                    <?php echo htmlspecialchars(
+                                                                        $reply[
+                                                                            "comment"
+                                                                        ],
+                                                                    ); ?>
                                                                 </div>
                                                             </div>
                                                         </li>

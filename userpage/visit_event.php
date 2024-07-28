@@ -1,13 +1,10 @@
-<?php include '../includes/session.php'; ?>
-<style>
-
-</style>
+<?php include "../includes/session.php"; ?>
 
 <!doctype html>
 <html class="no-js" lang="">
 
 <head>
-    <?php include 'includes/header.php' ?>
+    <?php include "includes/header.php"; ?>
 </head>
 
 <body>
@@ -16,48 +13,49 @@
     <![endif]-->
 
     <!-- Start Header Top Area -->
-    <?php include 'includes/navbar.php' ?>
+    <?php include "includes/navbar.php"; ?>
     <!-- End Header Top Area -->
 
     <!-- Mobile Menu start -->
-    <?php include 'includes/mobile_view.php' ?>
+    <?php include "includes/mobile_view.php"; ?>
     <!-- Mobile Menu end -->
 
     <!-- Main Menu area start-->
-    <?php include 'includes/main_menu.php' ?>
+    <?php include "includes/main_menu.php"; ?>
     <!-- Main Menu area end -->
 
     <!-- Main Main Content area start-->
     <?php
-    require_once '../includes/firebaseRDB.php';
+    require_once "../includes/firebaseRDB.php";
 
     // Initialize Firebase URL
     $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
     $firebase = new firebaseRDB($databaseURL);
 
     // Function to calculate time difference in a human-readable format
-    function timeAgo($timestamp) {
+    function timeAgo($timestamp)
+    {
         $currentTime = time();
         $commentTime = strtotime($timestamp);
         $difference = $currentTime - $commentTime;
 
         if ($difference < 60) {
-            return 'Just now';
+            return "Just now";
         } elseif ($difference >= 60 && $difference < 3600) {
             $time = round($difference / 60);
-            return $time . ' minute' . ($time > 1 ? 's' : '') . ' ago';
+            return $time . " minute" . ($time > 1 ? "s" : "") . " ago";
         } elseif ($difference >= 3600 && $difference < 86400) {
             $time = round($difference / 3600);
-            return $time . ' hour' . ($time > 1 ? 's' : '') . ' ago';
+            return $time . " hour" . ($time > 1 ? "s" : "") . " ago";
         } else {
             $time = round($difference / 86400);
-            return $time . ' day' . ($time > 1 ? 's' : '') . ' ago';
+            return $time . " day" . ($time > 1 ? "s" : "") . " ago";
         }
     }
 
     // Get the news ID from the URL
-    if (isset($_GET['id'])) {
-        $event_id = $_GET['id'];
+    if (isset($_GET["id"])) {
+        $event_id = $_GET["id"];
 
         // Retrieve the specific news item using the ID
         $event_data = $firebase->retrieve("event/{$event_id}");
@@ -67,29 +65,32 @@
         $adminData = json_decode($adminData, true);
 
         // Extract admin profile image URL
-        $admin_image_url = $adminData['image_url'];
-        $adminFirstName = $adminData['firstname'];
-        $adminLastName = $adminData['lastname'];
+        $admin_image_url = $adminData["image_url"];
+        $adminFirstName = $adminData["firstname"];
+        $adminLastName = $adminData["lastname"];
 
         if ($event_data) {
+
             // Display news details
-            $image_url = htmlspecialchars($event_data['image_url']);
-            $event_author = htmlspecialchars($event_data['event_author']);
-            $event_created = htmlspecialchars($event_data['event_created']);
-            $event_description = $event_data['event_description']; // Ensure HTML content in event_description is displayed correctly
-            $event_title = htmlspecialchars($event_data['event_title']);
-            $event_date = htmlspecialchars($event_data['event_date']);
-            $event_venue = htmlspecialchars($event_data['event_venue']);
+            $image_url = htmlspecialchars($event_data["image_url"]);
+            $event_author = htmlspecialchars($event_data["event_author"]);
+            $event_created = htmlspecialchars($event_data["event_created"]);
+            $event_description = $event_data["event_description"]; // Ensure HTML content in event_description is displayed correctly
+            $event_title = htmlspecialchars($event_data["event_title"]);
+            $event_date = htmlspecialchars($event_data["event_date"]);
+            $event_venue = htmlspecialchars($event_data["event_venue"]);
 
             // Get logged in alumni ID from session
-            $alumni_id = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null;
+            $alumni_id = isset($_SESSION["user"]["id"])
+                ? $_SESSION["user"]["id"]
+                : null;
 
             // Retrieve alumni profile information
             $alumniData = $firebase->retrieve("alumni/{$alumni_id}");
             $alumniData = json_decode($alumniData, true);
-            $alumniProfileUrl = $alumniData['profile_url'];
-            $alumniFirstName = $alumniData['firstname'];
-            $alumniLastName = $alumniData['lastname'];
+            $alumniProfileUrl = $alumniData["profile_url"];
+            $alumniFirstName = $alumniData["firstname"];
+            $alumniLastName = $alumniData["lastname"];
 
             // Check if the alumni has already participated
             $participationExists = false;
@@ -99,7 +100,10 @@
 
                 if (is_array($participationData)) {
                     foreach ($participationData as $participation) {
-                        if ($participation['event_id'] === $event_id && $participation['alumni_id'] === $alumni_id) {
+                        if (
+                            $participation["event_id"] === $event_id &&
+                            $participation["alumni_id"] === $alumni_id
+                        ) {
                             $participationExists = true;
                             break;
                         }
@@ -113,15 +117,19 @@
             $eventComments = [];
             if (is_array($commentData)) {
                 foreach ($commentData as $comment) {
-                    if ($comment['event_id'] === $event_id) {
-                        $comment['date_ago'] = timeAgo($comment['date_commented']);
+                    if ($comment["event_id"] === $event_id) {
+                        $comment["date_ago"] = timeAgo(
+                            $comment["date_commented"],
+                        );
                         $eventComments[] = $comment;
-                        $isLiked = in_array($alumni_id, $comment['liked_by'] ?? []);
-
+                        $isLiked = in_array(
+                            $alumni_id,
+                            $comment["liked_by"] ?? [],
+                        );
                     }
                 }
             }
-    ?>
+            ?>
 
     <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1">
         <div class="container">
@@ -137,7 +145,9 @@
                                     <div class="breadcomb-ctn">
                                         <h2><?php echo $event_title; ?></h2>
                                         <div class="visited-content">
-                                            <i class="uploader">Posted by: <?php echo $adminFirstName . ' ' . $adminLastName; ?></i>
+                                            <i class="uploader">Posted by: <?php echo $adminFirstName .
+                                                " " .
+                                                $adminLastName; ?></i>
                                         </div>
                                     </div>
                                 </div>
@@ -157,124 +167,223 @@
             <div class="background">
                 <img style="width:100%; height: 500px; object-fit: cover;" src="../admin/<?php echo $image_url; ?>" alt="">
             </div>
+
+            <div class="post">
+                <div class="reactions">
+                <button class="btn btn-like" data-event-id="<?php echo $event_id; ?>" data-alumni-id="<?php echo $alumni_id; ?>">
+        <i class="fa fa-thumbs-up"></i> Like
+    </button>            
+    <span class="like-count"><?php echo isset($event_data["like_count"])
+        ? $event_data["like_count"]
+        : 0; ?></span>
+                </div>
+                <div class="comment-count"><i class="fa fa-comment"></i>     <span class="like-count"><?php echo isset(
+                    $commentData["alumni_id"],
+                )
+                    ? $commentData["alumni_id"]
+                    : 0; ?></span></div>
+            </div>
+
+
+<!-- Include FontAwesome for icons -->
+
             <div class="additional-content" style="width: 100%; background: white; padding: 20px;">
                 <?php
                 // Get the alumni's batch ID and course ID
-                $alumni_batch_id = isset($alumniData['batch']) ? $alumniData['batch'] : null;
-                $alumni_course_id = isset($alumniData['course']) ? $alumniData['course'] : null;
-               
+                $alumni_batch_id = isset($alumniData["batch"])
+                    ? $alumniData["batch"]
+                    : null;
+                $alumni_course_id = isset($alumniData["course"])
+                    ? $alumniData["course"]
+                    : null;
 
                 // Check if the alumni's batch ID is in the event's invited array
                 $is_batch_invited = false;
                 $is_course_invited = false;
 
-                if (isset($event_data['event_invited'])) {
+                if (isset($event_data["event_invited"])) {
                     // Parse the event_invited string into an array
-                    $invited_batches = json_decode($event_data['event_invited'], true);
+                    $invited_batches = json_decode(
+                        $event_data["event_invited"],
+                        true,
+                    );
 
                     // Check if parsing was successful and the result is an array
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($invited_batches)) {
-                        $is_batch_invited = in_array($alumni_batch_id, $invited_batches);
+                    if (
+                        json_last_error() === JSON_ERROR_NONE &&
+                        is_array($invited_batches)
+                    ) {
+                        $is_batch_invited = in_array(
+                            $alumni_batch_id,
+                            $invited_batches,
+                        );
                     } else {
-                        error_log("Error parsing event_invited JSON or it's not an array");
+                        error_log(
+                            "Error parsing event_invited JSON or it's not an array",
+                        );
                     }
                 }
 
-                if (isset($event_data['course_invited'])) {
+                if (isset($event_data["course_invited"])) {
                     // Parse the course_invited string into an array
-                    $invited_courses = json_decode($event_data['course_invited'], true);
+                    $invited_courses = json_decode(
+                        $event_data["course_invited"],
+                        true,
+                    );
 
                     // Check if parsing was successful and the result is an array
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($invited_courses)) {
-                        $is_course_invited = in_array($alumni_course_id, $invited_courses);
+                    if (
+                        json_last_error() === JSON_ERROR_NONE &&
+                        is_array($invited_courses)
+                    ) {
+                        $is_course_invited = in_array(
+                            $alumni_course_id,
+                            $invited_courses,
+                        );
                     } else {
-                        error_log("Error parsing course_invited JSON or it's not an array");
+                        error_log(
+                            "Error parsing course_invited JSON or it's not an array",
+                        );
                     }
                 }
 
                 // Only show the participation button if both batch and course are invited
-                if ($is_batch_invited && $is_course_invited) {
-                ?>
+                if ($is_batch_invited && $is_course_invited) { ?>
                 <div style="margin-top:20px pull">
                     <a id="participateBtn" href="javascript:void(0);" 
                        data-event-id="<?php echo $event_id; ?>"
                        data-alumni-id="<?php echo $alumni_id; ?>" 
                        class="btn btn-success notika-btn-success" 
-                       <?php echo $participationExists ? 'disabled' : ''; ?>>
+                       <?php echo $participationExists ? "disabled" : ""; ?>>
                         <i class="notika-icon notika-next"></i>
-                        <?php echo $participationExists ? 'Already Participated' : 'Participate'; ?>
+                        <?php echo $participationExists
+                            ? "Already Participated"
+                            : "Participate"; ?>
                     </a>
                 </div>
-                <?php
-                }
+                <?php }
                 ?>
                 <br><br>
 
                 <div class="comments-container">
-    <h1><i class="fa fa-wechat"></i> Comments</h1>
-    <ul id="comments-list" class="comments-list">
-        <?php if (empty($eventComments)): ?>
-            <li id="no-comments-message" class="center-message">Be the First to Comment</li>
-        <?php else: ?>
-            <?php foreach ($commentData as $commentId => $comment): ?>
-                <?php if ($comment['event_id'] === $event_id): ?>
-                    <?php
-                    $commenterData = $firebase->retrieve("alumni/{$comment['alumni_id']}");
-                    $commenterData = json_decode($commenterData, true);
-                    $commenterProfileUrl = $commenterData['profile_url'];
-                    $commenterFirstName = $commenterData['firstname'];
-                    $commenterLastName = $commenterData['lastname'];
-
-                    ?>
-                    <li data-comment-id="<?php echo $commentId; ?>">
-                        <div class="comment-main-level">
-                            <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
-                            <div class="comment-box">
-                                <div class="comment-head">
-                                    <h6 class="comment-name by-author">
-                                        <a href="#"><?php echo $commenterFirstName . ' ' . $commenterLastName; ?></a>
-                                    </h6>
-                                    <span><?php echo timeAgo($comment['date_commented']); ?></span>
-                                    <i class="fa fa-reply reply-button"></i>
-                                    <i class="fa fa-heart <?php echo $isLiked ? 'liked' : ''; ?>" data-comment-id="<?php echo $commentId; ?>"></i>
-                                    <span style="float:right" class="heart-count"><?php echo isset($comment['heart_count']) ? $comment['heart_count'] : 0; ?></span>
-                                </div>
-                                <div class="comment-content">
-                                    <?php echo htmlspecialchars($comment['comment']); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="reply-container" style="display: none;"></div>
-                        <ul class="comments-list reply-list">
-                            <?php if (isset($comment['replies'])): ?>
-                                <?php foreach ($comment['replies'] as $replyId => $reply): ?>
+                    <h1><i class="fa fa-wechat"></i> Comments</h1>
+                    <ul id="comments-list" class="comments-list">
+                        <?php if (empty($eventComments)): ?>
+                            <li id="no-comments-message" class="center-message">Be the First to Comment</li>
+                        <?php else: ?>
+                            <?php foreach (
+                                $commentData
+                                as $commentId => $comment
+                            ): ?>
+                                <?php if (
+                                    $comment["event_id"] === $event_id
+                                ): ?>
                                     <?php
-                                    $replyAuthorData = $firebase->retrieve("alumni/{$reply['alumni_id']}");
-                                    $replyAuthorData = json_decode($replyAuthorData, true);
+                                    $commenterData = $firebase->retrieve(
+                                        "alumni/{$comment["alumni_id"]}",
+                                    );
+                                    $commenterData = json_decode(
+                                        $commenterData,
+                                        true,
+                                    );
+                                    $commenterProfileUrl =
+                                        $commenterData["profile_url"];
+                                    $commenterFirstName =
+                                        $commenterData["firstname"];
+                                    $commenterLastName =
+                                        $commenterData["lastname"];
                                     ?>
-                                    <li>
-                                        <div class="comment-avatar"><img src="<?php echo $replyAuthorData['profile_url']; ?>" alt=""></div>
-                                        <div class="comment-box">
-                                            <div class="comment-head">
-                                                <h6 class="comment-name by-author">
-                                                    <a href="#"><?php echo $replyAuthorData['firstname'] . ' ' . $replyAuthorData['lastname']; ?></a>
-                                                </h6>
-                                                <span><?php echo timeAgo($reply['date_replied']); ?></span>
-                                            </div>
-                                            <div class="comment-content">
-                                                <?php echo htmlspecialchars($reply['comment']); ?>
+                                    <li data-comment-id="<?php echo $commentId; ?>">
+                                        <div class="comment-main-level">
+                                            <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
+                                            <div class="comment-box">
+                                                <div class="comment-head">
+                                                    <h6 class="comment-name by-author">
+                                                        <a href="#"><?php echo $commenterFirstName .
+                                                            " " .
+                                                            $commenterLastName; ?></a>
+                                                    </h6>
+                                                    <span><?php echo timeAgo(
+                                                        $comment[
+                                                            "date_commented"
+                                                        ],
+                                                    ); ?></span>
+                                                    <i class="fa fa-reply reply-button"></i>
+                                                    <i class="fa fa-heart <?php echo $isLiked
+                                                        ? "liked"
+                                                        : ""; ?>" data-comment-id="<?php echo $commentId; ?>"></i>
+                                                    <span style="float:right" class="heart-count"><?php echo isset(
+                                                        $comment["heart_count"],
+                                                    )
+                                                        ? $comment[
+                                                            "heart_count"
+                                                        ]
+                                                        : 0; ?></span>
+                                                </div>
+                                                <div class="comment-content">
+                                                    <?php echo htmlspecialchars(
+                                                        $comment["comment"],
+                                                    ); ?>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="reply-container" style="display: none;"></div>
+                                        <ul class="comments-list reply-list">
+                                            <?php if (
+                                                isset($comment["replies"])
+                                            ): ?>
+                                                <?php foreach (
+                                                    $comment["replies"]
+                                                    as $replyId => $reply
+                                                ): ?>
+                                                    <?php
+                                                    $replyAuthorData = $firebase->retrieve(
+                                                        "alumni/{$reply["alumni_id"]}",
+                                                    );
+                                                    $replyAuthorData = json_decode(
+                                                        $replyAuthorData,
+                                                        true,
+                                                    );
+                                                    ?>
+                                                    <li>
+                                                        <div class="comment-avatar"><img src="<?php echo $replyAuthorData[
+                                                            "profile_url"
+                                                        ]; ?>" alt=""></div>
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">
+                                                                    <a href="#"><?php echo $replyAuthorData[
+                                                                        "firstname"
+                                                                    ] .
+                                                                        " " .
+                                                                        $replyAuthorData[
+                                                                            "lastname"
+                                                                        ]; ?></a>
+                                                                </h6>
+                                                                <span><?php echo timeAgo(
+                                                                    $reply[
+                                                                        "date_replied"
+                                                                    ],
+                                                                ); ?></span>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <?php echo htmlspecialchars(
+                                                                    $reply[
+                                                                        "comment"
+                                                                    ],
+                                                                ); ?>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </ul>
                                     </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </ul>
-                    </li>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </ul>
-</div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                </div>
 
                 <div class="container pb-cmnt-container">
                     <div class="row">
@@ -481,7 +590,9 @@ $(document).ready(function() {
                                 <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
                                 <div class="comment-box">
                                     <div class="comment-head">
-                                        <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
+                                        <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName .
+                                            " " .
+                                            $alumniLastName; ?></a></h6>
                                         <span>${timeAgo(timestamp)}</span>
                                         <i class="fa fa-reply reply-button"></i>
                                         <i class="fa fa-heart"></i>
@@ -579,7 +690,9 @@ $(document).ready(function() {
                             <div class="comment-avatar"><img src="<?php echo $alumniProfileUrl; ?>" alt=""></div>
                             <div class="comment-box">
                                 <div class="comment-head">
-                                    <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName . ' ' . $alumniLastName; ?></a></h6>
+                                    <h6 class="comment-name by-author"><a href="#"><?php echo $alumniFirstName .
+                                        " " .
+                                        $alumniLastName; ?></a></h6>
                                     <span>Just now</span>
                                 </div>
                                 <div class="comment-content">
@@ -713,6 +826,35 @@ $(document).ready(function() {
 
     // Call updateHearts on page load
     updateHearts();
+});
+$(document).ready(function() {
+    $('.btn-like').on('click', function() {
+        var eventId = $(this).data('event-id');
+        var alumniId = $(this).data('alumni-id');
+        
+        $.ajax({
+            url: 'update_like_event_count.php',
+            method: 'POST',
+            data: {
+                event_id: eventId,
+                alumni_id: alumniId
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    $('.like-count').text(data.likeCount);
+                    if (data.liked) {
+                        $('.btn-like').addClass('liked');
+                    } else {
+                        $('.btn-like').removeClass('liked');
+                    }
+                }
+            },
+            error: function() {
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
 });
 </script>
 <style>
