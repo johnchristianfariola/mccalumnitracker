@@ -15,7 +15,8 @@ if (isset($_POST['event_id']) && isset($_POST['alumni_id']) && isset($_POST['com
         'event_id' => $event_id,
         'alumni_id' => $alumni_id,
         'comment' => $comment,
-        'date_commented' => date('F j, Y H:i:s')  // Include current date and time
+        'date_commented' => date('F j, Y H:i:s'),  // Include current date and time
+        'heart_count' => 0
     ];
 
     // Insert the data into the comment rule

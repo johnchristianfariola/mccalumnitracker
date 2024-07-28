@@ -116,6 +116,8 @@
                     if ($comment['event_id'] === $event_id) {
                         $comment['date_ago'] = timeAgo($comment['date_commented']);
                         $eventComments[] = $comment;
+                        $isLiked = in_array($alumni_id, $comment['liked_by'] ?? []);
+
                     }
                 }
             }
@@ -160,6 +162,7 @@
                 // Get the alumni's batch ID and course ID
                 $alumni_batch_id = isset($alumniData['batch']) ? $alumniData['batch'] : null;
                 $alumni_course_id = isset($alumniData['course']) ? $alumniData['course'] : null;
+               
 
                 // Check if the alumni's batch ID is in the event's invited array
                 $is_batch_invited = false;
@@ -221,6 +224,7 @@
                     $commenterProfileUrl = $commenterData['profile_url'];
                     $commenterFirstName = $commenterData['firstname'];
                     $commenterLastName = $commenterData['lastname'];
+
                     ?>
                     <li data-comment-id="<?php echo $commentId; ?>">
                         <div class="comment-main-level">
@@ -232,7 +236,8 @@
                                     </h6>
                                     <span><?php echo timeAgo($comment['date_commented']); ?></span>
                                     <i class="fa fa-reply reply-button"></i>
-                                    <i class="fa fa-heart"></i>
+                                    <i class="fa fa-heart <?php echo $isLiked ? 'liked' : ''; ?>" data-comment-id="<?php echo $commentId; ?>"></i>
+                                    <span style="float:right" class="heart-count"><?php echo isset($comment['heart_count']) ? $comment['heart_count'] : 0; ?></span>
                                 </div>
                                 <div class="comment-content">
                                     <?php echo htmlspecialchars($comment['comment']); ?>
@@ -423,9 +428,10 @@
         });
 
     </script>
-   <script>
+  <script>
 $(document).ready(function() {
     var isReplyBoxOpen = false;
+    var heartedComments = new Set(); // Store IDs of comments that have been hearted
 
     $('#submitComment').click(function() {
         var $submitButton = $(this);
@@ -601,19 +607,38 @@ $(document).ready(function() {
         isReplyBoxOpen = false;
     });
 
+   
     function refreshComments() {
         if (!isReplyBoxOpen) {
             $.ajax({
                 url: 'refresh_event.php',
                 type: 'GET',
-                data: { event_id: '<?php echo $event_id; ?>' },
+                data: { event_id: '<?php echo $event_id; ?>',   alumni_id: '<?php echo $alumni_id; ?>'},
                 success: function(response) {
                     var openReplyForms = $('.reply-form:visible');
                     var savedInputs = openReplyForms.find('textarea').map(function() {
                         return $(this).val();
                     }).get();
 
-                    $('#comments-list').html(response);
+                    var $newCommentsList = $(response);
+
+                    // Preserve heart counts and liked status for hearted comments
+                    heartedComments.forEach(function(commentId) {
+                        var $oldComment = $('#comments-list').find('li[data-comment-id="' + commentId + '"]');
+                        var $newComment = $newCommentsList.find('li[data-comment-id="' + commentId + '"]');
+                        
+                        if ($oldComment.length && $newComment.length) {
+                            var $oldHeart = $oldComment.find('.fa-heart');
+                            var $oldHeartCount = $oldComment.find('.heart-count');
+                            var $newHeart = $newComment.find('.fa-heart');
+                            var $newHeartCount = $newComment.find('.heart-count');
+
+                            $newHeart.addClass('liked');
+                            $newHeartCount.text($oldHeartCount.text());
+                        }
+                    });
+
+                    $('#comments-list').html($newCommentsList);
 
                     if (savedInputs.length > 0) {
                         $('.reply-form:visible').each(function(index) {
@@ -628,10 +653,79 @@ $(document).ready(function() {
         }
     }
 
+
+  
     // Set interval to refresh comments every 5 seconds
     setInterval(refreshComments, 5000);
+
+});
+
+
+
+</script>
+<script>
+    $(document).ready(function() {
+    // Existing click handler
+    $(document).on('click', '.fa-heart', function() {
+        var $heart = $(this);
+        var commentId = $heart.data('comment-id');
+        var isLiked = $heart.hasClass('liked');
+
+        $.ajax({
+            url: 'update_heart_event.php',
+            method: 'POST',
+            data: { 
+                comment_id: commentId,
+                alumni_id: '<?php echo $alumni_id; ?>',
+                is_liked: !isLiked
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    $heart.toggleClass('liked', data.is_liked);
+                    $heart.next('.heart-count').text(data.heart_count);
+                }
+            }
+        });
+    });
+
+    // Function to update hearts on page load or refresh
+    function updateHearts() {
+        $('.fa-heart').each(function() {
+            var $heart = $(this);
+            var commentId = $heart.data('comment-id');
+            
+            $.ajax({
+                url: 'get_heart_status.php',
+                method: 'GET',
+                data: { 
+                    comment_id: commentId,
+                    alumni_id: '<?php echo $alumni_id; ?>'
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    $heart.toggleClass('liked', data.is_liked);
+                    $heart.next('.heart-count').text(data.heart_count);
+                }
+            });
+        });
+    }
+
+    // Call updateHearts on page load
+    updateHearts();
 });
 </script>
+<style>
+.fa-heart {
+    color: #ccc !important; /* Default color */
+    cursor: pointer;
+}
+
+.fa-heart.liked {
+    color: red !important; /* Color when liked */
+}
+
+</style>
 </body>
 
 </html>
