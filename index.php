@@ -338,7 +338,7 @@ $data = array_slice($data, 0, 5);
                 <?php foreach ($data as $key => $news): ?>
                     <div class="testimonial-item">
                         <div class="item">
-                            <a href="#" class="probootstrap-featured-news-box">
+                            <a class="openFormButton probootstrap-featured-news-box">
                                 <figure class="probootstrap-media">
                                     <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image"
                                         class="img-responsive fixed-dimension-img">
@@ -373,7 +373,7 @@ $data = array_slice($data, 0, 5);
                     <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="item">
                             <center>
-                                <a href="#" class="probootstrap-featured-news-box">
+                                <a class="openFormButton probootstrap-featured-news-box">
                                     <figure class="probootstrap-media">
                                         <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
                                             class="img-responsive fixed-dimension-img">
