@@ -225,16 +225,16 @@ echo '</script>';
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="edit_firstname" class="col-form-label">Firstname</label>
-                    <input type="text" class="form-control" id="editFirstname" name="edit_firstname">
+                    <input type="text" class="form-control" id="editFirstname" name="edit_firstname" readonly>
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="edit_lastname" class="col-form-label">Lastname</label>
-                    <input type="text" class="form-control" id="editLastname" name="edit_lastname">
+                    <input type="text" class="form-control" id="editLastname" name="edit_lastname" readonly>
                   </div>
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_middlename" class="col-form-label">Middle Name</label>
-                    <input type="text" class="form-control" id="editMiddlename" name="edit_middlename">
+                    <input type="text" class="form-control" id="editMiddlename" name="edit_middlename" readonly>
                   </div>
 
                   <div class="col-sm-6 mb-3">
