@@ -844,7 +844,7 @@ var eventId = $('.btn-like').data('event-id');
   renderer: 'svg',
   loop: false,
   autoplay: false,
-  path: 'celebrate.json',
+  path: 'js/lottie/check.json',
   rendererSettings: {
     preserveAspectRatio: 'xMidYMid slice'
   }
