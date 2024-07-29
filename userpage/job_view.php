@@ -6,32 +6,32 @@
 <head>
     <?php include 'includes/header.php' ?>
     <?php
-require_once '../includes/firebaseRDB.php';
-require_once '../includes/config.php';
-$firebase = new firebaseRDB($databaseURL);
+    require_once '../includes/firebaseRDB.php';
+    require_once '../includes/config.php';
+    $firebase = new firebaseRDB($databaseURL);
 
-$data = $firebase->retrieve("job");
-$data = json_decode($data, true);
+    $data = $firebase->retrieve("job");
+    $data = json_decode($data, true);
 
-// Array to store active jobs
-$activeJobs = [];
+    // Array to store active jobs
+    $activeJobs = [];
 
-// Collect all active jobs
-foreach ($data as $id => $job) {
-    if ($job['status'] === 'Active') {
-        $job['id'] = $id; // Store the job ID
-        $activeJobs[] = $job;
+    // Collect all active jobs
+    foreach ($data as $id => $job) {
+        if ($job['status'] === 'Active') {
+            $job['id'] = $id; // Store the job ID
+            $activeJobs[] = $job;
+        }
     }
-}
 
-// Sort active jobs by date posted (most recent first)
-usort($activeJobs, function($a, $b) {
-    return strtotime($b['job_created']) - strtotime($a['job_created']);
-});
+    // Sort active jobs by date posted (most recent first)
+    usort($activeJobs, function ($a, $b) {
+        return strtotime($b['job_created']) - strtotime($a['job_created']);
+    });
 
-// Make the data available to the HTML file
-$jobsData = $activeJobs;
-?>
+    // Make the data available to the HTML file
+    $jobsData = $activeJobs;
+    ?>
     <style>
         .breadcomb-area {
             padding: 20px 0;
@@ -73,6 +73,7 @@ $jobsData = $activeJobs;
             color: #777;
             line-height: 1.6;
         }
+
         .breadcomb-area {
             padding: 20px 0;
         }
@@ -80,7 +81,8 @@ $jobsData = $activeJobs;
         .section-title {
             position: relative;
             display: inline-block;
-            margin-bottom: 20px; /* Add some bottom margin to create spacing */
+            margin-bottom: 20px;
+            /* Add some bottom margin to create spacing */
         }
 
         .section-title::before {
@@ -88,7 +90,8 @@ $jobsData = $activeJobs;
             content: "";
             width: calc(100% + 80px);
             height: 2px;
-            top: -10px; /* Move the top line higher */
+            top: -10px;
+            /* Move the top line higher */
             left: -40px;
             background: #06BBCC;
             z-index: -1;
@@ -99,7 +102,8 @@ $jobsData = $activeJobs;
             content: "";
             width: calc(100% + 120px);
             height: 2px;
-            bottom: -8px; /* Move the bottom line lower */
+            bottom: -8px;
+            /* Move the bottom line lower */
             left: -60px;
             background: #06BBCC;
             z-index: 1000;
@@ -132,53 +136,56 @@ $jobsData = $activeJobs;
 
     <!-- News items would be dynamically inserted here -->
     <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1s">
-    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center  px-3">ACTIVE JOB</h6>
-                <h1 class="mb-5">ACTIVE JOB</h1>
-            </div>
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center  px-3">ACTIVE JOB</h6>
+            <h1 class="mb-5">ACTIVE JOB</h1>
+        </div>
 
         <div class="container">
             <div class="rows">
-       <!-- Include the PHP file to access the data -->
+                <!-- Include the PHP file to access the data -->
 
 
-<!-- Display the sorted active jobs -->
-<?php foreach ($jobsData as $job) { ?>
-    <?php
-        $jobTitle = $job['job_title'];
-        $workTime = $job['work_time'];
-        $company = $job['company_name'];
-        $jobDate = $job['job_created'];
-        $id = $job['id'];
-        
-        // Determine background color and text color based on work time
-        $backgroundColor = ($workTime == 'Full-Time') ? '#e6f7ff' : '#fff0f5';
-        $color = ($workTime == 'Full-Time') ? '#0066cc' : '#cc0066';
-    ?>
-    <a href="visit_job.php?id=<?php echo $id; ?>">
-        <div class="card">
-            <div class="card-content">
-                <div class="job-container">
-                    <div class="job-title"><?php echo $jobTitle; ?></div>
-                    <div class="job-timesced" style="background-color: <?php echo $backgroundColor; ?>; color: <?php echo $color; ?>;"><?php echo $workTime; ?></div>
-                </div>
-                <hr>
-                <div class="card-date"><?php echo $company; ?></div>
-                <div class="card-date">Posted on <?php echo $jobDate; ?></div>
-            </div>
-        </div>
-    </a>
-<?php } ?>
+                <!-- Display the sorted active jobs -->
+                <?php foreach ($jobsData as $job) { ?>
+                    <?php
+                    $jobTitle = $job['job_title'];
+                    $workTime = $job['work_time'];
+                    $company = $job['company_name'];
+                    $jobDate = $job['job_created'];
+                    $id = $job['id'];
+
+                    // Determine background color and text color based on work time
+                    $backgroundColor = ($workTime == 'Full-Time') ? '#e6f7ff' : '#fff0f5';
+                    $color = ($workTime == 'Full-Time') ? '#0066cc' : '#cc0066';
+                    ?>
+                    <a href="visit_job.php?id=<?php echo $id; ?>">
+                        <div class="card">
+                            
+                            <div class="card-content">
+                                <div class="job-container">
+                                    <div class="job-title"><?php echo $jobTitle; ?></div>
+                                    <div class="job-timesced"
+                                        style="background-color: <?php echo $backgroundColor; ?>; color: <?php echo $color; ?>;">
+                                        <?php echo $workTime; ?></div>
+                                </div>
+                                <hr>
+                                <div class="card-date"><?php echo $company; ?></div>
+                                <div class="card-date">Posted on <?php echo $jobDate; ?></div>
+                            </div>
+                        </div>
+                    </a>
+                <?php } ?>
             </div>
         </div>
     </div>
 
 
     <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1s">
-    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center  px-3">ARCHIVE JOB</h6>
-                <h1 class="mb-5">ARCHIVE JOB</h1>
-            </div>
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center  px-3">ARCHIVE JOB</h6>
+            <h1 class="mb-5">ARCHIVE JOB</h1>
+        </div>
         <div class="container">
             <div class="rows">
                 <?php

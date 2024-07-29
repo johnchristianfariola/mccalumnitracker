@@ -6,50 +6,42 @@
     <!-- Include header -->
     <?php include 'includes/header.php'; ?>
     <?php
-require_once '../includes/firebaseRDB.php';
-require_once '../includes/config.php';
+    require_once '../includes/firebaseRDB.php';
+    require_once '../includes/config.php';
 
-$firebase = new firebaseRDB($databaseURL);
+    $firebase = new firebaseRDB($databaseURL);
+    $jobId = $_GET['id'] ?? '';
 
-// Get the job ID from the URL
-$jobId = $_GET['id'] ?? '';
-
-if ($jobId) {
-    // Retrieve the specific job data
-    $jobData = $firebase->retrieve("job/" . $jobId);
-    $job = json_decode($jobData, true);
-
-    if ($job) {
-        $jobTitle = $job['job_title'] ?? 'N/A';
-        $workTime = $job['work_time'] ?? 'N/A';
-        $company = $job['company_name'] ?? 'N/A';
-        $jobDescription = $job['job_description'] ?? 'No description available.';
-        $image_path = $job['image_path'] ?? 'N/A';
-
-        // Determine background color and text color based on work time
-        $backgroundColor = ($workTime == 'Full-Time') ? '#e6f7ff' : '#fff0f5';
-        $color = ($workTime == 'Full-Time') ? '#0066cc' : '#cc0066';
-
-        // Create an array to store the job details
-        $jobDetails = [
-            'title' => $jobTitle,
-            'workTime' => $workTime,
-            'company' => $company,
-            'description' => $jobDescription,
-            'imagePath' => $image_path,
-            'backgroundColor' => $backgroundColor,
-            'color' => $color,
-        ];
-
-        // Encode the job details as JSON
-        $jobDetailsJson = json_encode($jobDetails);
-    } else {
-        $jobDetailsJson = null;
+    if ($jobId) {
+        $job = json_decode($firebase->retrieve("job/" . $jobId), true);
+        if ($job) {
+            $workTime = $job['work_time'] ?? 'N/A';
+            $jobDetails = [
+                'title' => $job['job_title'] ?? 'N/A',
+                'workTime' => $workTime,
+                'company' => $job['company_name'] ?? 'N/A',
+                'description' => $job['job_description'] ?? 'No description available.',
+                'imagePath' => $job['image_path'] ?? 'N/A',
+                'job_created' => $job['job_created'] ?? 'N/A',
+                'backgroundColor' => ($workTime == 'Full-Time') ? '#e6f7ff' : '#fff0f5',
+                'color' => ($workTime == 'Full-Time') ? '#0066cc' : '#cc0066',
+            ];
+            $jobDetailsJson = json_encode($jobDetails);
+        }
     }
-} else {
-    $jobDetailsJson = null;
-}
-?>
+
+    $data = json_decode($firebase->retrieve("job"), true);
+    $jobsData = [];
+    foreach ($data as $id => $job) {
+        if ($job['status'] === 'Active') {
+            $job['id'] = $id;  // Add the id to the job array
+            $jobsData[] = $job;
+        }
+    }
+    usort($jobsData, function ($a, $b) {
+        return strtotime($b['job_created']) - strtotime($a['job_created']);
+    });
+    ?>
 </head>
 
 <body>
@@ -91,24 +83,30 @@ if ($jobId) {
                                 </div>
                                 <div class="info-section">
                                     <h2>Admin FirstName Admin LastName</h2>
-                                    <i>Job Created Date</i>
+                                    <i><?= htmlspecialchars($jobDetails['job_created']) ?></i>
                                 </div>
                             </div>
                         </div>
                         <?php if ($jobDetailsJson): ?>
-        <?php $jobDetails = json_decode($jobDetailsJson, true); ?>
-        <div class="content">
-            <h3><?= htmlspecialchars($jobDetails['title']) ?></h3>
-            <div class="job-timesced" style="background-color: <?= $jobDetails['backgroundColor'] ?>; color: <?= $jobDetails['color'] ?>"><?= htmlspecialchars($jobDetails['workTime']) ?></div>
-            <br>
-            <h4><?= htmlspecialchars($jobDetails['company']) ?></h4>
-            <div class="Job-description"><?= htmlspecialchars_decode($jobDetails['description']) ?></div>
-        </div>
-        <br><br>
-        <img style="border-radius: 1rem" src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="news_post" alt="news image">
-    <?php else: ?>
-        <p>Job not found.</p>
-    <?php endif; ?>
+                            <?php $jobDetails = json_decode($jobDetailsJson, true); ?>
+                            <div class="content">
+                                <h3><?= htmlspecialchars($jobDetails['title']) ?></h3>
+                                <div class="job-timesced"
+                                    style="background-color: <?= $jobDetails['backgroundColor'] ?>; color: <?= $jobDetails['color'] ?>">
+                                    <?= htmlspecialchars($jobDetails['workTime']) ?>
+                                </div>
+                                <br>
+                                <h4><?= htmlspecialchars($jobDetails['company']) ?></h4>
+                                <div class="Job-description"><?= htmlspecialchars_decode($jobDetails['description']) ?>
+                                </div>
+                            </div>
+                            <br><br>
+                            <img style="border-radius: 1rem"
+                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="news_post"
+                                alt="news image">
+                        <?php else: ?>
+                            <p>Job not found.</p>
+                        <?php endif; ?>
 
                     </div>
 
@@ -120,68 +118,56 @@ if ($jobId) {
                         <!-- Event Item Example -->
                         <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
                             data-wow-delay="0.2s">
-                            <div class="card">
-                                <img src="path/to/event_image.jpg" alt="Event Image" class="event_image">
-                                <div class="card-content">
-                                    <hr>
-                                    <div class="card-title">Event Title</div>
-                                    <div class="card-date">Posted on Event Date</div>
-                                    <a href="visit_event.php?id=event_id"
-                                        class="btn btn-default btn-icon-notika waves-effect">
-                                        <i class="notika-icon notika-menu"> More</i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Event Item Example -->
 
-                        <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
+                            <?php foreach ($jobsData as $job) {
+                                // Skip the current job being viewed
+                                if ($job['id'] == $jobId)
+                                    continue;
+                                ?>
+                                <?php
+                                $jobTitle = htmlspecialchars($job['job_title']);
+                                $workTime = htmlspecialchars($job['work_time']);
+                                $company = htmlspecialchars($job['company_name']);
+                                $jobDate = htmlspecialchars($job['job_created']);
+                                $imagePath = htmlspecialchars($job['image_path'] ?? ''); // Get the image path
+                                $id = htmlspecialchars($job['id']);
 
-                        <div class="job-section" style="margin-top:60px">
-                            <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
-                            <!-- Job Item Example -->
-                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
-                                data-wow-delay="0.3">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <div class="job-container">
-                                            <div class="job-title">Job Title</div>
-                                            <div class="job-timesced"
-                                                style="background-color: rgb(255, 105, 105); color: white;">Full-Time
+                                // Determine background color and text color based on work time
+                                $backgroundColor = ($workTime == 'Full-Time') ? '#e6f7ff' : '#fff0f5';
+                                $color = ($workTime == 'Full-Time') ? '#0066cc' : '#cc0066';
+                                ?>
+                                <a href="visit_job.php?id=<?php echo $id; ?>">
+                                    <div class="card">
+                                    <img src="../admin/<?php echo $imagePath; ?>" alt="Event Image" class="event_image">
+                                        <div class="card-content">
+                                            <div class="job-container">
+                                                <div class="job-title"><?php echo $jobTitle; ?></div>
+                                                <div class="job-timesced"
+                                                    style="background-color: <?php echo $backgroundColor; ?>; color: <?php echo $color; ?>;">
+                                                    <?php echo $workTime; ?>
+                                                </div>
                                             </div>
+                                            <hr>
+                                            <div class="card-date"><?php echo $company; ?></div>
+                                            <div class="card-date">Posted on <?php echo $jobDate; ?></div>
                                         </div>
-                                        <hr>
-                                        <div class="card-date">Company Name</div>
-                                        <div class="card-date">Posted on Job Date</div>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- End Job Item Example -->
-                        </div>
-
-                        <div class="forum-section" style="margin-top:60px">
-                            <h3><i class="fa fa-wechat"></i> Forum</h3>
-                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
-                                data-wow-delay="0.3">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
-                                    </div>
-                                </div>
-                            </div>
+                                </a>
+                            <?php } ?>
                         </div>
                     </div>
+                    <!-- End Event Item Example -->
+
+                    <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
+
+
                 </div>
             </div>
         </div>
     </div>
     </div>
+    </div>
 
-    <!-- Start Footer area -->
-    <footer>
-        <!-- Include your footer content here -->
-    </footer>
-    <!-- End Footer area -->
 
     <!-- JavaScript -->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>
