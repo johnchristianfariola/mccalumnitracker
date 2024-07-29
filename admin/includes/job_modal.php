@@ -9,10 +9,10 @@
         }
     });
 
-    function previewImage(event) {
+    function previewImage(event, previewId) {
         var reader = new FileReader();
         reader.onload = function () {
-            var output = document.getElementById('imagePreviewImg');
+            var output = document.getElementById(previewId);
             output.src = reader.result;
             output.style.display = 'block';
         };
@@ -21,121 +21,121 @@
 
 
 
-function validateAddForm() {
-    var isValid = true;
+    function validateAddForm() {
+        var isValid = true;
 
-    // Validate job_title
-    var jobTitle = document.getElementById('job_title').value;
-    var jobTitleError = document.getElementById('job_title_error');
-    if (jobTitle.trim() === "") {
-        jobTitleError.style.display = 'block';
-        isValid = false;
-    } else {
-        jobTitleError.style.display = 'none';
+        // Validate job_title
+        var jobTitle = document.getElementById('job_title').value;
+        var jobTitleError = document.getElementById('job_title_error');
+        if (jobTitle.trim() === "") {
+            jobTitleError.style.display = 'block';
+            isValid = false;
+        } else {
+            jobTitleError.style.display = 'none';
+        }
+
+        // Validate company_name
+        var companyName = document.getElementById('company_name').value;
+        var companyNameError = document.getElementById('company_error');
+        if (companyName.trim() === "") {
+            companyNameError.style.display = 'block';
+            isValid = false;
+        } else {
+            companyNameError.style.display = 'none';
+        }
+
+        // Validate work_time (radio buttons)
+        var workTimeChecked = document.querySelector('input[name="work_status"]:checked');
+        var workTimeError = document.getElementById('job_worktime_error');
+        if (!workTimeChecked) {
+            workTimeError.style.display = 'block';
+            isValid = false;
+        } else {
+            workTimeError.style.display = 'none';
+        }
+
+        // Validate status (radio buttons)
+        var statusChecked = document.querySelector('input[name="status"]:checked');
+        var statusError = document.getElementById('status_error');
+        if (!statusChecked) {
+            statusError.style.display = 'block';
+            isValid = false;
+        } else {
+            statusError.style.display = 'none';
+        }
+
+        // Validate job_description
+        var jobDescription = document.getElementById('job_description').value;
+        var jobDescriptionError = document.getElementById('desc_error');
+        if (jobDescription.trim() === "") {
+            jobDescriptionError.style.display = 'block';
+            isValid = false;
+        } else {
+            jobDescriptionError.style.display = 'none';
+        }
+
+        if (isValid) {
+            document.getElementById('submitButton').disabled = true;
+        }
+
+        return isValid;
     }
 
-    // Validate company_name
-    var companyName = document.getElementById('company_name').value;
-    var companyNameError = document.getElementById('company_error');
-    if (companyName.trim() === "") {
-        companyNameError.style.display = 'block';
-        isValid = false;
-    } else {
-        companyNameError.style.display = 'none';
+    function validateEditForm() {
+        var isValid = true;
+
+        // Validate edit_job_title
+        var editJobTitle = document.getElementById('edit_job_title').value;
+        var editJobTitleError = document.getElementById('edit_title_error');
+        if (editJobTitle.trim() === "") {
+            editJobTitleError.style.display = 'block';
+            isValid = false;
+        } else {
+            editJobTitleError.style.display = 'none';
+        }
+
+        // Validate edit_company_name
+        var editCompanyName = document.getElementById('edit_company_name').value;
+        var editCompanyNameError = document.getElementById('edit_company_error');
+        if (editCompanyName.trim() === "") {
+            editCompanyNameError.style.display = 'block';
+            isValid = false;
+        } else {
+            editCompanyNameError.style.display = 'none';
+        }
+
+        // Validate edit_work_status (radio buttons)
+        var editWorkStatusChecked = document.querySelector('input[name="edit_work_status"]:checked');
+        var editWorkStatusError = document.getElementById('edit_worktime_error');
+        if (!editWorkStatusChecked) {
+            editWorkStatusError.style.display = 'block';
+            isValid = false;
+        } else {
+            editWorkStatusError.style.display = 'none';
+        }
+
+        // Validate edit_status (radio buttons)
+        var editStatusChecked = document.querySelector('input[name="edit_status"]:checked');
+        var editStatusError = document.getElementById('edit_status_error');
+        if (!editStatusChecked) {
+            editStatusError.style.display = 'block';
+            isValid = false;
+        } else {
+            editStatusError.style.display = 'none';
+        }
+
+        // Validate edit_job_description
+        var editJobDescription = document.getElementById('edit_description').value;
+        var editJobDescriptionError = document.getElementById('edit_desc_error');
+        if (editJobDescription.trim() === "") {
+            editJobDescriptionError.style.display = 'block';
+            isValid = false;
+        } else {
+            editJobDescriptionError.style.display = 'none';
+        }
+
+        return isValid;
     }
-
-    // Validate work_time (radio buttons)
-    var workTimeChecked = document.querySelector('input[name="work_status"]:checked');
-    var workTimeError = document.getElementById('job_worktime_error');
-    if (!workTimeChecked) {
-        workTimeError.style.display = 'block';
-        isValid = false;
-    } else {
-        workTimeError.style.display = 'none';
-    }
-
-    // Validate status (radio buttons)
-    var statusChecked = document.querySelector('input[name="status"]:checked');
-    var statusError = document.getElementById('status_error');
-    if (!statusChecked) {
-        statusError.style.display = 'block';
-        isValid = false;
-    } else {
-        statusError.style.display = 'none';
-    }
-
-    // Validate job_description
-    var jobDescription = document.getElementById('job_description').value;
-    var jobDescriptionError = document.getElementById('desc_error');
-    if (jobDescription.trim() === "") {
-        jobDescriptionError.style.display = 'block';
-        isValid = false;
-    } else {
-        jobDescriptionError.style.display = 'none';
-    }
-
-    if (isValid) {
-        document.getElementById('submitButton').disabled = true;
-    }
-
-    return isValid;
-}
-
-function validateEditForm() {
-    var isValid = true;
-
-    // Validate edit_job_title
-    var editJobTitle = document.getElementById('edit_job_title').value;
-    var editJobTitleError = document.getElementById('edit_title_error');
-    if (editJobTitle.trim() === "") {
-        editJobTitleError.style.display = 'block';
-        isValid = false;
-    } else {
-        editJobTitleError.style.display = 'none';
-    }
-
-    // Validate edit_company_name
-    var editCompanyName = document.getElementById('edit_company_name').value;
-    var editCompanyNameError = document.getElementById('edit_company_error');
-    if (editCompanyName.trim() === "") {
-        editCompanyNameError.style.display = 'block';
-        isValid = false;
-    } else {
-        editCompanyNameError.style.display = 'none';
-    }
-
-    // Validate edit_work_status (radio buttons)
-    var editWorkStatusChecked = document.querySelector('input[name="edit_work_status"]:checked');
-    var editWorkStatusError = document.getElementById('edit_worktime_error');
-    if (!editWorkStatusChecked) {
-        editWorkStatusError.style.display = 'block';
-        isValid = false;
-    } else {
-        editWorkStatusError.style.display = 'none';
-    }
-
-    // Validate edit_status (radio buttons)
-    var editStatusChecked = document.querySelector('input[name="edit_status"]:checked');
-    var editStatusError = document.getElementById('edit_status_error');
-    if (!editStatusChecked) {
-        editStatusError.style.display = 'block';
-        isValid = false;
-    } else {
-        editStatusError.style.display = 'none';
-    }
-
-    // Validate edit_job_description
-    var editJobDescription = document.getElementById('edit_description').value;
-    var editJobDescriptionError = document.getElementById('edit_desc_error');
-    if (editJobDescription.trim() === "") {
-        editJobDescriptionError.style.display = 'block';
-        isValid = false;
-    } else {
-        editJobDescriptionError.style.display = 'none';
-    }
-
-    return isValid;
-}
 
 </script>
 
@@ -153,7 +153,8 @@ function validateEditForm() {
             </div>
             <div class="modal-body">
 
-                <form id="addJobForm" class="form-horizontal" method="POST" action="job_add.php" enctype="multipart/form-data" onsubmit="return validateAddForm()">
+                <form id="addJobForm" class="form-horizontal" method="POST" action="job_add.php"
+                    enctype="multipart/form-data" onsubmit="return validateAddForm()" enctype="multipart/form-data">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="personal_information">
                         <div class="form-group row" style="border-bottom: 1px solid silver !important;">
@@ -164,42 +165,71 @@ function validateEditForm() {
                                 <div class="row">
                                     <div class="col-sm-12 mb-3">
                                         <label for="job_title" class="col-form-label">Job Title</label>
-                                        <input type="text" class="form-control" id="job_title" name="job_title"
-                                            >
-                                            <small class="error-message" id="job_title_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <input type="text" class="form-control" id="job_title" name="job_title">
+                                        <small class="error-message" id="job_title_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
 
                                     </div>
                                     <div class="col-sm-12 mb-3">
                                         <label for="company_name" class="col-form-label">Company Name</label>
-                                        <input type="text" class="form-control" id="company_name" name="company_name"
-                                            >
-                                            <small class="error-message" id="company_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <input type="text" class="form-control" id="company_name" name="company_name">
+                                        <small class="error-message" id="company_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
 
                                     </div>
 
                                     <div class="col-sm-6 mb-3">
                                         <label for="work_time" class="col-form-label">Work Time</label><br>
                                         <input type="radio" id="part_time" name="work_status" value="Part-Time"
-                                            class="partime-radio" >
+                                            class="partime-radio">
                                         <label for="part_time" class="radio-label">Part Time</label>
 
                                         <input type="radio" id="full_time" name="work_status" value="Full-Time"
-                                            class="partime-radio" >
+                                            class="partime-radio">
                                         <label for="full_time" class="radio-label">Full Time</label>
-                                        <small class="error-message" id="job_worktime_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <small class="error-message" id="job_worktime_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
 
                                     </div>
 
                                     <div class="col-sm-6 mb-3">
                                         <label for="status" class="col-form-label">Status</label><br>
                                         <input type="radio" id="archive" name="status" value="Archive"
-                                            class="status-radio" >
+                                            class="status-radio">
                                         <label for="archive" class="radio-label">Archive</label>
 
                                         <input type="radio" id="active" name="status" value="Active"
-                                            class="status-radio" >
+                                            class="status-radio">
                                         <label for="active" class="radio-label">Active</label>
-                                        <small class="error-message" id="status_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <small class="error-message" id="status_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
+                                    </div>
+
+                                    <div class="col-sm-1 mb-3">
+                                        <label for="picture" class="col-form-label">Picture</label><br>
+                                        <div class="image-upload-container">
+                                            <div class="image-preview" id="imagePreviewAdd">
+                                                <img id="imagePreviewImg" src="" alt="Image Preview"
+                                                    style="display:none;">
+                                                <div class="upload-controls">
+                                                    <label for="imageUploadAdd" class="image-upload-label">Edit</label>
+                                                    <input type="file" id="imageUploadAdd" name="imageUpload"
+                                                        accept="image/*"
+                                                        onchange="previewImage(event, 'imagePreviewImg')"
+                                                        style="display:none;">
+                                                </div>
+                                            </div>
+                                            <h5 class="h5">Thumbnail</h5>
+                                            <small class="error-message" id="imageUploadAdd_error"
+                                                style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                                field is required.</small>
+
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +245,8 @@ function validateEditForm() {
                                         <label for="job_title" class="col-form-label">Description</label>
                                         <textarea class="form-control" id="job_description"
                                             name="job_description"></textarea>
-                                            <small class="error-message" id="desc_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <small class="error-message" id="desc_error" style="color:red; display:none;"><i
+                                                class="fa fa-info-circle"></i> This field is required.</small>
 
                                     </div>
 
@@ -253,7 +284,8 @@ function validateEditForm() {
                 <hr>
             </div>
             <div class="modal-body">
-                <form id="editJobForm" class="form-horizontal" method="POST" action="job_edit.php" enctype="multipart/form-data" onsubmit="return validateEditForm()">
+                <form id="editJobForm" class="form-horizontal" method="POST" action="job_edit.php"
+                    enctype="multipart/form-data" onsubmit="return validateEditForm()">
                     <input type="hidden" id="editId" name="id">
                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                     <div class="personal_information">
@@ -266,38 +298,68 @@ function validateEditForm() {
                                     <div class="col-sm-12 mb-3">
                                         <label for="edit_job_title" class="col-form-label">Job Title</label>
                                         <input type="text" class="form-control" id="edit_job_title"
-                                            name="edit_job_title" >
-                                            <small class="error-message" id="edit_title_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                            name="edit_job_title">
+                                        <small class="error-message" id="edit_title_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
                                     </div>
                                     <div class="col-sm-12 mb-3">
                                         <label for="edit_company_name" class="col-form-label">Company Name</label>
                                         <input type="text" class="form-control" id="edit_company_name"
-                                            name="edit_company_name" >
-                                            <small class="error-message" id="edit_company_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                            name="edit_company_name">
+                                        <small class="error-message" id="edit_company_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
                                     </div>
 
                                     <div class="col-sm-6 mb-3">
                                         <label for="work_time" class="col-form-label">Work Time</label><br>
                                         <input type="radio" id="edit_parttime" name="edit_work_status" value="Part-Time"
-                                            class="partime-radio" >
+                                            class="partime-radio">
                                         <label for="edit_parttime" class="radio-label">Part Time</label>
 
                                         <input type="radio" id="edit_fulltime" name="edit_work_status" value="Full-Time"
-                                            class="partime-radio" >
+                                            class="partime-radio">
                                         <label for="edit_fulltime" class="radio-label">Full Time</label>
-                                        <small class="error-message" id="edit_worktime_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <small class="error-message" id="edit_worktime_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
                                     </div>
 
                                     <div class="col-sm-6 mb-3">
                                         <label for="status" class="col-form-label">Status</label><br>
                                         <input type="radio" id="edit_statusArchive" name="edit_status" value="Archive"
-                                            class="status-radio" >
+                                            class="status-radio">
                                         <label for="edit_statusArchive" class="radio-label">Archive</label>
 
                                         <input type="radio" id="edit_statusActive" name="edit_status" value="Active"
-                                            class="status-radio" >
+                                            class="status-radio">
                                         <label for="edit_statusActive" class="radio-label">Active</label>
-                                        <small class="error-message" id="edit_status_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <small class="error-message" id="edit_status_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
+                                    </div>
+
+                                    <div class="col-sm-1 mb-3">
+                                        <label for="picture" class="col-form-label">Picture</label><br>
+                                        <div class="image-upload-container">
+                                            <div class="image-preview" id="imagePreviewEdit">
+                                                <img id="imagePreviewImg2" src="" alt="Image Preview"
+                                                    style="display:none;">
+                                                <div class="upload-controls">
+                                                    <label for="imageUploadEdit" class="image-upload-label">Edit</label>
+                                                    <input type="file" id="imageUploadEdit" name="imageUpload"
+                                                        accept="image/*"
+                                                        onchange="previewImage(event, 'imagePreviewImg2')"
+                                                        style="display:none;">
+                                                </div>
+                                            </div>
+                                            <h5 class="h5">Thumbnail</h5>
+                                            <small class="error-message" id="imageUploadEdit_error"
+                                                style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                                field is required.</small>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -313,7 +375,9 @@ function validateEditForm() {
                                         <label for="job_title" class="col-form-label">Description</label>
                                         <textarea class="form-control" id="edit_description"
                                             name="edit_job_description"></textarea>
-                                            <small class="error-message" id="edit_desc_error" style="color:red; display:none;"><i class="fa fa-info-circle"></i> This field is required.</small>
+                                        <small class="error-message" id="edit_desc_error"
+                                            style="color:red; display:none;"><i class="fa fa-info-circle"></i> This
+                                            field is required.</small>
                                     </div>
 
                                     <div class="col-sm-6"></div>

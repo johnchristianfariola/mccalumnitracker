@@ -31,6 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "work_time" => $_POST['edit_work_status']
         ];
 
+        // Handle the image upload if a file is provided
+        if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_ERR_OK) {
+            $image = $_FILES['imageUpload'];
+            $imagePath = 'uploads/' . basename($image['name']);
+
+            if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to upload image.']);
+                exit;
+            }
+
+            // Add image path to update data
+            $updateData['image_path'] = $imagePath;
+        }
+
         // Retrieve current data
         $currentDataJson = $firebase->retrieve("job/$id");
         $currentData = json_decode($currentDataJson, true);
@@ -38,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if data has changed
         $dataChanged = false;
         foreach ($updateData as $key => $value) {
-            if ($currentData[$key] != $value) {
+            if (!isset($currentData[$key]) || $currentData[$key] != $value) {
                 $dataChanged = true;
                 break;
             }
@@ -57,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            echo json_encode(['status' => 'info', 'message' => 'You have not made any changes']);
+            echo json_encode(['status' => 'info', 'message' => 'You have not made any changes.']);
             exit;
         }
     } else {

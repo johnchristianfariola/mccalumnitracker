@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('event').classList.add('active');
             break;
         case 'job_view.php':
+        case 'visit_job.php':
             document.getElementById('job').classList.add('active');
             break;
         case 'forum.php':

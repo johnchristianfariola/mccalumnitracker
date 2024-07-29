@@ -6,26 +6,6 @@
 <head>
     <?php include "includes/header.php"; ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
-</head>
-
-<body>
-    <!--[if lt IE 8]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-    <!-- Start Header Top Area -->
-    <?php include "includes/navbar.php"; ?>
-    <!-- End Header Top Area -->
-
-    <!-- Mobile Menu start -->
-    <?php include "includes/mobile_view.php"; ?>
-    <!-- Mobile Menu end -->
-
-    <!-- Main Menu area start-->
-    <?php include "includes/main_menu.php"; ?>
-    <!-- Main Menu area end -->
-
-    <!-- Main Main Content area start-->
     <?php
     require_once "../includes/firebaseRDB.php";
 
@@ -138,6 +118,27 @@
                 }
             }
             ?>
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Start Header Top Area -->
+    <?php include "includes/navbar.php"; ?>
+    <!-- End Header Top Area -->
+
+    <!-- Mobile Menu start -->
+    <?php include "includes/mobile_view.php"; ?>
+    <!-- Mobile Menu end -->
+
+    <!-- Main Menu area start-->
+    <?php include "includes/main_menu.php"; ?>
+    <!-- Main Menu area end -->
+
+    <!-- Main Main Content area start-->
+    
 
     <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1">
         <div class="container">

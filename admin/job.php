@@ -126,6 +126,12 @@
       $('#edit_fulltime').prop('checked', response.work_time === 'Full-Time');
       $('#edit_statusActive').prop('checked', response.status === 'Active');
       $('#edit_statusArchive').prop('checked', response.status === 'Archive');
+
+      if (response.image_path && response.image_path.trim() !== '') {
+          $('#imagePreviewImg2').attr('src', response.image_path).show();
+        } else {
+          $('#imagePreviewImg2').hide();
+        }
       
       // Set the textarea value before initializing CKEditor
       $('#edit_description').val(response.job_description);
@@ -135,7 +141,8 @@
         company_name: response.company_name,
         work_time: response.work_time,
         status: response.status,
-        job_description: response.job_description
+        job_description: response.job_description,
+        image_path: response.image_path
       };
 
       $('#editModal').modal('show');
