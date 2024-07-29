@@ -82,7 +82,7 @@
                                     <img class="profile" src="../admin/image_url.jpg" alt="Job image">
                                 </div>
                                 <div class="info-section">
-                                    <h2>Admin FirstName Admin LastName</h2>
+                                    <h2>Admin irstName Admin LastName</h2>
                                     <i><?= htmlspecialchars($jobDetails['job_created']) ?></i>
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                             </div>
                             <br><br>
                             <img style="border-radius: 1rem"
-                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" style="height:500% !important;" class="news_post"
+                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="news_post"
                                 alt="news image">
                         <?php else: ?>
                             <p>Job not found.</p>
