@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($liked) {
         // Remove like
-        $event_data['likes'] = array_diff($event_data['likes'], [$alumni_id]);
+        $event_data['likes'] = array_values(array_diff($event_data['likes'], [$alumni_id]));
     } else {
         // Add like
         $event_data['likes'][] = $alumni_id;
@@ -32,14 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $event_data['like_count'] = count($event_data['likes']);
 
     // Update event data in Firebase
-    $firebase->update($table, "event/{$event_id}", $event_data);
+    $result = $firebase->update("event", $event_id, $event_data);
 
-    // Return updated data
-    echo json_encode([
-        'success' => true,
-        'likeCount' => $event_data['like_count'],
-        'liked' => !$liked
-    ]);
+    if ($result) {
+        // Return updated data
+        echo json_encode([
+            'success' => true,
+            'likeCount' => $event_data['like_count'],
+            'liked' => !$liked
+        ]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to update data']);
+    }
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
