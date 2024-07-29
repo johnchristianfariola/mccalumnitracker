@@ -4,6 +4,8 @@
 
 <head>
     <?php include "includes/header.php"; ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
+
 </head>
 
 <body>
@@ -55,6 +57,11 @@
             $alumni_id = isset($_SESSION["user"]["id"])
                 ? $_SESSION["user"]["id"]
                 : null;
+
+                $isLiked = false;
+                if ($alumni_id && isset($event_data['likes']) && is_array($event_data['likes'])) {
+                    $isLiked = in_array($alumni_id, $event_data['likes']);
+                }
 
             $alumniData = $firebase->retrieve("alumni/{$alumni_id}");
             $alumniData = json_decode($alumniData, true);
@@ -124,6 +131,17 @@
                         <img style="width:100%; height: 500px; object-fit: cover;" src="../admin/<?php echo $image_url; ?>"
                             alt="">
                     </div>
+            <div id="lottie-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; display: none;"></div>
+
+                    <div class="post">
+                    <div class="reactions">
+    <button class="btn btn-like <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'liked' : ''; ?>" data-news-id="<?php echo $news_id; ?>">
+        <i class="fa fa-thumbs-up"></i> <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'Liked' : 'Like'; ?>
+    </button>
+    <span class="like-count"><?php echo isset($news_data['likes']) ? count($news_data['likes']) : 0; ?></span>
+</div>
+    <div class="comment-count"><i class="fa fa-comment"></i> <span><?php echo count($newsComments); ?></span></div>
+</div>
 
                     <div class="additional-content" style="width: 100%; background: white; padding: 20px;">
                         <br><br>
@@ -698,6 +716,105 @@
     // Call updateHearts on page load
     updateHearts();
 });
+
+
+$(document).ready(function() {
+    var newsId = $('.btn-like').data('news-id');
+    var alumniId = $('.btn-like').data('alumni-id');
+
+    var animation = lottie.loadAnimation({
+        container: document.getElementById('lottie-container'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: 'js/lottie/check.json',
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+        }
+    });
+
+    function resizeLottieAnimation() {
+        var container = document.getElementById('lottie-container');
+        var desiredWidth = 500;
+        var desiredHeight = 500;
+
+        container.style.width = desiredWidth + 'px';
+        container.style.height = desiredHeight + 'px';
+
+        if (animation) {
+            animation.resize();
+        }
+    }
+
+    window.addEventListener('resize', resizeLottieAnimation);
+    resizeLottieAnimation();
+
+    function playLikeAnimation() {
+        $('#lottie-container').show();
+        animation.goToAndPlay(0);
+
+        var animationDuration = animation.getDuration() * 1000;
+        setTimeout(function() {
+            $('#lottie-container').hide();
+        }, animationDuration);
+    }
+
+    $('.btn-like').on('click', function() {
+        var $likeButton = $(this);
+        var $likeCount = $likeButton.siblings('.like-count');
+        var isCurrentlyLiked = $likeButton.hasClass('liked');
+
+        // Play animation immediately on click if not currently liked
+        if (!isCurrentlyLiked) {
+            playLikeAnimation();
+        }
+
+        $.ajax({
+            url: 'update_like_news_count.php',
+            method: 'POST',
+            data: { 
+                news_id: newsId,
+                alumni_id: '<?php echo $alumni_id; ?>'
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    $likeButton.toggleClass('liked', data.is_liked);
+                    $likeCount.text(data.like_count);
+                    
+                    // Update button text while preserving the thumbs-up icon
+                    $likeButton.html('<i class="fa fa-thumbs-up"></i> ' + (data.is_liked ? 'Liked' : 'Like'));
+                }
+            }
+        });
+    });
+
+    function updateCounts() {
+        $.ajax({
+            url: 'get_news_like_count.php',
+            method: 'GET',
+            data: { 
+                news_id: newsId,
+                alumni_id: '<?php echo $alumni_id; ?>'
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                $('.comment-count span').text(data.comment_count);
+                $('.like-count').text(data.like_count);
+                $('.btn-like').each(function() {
+                    var $btn = $(this);
+                    var isLiked = data.is_liked;
+                    $btn.toggleClass('liked', isLiked);
+                    // Preserve the thumbs-up icon when updating the text
+                    $btn.html('<i class="fa fa-thumbs-up"></i> ' + (isLiked ? 'Liked' : 'Like'));
+                });
+            }
+        });
+    }
+
+    updateCounts();
+    setInterval(updateCounts, 5000);
+});
     </script>
     <style>
         .fa-heart {
@@ -710,6 +827,10 @@
             color: red !important;
             /* Color when liked */
         }
+        .btn-like.liked {
+        background-color: blue;
+        color: white;
+    }
     </style>
 </body>
 

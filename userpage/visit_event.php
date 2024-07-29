@@ -185,11 +185,7 @@
         ? $event_data["like_count"]
         : 0; ?></span>
                 </div>
-                <div class="comment-count"><i class="fa fa-comment"></i>     <span class="like-count"><?php echo isset(
-                    $commentData["alumni_id"],
-                )
-                    ? $commentData["alumni_id"]
-                    : 0; ?></span></div>
+                <div class="comment-count"><i class="fa fa-comment"></i> <span><?php echo count($eventComments); ?></span></div>
             </div>
 
 
