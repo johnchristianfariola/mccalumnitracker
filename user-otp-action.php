@@ -50,7 +50,7 @@ if (isset($_POST['check'])) {
             $_SESSION['email'] = $email;
 
             // Redirect to home page
-            header('Location: home.php');
+            header('Location: index.php');
             exit();
         } catch (Exception $e) {
             $errors['otp-error'] = "Failed while updating code!";

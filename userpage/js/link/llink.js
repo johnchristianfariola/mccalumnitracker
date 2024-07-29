@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         case 'visit_event.php':
             document.getElementById('event').classList.add('active');
             break;
-        case 'jobs.php':
+        case 'job_view.php':
             document.getElementById('job').classList.add('active');
             break;
         case 'forum.php':

@@ -138,7 +138,7 @@
     <button class="btn btn-like <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'liked' : ''; ?>" data-news-id="<?php echo $news_id; ?>">
         <i class="fa fa-thumbs-up"></i> <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'Liked' : 'Like'; ?>
     </button>
-    <span class="like-count"><?php echo isset($news_data['likes']) ? count($news_data['likes']) : 0; ?></span>
+    <span class="like-count">&nbsp; &nbsp; &nbsp;<?php echo isset($news_data['likes']) ? count($news_data['likes']) : 0; ?></span>
 </div>
     <div class="comment-count"><i class="fa fa-comment"></i> <span><?php echo count($newsComments); ?></span></div>
 </div>
