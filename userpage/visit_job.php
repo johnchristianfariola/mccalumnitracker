@@ -118,117 +118,6 @@
             margin-left: 20px;
         }
 
-        .job_img {
-            width: 100%;
-            height: 60vh;
-        }
-
-        .comments-list .comment-avatar {
-            width: 40px;
-            height: 40px;
-            position: relative;
-            z-index: 99;
-            float: left;
-            border: 3px solid #FFF;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            border-radius: 4px;
-            -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-
-        .comments-container {
-            width: 100%;
-            max-height: 500px;
-            /* Adjust based on your design */
-            overflow-y: auto;
-            /* Allows vertical scrolling if comments exceed the container height */
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .comments-list {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-        }
-
-        .comment-main-level {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .comment-avatar {
-            margin-right: 10px;
-        }
-
-        .comment-box {
-            flex: 1;
-        }
-
-        .reply-container {
-            margin-top: 10px;
-        }
-
-        .reply-list {
-            padding-left: 20px;
-            /* Indent replies */
-        }
-
-        .pb-cmnt-container {
-            margin-top: 20px;
-        }
-
-        .pb-cmnt-textarea {
-            width: calc(100% - 100px);
-            /* Adjust width based on button */
-            margin-bottom: 10px;
-        }
-
-        #submitComment {
-            float: right;
-        }
-
-        .pb-cmnt-container {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .panel-info {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .panel-body {
-            padding: 15px;
-        }
-
-        .pb-cmnt-textarea {
-            width: calc(100% - 110px);
-            /* Adjust width to account for the button */
-            margin-bottom: 10px;
-            resize: vertical;
-            /* Allows vertical resizing if needed */
-            box-sizing: border-box;
-        }
-
-        #submitComment {
-            float: right;
-            margin-top: 10px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
     </style>
 
     <!-- End Sale Statistic area -->
@@ -272,84 +161,75 @@
 
                             <br><br>
 
-                            <div class="comments-container">
-                                <h1><i class="fa fa-wechat"></i> Comments</h1>
-                                <ul id="comments-list" class="comments-list">
-                                    <?php if (empty($jobComments)): ?>
-                                        <li id="no-comments-message" class="center-message">Be the First to Comment</li>
-                                    <?php else: ?>
-                                        <?php foreach ($jobComments as $commentId => $comment): ?>
-                                            <?php
-                                            $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
-                                            $commenterData = json_decode($commenterData, true);
-                                            $commenterProfileUrl = $commenterData["profile_url"] ?? '';
-                                            $commenterFirstName = $commenterData["firstname"] ?? '';
-                                            $commenterLastName = $commenterData["lastname"] ?? '';
-                                            ?>
-                                            <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
-                                                <div class="comment-main-level">
-                                                    <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>"
-                                                            alt=""></div>
-                                                    <div class="comment-box">
-                                                        <div class="comment-head">
-                                                            <h6 class="comment-name by-author">
-                                                                <a
-                                                                    href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
-                                                            </h6>
-                                                            <span><?php echo $comment["date_ago"]; ?></span>
-                                                            <i class="fa fa-reply reply-button"></i>
-                                                            <i class="fa fa-heart heart-icon"
-                                                                data-comment-id="<?php echo $commentId; ?>"
-                                                                data-liked="<?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? "true" : "false"; ?>"></i>
-                                                            <span
-                                                                class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
-                                                        </div>
-                                                        <div class="comment-content">
-                                                            <?php echo htmlspecialchars($comment["comment"]); ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="reply-container" style="display: none;">
-                                                    <form class="reply-form">
-                                                        <textarea class="reply-textarea"
-                                                            placeholder="Write your reply here..."></textarea>
-                                                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                                                        <input type="hidden" name="parent_comment_id"
-                                                            value="<?php echo $commentId; ?>">
-                                                    </form>
-                                                </div>
-                                                <ul class="comments-list reply-list">
-                                                    <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
-                                                        <?php foreach ($comment["replies"] as $replyId => $reply): ?>
-                                                            <?php
-                                                            $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
-                                                            $replyAuthorData = json_decode($replyAuthorData, true);
-                                                            ?>
-                                                            <li>
-                                                                <div class="comment-avatar"><img
-                                                                        src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>"
-                                                                        alt=""></div>
-                                                                <div class="comment-box">
-                                                                    <div class="comment-head">
-                                                                        <h6 class="comment-name by-author">
-                                                                            <a
-                                                                                href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
-                                                                        </h6>
-                                                                        <span><?php echo timeAgo($reply["date_replied"]); ?></span>
-                                                                    </div>
-                                                                    <div class="comment-content">
-                                                                        <?php echo htmlspecialchars($reply["comment"]); ?>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </ul>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
+
+                            
+<div class="comments-section">
+    <h1><i class="fa fa-wechat"></i> Comments</h1>
+    <ul id="comment-list" class="comment-list">
+        <?php if (empty($jobComments)): ?>
+            <li id="no-comments-message" class="center-message">Be the First to Comment</li>
+        <?php else: ?>
+            <?php foreach ($jobComments as $commentId => $comment): ?>
+                <?php
+                $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
+                $commenterData = json_decode($commenterData, true);
+                $commenterProfileUrl = $commenterData["profile_url"] ?? '';
+                $commenterFirstName = $commenterData["firstname"] ?? '';
+                $commenterLastName = $commenterData["lastname"] ?? '';
+                ?>
+                <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
+                    <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
+                    <div class="comment-box">
+                        <div class="comment-header">
+                            <h6 class="comment-author">
+                                <a href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
+                            </h6>
+                            <span><?php echo $comment["date_ago"]; ?></span>
+                            <i class="fa fa-reply reply-button"></i>
+                            <i class="fa fa-heart heart-icon <?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? 'liked' : ''; ?>"
+                               data-comment-id="<?php echo $commentId; ?>"></i>
+                            <span class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
+                        </div>
+                        <div class="comment-body">
+                            <?php echo htmlspecialchars($comment["comment"]); ?>
+                        </div>
+                    </div>
+                </li>
+                <div class="reply-container" style="display: none;">
+                    <form class="reply-form">
+                        <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
+                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                        <input type="hidden" name="parent_comment_id" value="<?php echo $commentId; ?>">
+                    </form>
+                </div>
+                <ul class="comment-list reply-list">
+                    <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
+                        <?php foreach ($comment["replies"] as $replyId => $reply): ?>
+                            <?php
+                            $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
+                            $replyAuthorData = json_decode($replyAuthorData, true);
+                            ?>
+                            <li>
+                                <div class="comment-avatar"><img src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>" alt=""></div>
+                                <div class="comment-box">
+                                    <div class="comment-header">
+                                        <h6 class="comment-author">
+                                            <a href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
+                                        </h6>
+                                        <span><?php echo timeAgo($reply["date_replied"]); ?></span>
+                                    </div>
+                                    <div class="comment-body">
+                                        <?php echo htmlspecialchars($reply["comment"]); ?>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </ul>
+</div>
 
                             <div class="container pb-cmnt-container" style="width:100%">
                                 <div class="row">
@@ -736,6 +616,40 @@
                     refreshComments();
                 }
             }, refreshInterval);
+        });
+    </script>
+    <script>
+        $(document).on('click', '.heart-icon', function () {
+            var $heartIcon = $(this);
+            var commentId = $heartIcon.data('comment-id');
+            var alumniId = '<?php echo $alumni_id; ?>';
+
+            $.ajax({
+                type: 'POST',
+                url: 'like_job_comment.php',
+                data: {
+                    comment_id: commentId,
+                    alumni_id: alumniId
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        if (response.action === 'liked') {
+                            $heartIcon.addClass('liked');
+                            heartedComments.add(commentId);
+                        } else {
+                            $heartIcon.removeClass('liked');
+                            heartedComments.delete(commentId);
+                        }
+                        $heartIcon.siblings('.heart-count').text(response.heart_count);
+                    } else {
+                        console.error('Error updating like status:', response.message);
+                    }
+                },
+                error: function () {
+                    console.error('Error sending like/unlike request');
+                }
+            });
         });
     </script>
 </body>
