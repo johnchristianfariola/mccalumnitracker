@@ -154,9 +154,9 @@
                                     <div class="breadcomb-ctn">
                                         <h2><?php echo $event_title; ?></h2>
                                         <div class="visited-content">
-                                            <i class="uploader">Posted by: <?php echo $adminFirstName .
+                                            <span class="uploader">Posted by: <?php echo $adminFirstName .
                                                 " " .
-                                                $adminLastName; ?></i>
+                                                $adminLastName; ?></>
                                         </div>
                                     </div>
                                 </div>

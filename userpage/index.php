@@ -97,7 +97,7 @@ if (is_array($jobData)) {
                                     </div>
                                     <div class="info-section">
                                         <h2><?php echo $admin_firstname . ' ' . $admin_lastmame; ?></h2>
-                                        <i><?php echo $news['news_created']; ?></i>
+                                        <span><?php echo $news['news_created']; ?></span>
                                     </div>
                                 </div>
                             </div>

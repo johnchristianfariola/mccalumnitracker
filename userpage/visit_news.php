@@ -131,17 +131,17 @@
                         <img style="width:100%; height: 500px; object-fit: cover;" src="../admin/<?php echo $image_url; ?>"
                             alt="">
                     </div>
-            <div id="lottie-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; display: none;"></div>
+                    <div id="lottie-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; display: none;"></div>
 
                     <div class="post">
                     <div class="reactions">
-    <button class="btn btn-like <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'liked' : ''; ?>" data-news-id="<?php echo $news_id; ?>">
-        <i class="fa fa-thumbs-up"></i> <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'Liked' : 'Like'; ?>
-    </button>
-    <span class="like-count">&nbsp; &nbsp; &nbsp;<?php echo isset($news_data['likes']) ? count($news_data['likes']) : 0; ?></span>
-</div>
-    <div class="comment-count"><i class="fa fa-comment"></i> <span><?php echo count($newsComments); ?></span></div>
-</div>
+                        <button class="btn btn-like <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'liked' : ''; ?>" data-news-id="<?php echo $news_id; ?>">
+                            <i class="fa fa-thumbs-up"></i> <?php echo in_array($alumni_id, $news_data['likes'] ?? []) ? 'Liked' : 'Like'; ?>
+                        </button>
+                        <span class="like-count">&nbsp; &nbsp; &nbsp;<?php echo isset($news_data['likes']) ? count($news_data['likes']) : 0; ?></span>
+                    </div>
+                        <div class="comment-count"><i class="fa fa-comment"></i> <span><?php echo count($newsComments); ?></span></div>
+                    </div>
 
                     <div class="additional-content" style="width: 100%; background: white; padding: 20px;">
                         <br><br>
@@ -557,9 +557,6 @@
         }
     });
 }
-
-
-
             function attachEventListeners() {
                 $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
                     var $commentItem = $(this).closest('li');

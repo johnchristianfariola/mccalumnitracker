@@ -6,8 +6,10 @@
     <!-- Include header -->
     <?php include 'includes/header.php'; ?>
     <?php
+
     require_once '../includes/firebaseRDB.php';
     require_once '../includes/config.php';
+
 
     $firebase = new firebaseRDB($databaseURL);
     $jobId = $_GET['id'] ?? '';
@@ -28,10 +30,38 @@
             ];
             $jobDetailsJson = json_encode($jobDetails);
         }
+
+        $commentData = $firebase->retrieve("job_comments");
+        $commentData = json_decode($commentData, true);
+        $jobComments = [];
+        if (is_array($commentData)) {
+            foreach ($commentData as $commentId => $comment) {
+                if ($comment["job_id"] === $jobId) {
+                    $comment["date_ago"] = timeAgo($comment["date_commented"]);
+                    $jobComments[$commentId] = $comment;
+                }
+            }
+        }
+
+        $alumni_id = isset($_SESSION["user"]["id"]) ? $_SESSION["user"]["id"] : null;
+
+        // Retrieve alumni data
+        if ($alumni_id) {
+            $alumniData = $firebase->retrieve("alumni/{$alumni_id}");
+            $alumniData = json_decode($alumniData, true);
+            $alumniProfileUrl = $alumniData["profile_url"] ?? '';
+            $alumniFirstName = $alumniData["firstname"] ?? '';
+            $alumniLastName = $alumniData["lastname"] ?? '';
+        }
     }
 
     $data = json_decode($firebase->retrieve("job"), true);
     $jobsData = [];
+
+    $adminData = $firebase->retrieve("admin/admin");
+    $adminData = json_decode($adminData, true);
+
+
     foreach ($data as $id => $job) {
         if ($job['status'] === 'Active') {
             $job['id'] = $id;  // Add the id to the job array
@@ -41,6 +71,28 @@
     usort($jobsData, function ($a, $b) {
         return strtotime($b['job_created']) - strtotime($a['job_created']);
     });
+    ?>
+
+    <?php
+    function timeAgo($timestamp)
+    {
+        $currentTime = time();
+        $commentTime = strtotime($timestamp);
+        $difference = $currentTime - $commentTime;
+
+        if ($difference < 60) {
+            return "Just now";
+        } elseif ($difference >= 60 && $difference < 3600) {
+            $time = round($difference / 60);
+            return $time . " minute" . ($time > 1 ? "s" : "") . " ago";
+        } elseif ($difference >= 3600 && $difference < 86400) {
+            $time = round($difference / 3600);
+            return $time . " hour" . ($time > 1 ? "s" : "") . " ago";
+        } else {
+            $time = round($difference / 86400);
+            return $time . " day" . ($time > 1 ? "s" : "") . " ago";
+        }
+    }
     ?>
 </head>
 
@@ -65,9 +117,10 @@
             list-style: circle;
             margin-left: 20px;
         }
-        .job_img{
+
+        .job_img {
             width: 100%;
-            height: 90vh;
+            height: 60vh;
         }
     </style>
 
@@ -83,11 +136,11 @@
                         <div class="curved-inner-pro">
                             <div class="curved-ctn">
                                 <div class="image-section">
-                                    <img class="profile" src="../admin/image_url.jpg" alt="Job image">
+                                    <img class="profile" src="../admin/<?php echo $adminData["image_url"]; ?>" alt="">
                                 </div>
                                 <div class="info-section">
-                                    <h2>Admin irstName Admin LastName</h2>
-                                    <i><?= htmlspecialchars($jobDetails['job_created']) ?></i>
+                                    <h2> <?php echo $adminData["firstname"] . " " . $adminData["lastname"]; ?></h2>
+                                    <span><?= htmlspecialchars($jobDetails['job_created']) ?></span>
                                 </div>
                             </div>
                         </div>
@@ -108,11 +161,84 @@
                             <img style="border-radius: 1rem"
                                 src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="job_img"
                                 alt="news image">
+
+
+                            <div class="comments-container">
+                                <h1><i class="fa fa-wechat"></i> Comments</h1>
+                                <ul id="comments-list" class="comments-list">
+                                    <?php if (empty($jobComments)): ?>
+                                        <li id="no-comments-message" class="center-message">Be the First to Comment</li>
+                                    <?php else: ?>
+                                        <?php foreach ($jobComments as $commentId => $comment): ?>
+                                            <?php
+                                            $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
+                                            $commenterData = json_decode($commenterData, true);
+                                            $commenterProfileUrl = $commenterData["profile_url"] ?? '';
+                                            $commenterFirstName = $commenterData["firstname"] ?? '';
+                                            $commenterLastName = $commenterData["lastname"] ?? '';
+                                            ?>
+                                            <li data-comment-id="<?php echo $commentId; ?>">
+                                                <div class="comment-main-level">
+                                                    <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>"
+                                                            alt=""></div>
+                                                    <div class="comment-box">
+                                                        <div class="comment-head">
+                                                            <h6 class="comment-name by-author">
+                                                                <a
+                                                                    href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
+                                                            </h6>
+                                                            <span><?php echo $comment["date_ago"]; ?></span>
+                                                            <i class="fa fa-reply reply-button"></i>
+                                                            <i class="fa fa-heart heart-icon"
+                                                                data-comment-id="<?php echo $commentId; ?>"
+                                                                data-liked="<?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? "true" : "false"; ?>"></i>
+                                                            <span
+                                                                class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
+                                                        </div>
+                                                        <div class="comment-content">
+                                                            <?php echo htmlspecialchars($comment["comment"]); ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Add reply functionality here if needed -->
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+
+                            <div class="container pb-cmnt-container" style="width:100%">
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-0">
+                                        <div id="uniquePanelInfo" class="panel panel-info">
+                                            <div id="uniquePanelBody" class="panel-body">
+                                                <form id="commentForm" method="POST" action="comment_job.php">
+                                                    <textarea name="comment" placeholder="Write your comment here!"
+                                                        class="pb-cmnt-textarea" id="uniqueCommentTextarea"></textarea>
+                                                    <button class="btn btn-primary pull-right" type="button"
+                                                        id="submitComment">Share</button>
+                                                    <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
+                                                    <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         <?php else: ?>
                             <p>Job not found.</p>
                         <?php endif; ?>
 
                     </div>
+
+
+
+
+
+
+
+
 
                     <!-- More Job items can be added similarly -->
                 </div>
@@ -142,7 +268,7 @@
                                 ?>
                                 <a href="visit_job.php?id=<?php echo $id; ?>">
                                     <div class="card">
-                                    <img src="../admin/<?php echo $imagePath; ?>" alt="Event Image" class="event_image">
+                                        <img src="../admin/<?php echo $imagePath; ?>" alt="Event Image" class="event_image">
                                         <div class="card-content">
                                             <div class="job-container">
                                                 <div class="job-title"><?php echo $jobTitle; ?></div>
