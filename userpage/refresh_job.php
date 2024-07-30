@@ -43,6 +43,7 @@ if (isset($_GET['job_id']) && isset($_GET['last_update']) && isset($_GET['alumni
     }
 
     if (!empty($jobComments)) {
+        echo '<ul id="comment-list" class="comment-list">';
         foreach ($jobComments as $commentId => $comment) {
             $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
             $commenterData = json_decode($commenterData, true);
@@ -50,61 +51,60 @@ if (isset($_GET['job_id']) && isset($_GET['last_update']) && isset($_GET['alumni
             $commenterFirstName = $commenterData["firstname"] ?? '';
             $commenterLastName = $commenterData["lastname"] ?? '';
             ?>
-            <li data-comment-id="<?php echo $commentId; ?>">
-                <div class="comment-main-level">
-                    <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
-                    <div class="comment-box">
-                        <div class="comment-head">
-                            <h6 class="comment-name by-author">
-                                <a href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
-                            </h6>
-                            <span><?php echo $comment["date_ago"]; ?></span>
-                            <i class="fa fa-reply reply-button"></i>
-                            <i class="fa fa-heart heart-icon" data-comment-id="<?php echo $commentId; ?>"
-                                data-liked="<?php echo in_array($alumniId, $comment["liked_by"] ?? []) ? "true" : "false"; ?>"></i>
-                            <span style="float-" class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
-                        </div>
-                        <div class="comment-content">
-                            <?php echo htmlspecialchars($comment["comment"]); ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="reply-container" style="display: none;">
-                    <form class="reply-form">
-                        <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
-                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                        <input type="hidden" name="parent_comment_id" value="<?php echo $commentId; ?>">
-                    </form>
-                </div>
-                <ul class="comments-list reply-list">
-    <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
-        <?php foreach ($comment["replies"] as $replyId => $reply): ?>
-            <?php
-            $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
-            $replyAuthorData = json_decode($replyAuthorData, true);
-            ?>
-            <li>
-                <div class="comment-avatar"><img src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>" alt=""></div>
+            <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
+                <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
                 <div class="comment-box">
-                    <div class="comment-head">
-                        <h6 class="comment-name by-author">
-                            <a href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
+                    <div class="comment-header">
+                        <h6 class="comment-author">
+                            <a href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
                         </h6>
-                        <span><?php echo timeAgo($reply["date_replied"]); ?></span>
+                        <span><?php echo $comment["date_ago"]; ?></span>
+                        <i class="fa fa-reply reply-button"></i>
+                        <i class="fa fa-heart heart-icon <?php echo in_array($alumniId, $comment["liked_by"] ?? []) ? 'liked' : ''; ?>"
+                            data-comment-id="<?php echo $commentId; ?>"></i>
+                        <span class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
                     </div>
-                    <div class="comment-content">
-                        <?php echo htmlspecialchars($reply["comment"]); ?>
+                    <div class="comment-body">
+                        <?php echo htmlspecialchars($comment["comment"]); ?>
                     </div>
                 </div>
             </li>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</ul>
-            </li>
+            <div class="reply-container" style="display: none;">
+                <form class="reply-form">
+                    <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
+                    <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                    <input type="hidden" name="parent_comment_id" value="<?php echo $commentId; ?>">
+                </form>
+            </div>
+            <ul class="comment-list reply-list">
+                <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
+                    <?php foreach ($comment["replies"] as $replyId => $reply): ?>
+                        <?php
+                        $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
+                        $replyAuthorData = json_decode($replyAuthorData, true);
+                        ?>
+                        <li>
+                            <div class="comment-avatar"><img src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>" alt=""></div>
+                            <div class="comment-box">
+                                <div class="comment-header">
+                                    <h6 class="comment-author">
+                                        <a href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
+                                    </h6>
+                                    <span><?php echo timeAgo($reply["date_replied"]); ?></span>
+                                </div>
+                                <div class="comment-body">
+                                    <?php echo htmlspecialchars($reply["comment"]); ?>
+                                </div>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </ul>
             <?php
         }
+        echo '</ul>';
     } else {
-        echo '<li id="no-comments-message" class="center-message">Be the First to Comment</li>';
+        echo '<ul id="comment-list" class="comment-list"><li id="no-comments-message" class="center-message">Be the First to Comment</li></ul>';
     }
 }
 ?>

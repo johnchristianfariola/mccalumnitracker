@@ -382,150 +382,134 @@
             });
         });
     </script>
-    <script>
-        $(document).ready(function () {
-            var openReplyFormId = null;
-            var refreshInterval = 5000;
-            var lastUpdate = Date.now();
-            var currentOpenReplyContent = '';
-            var caretPosition = 0;
-            var isReplyFormOpen = false;
-            var heartedComments = new Set();
+  <script>
+    $(document).ready(function () {
+    var openReplyFormId = null;
+    var refreshInterval = 5000;
+    var lastUpdate = Date.now();
+    var currentOpenReplyContent = '';
+    var caretPosition = 0;
+    var isReplyFormOpen = false;
+    var heartedComments = new Set();
 
-            $('#submitComment').click(function () {
-                var $submitButton = $(this);
-                var $form = $('#commentForm');
-                var $textarea = $('.pb-cmnt-textarea');
-                var commentContent = $textarea.val().trim();
+    $('#submitComment').click(function () {
+        var $submitButton = $(this);
+        var $form = $('#commentForm');
+        var $textarea = $('.pb-cmnt-textarea');
+        var commentContent = $textarea.val().trim();
 
-                if (commentContent === "") {
-                    swal({
-                        title: 'Oops...',
-                        text: 'Please enter a comment before sharing.',
-                        type: 'warning',
-                        timer: 5000,
-                        onOpen: function () {
-                            swal.showLoading()
-                        }
-                    }).then(
-                        function () { },
-                        function (dismiss) {
-                            if (dismiss === 'timer') {
-                                console.log('I was closed by the timer')
-                            }
-                        }
-                    )
-                    return;
+        if (commentContent === "") {
+            swal({
+                title: 'Oops...',
+                text: 'Please enter a comment before sharing.',
+                type: 'warning',
+                timer: 5000,
+                onOpen: function () {
+                    swal.showLoading()
                 }
-
-                $submitButton.prop('disabled', true);
-                var formData = $form.serialize();
-                $textarea.val('');
-                $submitButton.prop('disabled', false);
-
-                var $tempMessage = $('<div class="temp-message">Submitting your comment...</div>');
-                $form.after($tempMessage);
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'comment_job.php',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (response) {
-                        $tempMessage.remove();
-                        if (response.status === 'success') {
-                            refreshComments();
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Your comment has been added.',
-                                icon: 'success',
-                                timer: 2000,
-                                timerProgressBar: true
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: response.message,
-                                icon: 'error'
-                            });
-                        }
-                    },
-                    error: function () {
-                        $tempMessage.remove();
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while submitting your comment.',
-                            icon: 'error'
-                        });
+            }).then(
+                function () { },
+                function (dismiss) {
+                    if (dismiss === 'timer') {
+                        console.log('I was closed by the timer')
                     }
-                });
-            });
-
-            function refreshComments() {
-                if (isReplyFormOpen) {
-                    return;
                 }
+            )
+            return;
+        }
 
-                if (openReplyFormId) {
-                    var $currentOpenReplyForm = $(`#comments-list li[data-comment-id="${openReplyFormId}"] .reply-container`);
-                    var $currentTextarea = $currentOpenReplyForm.find('.reply-textarea');
-                    currentOpenReplyContent = $currentTextarea.val();
-                    caretPosition = $currentTextarea[0].selectionStart;
+        $submitButton.prop('disabled', true);
+        var formData = $form.serialize();
+        $textarea.val('');
+        $submitButton.prop('disabled', false);
+
+        var $tempMessage = $('<div class="temp-message">Submitting your comment...</div>');
+        $form.after($tempMessage);
+
+        $.ajax({
+            type: 'POST',
+            url: 'comment_job.php',
+            data: formData,
+            dataType: 'json',
+            success: function (response) {
+                $tempMessage.remove();
+                if (response.status === 'success') {
+                    refreshComments();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Your comment has been added.',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.message,
+                        icon: 'error'
+                    });
                 }
-
-                $.ajax({
-                    url: 'refresh_job.php',
-                    type: 'GET',
-                    data: { job_id: '<?php echo $jobId; ?>', last_update: lastUpdate, alumni_id: '<?php echo $alumni_id; ?>' },
-                    success: function (response) {
-                        var $commentsList = $('#comments-list');
-
-                        if (response.trim() !== '') {
-                            var $newCommentsList = $(response);
-
-                            heartedComments.forEach(function (commentId) {
-                                var $oldComment = $commentsList.find('li[data-comment-id="' + commentId + '"]');
-                                var $newComment = $newCommentsList.find('li[data-comment-id="' + commentId + '"]');
-
-                                if ($oldComment.length && $newComment.length) {
-                                    var $oldHeart = $oldComment.find('.fa-heart');
-                                    var $oldHeartCount = $oldComment.find('.heart-count');
-                                    var $newHeart = $newComment.find('.fa-heart');
-                                    var $newHeartCount = $newComment.find('.heart-count');
-
-                                    $newHeart.addClass('liked');
-                                    $newHeartCount.text($oldHeartCount.text());
-                                }
-                            });
-
-                            $commentsList.html($newCommentsList);
-                            lastUpdate = Date.now();
-                        }
-
-                        if (openReplyFormId) {
-                            var $newReplyContainer = $commentsList.find(`li[data-comment-id="${openReplyFormId}"] .reply-container`);
-                            $newReplyContainer.html(`
-                        <form class="reply-form">
-                            <textarea class="reply-textarea" placeholder="Write your reply here...">${currentOpenReplyContent}</textarea>
-                            <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                            <input type="hidden" name="parent_comment_id" value="${openReplyFormId}">
-                        </form>
-                    `).show();
-
-                            var $newTextarea = $newReplyContainer.find('.reply-textarea');
-                            $newTextarea.focus();
-                            $newTextarea[0].setSelectionRange(caretPosition, caretPosition);
-                        }
-
-                        attachEventListeners();
-                    },
-                    error: function () {
-                        console.log('Error refreshing comments');
-                    }
+            },
+            error: function () {
+                $tempMessage.remove();
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while submitting your comment.',
+                    icon: 'error'
                 });
             }
+        });
+    });
 
-         
+    function refreshComments() {
+        if (isReplyFormOpen) {
+            return;
+        }
+
+        $.ajax({
+            url: 'refresh_job.php',
+            type: 'GET',
+            data: { job_id: '<?php echo $jobId; ?>', last_update: lastUpdate, alumni_id: '<?php echo $alumni_id; ?>' },
+            success: function (response) {
+                var $commentsList = $('#comment-list');
+
+                if (response.trim() !== '') {
+                    var $newCommentsList = $(response);
+
+                    // Preserve hearted comments
+                    heartedComments.forEach(function (commentId) {
+                        var $oldComment = $commentsList.find('li[data-comment-id="' + commentId + '"]');
+                        var $newComment = $newCommentsList.find('li[data-comment-id="' + commentId + '"]');
+
+                        if ($oldComment.length && $newComment.length) {
+                            var $oldHeart = $oldComment.find('.fa-heart');
+                            var $oldHeartCount = $oldComment.find('.heart-count');
+                            $newComment.find('.fa-heart').replaceWith($oldHeart.clone());
+                            $newComment.find('.heart-count').text($oldHeartCount.text());
+                        }
+                    });
+
+                    // Preserve open reply forms
+                    $commentsList.find('.reply-container:visible').each(function() {
+                        var commentId = $(this).closest('li').data('comment-id');
+                        var $newReplyContainer = $newCommentsList.find('li[data-comment-id="' + commentId + '"] + .reply-container');
+                        if ($newReplyContainer.length) {
+                            $newReplyContainer.replaceWith($(this).clone());
+                        }
+                    });
+
+                    $commentsList.html($newCommentsList.html());
+                    lastUpdate = Date.now();
+                }
+
+                attachEventListeners();
+            },
+            error: function () {
+                console.log('Error refreshing comments');
+            }
+        });
+    }
+
     function attachEventListeners() {
         // Reply button click event
         $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
@@ -619,7 +603,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: 'like_comment.php',
+                url: 'like_job_comment.php',
                 data: {
                     comment_id: commentId,
                     alumni_id: '<?php echo $alumni_id; ?>'
@@ -652,42 +636,8 @@
             refreshComments();
         }
     }, refreshInterval);
-        });
-    </script>
-     <script>
-        $(document).on('click', '.heart-icon', function() {
-    var $heartIcon = $(this);
-    var commentId = $heartIcon.data('comment-id');
-    var alumniId = '<?php echo $alumni_id; ?>';
-
-    $.ajax({
-        type: 'POST',
-        url: 'like_job_comment.php',
-        data: {
-            comment_id: commentId,
-            alumni_id: alumniId
-        },
-        dataType: 'json',
-        success: function(response) {
-            if (response.status === 'success') {
-                if (response.action === 'liked') {
-                    $heartIcon.addClass('liked');
-                    heartedComments.add(commentId);
-                } else {
-                    $heartIcon.removeClass('liked');
-                    heartedComments.delete(commentId);
-                }
-                $heartIcon.siblings('.heart-count').text(response.heart_count);
-            } else {
-                console.error('Error updating like status:', response.message);
-            }
-        },
-        error: function() {
-            console.error('Error sending like/unlike request');
-        }
-    });
 });
-    </script>
+  </script>
 </body>
 
 </html>

@@ -10,10 +10,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $alumniId = $_POST["alumni_id"];
 
     $comment = $firebase->retrieve("job_comments/{$commentId}");
-    if ($comment === false) {
-        echo json_encode(["status" => "error", "message" => "Error retrieving comment"]);
-        exit;
-    }
     $comment = json_decode($comment, true);
 
     if (!isset($comment["liked_by"])) {
@@ -24,7 +20,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($index !== false) {
         // Unlike
         unset($comment["liked_by"][$index]);
-        $comment["liked_by"] = array_values($comment["liked_by"]); // Reindex array
         $comment["heart_count"] = max(0, ($comment["heart_count"] ?? 0) - 1);
         $action = "unliked";
     } else {
@@ -34,16 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $action = "liked";
     }
 
-    $result = $firebase->update("job_comments", $commentId, $comment);
+    $result = $firebase->update($table, "job_comments/{$commentId}", $comment);
 
-    if ($result === null) {
+    if ($result) {
         echo json_encode([
             "status" => "success",
             "action" => $action,
             "heart_count" => $comment["heart_count"]
         ]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Error updating like status: " . $result]);
+        echo json_encode(["status" => "error", "message" => "Error updating like status"]);
     }
 } else {
     echo json_encode(["status" => "error", "message" => "Invalid request method"]);
