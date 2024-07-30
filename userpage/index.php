@@ -112,8 +112,9 @@ if (is_array($jobData)) {
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
                     <div class="right-section">
+                    <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
+
                         <?php foreach ($eventData as $id => $event) { ?>
-                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
                                 <div class="card">
                                     <img src="../admin/<?php echo $event['image_url']; ?>" alt="Event Image" class="event_image">
                                     <div class="card-content">
@@ -123,8 +124,9 @@ if (is_array($jobData)) {
                                         <a href="visit_event.php?id=<?php echo $id; ?>" class="btn btn-default btn-icon-notika waves-effect"><i class="notika-icon notika-menu"> More</i></a>
                                     </div>
                                 </div>
-                            </div>
+                         
                         <?php } ?>
+                        </div>
                         <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
 
                         <div class="job-section" style="margin-top:60px">
