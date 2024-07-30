@@ -131,7 +131,7 @@
                         <img style="width:100%; height: 500px; object-fit: cover;" src="../admin/<?php echo $image_url; ?>"
                             alt="">
                     </div>
-                    <div id="lottie-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; display: none;"></div>
+                          <div id="lottie-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; display: none;"></div>
 
                     <div class="post">
                     <div class="reactions">
@@ -557,6 +557,9 @@
         }
     });
 }
+
+
+
             function attachEventListeners() {
                 $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
                     var $commentItem = $(this).closest('li');

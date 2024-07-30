@@ -122,6 +122,113 @@
             width: 100%;
             height: 60vh;
         }
+
+        .comments-list .comment-avatar {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            z-index: 99;
+            float: left;
+            border: 3px solid #FFF;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .comments-container {
+            width: 100%;
+            max-height: 500px;
+            /* Adjust based on your design */
+            overflow-y: auto;
+            /* Allows vertical scrolling if comments exceed the container height */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .comments-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .comment-main-level {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .comment-avatar {
+            margin-right: 10px;
+        }
+
+        .comment-box {
+            flex: 1;
+        }
+
+        .reply-container {
+            margin-top: 10px;
+        }
+
+        .reply-list {
+            padding-left: 20px;
+            /* Indent replies */
+        }
+
+        .pb-cmnt-container {
+            margin-top: 20px;
+        }
+
+        .pb-cmnt-textarea {
+            width: calc(100% - 100px);
+            /* Adjust width based on button */
+            margin-bottom: 10px;
+        }
+
+        #submitComment {
+            float: right;
+        }
+
+        .pb-cmnt-container {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .panel-info {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .panel-body {
+            padding: 15px;
+        }
+
+        .pb-cmnt-textarea {
+            width: calc(100% - 110px);
+            /* Adjust width to account for the button */
+            margin-bottom: 10px;
+            resize: vertical;
+            /* Allows vertical resizing if needed */
+            box-sizing: border-box;
+        }
+
+        #submitComment {
+            float: right;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
     </style>
 
     <!-- End Sale Statistic area -->
@@ -163,6 +270,8 @@
                                 alt="news image">
 
 
+                            <br><br>
+
                             <div class="comments-container">
                                 <h1><i class="fa fa-wechat"></i> Comments</h1>
                                 <ul id="comments-list" class="comments-list">
@@ -177,7 +286,7 @@
                                             $commenterFirstName = $commenterData["firstname"] ?? '';
                                             $commenterLastName = $commenterData["lastname"] ?? '';
                                             ?>
-                                            <li data-comment-id="<?php echo $commentId; ?>">
+                                            <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
                                                 <div class="comment-main-level">
                                                     <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>"
                                                             alt=""></div>
@@ -200,7 +309,42 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- Add reply functionality here if needed -->
+                                                <div class="reply-container" style="display: none;">
+                                                    <form class="reply-form">
+                                                        <textarea class="reply-textarea"
+                                                            placeholder="Write your reply here..."></textarea>
+                                                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                                                        <input type="hidden" name="parent_comment_id"
+                                                            value="<?php echo $commentId; ?>">
+                                                    </form>
+                                                </div>
+                                                <ul class="comments-list reply-list">
+                                                    <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
+                                                        <?php foreach ($comment["replies"] as $replyId => $reply): ?>
+                                                            <?php
+                                                            $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
+                                                            $replyAuthorData = json_decode($replyAuthorData, true);
+                                                            ?>
+                                                            <li>
+                                                                <div class="comment-avatar"><img
+                                                                        src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>"
+                                                                        alt=""></div>
+                                                                <div class="comment-box">
+                                                                    <div class="comment-head">
+                                                                        <h6 class="comment-name by-author">
+                                                                            <a
+                                                                                href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
+                                                                        </h6>
+                                                                        <span><?php echo timeAgo($reply["date_replied"]); ?></span>
+                                                                    </div>
+                                                                    <div class="comment-content">
+                                                                        <?php echo htmlspecialchars($reply["comment"]); ?>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </ul>
                                             </li>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -231,15 +375,6 @@
                         <?php endif; ?>
 
                     </div>
-
-
-
-
-
-
-
-
-
                     <!-- More Job items can be added similarly -->
                 </div>
 
@@ -359,6 +494,248 @@
                     button.style.display = "none";
                 }
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var openReplyFormId = null;
+            var refreshInterval = 5000;
+            var lastUpdate = Date.now();
+            var currentOpenReplyContent = '';
+            var caretPosition = 0;
+            var isReplyFormOpen = false;
+            var heartedComments = new Set();
+
+            $('#submitComment').click(function () {
+                var $submitButton = $(this);
+                var $form = $('#commentForm');
+                var $textarea = $('.pb-cmnt-textarea');
+                var commentContent = $textarea.val().trim();
+
+                if (commentContent === "") {
+                    swal({
+                        title: 'Oops...',
+                        text: 'Please enter a comment before sharing.',
+                        type: 'warning',
+                        timer: 5000,
+                        onOpen: function () {
+                            swal.showLoading()
+                        }
+                    }).then(
+                        function () { },
+                        function (dismiss) {
+                            if (dismiss === 'timer') {
+                                console.log('I was closed by the timer')
+                            }
+                        }
+                    )
+                    return;
+                }
+
+                $submitButton.prop('disabled', true);
+                var formData = $form.serialize();
+                $textarea.val('');
+                $submitButton.prop('disabled', false);
+
+                var $tempMessage = $('<div class="temp-message">Submitting your comment...</div>');
+                $form.after($tempMessage);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'comment_job.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        $tempMessage.remove();
+                        if (response.status === 'success') {
+                            refreshComments();
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Your comment has been added.',
+                                icon: 'success',
+                                timer: 2000,
+                                timerProgressBar: true
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function () {
+                        $tempMessage.remove();
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while submitting your comment.',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
+            function refreshComments() {
+                if (isReplyFormOpen) {
+                    return;
+                }
+
+                if (openReplyFormId) {
+                    var $currentOpenReplyForm = $(`#comments-list li[data-comment-id="${openReplyFormId}"] .reply-container`);
+                    var $currentTextarea = $currentOpenReplyForm.find('.reply-textarea');
+                    currentOpenReplyContent = $currentTextarea.val();
+                    caretPosition = $currentTextarea[0].selectionStart;
+                }
+
+                $.ajax({
+                    url: 'refresh_job.php',
+                    type: 'GET',
+                    data: { job_id: '<?php echo $jobId; ?>', last_update: lastUpdate, alumni_id: '<?php echo $alumni_id; ?>' },
+                    success: function (response) {
+                        var $commentsList = $('#comments-list');
+
+                        if (response.trim() !== '') {
+                            var $newCommentsList = $(response);
+
+                            heartedComments.forEach(function (commentId) {
+                                var $oldComment = $commentsList.find('li[data-comment-id="' + commentId + '"]');
+                                var $newComment = $newCommentsList.find('li[data-comment-id="' + commentId + '"]');
+
+                                if ($oldComment.length && $newComment.length) {
+                                    var $oldHeart = $oldComment.find('.fa-heart');
+                                    var $oldHeartCount = $oldComment.find('.heart-count');
+                                    var $newHeart = $newComment.find('.fa-heart');
+                                    var $newHeartCount = $newComment.find('.heart-count');
+
+                                    $newHeart.addClass('liked');
+                                    $newHeartCount.text($oldHeartCount.text());
+                                }
+                            });
+
+                            $commentsList.html($newCommentsList);
+                            lastUpdate = Date.now();
+                        }
+
+                        if (openReplyFormId) {
+                            var $newReplyContainer = $commentsList.find(`li[data-comment-id="${openReplyFormId}"] .reply-container`);
+                            $newReplyContainer.html(`
+                        <form class="reply-form">
+                            <textarea class="reply-textarea" placeholder="Write your reply here...">${currentOpenReplyContent}</textarea>
+                            <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                            <input type="hidden" name="parent_comment_id" value="${openReplyFormId}">
+                        </form>
+                    `).show();
+
+                            var $newTextarea = $newReplyContainer.find('.reply-textarea');
+                            $newTextarea.focus();
+                            $newTextarea[0].setSelectionRange(caretPosition, caretPosition);
+                        }
+
+                        attachEventListeners();
+                    },
+                    error: function () {
+                        console.log('Error refreshing comments');
+                    }
+                });
+            }
+
+            function attachEventListeners() {
+                $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
+                    var $commentItem = $(this).closest('li');
+                    var commentId = $commentItem.data('comment-id');
+                    var $replyContainer = $commentItem.find('.reply-container');
+
+                    if ($replyContainer.is(':empty')) {
+                        var replyForm = `
+                    <form class="reply-form">
+                        <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
+                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                        <input type="hidden" name="parent_comment_id" value="${commentId}">
+                    </form>
+                `;
+                        $replyContainer.html(replyForm).show();
+                        openReplyFormId = commentId;
+                        isReplyFormOpen = true;
+                    } else {
+                        $replyContainer.toggle();
+                        isReplyFormOpen = $replyContainer.is(':visible');
+                        openReplyFormId = isReplyFormOpen ? commentId : null;
+                    }
+                });
+
+                $(document).off('submit', '.reply-form').on('submit', '.reply-form', function (e) {
+                    e.preventDefault();
+                    var $form = $(this);
+                    var $replyTextarea = $form.find('.reply-textarea');
+                    var replyContent = $replyTextarea.val().trim();
+                    var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
+
+                    if (replyContent === "") {
+                        Swal.fire({
+                            title: 'Oops...',
+                            text: 'Please enter a reply before submitting.',
+                            icon: 'warning',
+                            timer: 5000,
+                            timerProgressBar: true
+                        });
+                        return;
+                    }
+
+                    $replyTextarea.val('');
+
+                    var $tempMessage = $('<div class="temp-message">Submitting your reply...</div>');
+                    $form.after($tempMessage);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'reply_job.php',
+                        data: {
+                            comment: replyContent,
+                            parent_comment_id: parentCommentId,
+                            job_id: '<?php echo $jobId; ?>',
+                            alumni_id: '<?php echo $alumni_id; ?>'
+                        },
+                        dataType: 'json',
+                        success: function (response) {
+                            $tempMessage.remove();
+                            if (response.status === 'success') {
+                                isReplyFormOpen = false;
+                                refreshComments();
+                                openReplyFormId = null;
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Your reply has been added.',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    timerProgressBar: true
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: response.message,
+                                    icon: 'error'
+                                });
+                            }
+                        },
+                        error: function () {
+                            $tempMessage.remove();
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'An error occurred while submitting your reply.',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                });
+            }
+
+            attachEventListeners();
+
+            setInterval(function () {
+                if (!isReplyFormOpen) {
+                    refreshComments();
+                }
+            }, refreshInterval);
         });
     </script>
 </body>
