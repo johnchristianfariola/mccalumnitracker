@@ -29,11 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
 
             $existingData = json_decode($firebase->retrieve('alumni'), true);
             $existingEntries = array();
+            $existingStudentIds = array();
 
             if ($existingData) {
                 foreach ($existingData as $record) {
                     if (isset($record['firstname'], $record['lastname'], $record['studentid'])) {
                         $existingEntries[] = $record['firstname'] . $record['lastname'] . $record['studentid'];
+                        $existingStudentIds[] = $record['studentid'];
                     }
                 }
             }
@@ -74,7 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
                     $errors[] = 'Alumni data already exists for ' . $firstname . ' ' . $lastname . ' (' . $studentid . ')';
                     continue; // Skip this entry if it's a duplicate in the database
                 }
-     
+
+                // Check for duplicate student ID in the database
+                if (in_array($studentid, $existingStudentIds)) {
+                    $errors[] = 'Student ID ' . $studentid . ' already exists in the database.';
+                    continue; // Skip this entry if the student ID is a duplicate in the database
+                }
+
                 // Fetch batch ID
                 $batchId = getBatchId($firebase, $batchYear);
                 if ($batchId === null) {
@@ -91,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
 
                 // Add alumni data
                 addAlumniData($firebase, $firstname, $lastname, $middlename, $auxiliaryname, $birthdate, $civilstatus, $gender, $addressline1, $city, $state, $zipcode, $contactnumber, $email, $courseId, $batchId, $studentid);
-                
+
                 // Record this entry as imported
                 $importedEntries[] = $entryKey;
             }

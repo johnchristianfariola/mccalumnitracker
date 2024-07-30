@@ -449,8 +449,7 @@
         });
       });
 
-      // New import file form submission
-      $('#importFileForm').on('submit', function (event) {
+    $('#importFileForm').on('submit', function(event) {
         event.preventDefault();
         var formData = new FormData(this);
         var uploadStatus = $('#uploadStatus');
@@ -462,74 +461,93 @@
         progressBar.css('width', '0%').attr('aria-valuenow', 0).text('0%');
 
         var progress = 0;
-        var intervalId = setInterval(function () {
-          if (progress < 90) {
-            progress += 1;
-            progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
-          }
-        }, 100); // Update every 100ms
+        var intervalId = setInterval(function() {
+            if (progress < 90) {
+                progress += 1;
+                progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+            }
+        }, 100);
 
         $.ajax({
-          type: 'POST',
-          url: 'import_file.php',
-          data: formData,
-          contentType: false,
-          processData: false,
-          dataType: 'json',
-          success: function (response) {
-            clearInterval(intervalId);
-            if (response.status === 'success') {
-              var completeProgress = setInterval(function () {
-                if (progress < 100) {
-                  progress += 1;
-                  progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+            type: 'POST',
+            url: 'import_file.php',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function(response) {
+                clearInterval(intervalId);
+                if (response.status === 'success') {
+                    var completeProgress = setInterval(function() {
+                        if (progress < 100) {
+                            progress += 1;
+                            progressBar.css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+                        } else {
+                            clearInterval(completeProgress);
+                            progressBar.removeClass('progress-bar-animated').addClass('bg-success');
+                            uploadStatus.text('Upload Completed');
+                            progressContainer.hide();
+                            showAlert('success', response.message);
+                        }
+                    }, 50);
                 } else {
-                  clearInterval(completeProgress);
-                  progressBar.removeClass('progress-bar-animated').addClass('bg-success');
-                  uploadStatus.text('Upload Completed');
-                  progressContainer.hide(); // Hide the progress container
-                  showAlert('success', response.message);
+                    progressContainer.hide();
+                    uploadStatus.text('Upload Failed');
+                    showAlertEdit('error', response.message);
                 }
-              }, 50);
-            } else {
-              clearInterval(intervalId);
-              progressContainer.hide(); // Hide the progress container
-              uploadStatus.text('Upload Failed');
-              showAlert('error', response.message);
+            },
+            error: function() {
+                clearInterval(intervalId);
+                progressContainer.hide();
+                uploadStatus.text('Upload Failed');
+                showAlert('error', 'An unexpected error occurred.');
             }
-          },
-          error: function () {
-            clearInterval(intervalId);
-            progressContainer.hide(); // Hide the progress container
-            uploadStatus.text('Upload Failed');
-            showAlert('error', 'An unexpected error occurred.');
-          }
         });
-      });
+    });
 
-      function showAlertEdit(type, message) {
-        let iconType = 'info';
-        let title = 'Oops...';
-
-        switch (type) {
-          case 'info':
-            iconType = 'info';
-            title = 'Oops...';
-            break;
-        }
+    function showAlert(type, message) {
+        let iconType = type === 'success' ? 'success' : 'error';
+        let title = type === 'success' ? 'Success!' : 'Error!';
 
         Swal.fire({
-          icon: iconType,
-          title: title,
-          text: message,
-          confirmButtonText: 'OK',
-          customClass: {
-            title: 'swal-title',
-            htmlContainer: 'swal-text',
-            confirmButton: 'swal-button'
-          }
+            icon: iconType,
+            title: title,
+            text: message,
+            confirmButtonText: 'OK',
+            customClass: {
+                title: 'swal-title',
+                htmlContainer: 'swal-text',
+                confirmButton: 'swal-button'
+            }
         });
-      }
+    }
+
+    function showAlertEdit(type, message) {
+        let iconType = 'info';
+        let title = 'Import Results';
+
+        // Split the message into an array if it contains <br> tags
+        let messageArray = message.split('<br>').filter(msg => msg.trim() !== '');
+
+        let messageHtml = '<ul style="text-align: left; list-style-position: inside; max-height: 300px; overflow-y: auto;">';
+        messageArray.forEach(msg => {
+            messageHtml += `<li>${msg}</li>`;
+        });
+        messageHtml += '</ul>';
+
+        Swal.fire({
+            icon: iconType,
+            title: title,
+            html: messageHtml,
+            confirmButtonText: 'OK',
+            customClass: {
+                title: 'swal-title',
+                htmlContainer: 'swal-text',
+                confirmButton: 'swal-button'
+            }
+        });
+    }
+
     });
 
   </script>
