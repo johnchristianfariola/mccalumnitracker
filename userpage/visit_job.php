@@ -65,6 +65,10 @@
             list-style: circle;
             margin-left: 20px;
         }
+        .job_img{
+            width: 100%;
+            height: 90vh;
+        }
     </style>
 
     <!-- End Sale Statistic area -->
@@ -102,7 +106,7 @@
                             </div>
                             <br><br>
                             <img style="border-radius: 1rem"
-                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="news_post" style="height:90vh !important;"
+                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="job_img"
                                 alt="news image">
                         <?php else: ?>
                             <p>Job not found.</p>
