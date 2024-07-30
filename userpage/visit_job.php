@@ -102,7 +102,7 @@
                             </div>
                             <br><br>
                             <img style="border-radius: 1rem"
-                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="news_post"
+                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="news_post" style="height:90vh;"
                                 alt="news image">
                         <?php else: ?>
                             <p>Job not found.</p>
