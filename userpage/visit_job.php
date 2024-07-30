@@ -654,39 +654,39 @@
     }, refreshInterval);
         });
     </script>
-    <script>
-        $(document).on('click', '.heart-icon', function () {
-            var $heartIcon = $(this);
-            var commentId = $heartIcon.data('comment-id');
-            var alumniId = '<?php echo $alumni_id; ?>';
+     <script>
+        $(document).on('click', '.heart-icon', function() {
+    var $heartIcon = $(this);
+    var commentId = $heartIcon.data('comment-id');
+    var alumniId = '<?php echo $alumni_id; ?>';
 
-            $.ajax({
-                type: 'POST',
-                url: 'like_job_comment.php',
-                data: {
-                    comment_id: commentId,
-                    alumni_id: alumniId
-                },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.status === 'success') {
-                        if (response.action === 'liked') {
-                            $heartIcon.addClass('liked');
-                            heartedComments.add(commentId);
-                        } else {
-                            $heartIcon.removeClass('liked');
-                            heartedComments.delete(commentId);
-                        }
-                        $heartIcon.siblings('.heart-count').text(response.heart_count);
-                    } else {
-                        console.error('Error updating like status:', response.message);
-                    }
-                },
-                error: function () {
-                    console.error('Error sending like/unlike request');
+    $.ajax({
+        type: 'POST',
+        url: 'like_job_comment.php',
+        data: {
+            comment_id: commentId,
+            alumni_id: alumniId
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                if (response.action === 'liked') {
+                    $heartIcon.addClass('liked');
+                    heartedComments.add(commentId);
+                } else {
+                    $heartIcon.removeClass('liked');
+                    heartedComments.delete(commentId);
                 }
-            });
-        });
+                $heartIcon.siblings('.heart-count').text(response.heart_count);
+            } else {
+                console.error('Error updating like status:', response.message);
+            }
+        },
+        error: function() {
+            console.error('Error sending like/unlike request');
+        }
+    });
+});
     </script>
 </body>
 

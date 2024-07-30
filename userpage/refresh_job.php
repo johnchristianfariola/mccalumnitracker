@@ -50,7 +50,7 @@ if (isset($_GET['job_id']) && isset($_GET['last_update']) && isset($_GET['alumni
             $commenterFirstName = $commenterData["firstname"] ?? '';
             $commenterLastName = $commenterData["lastname"] ?? '';
             ?>
-            <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
+            <li data-comment-id="<?php echo $commentId; ?>">
                 <div class="comment-main-level">
                     <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
                     <div class="comment-box">
@@ -62,7 +62,7 @@ if (isset($_GET['job_id']) && isset($_GET['last_update']) && isset($_GET['alumni
                             <i class="fa fa-reply reply-button"></i>
                             <i class="fa fa-heart heart-icon" data-comment-id="<?php echo $commentId; ?>"
                                 data-liked="<?php echo in_array($alumniId, $comment["liked_by"] ?? []) ? "true" : "false"; ?>"></i>
-                            <span style="float:right" class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
+                            <span style="float-" class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
                         </div>
                         <div class="comment-content">
                             <?php echo htmlspecialchars($comment["comment"]); ?>
