@@ -20,6 +20,53 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
 
 <head>
     <?php include 'includes/header.php' ?>
+    <?php
+require_once '../includes/firebaseRDB.php';
+require_once '../includes/config.php';
+
+$firebase = new firebaseRDB($databaseURL);
+
+function sortByDate($a, $b) {
+    $dateA = strtotime($a['news_created']);
+    $dateB = strtotime($b['news_created']);
+    return $dateB - $dateA;
+}
+
+// Retrieve admin data
+$adminData = $firebase->retrieve("admin/admin");
+$adminData = json_decode($adminData, true);
+
+// Extract admin profile image URL
+$admin_image_url = $adminData['image_url'];
+$admin_firstname = $adminData['firstname'];
+$admin_lastmame = $adminData['lastname'];
+
+// Retrieve news data
+$data = $firebase->retrieve("news");
+$data = json_decode($data, true);
+
+if (is_array($data)) {
+    usort($data, 'sortByDate');
+}
+
+// Retrieve event data
+$eventData = $firebase->retrieve("event");
+$eventData = json_decode($eventData, true);
+
+// Retrieve job data
+$jobData = $firebase->retrieve("job");
+$jobData = json_decode($jobData, true);
+
+function sortByDateJob($a, $b) {
+    $dateA = strtotime($a['job_created']);
+    $dateB = strtotime($b['job_created']);
+    return $dateB - $dateA;
+}
+
+if (is_array($jobData)) {
+    usort($jobData, 'sortByDateJob');
+}
+?>
 </head>
 
 <body>
@@ -36,159 +83,74 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
     <?php include 'includes/main_menu.php' ?>
 
     <!-- End Sale Statistic area-->
-    <div class="main-content"></div>
+    <div class="main-content">
     <div class="sale-statistic-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
-                    <?php
-                    require_once '../includes/firebaseRDB.php';
-                    require_once '../includes/config.php';
-                    $firebase = new firebaseRDB($databaseURL);
-
-                    function sortByDate($a, $b)
-                    {
-                        $dateA = strtotime($a['news_created']);
-                        $dateB = strtotime($b['news_created']);
-                        return $dateB - $dateA;
-                    }
-
-                    // Retrieve admin data
-                    $adminData = $firebase->retrieve("admin/admin");
-                    $adminData = json_decode($adminData, true);
-
-                    // Extract admin profile image URL
-                    $admin_image_url = $adminData['image_url'];
-                    $admin_firstname = $adminData['firstname'];
-                    $admin_lastmame = $adminData['lastname'];
-
-                    $data = $firebase->retrieve("news");
-                    $data = json_decode($data, true);
-
-                    if (is_array($data)) {
-                        usort($data, 'sortByDate');
-                        foreach ($data as $id => $news) {
-                            $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news['news_description'])));
-                            $news_title = strip_tags($news['news_title']);
-                            $news_author = strip_tags($news['news_author']);
-                            $news_created = strip_tags($news['news_created']);
-                            $image_url = strip_tags($news['image_url']);
-                            ?>
-
-                            <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-                                <div class="curved-inner-pro">
-                                    <div class="curved-ctn">
-                                        <div class="image-section">
-                                            <img class="profile" src="../admin/<?php echo $admin_image_url; ?>"
-                                                alt="news image">
-                                        </div>
-                                        <div class="info-section">
-                                            <h2><?php echo $admin_firstname . ' ' . $admin_lastmame; ?></h2>
-                                            <i><?php echo $news_created; ?></i>
-                                        </div>
+                    <?php foreach ($data as $id => $news) { ?>
+                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+                            <div class="curved-inner-pro">
+                                <div class="curved-ctn">
+                                    <div class="image-section">
+                                        <img class="profile" src="../admin/<?php echo $admin_image_url; ?>" alt="news image">
+                                    </div>
+                                    <div class="info-section">
+                                        <h2><?php echo $admin_firstname . ' ' . $admin_lastmame; ?></h2>
+                                        <i><?php echo $news['news_created']; ?></i>
                                     </div>
                                 </div>
-                                <div class="content">
-                                    <h1><?php echo $news_title; ?></h1>
-                                    <p class="news-description"><?php echo $news_description; ?></p>
-                                    <button class="toggle-button">Show More...</button>
-                                </div>
-                                <img style="border-radius: 1rem" src="../admin/<?php echo $image_url; ?>" class="news_post"
-                                    alt="news image">
                             </div>
-
-                            <?php
-                        }
-                    }
-                    ?>
+                            <div class="content">
+                                <h1><?php echo $news['news_title']; ?></h1>
+                                <p class="news-description"><?php echo nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news['news_description']))); ?></p>
+                                <button class="toggle-button">Show More...</button>
+                            </div>
+                            <img style="border-radius: 1rem" src="../admin/<?php echo $news['image_url']; ?>" class="news_post" alt="news image">
+                        </div>
+                    <?php } ?>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
                     <div class="right-section">
-                        <?php
-                        $data = $firebase->retrieve("event");
-                        $data = json_decode($data, true);
-
-                        if (is_array($data)) {
-                            $count = 0; // Initialize counter
-                        
-                            foreach ($data as $id => $event) {
-                                if ($count >= 5)
-                                    break; // Limit to 5 events
-                        
-                                $eventTitle = htmlspecialchars($event['event_title']);
-                                $eventDate = htmlspecialchars($event['event_created']);
-                                $eventDescription = strip_tags($event['event_description']);
-                                $eventImage = htmlspecialchars($event['image_url']);
-
-                                echo '
-                <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
-                    <div class="card">
-                        <img src="../admin/' . $eventImage . '" alt="Event Image" class="event_image">
-                        <div class="card-content">
-                            <hr>
-                            <div class="card-title">' . $eventTitle . '</div>
-                            <div class="card-date">Posted on ' . $eventDate . '</div>
-                            <a href="visit_event.php?id=' . $id . '" class="btn btn-default btn-icon-notika waves-effect"><i class="notika-icon notika-menu"> More</i></a>
-                        </div>
-                    </div>
-                </div>';
-
-                                $count++; // Increment counter
-                            }
-                        }
-                        ?>
-
+                        <?php foreach ($eventData as $id => $event) { ?>
+                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
+                                <div class="card">
+                                    <img src="../admin/<?php echo $event['image_url']; ?>" alt="Event Image" class="event_image">
+                                    <div class="card-content">
+                                        <hr>
+                                        <div class="card-title"><?php echo $event['event_title']; ?></div>
+                                        <div class="card-date">Posted on <?php echo $event['event_created']; ?></div>
+                                        <a href="visit_event.php?id=<?php echo $id; ?>" class="btn btn-default btn-icon-notika waves-effect"><i class="notika-icon notika-menu"> More</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
                         <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
 
                         <div class="job-section" style="margin-top:60px">
                             <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
-                            <?php
-                            $data = $firebase->retrieve("job");
-                            $data = json_decode($data, true);
-
-                            function sortByDateJob($a, $b)
-                            {
-                                $dateA = strtotime($a['job_created']);
-                                $dateB = strtotime($b['job_created']);
-                                return $dateB - $dateA;
-                            }
-
-                            if (is_array($data)) {
-                                usort($data, 'sortByDateJob');
-                                foreach ($data as $id => $job) {
-                                    if (isset($job['status']) && $job['status'] == 'Active') {
-                                        $jobTitle = isset($job['job_title']) ? strip_tags($job['job_title']) : 'N/A';
-                                        $workTime = isset($job['work_time']) ? strip_tags($job['work_time']) : 'N/A';
-                                        $company = isset($job['company_name']) ? strip_tags($job['company_name']) : 'N/A';
-                                        $jobDate = isset($job['job_created']) ? strip_tags($job['job_created']) : 'N/A';
-
-                                        $backgroundColor = ($workTime == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold';
-                                        $color = ($workTime == 'Full-Time') ? 'white' : 'black';
-
-                                        echo '
+                            <?php foreach ($jobData as $id => $job) { ?>
+                                <?php if (isset($job['status']) && $job['status'] == 'Active') { ?>
                                     <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
                                         <div class="card">
                                             <div class="card-content">
                                                 <div class="job-container">
-                                                    <div class="job-title">' . $jobTitle . '</div>
-                                                    <div class="job-timesced" style="background-color: ' . $backgroundColor . '; color: ' . $color . ';">' . $workTime . '</div>
+                                                    <div class="job-title"><?php echo $job['job_title']; ?></div>
+                                                    <div class="job-timesced" style="background-color: <?php echo ($job['work_time'] == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold'; ?>; color: <?php echo ($job['work_time'] == 'Full-Time') ? 'white' : 'black'; ?>;"><?php echo $job['work_time']; ?></div>
                                                 </div>
                                                 <hr>
-                                                <div class="card-date">' . $company . '</div>
-                                                <div class="card-date">Posted on ' . $jobDate . '</div>
+                                                <div class="card-date"><?php echo $job['company_name']; ?></div>
+                                                <div class="card-date">Posted on <?php echo $job['job_created']; ?></div>
                                             </div>
                                         </div>
-                                    </div>';
-                                    }
-                                }
-                            }
-                            ?>
+                                    </div>
+                                <?php } ?>
+                            <?php } ?>
                         </div>
 
                         <div class="forum-section" style="margin-top:60px">
                             <h3><i class="fa fa-wechat"></i> Forum</h3>
-                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
-                                data-wow-delay="0.3">
+                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
                                 <div class="card">
                                     <div class="card-content">
                                         <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
