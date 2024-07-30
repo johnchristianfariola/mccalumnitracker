@@ -117,7 +117,6 @@
             list-style: circle;
             margin-left: 20px;
         }
-
     </style>
 
     <!-- End Sale Statistic area -->
@@ -162,74 +161,81 @@
                             <br><br>
 
 
-                            
-<div class="comments-section">
-    <h1><i class="fa fa-wechat"></i> Comments</h1>
-    <ul id="comment-list" class="comment-list">
-        <?php if (empty($jobComments)): ?>
-            <li id="no-comments-message" class="center-message">Be the First to Comment</li>
-        <?php else: ?>
-            <?php foreach ($jobComments as $commentId => $comment): ?>
-                <?php
-                $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
-                $commenterData = json_decode($commenterData, true);
-                $commenterProfileUrl = $commenterData["profile_url"] ?? '';
-                $commenterFirstName = $commenterData["firstname"] ?? '';
-                $commenterLastName = $commenterData["lastname"] ?? '';
-                ?>
-                <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
-                    <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt=""></div>
-                    <div class="comment-box">
-                        <div class="comment-header">
-                            <h6 class="comment-author">
-                                <a href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
-                            </h6>
-                            <span><?php echo $comment["date_ago"]; ?></span>
-                            <i class="fa fa-reply reply-button"></i>
-                            <i class="fa fa-heart heart-icon <?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? 'liked' : ''; ?>"
-                               data-comment-id="<?php echo $commentId; ?>"></i>
-                            <span class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
-                        </div>
-                        <div class="comment-body">
-                            <?php echo htmlspecialchars($comment["comment"]); ?>
-                        </div>
-                    </div>
-                </li>
-                <div class="reply-container" style="display: none;">
-                    <form class="reply-form">
-                        <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
-                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                        <input type="hidden" name="parent_comment_id" value="<?php echo $commentId; ?>">
-                    </form>
-                </div>
-                <ul class="comment-list reply-list">
-                    <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
-                        <?php foreach ($comment["replies"] as $replyId => $reply): ?>
-                            <?php
-                            $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
-                            $replyAuthorData = json_decode($replyAuthorData, true);
-                            ?>
-                            <li>
-                                <div class="comment-avatar"><img src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>" alt=""></div>
-                                <div class="comment-box">
-                                    <div class="comment-header">
-                                        <h6 class="comment-author">
-                                            <a href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
-                                        </h6>
-                                        <span><?php echo timeAgo($reply["date_replied"]); ?></span>
-                                    </div>
-                                    <div class="comment-body">
-                                        <?php echo htmlspecialchars($reply["comment"]); ?>
-                                    </div>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </ul>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </ul>
-</div>
+
+                            <div class="comments-section">
+                                <h1><i class="fa fa-wechat"></i> Comments</h1>
+                                <ul id="comment-list" class="comment-list">
+                                    <?php if (empty($jobComments)): ?>
+                                        <li id="no-comments-message" class="center-message">Be the First to Comment</li>
+                                    <?php else: ?>
+                                        <?php foreach ($jobComments as $commentId => $comment): ?>
+                                            <?php
+                                            $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
+                                            $commenterData = json_decode($commenterData, true);
+                                            $commenterProfileUrl = $commenterData["profile_url"] ?? '';
+                                            $commenterFirstName = $commenterData["firstname"] ?? '';
+                                            $commenterLastName = $commenterData["lastname"] ?? '';
+                                            ?>
+                                            <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
+                                                <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt="">
+                                                </div>
+                                                <div class="comment-box">
+                                                    <div class="comment-header">
+                                                        <h6 class="comment-author">
+                                                            <a
+                                                                href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
+                                                        </h6>
+                                                        <span><?php echo $comment["date_ago"]; ?></span>
+                                                        <i class="fa fa-reply reply-button"></i>
+                                                        <i class="fa fa-heart heart-icon <?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? 'liked' : ''; ?>"
+                                                            data-comment-id="<?php echo $commentId; ?>"></i>
+                                                        <span
+                                                            class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
+                                                    </div>
+                                                    <div class="comment-body">
+                                                        <?php echo htmlspecialchars($comment["comment"]); ?>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <div class="reply-container" style="display: none;">
+                                                <form class="reply-form">
+                                                    <textarea class="reply-textarea"
+                                                        placeholder="Write your reply here..."></textarea>
+                                                    <button type="submit" class="btn btn-primary submit-reply">Reply</button>
+                                                    <input type="hidden" name="parent_comment_id" value="<?php echo $commentId; ?>">
+                                                </form>
+                                            </div>
+                                            <ul class="comment-list reply-list">
+                                                <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
+                                                    <?php foreach ($comment["replies"] as $replyId => $reply): ?>
+                                                        <?php
+                                                        $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
+                                                        $replyAuthorData = json_decode($replyAuthorData, true);
+                                                        ?>
+                                                        <li>
+                                                            <div class="comment-avatar"><img
+                                                                    src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>"
+                                                                    alt=""></div>
+                                                            <div class="comment-box">
+                                                                <div class="comment-header">
+                                                                    <h6 class="comment-author">
+                                                                        <a
+                                                                            href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
+                                                                    </h6>
+                                                                    <span><?php echo timeAgo($reply["date_replied"]); ?></span>
+                                                                </div>
+                                                                <div class="comment-body">
+                                                                    <?php echo htmlspecialchars($reply["comment"]); ?>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </ul>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
 
                             <div class="container pb-cmnt-container" style="width:100%">
                                 <div class="row">
@@ -519,103 +525,133 @@
                 });
             }
 
-            function attachEventListeners() {
-                $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
-                    var $commentItem = $(this).closest('li');
-                    var commentId = $commentItem.data('comment-id');
-                    var $replyContainer = $commentItem.find('.reply-container');
+         
+    function attachEventListeners() {
+        // Reply button click event
+        $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
+            var $commentItem = $(this).closest('li');
+            var commentId = $commentItem.data('comment-id');
+            var $replyContainer = $commentItem.next('.reply-container');
 
-                    if ($replyContainer.is(':empty')) {
-                        var replyForm = `
-                    <form class="reply-form">
-                        <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
-                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                        <input type="hidden" name="parent_comment_id" value="${commentId}">
-                    </form>
-                `;
-                        $replyContainer.html(replyForm).show();
-                        openReplyFormId = commentId;
-                        isReplyFormOpen = true;
-                    } else {
-                        $replyContainer.toggle();
-                        isReplyFormOpen = $replyContainer.is(':visible');
-                        openReplyFormId = isReplyFormOpen ? commentId : null;
-                    }
+            if ($replyContainer.is(':hidden')) {
+                $replyContainer.show();
+                openReplyFormId = commentId;
+                isReplyFormOpen = true;
+            } else {
+                $replyContainer.hide();
+                isReplyFormOpen = false;
+                openReplyFormId = null;
+            }
+        });
+
+        // Reply form submission
+        $(document).off('submit', '.reply-form').on('submit', '.reply-form', function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            var $replyTextarea = $form.find('.reply-textarea');
+            var replyContent = $replyTextarea.val().trim();
+            var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
+
+            if (replyContent === "") {
+                Swal.fire({
+                    title: 'Oops...',
+                    text: 'Please enter a reply before submitting.',
+                    icon: 'warning',
+                    timer: 5000,
+                    timerProgressBar: true
                 });
-
-                $(document).off('submit', '.reply-form').on('submit', '.reply-form', function (e) {
-                    e.preventDefault();
-                    var $form = $(this);
-                    var $replyTextarea = $form.find('.reply-textarea');
-                    var replyContent = $replyTextarea.val().trim();
-                    var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
-
-                    if (replyContent === "") {
-                        Swal.fire({
-                            title: 'Oops...',
-                            text: 'Please enter a reply before submitting.',
-                            icon: 'warning',
-                            timer: 5000,
-                            timerProgressBar: true
-                        });
-                        return;
-                    }
-
-                    $replyTextarea.val('');
-
-                    var $tempMessage = $('<div class="temp-message">Submitting your reply...</div>');
-                    $form.after($tempMessage);
-
-                    $.ajax({
-                        type: 'POST',
-                        url: 'reply_job.php',
-                        data: {
-                            comment: replyContent,
-                            parent_comment_id: parentCommentId,
-                            job_id: '<?php echo $jobId; ?>',
-                            alumni_id: '<?php echo $alumni_id; ?>'
-                        },
-                        dataType: 'json',
-                        success: function (response) {
-                            $tempMessage.remove();
-                            if (response.status === 'success') {
-                                isReplyFormOpen = false;
-                                refreshComments();
-                                openReplyFormId = null;
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'Your reply has been added.',
-                                    icon: 'success',
-                                    timer: 2000,
-                                    timerProgressBar: true
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: response.message,
-                                    icon: 'error'
-                                });
-                            }
-                        },
-                        error: function () {
-                            $tempMessage.remove();
-                            Swal.fire({
-                                title: 'Error',
-                                text: 'An error occurred while submitting your reply.',
-                                icon: 'error'
-                            });
-                        }
-                    });
-                });
+                return;
             }
 
-            attachEventListeners();
+            $replyTextarea.val('');
 
-            setInterval(function () {
-                if (!isReplyFormOpen) {
-                    refreshComments();
+            var $tempMessage = $('<div class="temp-message">Submitting your reply...</div>');
+            $form.after($tempMessage);
+
+            $.ajax({
+                type: 'POST',
+                url: 'reply_job.php',
+                data: {
+                    comment: replyContent,
+                    parent_comment_id: parentCommentId,
+                    job_id: '<?php echo $jobId; ?>',
+                    alumni_id: '<?php echo $alumni_id; ?>'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    $tempMessage.remove();
+                    if (response.status === 'success') {
+                        isReplyFormOpen = false;
+                        refreshComments();
+                        openReplyFormId = null;
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Your reply has been added.',
+                            icon: 'success',
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function () {
+                    $tempMessage.remove();
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'An error occurred while submitting your reply.',
+                        icon: 'error'
+                    });
                 }
-            }, refreshInterval);
+            });
+        });
+
+        // Heart icon click event
+        $(document).off('click', '.heart-icon').on('click', '.heart-icon', function () {
+            var $heartIcon = $(this);
+            var commentId = $heartIcon.data('comment-id');
+            var $heartCount = $heartIcon.next('.heart-count');
+            var currentCount = parseInt($heartCount.text());
+
+            $.ajax({
+                type: 'POST',
+                url: 'like_comment.php',
+                data: {
+                    comment_id: commentId,
+                    alumni_id: '<?php echo $alumni_id; ?>'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        if (response.action === 'liked') {
+                            $heartIcon.addClass('liked');
+                            $heartCount.text(currentCount + 1);
+                            heartedComments.add(commentId);
+                        } else {
+                            $heartIcon.removeClass('liked');
+                            $heartCount.text(currentCount - 1);
+                            heartedComments.delete(commentId);
+                        }
+                    }
+                },
+                error: function () {
+                    console.log('Error updating like');
+                }
+            });
+        });
+    }
+
+    attachEventListeners();
+
+    setInterval(function () {
+        if (!isReplyFormOpen) {
+            refreshComments();
+        }
+    }, refreshInterval);
         });
     </script>
     <script>
