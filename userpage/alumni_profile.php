@@ -1,41 +1,9 @@
 <?php include '../includes/session.php'; ?>
-<?php
-
-// If the user is not logged in, redirect to the main index page
-if (!isset($_SESSION['alumni'])) {
-	header('location: ../index.php');
-	exit();
-}
-
-// If forms_completed is true, redirect to the user home page
-if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == true) {
-	header('location: index.php');
-	exit();
-}
-
-if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed']) {
-	// Redirect to index.php if forms are completed
-	header('location: index.php');
-	exit();
-}
-
-
-?>
 
 
 
-<?php
 
 
-// Fetch data from Firebase
-$courseKey = "course"; // Replace with your actual Firebase path or key for courses
-
-$data = $firebase->retrieve($courseKey);
-$data = json_decode($data, true); // Decode JSON data into associative arrays
-
-$batchYears = $firebase->retrieve("batch_yr");
-$batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
-?>
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
@@ -52,6 +20,38 @@ $batchYears = json_decode($batchYears, true); // Decode JSON data into associati
 	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
 	<title>Responsive Regisration Form </title>
+	<?php
+
+	// If the user is not logged in, redirect to the main index page
+	if (!isset($_SESSION['alumni'])) {
+		header('location: ../index.php');
+		exit();
+	}
+
+	// If forms_completed is true, redirect to the user home page
+	if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == true) {
+		header('location: index.php');
+		exit();
+	}
+
+	if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed']) {
+		// Redirect to index.php if forms are completed
+		header('location: index.php');
+		exit();
+	}
+
+
+	?>
+	<?php
+	// Fetch data from Firebase
+	$courseKey = "course"; // Replace with your actual Firebase path or key for courses
+	
+	$data = $firebase->retrieve($courseKey);
+	$data = json_decode($data, true); // Decode JSON data into associative arrays
+	
+	$batchYears = $firebase->retrieve("batch_yr");
+	$batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
+	?>
 </head>
 
 <body>
