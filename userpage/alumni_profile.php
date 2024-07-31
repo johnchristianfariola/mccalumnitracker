@@ -1,3 +1,7 @@
+<?php include '../includes/session.php'; ?>
+
+
+
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
@@ -13,8 +17,21 @@
 	<!----===== Iconscout CSS ===== -->
 	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-	<title>Responsive Regisration Form </title>
-	<?php include '../includes/session.php'; ?>
+
+	<?php
+
+
+	// Fetch data from Firebase
+	$courseKey = "course"; // Replace with your actual Firebase path or key for courses
+	
+	$data = $firebase->retrieve($courseKey);
+	$data = json_decode($data, true); // Decode JSON data into associative arrays
+	
+	$batchYears = $firebase->retrieve("batch_yr");
+	$batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
+	?>
+
+
 	<?php
 
 	// If the user is not logged in, redirect to the main index page
@@ -38,136 +55,13 @@
 
 	?>
 
-	<?php
-
-
-	// Fetch data from Firebase
-	$courseKey = "course"; // Replace with your actual Firebase path or key for courses
-	
-	$data = $firebase->retrieve($courseKey);
-	$data = json_decode($data, true); // Decode JSON data into associative arrays
-	
-	$batchYears = $firebase->retrieve("batch_yr");
-	$batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
-	?>
-
-<script>
-	const form = document.querySelector(".form"),
-		nextBtn = form.querySelector(".nextBtn"),
-		backBtn = form.querySelector(".backBtn"),
-		formSections = form.querySelectorAll(".form-section");
-
-	let currentSection = 0; // Track current section index
-
-	// Initialize form navigation
-	function initializeForm() {
-		// Hide all sections except the first one
-		formSections.forEach((section, index) => {
-			if (index !== currentSection) {
-				section.classList.add("move-from-right");
-			} else {
-				section.classList.add("active");
-			}
-		});
-
-		// Add event listeners to navigation buttons
-		nextBtn.addEventListener("click", goToNextSection);
-		backBtn.addEventListener("click", goToPreviousSection);
-	}
-
-	// Function to navigate to the next section
-	function goToNextSection() {
-		// Validate current section inputs if needed
-		const inputsValid = validateInputs(formSections[currentSection]);
-
-		// Proceed to the next section if inputs are valid
-		if (inputsValid) {
-			formSections[currentSection].classList.remove("active");
-			formSections[currentSection].classList.add("move-from-right");
-			currentSection++;
-			formSections[currentSection].classList.remove("move-from-right");
-			formSections[currentSection].classList.add("active");
-		}
-	}
-
-	// Function to navigate to the previous section
-	function goToPreviousSection() {
-		formSections[currentSection].classList.remove("active");
-		formSections[currentSection].classList.add("move-from-right");
-		currentSection--;
-		formSections[currentSection].classList.remove("move-from-right");
-		formSections[currentSection].classList.add("active");
-	}
-
-	// Example input validation function (customize as per your requirements)
-	function validateInputs(section) {
-		const inputs = section.querySelectorAll("input[required]");
-		let isValid = true;
-
-		inputs.forEach(input => {
-			if (!input.value.trim()) {
-				isValid = false;
-				// Optionally show error messages or other validation feedback
-			}
-		});
-
-		return isValid;
-	}
-
-	// Initialize the form
-	initializeForm();
-</script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-	$(document).ready(function () {
-		function toggleEmploymentFields() {
-			const selectedStatus = $('#work-status').val();
-			if (selectedStatus === 'Employed') {
-				$('#first_employment_date').closest('.input-field').show();
-				$('#date_for_current_employment').closest('.input-field').show();
-				$('#type_of_work').closest('.input-field').show();
-				$('#work_position').closest('.input-field').show();
-				$('#current_monthly_income').closest('.input-field').show();
-				$('#work_related').closest('.input-field').show();
-				$('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').attr('required', true);
-			} else {
-				$('#first_employment_date').closest('.input-field').hide();
-				$('#date_for_current_employment').closest('.input-field').hide();
-				$('#type_of_work').closest('.input-field').hide();
-				$('#work_position').closest('.input-field').hide();
-				$('#current_monthly_income').closest('.input-field').hide();
-				$('#work_related').closest('.input-field').hide();
-				$('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').removeAttr('required');
-			}
-		}
-
-		$('#work-status').change(toggleEmploymentFields);
-
-		// Initial toggle based on current value
-		toggleEmploymentFields();
-	});
-
-	function displayImage(input) {
-		if (input.files && input.files[0]) {
-			var reader = new FileReader();
-			reader.onload = function (e) {
-				document.getElementById('profileDisplay').style.backgroundImage = `url(${e.target.result})`;
-			}
-			reader.readAsDataURL(input.files[0]);
-		}
-	}
-
-	document.getElementById('profileImageInput').addEventListener('change', function () {
-		displayImage(this);
-	});
-
-
-</script>
-
+	<title>Alumni Regisration Form </title>
 </head>
 
 <body>
+
+
+
 
 	<div class="bg"></div>
 	<div class="bg bg2"></div>
@@ -419,3 +313,117 @@
 </body>
 
 </html>
+
+<script>
+	const form = document.querySelector(".form"),
+		nextBtn = form.querySelector(".nextBtn"),
+		backBtn = form.querySelector(".backBtn"),
+		formSections = form.querySelectorAll(".form-section");
+
+	let currentSection = 0; // Track current section index
+
+	// Initialize form navigation
+	function initializeForm() {
+		// Hide all sections except the first one
+		formSections.forEach((section, index) => {
+			if (index !== currentSection) {
+				section.classList.add("move-from-right");
+			} else {
+				section.classList.add("active");
+			}
+		});
+
+		// Add event listeners to navigation buttons
+		nextBtn.addEventListener("click", goToNextSection);
+		backBtn.addEventListener("click", goToPreviousSection);
+	}
+
+	// Function to navigate to the next section
+	function goToNextSection() {
+		// Validate current section inputs if needed
+		const inputsValid = validateInputs(formSections[currentSection]);
+
+		// Proceed to the next section if inputs are valid
+		if (inputsValid) {
+			formSections[currentSection].classList.remove("active");
+			formSections[currentSection].classList.add("move-from-right");
+			currentSection++;
+			formSections[currentSection].classList.remove("move-from-right");
+			formSections[currentSection].classList.add("active");
+		}
+	}
+
+	// Function to navigate to the previous section
+	function goToPreviousSection() {
+		formSections[currentSection].classList.remove("active");
+		formSections[currentSection].classList.add("move-from-right");
+		currentSection--;
+		formSections[currentSection].classList.remove("move-from-right");
+		formSections[currentSection].classList.add("active");
+	}
+
+	// Example input validation function (customize as per your requirements)
+	function validateInputs(section) {
+		const inputs = section.querySelectorAll("input[required]");
+		let isValid = true;
+
+		inputs.forEach(input => {
+			if (!input.value.trim()) {
+				isValid = false;
+				// Optionally show error messages or other validation feedback
+			}
+		});
+
+		return isValid;
+	}
+
+	// Initialize the form
+	initializeForm();
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function () {
+		function toggleEmploymentFields() {
+			const selectedStatus = $('#work-status').val();
+			if (selectedStatus === 'Employed') {
+				$('#first_employment_date').closest('.input-field').show();
+				$('#date_for_current_employment').closest('.input-field').show();
+				$('#type_of_work').closest('.input-field').show();
+				$('#work_position').closest('.input-field').show();
+				$('#current_monthly_income').closest('.input-field').show();
+				$('#work_related').closest('.input-field').show();
+				$('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').attr('required', true);
+			} else {
+				$('#first_employment_date').closest('.input-field').hide();
+				$('#date_for_current_employment').closest('.input-field').hide();
+				$('#type_of_work').closest('.input-field').hide();
+				$('#work_position').closest('.input-field').hide();
+				$('#current_monthly_income').closest('.input-field').hide();
+				$('#work_related').closest('.input-field').hide();
+				$('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').removeAttr('required');
+			}
+		}
+
+		$('#work-status').change(toggleEmploymentFields);
+
+		// Initial toggle based on current value
+		toggleEmploymentFields();
+	});
+
+	function displayImage(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				document.getElementById('profileDisplay').style.backgroundImage = `url(${e.target.result})`;
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	document.getElementById('profileImageInput').addEventListener('change', function () {
+		displayImage(this);
+	});
+
+
+</script>
