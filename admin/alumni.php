@@ -493,7 +493,7 @@
                 } else {
                     progressContainer.hide();
                     uploadStatus.text('Upload Failed');
-                    showAlertEdit('error', response.message);
+                    showAlertEdit('info', response.message);
                 }
             },
             error: function() {
@@ -506,23 +506,21 @@
     });
 
     function showAlert(type, message) {
-        let iconType = type === 'success' ? 'success' : 'error';
-        let title = type === 'success' ? 'Success!' : 'Error!';
-
-        Swal.fire({
-            icon: iconType,
-            title: title,
-            text: message,
-            confirmButtonText: 'OK',
-            customClass: {
-                title: 'swal-title',
-                htmlContainer: 'swal-text',
-                confirmButton: 'swal-button'
+                Swal.fire({
+                    position: 'top-end',
+                    icon: type,
+                    title: message,
+                    showConfirmButton: false,
+                    timer: 2500,
+                    willClose: () => {
+                        if (type === 'success') {
+                            location.reload();
+                        }
+                    }
+                });
             }
-        });
-    }
 
-    function showAlertEdit(type, message) {
+            function showAlertEdit(type, message) {
         let iconType = 'info';
         let title = 'Import Results';
 
