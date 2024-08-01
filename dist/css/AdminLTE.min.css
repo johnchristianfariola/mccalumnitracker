@@ -123,16 +123,10 @@ body {
     transform: translate(230px, 0);
   }
 }
-@media (max-width: 990px) {
-  .breadcrumb{
-    display: none;
-  }
-}
 .content-wrapper {
   min-height: 100%;
   background-color: #ecf0f5;
   z-index: 800;
-  
 }
 .main-footer {
   background: #fff;
@@ -150,7 +144,6 @@ body {
   right: 0;
   left: 0;
 }
-
 .fixed .content-wrapper,
 .fixed .right-side {
   padding-top: 50px;
@@ -232,7 +225,7 @@ a:focus {
   margin-bottom: 0;
   margin-left: 230px;
   border: none;
-  height: 0px;
+  min-height: 0px;
   border-radius: 0;
 }
 .layout-top-nav .main-header .navbar {
@@ -5975,9 +5968,10 @@ table.text-center th {
 }
 
 
-/*=============Recent Comment Start Here===================*/
 
-.recent-comments-wrapper {
+ /*=============Recent Comment Start Here===================*/
+ 
+ .recent-comments-wrapper {
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
