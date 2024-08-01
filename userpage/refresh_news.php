@@ -2,6 +2,9 @@
 require_once '../includes/firebaseRDB.php';
 
 // Initialize Firebase URL
+date_default_timezone_set('Asia/Manila');
+
+
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 $news_id = $_GET['news_id'];
