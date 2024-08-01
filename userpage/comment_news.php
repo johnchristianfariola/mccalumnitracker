@@ -5,6 +5,9 @@ require_once '../includes/firebaseRDB.php';
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
+// Set the default timezone to Philippine Time
+date_default_timezone_set('Asia/Manila');
+
 if (isset($_POST['news_id']) && isset($_POST['alumni_id']) && isset($_POST['comment'])) {
     $news_id = $_POST['news_id'];
     $alumni_id = $_POST['alumni_id'];
