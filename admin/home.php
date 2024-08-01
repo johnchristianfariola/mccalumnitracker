@@ -1,7 +1,7 @@
 <?php include 'includes/session.php'; ?>
 <?php
 include 'includes/timezone.php';
-require_once 'includes/config.php'; // Include your config file
+require_once 'includes/config.php';
 require_once 'includes/firebaseRDB.php';
 
 $firebase = new firebaseRDB($databaseURL);
@@ -20,23 +20,31 @@ $forumData = $firebase->retrieve("forum");
 $jobData = $firebase->retrieve("job");
 $eventData = $firebase->retrieve("event");
 $trackVisitors = $firebase->retrieve("track_visitors");
+$newsData = $firebase->retrieve("news");
+$newsCommentsData = $firebase->retrieve("news_comments");
+$eventCommentsData = $firebase->retrieve("event_comments");
+$jobCommentsData = $firebase->retrieve("job_comments");
 
 // Decode JSON data into associative arrays
 $courses = json_decode($courseData, true) ?: [];
 $alumni = json_decode($alumniData, true) ?: [];
 $batchYr = json_decode($batchYrData, true) ?: [];
 $forum = json_decode($forumData, true) ?: [];
-$jobData = json_decode($jobData, true) ?: [];
-$event = json_decode($eventData, true) ?: [];
-$trackVisitors = json_decode($trackVisitors, true);
+$jobs = json_decode($jobData, true) ?: [];
+$events = json_decode($eventData, true) ?: [];
+$trackVisitors = json_decode($trackVisitors, true) ?: [];
+$news = json_decode($newsData, true) ?: [];
+$newsComments = json_decode($newsCommentsData, true) ?: [];
+$eventComments = json_decode($eventCommentsData, true) ?: [];
+$jobComments = json_decode($jobCommentsData, true) ?: [];
 
 // Count alumni
 $alumniCount = is_array($alumni) ? count($alumni) : 0;
 
 // Count active jobs
 $jobCount = 0;
-if (is_array($jobData)) {
-  foreach ($jobData as $job) {
+if (is_array($jobs)) {
+  foreach ($jobs as $job) {
     if (isset($job['status']) && $job['status'] === 'Active') {
       $jobCount++;
     }
@@ -44,7 +52,7 @@ if (is_array($jobData)) {
 }
 
 // Count events
-$eventCount = is_array($event) ? count($event) : 0;
+$eventCount = is_array($events) ? count($events) : 0;
 
 // Count forums
 $forumCount = is_array($forum) ? count($forum) : 0;
@@ -102,22 +110,73 @@ $allMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oc
 $categories = $allMonths;
 $visitors = array_values($visitorCounts);
 
-
 // Count Verified Alumni
-
-$radialVerifiedUser = $firebase->retrieve("alumni");
-$radialVerifiedUser = json_decode($radialVerifiedUser, true);
-
-$totalAlumni = count($radialVerifiedUser);
+$totalAlumni = count($alumni);
 $verifiedAlumni = 0;
 
-foreach ($radialVerifiedUser as $alumnus) {
+foreach ($alumni as $alumnus) {
   if (isset($alumnus['status']) && $alumnus['status'] === 'verified') {
     $verifiedAlumni++;
   }
 }
 
 $percentVerified = ($totalAlumni > 0) ? round(($verifiedAlumni / $totalAlumni) * 100, 1) : 0;
+
+// Function to get alumni name
+function getAlumniName($alumni_id, $alumni)
+{
+  if (isset($alumni[$alumni_id])) {
+    return $alumni[$alumni_id]['firstname'] . ' ' . $alumni[$alumni_id]['lastname'];
+  }
+  return "Unknown";
+}
+
+// Function to get item title
+function getItemTitle($item_id, $items)
+{
+  if (isset($items[$item_id])) {
+    return isset($items[$item_id]['news_author']) ? $items[$item_id]['news_author'] :
+      (isset($items[$item_id]['event_author']) ? $items[$item_id]['event_author'] :
+        (isset($items[$item_id]['job_title']) ? $items[$item_id]['job_title'] : "Unknown"));
+  }
+  return "Unknown";
+}
+
+// Combine all comments
+$all_comments = [];
+foreach ($newsComments as $id => $comment) {
+  $all_comments[] = [
+    'type' => 'news',
+    'alumni_id' => $comment['alumni_id'],
+    'comment' => $comment['comment'],
+    'item_id' => $comment['news_id'],
+    'date' => strtotime($comment['date_commented'])
+  ];
+}
+foreach ($eventComments as $id => $comment) {
+  $all_comments[] = [
+    'type' => 'event',
+    'alumni_id' => $comment['alumni_id'],
+    'comment' => $comment['comment'],
+    'item_id' => $comment['event_id'],
+    'date' => strtotime($comment['date_commented'])
+  ];
+}
+foreach ($jobComments as $id => $comment) {
+  $all_comments[] = [
+    'type' => 'job',
+    'alumni_id' => $comment['alumni_id'],
+    'comment' => $comment['comment'],
+    'item_id' => $comment['job_id'],
+    'date' => strtotime($comment['date_commented'])
+  ];
+}
+
+// Sort comments by date, newest first
+usort($all_comments, function ($a, $b) {
+  return $b['date'] - $a['date'];
+});
+
 ?>
 
 <?php include 'includes/header.php'; ?>
@@ -306,14 +365,140 @@ $percentVerified = ($totalAlumni > 0) ? round(($verifiedAlumni / $totalAlumni) *
               </div>
             </div>
 
+
+            <div class="recent-comments-wrapper">
+              <div class="recent-comments-header">
+                <h2>Recent Comments</h2>
+              </div>
+              <div class="recent-comments-list">
+                <?php
+                $count = 0;
+                foreach ($all_comments as $comment):
+                  if ($count >= 5)
+                    break; // Limit to 5 comments
+                  $alumni_name = getAlumniName($comment['alumni_id'], $alumni);
+                  $item_title = getItemTitle($comment['item_id'], $comment['type'] == 'news' ? $news : ($comment['type'] == 'event' ? $events : $jobs));
+                  ?>
+                  <div class="recent-comment-item">
+                    <a href="#">
+                      <div class="comment-flex">
+                        <div class="comment-img">
+                          <img
+                            src="<?php echo $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'; ?>"
+                            alt="<?php echo $alumni_name; ?>" />
+                        </div>
+                        <div class="comment-content">
+                          <div class="comment-header">
+                            <h3><?php echo $alumni_name; ?></h3>
+                            <span>on <?php echo $item_title; ?></span>
+                          </div>
+                          <div class="comment-text">
+                            <p><?php echo htmlspecialchars($comment['comment']); ?></p>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  <?php
+                  $count++;
+                endforeach;
+                ?>
+                <div class="recent-comment-item view-all">
+                  <a href="#">
+                    <p>View All</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
-
-
-      </section>
-      <!-- right col -->
     </div>
-    <?php include 'includes/footer.php'; ?>
+    <style>
+      .recent-comments-wrapper {
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      .recent-comments-header h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      .recent-comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .recent-comment-item {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 20px;
+      }
+
+      .comment-flex {
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+
+      .comment-img {
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+
+      .comment-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .comment-content {
+        flex-grow: 1;
+      }
+
+      .comment-header h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .comment-text p {
+        font-size: 1.2rem;
+        color: #555;
+        margin: 0;
+      }
+
+      .view-all {
+        text-align: center;
+        padding-top: 10px;
+      }
+
+      .view-all p {
+        font-size: 0.875rem;
+        color: #007bff;
+      }
+    </style>
+
+
+
+
+  </div>
+  </div>
+
+
+  </section>
+  <!-- right col -->
+  </div>
+  <?php include 'includes/footer.php'; ?>
 
   </div>
   <!-- ./wrapper -->
