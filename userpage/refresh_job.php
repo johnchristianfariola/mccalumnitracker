@@ -3,6 +3,9 @@ session_start();
 require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
 
+date_default_timezone_set('Asia/Manila');
+
+
 $firebase = new firebaseRDB($databaseURL);
 
 function timeAgo($timestamp) {

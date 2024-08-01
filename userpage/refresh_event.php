@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/firebaseRDB.php';
+date_default_timezone_set('Asia/Manila');
 
 // Initialize Firebase URL
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";

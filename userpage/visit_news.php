@@ -195,7 +195,7 @@
                                                             )
                                                                 ? "true"
                                                                 : "false"; ?>"></i>
-                                                        <span
+                                                        <span style="float:right;"
                                                             class="heart-count"><?php echo isset(
                                                                 $comment[
                                                                     "heart_count"
