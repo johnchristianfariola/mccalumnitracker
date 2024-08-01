@@ -102,8 +102,23 @@ $allMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oc
 $categories = $allMonths;
 $visitors = array_values($visitorCounts);
 
-?>
 
+// Count Verified Alumni
+
+$radialVerifiedUser = $firebase->retrieve("alumni");
+$radialVerifiedUser = json_decode($radialVerifiedUser, true);
+
+$totalAlumni = count($radialVerifiedUser);
+$verifiedAlumni = 0;
+
+foreach ($radialVerifiedUser as $alumnus) {
+    if (isset($alumnus['status']) && $alumnus['status'] === 'verified') {
+        $verifiedAlumni++;
+    }
+}
+
+$percentVerified = ($totalAlumni > 0) ? round(($verifiedAlumni / $totalAlumni) * 100, 1) : 0;
+?>
 
 <?php include 'includes/header.php'; ?>
 
@@ -154,125 +169,146 @@ $visitors = array_values($visitorCounts);
         ?>
         <!-- Small boxes (Stat box) -->
         <div class="row">
-          <div class="col-xs-12">
-            <div class="box">
-              <div class="with-border">
-                <div class="box-tools pull-right">
-
-                </div>
-              </div>
-              <div class="box-body">
-                <div class="card-header">
-                </div>
-                <div class="card-body">
-                  <div id="line-chart-1"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-
-
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
-              <div class="inner">
-                <h3><?php echo $alumniCount; ?></h3>
-                <p>Total Alumni</p>
-              </div>
-              <div class="icon">
-                <i class="fa fa-graduation-cap"></i>
-              </div>
-              <a href="book.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box" style="background: linear-gradient(to right, #90caf9, #047edf 99%) !important;">
-              <div class="inner">
-                <h3><?php // echo $forumCount; ?>0</h3>
-
-                <p>Forum Topic</p>
-              </div>
-              <div class="icon">
-                <i class="fa fa-weixin"></i>
-              </div>
-              <a href="student.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box" style="background: linear-gradient(to right, #84d9d2, #07cdae) !important">
-              <div class="inner">
-                <h3><?php echo $jobCount; ?></h3>
-                <p>Active Job</p>
-              </div>
-              <div class="icon">
-                <i class="fa fa-tasks"></i>
-              </div>
-              <a href="return.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box" style="background: linear-gradient(to right, #f6e384, #ffd500) !important;">
-              <div class="inner">
-                <h3><?php echo $eventCount; ?></h3>
-                <p>Event</p>
-              </div>
-              <div class="icon">
-                <i class="fa fa-clock-o"></i>
-              </div>
-              <a href="borrow.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-        </div>
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="box">
-              <div class="box-header with-border">
-                <h3 class="box-title" style="color:white;">Alumni Report </h3>
-                <div class="box-tools pull-right">
-                  <form class="form-inline">
-                    <div class="form-group">
-                      <label style="color:white;">Select Year: </label>
-                      <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_year">
-                        <?php
-                        for ($i = 2001; $i <= 2065; $i++) {
-                          $selected = ($i == $year) ? 'selected' : '';
-                          echo "
-                            <option value='" . $i . "' " . $selected . ">" . $i . "</option>
-                          ";
-                        }
-                        ?>
-                      </select>
+          <!-- Left Column (70% width) -->
+          <div class="col-lg-9 col-md-9 col-sm-12">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="box">
+                  <div class="with-border">
+                    <div class="box-tools pull-right"></div>
+                  </div>
+                  <div class="box-body">
+                    <div class="card-header"></div>
+                    <div class="card-body">
+                      <div id="line-chart-1"></div>
                     </div>
-                  </form>
-                  <script>
-                    $(function () {
-                      $('#select_year').change(function () {
-                        window.location.href = 'home.php?year=' + $(this).val();
-                      });
-                    });
-                  </script>
+                  </div>
                 </div>
               </div>
-              <div class="box-body">
-                <div class="chart">
-                  <br>
-                  <div id="legend" class="text-center"></div>
-                  <canvas id="barChart" style="height:550px"></canvas>
+            </div>
+            <div class="row">
+              <div class="col-lg-3 col-xs-6">
+                <div class="small-box" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
+                  <div class="inner">
+                    <h3><?php echo $alumniCount; ?></h3>
+                    <p>Total Alumni</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fa fa-graduation-cap"></i>
+                  </div>
+                  <a href="book.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <div class="col-lg-3 col-xs-6">
+                <div class="small-box" style="background: linear-gradient(to right, #90caf9, #047edf 99%) !important;">
+                  <div class="inner">
+                    <h3><?php // echo $forumCount; ?>0</h3>
+                    <p>Forum Topic</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fa fa-weixin"></i>
+                  </div>
+                  <a href="student.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <div class="col-lg-3 col-xs-6">
+                <div class="small-box" style="background: linear-gradient(to right, #84d9d2, #07cdae) !important">
+                  <div class="inner">
+                    <h3><?php echo $jobCount; ?></h3>
+                    <p>Active Job</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fa fa-tasks"></i>
+                  </div>
+                  <a href="return.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <div class="col-lg-3 col-xs-6">
+                <div class="small-box" style="background: linear-gradient(to right, #f6e384, #ffd500) !important;">
+                  <div class="inner">
+                    <h3><?php echo $eventCount; ?></h3>
+                    <p>Event</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fa fa-clock-o"></i>
+                  </div>
+                  <a href="borrow.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="box">
+                  <div class="box-header with-border">
+                    <h3 class="box-title" style="color:white;">Alumni Report </h3>
+                    <div class="box-tools pull-right">
+                      <form class="form-inline">
+                        <div class="form-group">
+                          <label style="color:white;">Select Year: </label>
+                          <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_year">
+                            <?php
+                            for ($i = 2001; $i <= 2065; $i++) {
+                              $selected = ($i == $year) ? 'selected' : '';
+                              echo "
+                        <option value='" . $i . "' " . $selected . ">" . $i . "</option>
+                      ";
+                            }
+                            ?>
+                          </select>
+                        </div>
+                      </form>
+                      <script>
+                        $(function () {
+                          $('#select_year').change(function () {
+                            window.location.href = 'home.php?year=' + $(this).val();
+                          });
+                        });
+                      </script>
+                    </div>
+                  </div>
+                  <div class="box-body">
+                    <div class="chart">
+                      <br>
+                      <div id="legend" class="text-center"></div>
+                      <canvas id="barChart" style="height:550px"></canvas>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- Right Column (30% width, Empty) -->
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <!-- Add content here if needed -->
+
+
+
+
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="box">
+                  <div class="box-header with-border">
+                    <h3 class="box-title" style="color:white;">Alumni Active User</h3>
+                    <div class="box-tools pull-right">
+                    </div>
+                  </div>
+                  <div class="box-body">
+                    <div class="card" style="background:white;">
+                      <div class="card-header">
+                      </div>
+                      <div class="card-body">
+                        <div id="radialBar-chart-1"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
+
 
       </section>
       <!-- right col -->
@@ -382,6 +418,7 @@ $visitors = array_values($visitorCounts);
 <script src="../plugins/chart/Chart.min.js"></script>
 <script src="../plugins/chart/chart.js"></script>
 <script src="../plugins/chart/apexcharts.min.js"></script>
+<script src="../plugins/chart/chart-apex.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var options = {
@@ -425,4 +462,44 @@ $visitors = array_values($visitorCounts);
     );
     chart.render();
   });
+
+  $(function () {
+    var options = {
+        chart: {
+            height: 350,
+            type: 'radialBar',
+        },
+        plotOptions: {
+            radialBar: {
+                hollow: {
+                    size: '70%',
+                },
+                dataLabels: {
+                    name: {
+                        fontSize: '22px',
+                    },
+                    value: {
+                        fontSize: '16px',
+                    },
+                    total: {
+                        show: true,
+                        label: 'Verified Alumni',
+                        formatter: function (w) {
+                            return '<?php echo $verifiedAlumni; ?> out of <?php echo $totalAlumni; ?>';
+                        }
+                    }
+                }
+            },
+        },
+        colors: ["#4680ff"],
+        series: [<?php echo $percentVerified; ?>],
+        labels: ['Verified Alumni'],
+    }
+    var chart = new ApexCharts(
+        document.querySelector("#radialBar-chart-1"),
+        options
+    );
+    chart.render();
+  });
 </script>
+sc

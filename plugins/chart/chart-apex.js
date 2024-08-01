@@ -1948,29 +1948,7 @@ $(document).ready(function() {
             );
             chart.render();
         });
-        $(function() {
-            var options = {
-                chart: {
-                    height: 350,
-                    type: 'radialBar',
-                },
-                plotOptions: {
-                    radialBar: {
-                        hollow: {
-                            size: '70%',
-                        }
-                    },
-                },
-                colors: ["#4680ff"],
-                series: [70],
-                labels: ['Cricket'],
-            }
-            var chart = new ApexCharts(
-                document.querySelector("#radialBar-chart-1"),
-                options
-            );
-            chart.render();
-        });
+       
         $(function() {
             var options = {
                 chart: {
