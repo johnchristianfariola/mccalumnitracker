@@ -158,21 +158,21 @@ $visitors = array_values($visitorCounts);
             <div class="box">
               <div class="with-border">
                 <div class="box-tools pull-right">
-  
+
                 </div>
               </div>
               <div class="box-body">
-              <div class="card-header">
-                    </div>
-                    <div class="card-body">
-                        <div id="line-chart-1"></div>
-                    </div>
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                  <div id="line-chart-1"></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="row">
-        
+
 
           <div class="col-lg-3 col-xs-6">
             <!-- small box -->
@@ -330,49 +330,49 @@ $visitors = array_values($visitorCounts);
     });
 
   </script>
-      <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('visitorChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: <?php echo json_encode($labels); ?>,
-                datasets: [{
-                    label: 'Visitors',
-                    data: <?php echo json_encode($visitors); ?>,
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    tension: 0.1,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Website Visitors Over Time'
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Date'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Visitors'
-                        }
-                    }
-                }
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const ctx = document.getElementById('visitorChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: <?php echo json_encode($labels); ?>,
+          datasets: [{
+            label: 'Visitors',
+            data: <?php echo json_encode($visitors); ?>,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.1,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Website Visitors Over Time'
             }
-        });
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Number of Visitors'
+              }
+            }
+          }
+        }
+      });
     });
-    </script>
+  </script>
 
 </body>
 
@@ -383,46 +383,46 @@ $visitors = array_values($visitorCounts);
 <script src="../plugins/chart/chart.js"></script>
 <script src="../plugins/chart/apexcharts.min.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     var options = {
-        chart: {
-            height: 300,
-            type: 'line',
-            zoom: {
-                enabled: false
-            }
-        },
-        dataLabels: {
-            enabled: false,
-            width: 2,
-        },
-        stroke: {
-            curve: 'straight',
-        },
-        colors: ["#4680ff"],
-        series: [{
-            name: "Visitors",
-            data: <?php echo json_encode($visitors); ?>
-        }],
-        title: {
-            text: 'Web Visitor By Month',
-            align: 'left'
-        },
-        grid: {
-            row: {
-                colors: ['#f3f6ff', 'transparent'],
-                opacity: 0.5
-            },
-        },
-        xaxis: {
-            categories: <?php echo json_encode($categories); ?>,
+      chart: {
+        height: 300,
+        type: 'line',
+        zoom: {
+          enabled: false
         }
+      },
+      dataLabels: {
+        enabled: false,
+        width: 2,
+      },
+      stroke: {
+        curve: 'straight',
+      },
+      colors: ["#4680ff"],
+      series: [{
+        name: "Visitors",
+        data: <?php echo json_encode($visitors); ?>
+      }],
+      title: {
+        text: 'Web Visitor By Month',
+        align: 'left'
+      },
+      grid: {
+        row: {
+          colors: ['#f3f6ff', 'transparent'],
+          opacity: 0.5
+        },
+      },
+      xaxis: {
+        categories: <?php echo json_encode($categories); ?>,
+      }
     };
 
     var chart = new ApexCharts(
-        document.querySelector("#line-chart-1"),
-        options
+      document.querySelector("#line-chart-1"),
+      options
     );
     chart.render();
-});
+  });
 </script>
