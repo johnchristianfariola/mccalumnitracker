@@ -368,41 +368,10 @@ usort($all_comments, function ($a, $b) {
                 <h2>Recent Comments</h2>
               </div>
               <div id="recent-comments-list" class="recent-comments-list">
-                <?php
-                $count = 0;
-                foreach ($all_comments as $comment):
-                  if ($count >= 5)
-                    break; // Limit to 5 comments
-                  $alumni_name = getAlumniName($comment['alumni_id'], $alumni);
-                  $item_title = getItemTitle($comment['item_id'], $comment['type'] == 'news' ? $news : ($comment['type'] == 'event' ? $events : $jobs));
-                  ?>
-                  <div class="recent-comment-item">
-                    <a href="#">
-                      <div class="comment-flex">
-                        <div class="comment-img">
-                          <img
-                            src="../userpage/<?php echo $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'; ?>"
-                            alt="<?php echo $alumni_name; ?>" />
-                        </div>
-                        <div class="comment-content">
-                          <div class="comment-header">
-                            <h3><?php echo $alumni_name; ?></h3>
-                            <span>on <?php echo $item_title; ?></span>
-                          </div>
-                          <div class="comment-text">
-                            <p><?php echo htmlspecialchars($comment['comment']); ?></p>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                  <?php
-                  $count++;
-                endforeach;
-                ?>
+              
                 <div class="recent-comment-item view-all">
                   <a href="#">
-                    <p>View All</p>
+                    <p style="font-size: 1.2rem;">View All</p>
                   </a>
                 </div>
               </div>
