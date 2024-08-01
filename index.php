@@ -11,6 +11,28 @@ if (isset($_SESSION['alumni'])) {
 ?>
 <?php
 require_once 'includes/firebaseRDB.php';
+require_once 'includes/config.php';
+
+$firebase = new firebaseRDB($databaseURL);
+
+// Get current date
+$date = date('Y-m-d');
+
+// Check if an entry for today exists
+$existingData = $firebase->retrieve("track_visitors/$date");
+$existingData = json_decode($existingData, true);
+
+if ($existingData) {
+    // Increment visitor count
+    $newCount = $existingData['count'] + 1;
+    $firebase->update("track_visitors", $date, ['count' => $newCount]);
+} else {
+    // Create new entry for today
+    $firebase->insert("track_visitors", [$date => ['count' => 1]]);
+}
+?>
+<?php
+require_once 'includes/firebaseRDB.php';
 
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);

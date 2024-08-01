@@ -1,25 +1,25 @@
 <?php include 'includes/session.php'; ?>
 <?php
 include 'includes/timezone.php';
+require_once 'includes/config.php'; // Include your config file
+require_once 'includes/firebaseRDB.php';
+
+$firebase = new firebaseRDB($databaseURL);
+
 $today = date('Y-m-d');
 $year = date('Y');
 if (isset($_GET['year'])) {
   $year = $_GET['year'];
 }
 
-require_once 'includes/firebaseRDB.php';
-
-
-require_once 'includes/config.php'; // Include your config file
-$firebase = new firebaseRDB($databaseURL);
-
-// Fetch course and alumni data from Firebase
+// Fetch data from Firebase
 $courseData = $firebase->retrieve("course");
 $alumniData = $firebase->retrieve("alumni");
 $batchYrData = $firebase->retrieve("batch_yr");
 $forumData = $firebase->retrieve("forum");
 $jobData = $firebase->retrieve("job");
 $eventData = $firebase->retrieve("event");
+$trackVisitors = $firebase->retrieve("track_visitors");
 
 // Decode JSON data into associative arrays
 $courses = json_decode($courseData, true) ?: [];
@@ -28,14 +28,12 @@ $batchYr = json_decode($batchYrData, true) ?: [];
 $forum = json_decode($forumData, true) ?: [];
 $jobData = json_decode($jobData, true) ?: [];
 $event = json_decode($eventData, true) ?: [];
+$trackVisitors = json_decode($trackVisitors, true);
 
+// Count alumni
+$alumniCount = is_array($alumni) ? count($alumni) : 0;
 
-$alumniCount = 0;
-if (is_array($alumni)) {
-  $alumniCount = count($alumni);
-}
-
-
+// Count active jobs
 $jobCount = 0;
 if (is_array($jobData)) {
   foreach ($jobData as $job) {
@@ -45,18 +43,11 @@ if (is_array($jobData)) {
   }
 }
 
-$eventCount = 0;
-if (is_array($event)) {
-  $eventCount = count($event);
-}
+// Count events
+$eventCount = is_array($event) ? count($event) : 0;
 
-$forumCount = 0;
-if (is_array($forum)) {
-  $forumCount = count($forum);
-}
-
-// Get the selected year from the query parameter
-$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+// Count forums
+$forumCount = is_array($forum) ? count($forum) : 0;
 
 // Filter alumni data for the selected batch year
 $filteredAlumni = [];
@@ -92,7 +83,28 @@ if (is_array($filteredAlumni)) {
 $courseCountsJson = json_encode(array_values($courseCounts));
 $courseCodesJson = json_encode(array_keys($courseCounts));
 
+// Count visitors per month
+$visitorCounts = array_fill(0, 12, 0); // Initialize all months with 0
+
+if (is_array($trackVisitors)) {
+  foreach ($trackVisitors as $entry) {
+    foreach ($entry as $date => $info) {
+      if (isset($info['count'])) {
+        $month = date('n', strtotime($date)) - 1; // 0-based month index
+        $visitorCounts[$month] += $info['count'];
+      }
+    }
+  }
+}
+
+$allMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+$categories = $allMonths;
+$visitors = array_values($visitorCounts);
+
 ?>
+
+
 <?php include 'includes/header.php'; ?>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -142,6 +154,26 @@ $courseCodesJson = json_encode(array_keys($courseCounts));
         ?>
         <!-- Small boxes (Stat box) -->
         <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+              <div class="with-border">
+                <div class="box-tools pull-right">
+  
+                </div>
+              </div>
+              <div class="box-body">
+              <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <div id="line-chart-1"></div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+        
+
           <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
@@ -160,7 +192,7 @@ $courseCodesJson = json_encode(array_keys($courseCounts));
             <!-- small box -->
             <div class="small-box" style="background: linear-gradient(to right, #90caf9, #047edf 99%) !important;">
               <div class="inner">
-                <h3><?php echo $forumCount; ?></h3>
+                <h3><?php // echo $forumCount; ?>0</h3>
 
                 <p>Forum Topic</p>
               </div>
@@ -298,6 +330,50 @@ $courseCodesJson = json_encode(array_keys($courseCounts));
     });
 
   </script>
+      <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('visitorChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($labels); ?>,
+                datasets: [{
+                    label: 'Visitors',
+                    data: <?php echo json_encode($visitors); ?>,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Website Visitors Over Time'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Visitors'
+                        }
+                    }
+                }
+            }
+        });
+    });
+    </script>
+
 </body>
 
 </html>
@@ -305,3 +381,48 @@ $courseCodesJson = json_encode(array_keys($courseCounts));
 
 <script src="../plugins/chart/Chart.min.js"></script>
 <script src="../plugins/chart/chart.js"></script>
+<script src="../plugins/chart/apexcharts.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var options = {
+        chart: {
+            height: 300,
+            type: 'line',
+            zoom: {
+                enabled: false
+            }
+        },
+        dataLabels: {
+            enabled: false,
+            width: 2,
+        },
+        stroke: {
+            curve: 'straight',
+        },
+        colors: ["#4680ff"],
+        series: [{
+            name: "Visitors",
+            data: <?php echo json_encode($visitors); ?>
+        }],
+        title: {
+            text: 'Web Visitor By Month',
+            align: 'left'
+        },
+        grid: {
+            row: {
+                colors: ['#f3f6ff', 'transparent'],
+                opacity: 0.5
+            },
+        },
+        xaxis: {
+            categories: <?php echo json_encode($categories); ?>,
+        }
+    };
+
+    var chart = new ApexCharts(
+        document.querySelector("#line-chart-1"),
+        options
+    );
+    chart.render();
+});
+</script>

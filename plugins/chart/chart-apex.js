@@ -1,48 +1,7 @@
 'use strict';
 $(document).ready(function() {
     setTimeout(function() {
-        $(function() {
-            var options = {
-                chart: {
-                    height: 300,
-                    type: 'line',
-                    zoom: {
-                        enabled: false
-                    }
-                },
-                dataLabels: {
-                    enabled: false,
-                    width: 2,
-                },
-                stroke: {
-                    curve: 'straight',
-                },
-                colors: ["#4680ff"],
-                series: [{
-                    name: "Desktops",
-                    data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-                }],
-                title: {
-                    text: 'Product Trends by Month',
-                    align: 'left'
-                },
-                grid: {
-                    row: {
-                        colors: ['#f3f6ff', 'transparent'], // takes an array which will be repeated on columns
-                        opacity: 0.5
-                    },
-                },
-                xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                }
-            }
-
-            var chart = new ApexCharts(
-                document.querySelector("#line-chart-1"),
-                options
-            );
-            chart.render();
-        });
+      
         $(function() {
             var lastDate = 0;
             var data = []
