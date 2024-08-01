@@ -112,9 +112,9 @@ $totalAlumni = count($radialVerifiedUser);
 $verifiedAlumni = 0;
 
 foreach ($radialVerifiedUser as $alumnus) {
-    if (isset($alumnus['status']) && $alumnus['status'] === 'verified') {
-        $verifiedAlumni++;
-    }
+  if (isset($alumnus['status']) && $alumnus['status'] === 'verified') {
+    $verifiedAlumni++;
+  }
 }
 
 $percentVerified = ($totalAlumni > 0) ? round(($verifiedAlumni / $totalAlumni) * 100, 1) : 0;
@@ -465,39 +465,39 @@ $percentVerified = ($totalAlumni > 0) ? round(($verifiedAlumni / $totalAlumni) *
 
   $(function () {
     var options = {
-        chart: {
-            height: 350,
-            type: 'radialBar',
-        },
-        plotOptions: {
-            radialBar: {
-                hollow: {
-                    size: '70%',
-                },
-                dataLabels: {
-                    name: {
-                        fontSize: '22px',
-                    },
-                    value: {
-                        fontSize: '16px',
-                    },
-                    total: {
-                        show: true,
-                        label: 'Verified Alumni',
-                        formatter: function (w) {
-                            return '<?php echo $verifiedAlumni; ?> out of <?php echo $totalAlumni; ?>';
-                        }
-                    }
-                }
+      chart: {
+        height: 350,
+        type: 'radialBar',
+      },
+      plotOptions: {
+        radialBar: {
+          hollow: {
+            size: '70%',
+          },
+          dataLabels: {
+            name: {
+              fontSize: '22px',
             },
+            value: {
+              fontSize: '16px',
+            },
+            total: {
+              show: true,
+              label: 'Verified Alumni',
+              formatter: function (w) {
+                return '<?php echo $verifiedAlumni; ?> out of <?php echo $totalAlumni; ?>';
+              }
+            }
+          }
         },
-        colors: ["#4680ff"],
-        series: [<?php echo $percentVerified; ?>],
-        labels: ['Verified Alumni'],
+      },
+      colors: ["#4680ff"],
+      series: [<?php echo $percentVerified; ?>],
+      labels: ['Verified Alumni'],
     }
     var chart = new ApexCharts(
-        document.querySelector("#radialBar-chart-1"),
-        options
+      document.querySelector("#radialBar-chart-1"),
+      options
     );
     chart.render();
   });
