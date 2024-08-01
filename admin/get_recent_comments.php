@@ -117,7 +117,7 @@ foreach ($recent_comments as $comment) {
     if ($is_new) {
         $new_comment_count++;
     }
-    
+
     $formatted_comments[] = [
         'alumni_name' => $alumni_name,
         'item_title' => $item_title,

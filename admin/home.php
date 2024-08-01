@@ -365,11 +365,11 @@ usort($all_comments, function ($a, $b) {
 
             <div class="recent-comments-wrapper">
             <div class="recent-comments-header">
-            <h2>Recent Comments 
-                <span class="notification-count">0</span>
-            </h2>
-            <a href="#" class="read-all-btn">Read All</a>
-        </div>
+    <h2>Recent Comments
+        <span class="notification-count">0</span>
+    </h2>
+    <a href="#" class="read-all-btn">Read All</a>
+</div>
 
               <div id="recent-comments-list" class="recent-comments-list">
                 <?php
@@ -613,12 +613,14 @@ usort($all_comments, function ($a, $b) {
   });
 </script>
 <script>
-  let lastReadTimestamp = localStorage.getItem('lastReadTimestamp') || 0;
+              
+let lastReadTimestamp = localStorage.getItem('lastReadTimestamp') || 0;
 
 function updateComments() {
     $.ajax({
         url: 'get_recent_comments.php',
         type: 'GET',
+        data: { last_read: lastReadTimestamp },
         dataType: 'json',
         success: function(data) {
             var commentsHtml = '';
