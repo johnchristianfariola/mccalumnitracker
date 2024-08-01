@@ -1,0 +1,101 @@
+<?php
+include 'includes/timezone.php';
+require_once 'includes/config.php';
+require_once 'includes/firebaseRDB.php';
+
+$firebase = new firebaseRDB($databaseURL);
+
+// Fetch data from Firebase
+$alumniData = $firebase->retrieve("alumni");
+$newsData = $firebase->retrieve("news");
+$eventData = $firebase->retrieve("event");
+$jobData = $firebase->retrieve("job");
+$newsCommentsData = $firebase->retrieve("news_comments");
+$eventCommentsData = $firebase->retrieve("event_comments");
+$jobCommentsData = $firebase->retrieve("job_comments");
+
+// Decode JSON data into associative arrays
+$alumni = json_decode($alumniData, true) ?: [];
+$news = json_decode($newsData, true) ?: [];
+$events = json_decode($eventData, true) ?: [];
+$jobs = json_decode($jobData, true) ?: [];
+$newsComments = json_decode($newsCommentsData, true) ?: [];
+$eventComments = json_decode($eventCommentsData, true) ?: [];
+$jobComments = json_decode($jobCommentsData, true) ?: [];
+
+// Function to get alumni name
+function getAlumniName($alumni_id, $alumni)
+{
+    if (isset($alumni[$alumni_id])) {
+        return $alumni[$alumni_id]['firstname'] . ' ' . $alumni[$alumni_id]['lastname'];
+    }
+    return "Unknown";
+}
+
+// Function to get item title
+function getItemTitle($item_id, $items)
+{
+    if (isset($items[$item_id])) {
+        return isset($items[$item_id]['news_author']) ? $items[$item_id]['news_author'] :
+            (isset($items[$item_id]['event_author']) ? $items[$item_id]['event_author'] :
+                (isset($items[$item_id]['job_title']) ? $items[$item_id]['job_title'] : "Unknown"));
+    }
+    return "Unknown";
+}
+
+// Combine all comments
+$all_comments = [];
+foreach ($newsComments as $id => $comment) {
+    $all_comments[] = [
+        'type' => 'news',
+        'alumni_id' => $comment['alumni_id'],
+        'comment' => $comment['comment'],
+        'item_id' => $comment['news_id'],
+        'date' => strtotime($comment['date_commented'])
+    ];
+}
+foreach ($eventComments as $id => $comment) {
+    $all_comments[] = [
+        'type' => 'event',
+        'alumni_id' => $comment['alumni_id'],
+        'comment' => $comment['comment'],
+        'item_id' => $comment['event_id'],
+        'date' => strtotime($comment['date_commented'])
+    ];
+}
+foreach ($jobComments as $id => $comment) {
+    $all_comments[] = [
+        'type' => 'job',
+        'alumni_id' => $comment['alumni_id'],
+        'comment' => $comment['comment'],
+        'item_id' => $comment['job_id'],
+        'date' => strtotime($comment['date_commented'])
+    ];
+}
+
+// Sort comments by date, newest first
+usort($all_comments, function ($a, $b) {
+    return $b['date'] - $a['date'];
+});
+
+// Prepare the recent comments data
+$recent_comments = array_slice($all_comments, 0, 5);
+$formatted_comments = [];
+
+foreach ($recent_comments as $comment) {
+    $alumni_name = getAlumniName($comment['alumni_id'], $alumni);
+    $item_title = getItemTitle($comment['item_id'], $comment['type'] == 'news' ? $news : ($comment['type'] == 'event' ? $events : $jobs));
+    
+    $formatted_comments[] = [
+        'alumni_name' => $alumni_name,
+        'item_title' => $item_title,
+        'comment' => htmlspecialchars($comment['comment']),
+        'profile_url' => $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'
+    ];
+}
+
+// Set the content type to JSON
+header('Content-Type: application/json');
+
+// Output the JSON-encoded comments
+echo json_encode($formatted_comments);

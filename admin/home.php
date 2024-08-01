@@ -341,9 +341,6 @@ usort($all_comments, function ($a, $b) {
           <div class="col-lg-3 col-md-3 col-sm-12">
             <!-- Add content here if needed -->
 
-
-
-
             <div class="row">
               <div class="col-xs-12">
                 <div class="box">
@@ -370,7 +367,7 @@ usort($all_comments, function ($a, $b) {
               <div class="recent-comments-header">
                 <h2>Recent Comments</h2>
               </div>
-              <div class="recent-comments-list">
+              <div id="recent-comments-list" class="recent-comments-list">
                 <?php
                 $count = 0;
                 foreach ($all_comments as $comment):
@@ -384,7 +381,7 @@ usort($all_comments, function ($a, $b) {
                       <div class="comment-flex">
                         <div class="comment-img">
                           <img
-                            src="../userpage/<?php echo $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'; ?>"
+                            src="../userpage/uploads<?php echo $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'; ?>"
                             alt="<?php echo $alumni_name; ?>" />
                         </div>
                         <div class="comment-content">
@@ -687,4 +684,56 @@ usort($all_comments, function ($a, $b) {
     chart.render();
   });
 </script>
-sc
+<script>
+function updateComments() {
+    $.ajax({
+        url: 'get_recent_comments.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var commentsHtml = '';
+            
+            for (var i = 0; i < data.length; i++) {
+                var comment = data[i];
+                commentsHtml += `
+                    <div class="recent-comment-item">
+                        <a href="#">
+                            <div class="comment-flex">
+                                <div class="comment-img">
+                                    <img src="../userpage/uploads${comment.profile_url}" alt="${comment.alumni_name}" />
+                                </div>
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <h3>${comment.alumni_name}</h3>
+                                        <span>on ${comment.item_title}</span>
+                                    </div>
+                                    <div class="comment-text">
+                                        <p>${comment.comment}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            }
+            
+            commentsHtml += `
+                <div class="recent-comment-item view-all">
+                    <a href="#">
+                        <p>View All</p>
+                    </a>
+                </div>
+            `;
+            
+            $('#recent-comments-list').html(commentsHtml);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching comments:", error);
+        }
+    });
+}
+
+// Update comments immediately and then every 5 seconds
+updateComments();
+setInterval(updateComments, 5000);
+</script>
