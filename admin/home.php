@@ -704,7 +704,7 @@ usort($all_comments, function ($a, $b) {
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
-                                        <h3>${comment.alumni_name} <span class="comment-time" style="font-size:10px">${comment.time_elapsed}</span></h3>
+                                        <h3>${comment.alumni_name}  | <span class="comment-time" style="font-size:12px">${comment.time_elapsed}</span></h3>
                                         <span>on ${comment.item_title}</span>
                                     </div>
                                     <div class="comment-text">
