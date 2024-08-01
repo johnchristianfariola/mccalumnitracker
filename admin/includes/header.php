@@ -53,6 +53,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-
+    <link rel="stylesheet" href="../dist/css/skins/notika-custom-icon.css">
+    <link rel="stylesheet" href="../dist/css/skins/responsive.css">
 
 </head>

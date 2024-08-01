@@ -3,6 +3,8 @@ include 'includes/timezone.php';
 require_once 'includes/config.php';
 require_once 'includes/firebaseRDB.php';
 
+date_default_timezone_set('Asia/Manila');
+
 $firebase = new firebaseRDB($databaseURL);
 
 // Fetch data from Firebase
@@ -23,7 +25,6 @@ $newsComments = json_decode($newsCommentsData, true) ?: [];
 $eventComments = json_decode($eventCommentsData, true) ?: [];
 $jobComments = json_decode($jobCommentsData, true) ?: [];
 
-// Function to get alumni name
 function getAlumniName($alumni_id, $alumni)
 {
     if (isset($alumni[$alumni_id])) {
@@ -32,7 +33,6 @@ function getAlumniName($alumni_id, $alumni)
     return "Unknown";
 }
 
-// Function to get item title
 function getItemTitle($item_id, $items)
 {
     if (isset($items[$item_id])) {
@@ -43,7 +43,6 @@ function getItemTitle($item_id, $items)
     return "Unknown";
 }
 
-// Function to calculate time elapsed
 function timeElapsed($timestamp) {
     $now = time();
     $diff = $now - $timestamp;
@@ -102,25 +101,38 @@ usort($all_comments, function ($a, $b) {
     return $b['date'] - $a['date'];
 });
 
-// Prepare the recent comments data
-$recent_comments = array_slice($all_comments, 0, 5);
+// Get the last read timestamp from a cookie or session
+$last_read_timestamp = isset($_COOKIE['last_read_timestamp']) ? $_COOKIE['last_read_timestamp'] : 0;
+
+$new_comment_count = 0;
 $formatted_comments = [];
+
+$recent_comments = array_slice($all_comments, 0, 5);
 
 foreach ($recent_comments as $comment) {
     $alumni_name = getAlumniName($comment['alumni_id'], $alumni);
     $item_title = getItemTitle($comment['item_id'], $comment['type'] == 'news' ? $news : ($comment['type'] == 'event' ? $events : $jobs));
+    
+    $is_new = $comment['date'] > $last_read_timestamp;
+    if ($is_new) {
+        $new_comment_count++;
+    }
     
     $formatted_comments[] = [
         'alumni_name' => $alumni_name,
         'item_title' => $item_title,
         'comment' => htmlspecialchars($comment['comment']),
         'profile_url' => $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg',
-        'time_elapsed' => timeElapsed($comment['date'])
+        'time_elapsed' => timeElapsed($comment['date']),
+        'is_new' => $is_new
     ];
 }
 
 // Set the content type to JSON
 header('Content-Type: application/json');
 
-// Output the JSON-encoded comments
-echo json_encode($formatted_comments);
+// Output the JSON-encoded comments and new comment count
+echo json_encode([
+    'comments' => $formatted_comments,
+    'new_comment_count' => $new_comment_count
+]);

@@ -5984,9 +5984,47 @@ table.text-center th {
   min-height: 20px;
 }
 
+.recent-comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .recent-comments-header h2 {
   font-size: 2rem;
   margin-bottom: 20px;
+  position: relative;
+  flex-grow: 1;
+}
+
+.notification-count {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 1rem;
+  position: absolute;
+  top: -10px; /* Adjust positioning as needed */
+  right: -20px; /* Adjust positioning as needed */
+  display: inline-block;
+  min-width: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.read-all-btn {
+  font-size: 1rem;
+  color: #007bff;
+  text-decoration: none;
+  margin-left: auto;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.read-all-btn:hover {
+  background-color: #e9e9e9;
 }
 
 .recent-comments-list {

@@ -364,14 +364,49 @@ usort($all_comments, function ($a, $b) {
 
 
             <div class="recent-comments-wrapper">
-              <div class="recent-comments-header">
-                <h2>Recent Comments</h2>
-              </div>
+            <div class="recent-comments-header">
+            <h2>Recent Comments 
+                <span class="notification-count">0</span>
+            </h2>
+            <a href="#" class="read-all-btn">Read All</a>
+        </div>
+
               <div id="recent-comments-list" class="recent-comments-list">
-              
+                <?php
+                $count = 0;
+                foreach ($all_comments as $comment):
+                  if ($count >= 5)
+                    break; // Limit to 5 comments
+                  $alumni_name = getAlumniName($comment['alumni_id'], $alumni);
+                  $item_title = getItemTitle($comment['item_id'], $comment['type'] == 'news' ? $news : ($comment['type'] == 'event' ? $events : $jobs));
+                  ?>
+                  <div class="recent-comment-item">
+                    <a href="#">
+                      <div class="comment-flex">
+                        <div class="comment-img">
+                          <img
+                            src="../userpage/<?php echo $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'; ?>"
+                            alt="<?php echo $alumni_name; ?>" />
+                        </div>
+                        <div class="comment-content">
+                          <div class="comment-header">
+                            <h3><?php echo $alumni_name; ?></h3>
+                            <span>on <?php echo $item_title; ?></span>
+                          </div>
+                          <div class="comment-text">
+                            <p><?php echo htmlspecialchars($comment['comment']); ?></p>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  <?php
+                  $count++;
+                endforeach;
+                ?>
                 <div class="recent-comment-item view-all">
                   <a href="#">
-                    <p style="font-size: 1.2rem;">View All</p>
+                    <p>View All</p>
                   </a>
                 </div>
               </div>
@@ -578,27 +613,32 @@ usort($all_comments, function ($a, $b) {
   });
 </script>
 <script>
-  function updateComments() {
-    $.ajax({
-      url: 'get_recent_comments.php',
-      type: 'GET',
-      dataType: 'json',
-      success: function (data) {
-        var commentsHtml = '';
+  let lastReadTimestamp = localStorage.getItem('lastReadTimestamp') || 0;
 
-        for (var i = 0; i < data.length; i++) {
-          var comment = data[i];
-          commentsHtml += `
-                    <div class="recent-comment-item">
+function updateComments() {
+    $.ajax({
+        url: 'get_recent_comments.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var commentsHtml = '';
+            var newCommentCount = data.new_comment_count;
+            
+            for (var i = 0; i < data.comments.length; i++) {
+                var comment = data.comments[i];
+                var newClass = comment.is_new ? 'new-comment' : '';
+                commentsHtml += `
+                    <div class="recent-comment-item ${newClass}">
                         <a href="#">
                             <div class="comment-flex">
                                 <div class="comment-img">
-                                    <img src="../userpage/${comment.profile_url}" alt="${comment.alumni_name}" />
+                                    <img src="../userpage/uploads${comment.profile_url}" alt="${comment.alumni_name}" />
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
-                                        <h3>${comment.alumni_name}  | <span class="comment-time" style="font-size:12px">${comment.time_elapsed}</span></h3>
+                                        <h3>${comment.alumni_name}</h3>
                                         <span>on ${comment.item_title}</span>
+                                        <span class="comment-time">${comment.time_elapsed}</span>
                                     </div>
                                     <div class="comment-text">
                                         <p>${comment.comment}</p>
@@ -608,25 +648,43 @@ usort($all_comments, function ($a, $b) {
                         </a>
                     </div>
                 `;
-        }
-
-        commentsHtml += `
+            }
+            
+            commentsHtml += `
                 <div class="recent-comment-item view-all">
                     <a href="#">
                         <p>View All</p>
                     </a>
                 </div>
             `;
-
-        $('#recent-comments-list').html(commentsHtml);
-      },
-      error: function (xhr, status, error) {
-        console.error("Error fetching comments:", error);
-      }
+            
+            $('#recent-comments-list').html(commentsHtml);
+            updateNotificationCount(newCommentCount);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching comments:", error);
+        }
     });
-  }
+}
 
-  // Update comments immediately and then every 5 seconds
-  updateComments();
-  setInterval(updateComments, 5000);
+function updateNotificationCount(count) {
+    const notificationCount = $('.notification-count');
+    if (count > 0) {
+        notificationCount.text(count).show();
+    } else {
+        notificationCount.hide();
+    }
+}
+
+$('.read-all-btn').on('click', function(e) {
+    e.preventDefault();
+    lastReadTimestamp = Date.now();
+    localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
+    updateNotificationCount(0);
+    $('.new-comment').removeClass('new-comment');
+});
+
+// Update comments immediately and then every 5 seconds
+updateComments();
+setInterval(updateComments, 5000);
 </script>
