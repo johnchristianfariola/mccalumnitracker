@@ -700,7 +700,7 @@ function updateComments() {
                         <a href="#">
                             <div class="comment-flex">
                                 <div class="comment-img">
-                                    <img src="../userpage/uploads${comment.profile_url}" alt="${comment.alumni_name}" />
+                                    <img src="../userpage/${comment.profile_url}" alt="${comment.alumni_name}" />
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
