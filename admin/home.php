@@ -417,6 +417,7 @@ usort($all_comments, function ($a, $b) {
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
+        min-height: 20px;
       }
 
       .recent-comments-header h2 {
@@ -428,7 +429,36 @@ usort($all_comments, function ($a, $b) {
         display: flex;
         flex-direction: column;
         gap: 20px;
+        max-height: 620px;
+        /* Adjust the max height as needed */
+        overflow-y: auto;
+        padding-right: 10px;
+        /* Prevent content from hiding behind the scrollbar */
       }
+
+      /* Styling the scrollbar */
+      .recent-comments-list::-webkit-scrollbar {
+        width: 6px;
+        /* Width of the scrollbar */
+      }
+
+      .recent-comments-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        /* Background of the scrollbar track */
+      }
+
+      .recent-comments-list::-webkit-scrollbar-thumb {
+        background-color: #888;
+        /* Color of the scrollbar thumb */
+        border-radius: 10px;
+        /* Rounded corners for the scrollbar thumb */
+      }
+
+      .recent-comments-list::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+        /* Color when hovering over the scrollbar thumb */
+      }
+
 
       .recent-comment-item {
         display: flex;
@@ -687,15 +717,15 @@ usort($all_comments, function ($a, $b) {
 <script>
   function updateComments() {
     $.ajax({
-        url: 'get_recent_comments.php',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            var commentsHtml = '';
-            
-            for (var i = 0; i < data.length; i++) {
-                var comment = data[i];
-                commentsHtml += `
+      url: 'get_recent_comments.php',
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        var commentsHtml = '';
+
+        for (var i = 0; i < data.length; i++) {
+          var comment = data[i];
+          commentsHtml += `
                     <div class="recent-comment-item">
                         <a href="#">
                             <div class="comment-flex">
@@ -715,25 +745,25 @@ usort($all_comments, function ($a, $b) {
                         </a>
                     </div>
                 `;
-            }
-            
-            commentsHtml += `
+        }
+
+        commentsHtml += `
                 <div class="recent-comment-item view-all">
                     <a href="#">
                         <p>View All</p>
                     </a>
                 </div>
             `;
-            
-            $('#recent-comments-list').html(commentsHtml);
-        },
-        error: function(xhr, status, error) {
-            console.error("Error fetching comments:", error);
-        }
-    });
-}
 
-// Update comments immediately and then every 5 seconds
-updateComments();
-setInterval(updateComments, 5000);
+        $('#recent-comments-list').html(commentsHtml);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching comments:", error);
+      }
+    });
+  }
+
+  // Update comments immediately and then every 5 seconds
+  updateComments();
+  setInterval(updateComments, 5000);
 </script>
