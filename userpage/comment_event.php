@@ -4,7 +4,7 @@ require_once '../includes/firebaseRDB.php';
 // Initialize Firebase URL
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
-
+date_default_timezone_set('Asia/Manila');
 if (isset($_POST['event_id']) && isset($_POST['alumni_id']) && isset($_POST['comment'])) {
     $event_id = $_POST['event_id'];
     $alumni_id = $_POST['alumni_id'];
