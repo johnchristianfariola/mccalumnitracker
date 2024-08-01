@@ -636,9 +636,8 @@ function updateComments() {
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
-                                        <h3>${comment.alumni_name}</h3>
+                                        <h3>${comment.alumni_name} | <span class="comment-time">${comment.time_elapsed}</span></h3>
                                         <span>on ${comment.item_title}</span>
-                                        <span class="comment-time">${comment.time_elapsed}</span>
                                     </div>
                                     <div class="comment-text">
                                         <p>${comment.comment}</p>
