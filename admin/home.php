@@ -365,12 +365,11 @@ usort($all_comments, function ($a, $b) {
 
             <div class="recent-comments-wrapper">
             <div class="recent-comments-header">
-    <h2>Recent Comments
+    <h2>Recent Comments 
         <span class="notification-count">0</span>
     </h2>
     <a href="#" class="read-all-btn">Read All</a>
 </div>
-
               <div id="recent-comments-list" class="recent-comments-list">
                 <?php
                 $count = 0;
@@ -613,22 +612,24 @@ usort($all_comments, function ($a, $b) {
   });
 </script>
 <script>
-              
-let lastReadTimestamp = localStorage.getItem('lastReadTimestamp') || 0;
+  let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
 
 function updateComments() {
     $.ajax({
         url: 'get_recent_comments.php',
         type: 'GET',
-        data: { last_read: lastReadTimestamp },
+        data: { last_read_timestamp: lastReadTimestamp },
         dataType: 'json',
         success: function(data) {
             var commentsHtml = '';
-            var newCommentCount = data.new_comment_count;
+            var newCommentCount = 0;
             
             for (var i = 0; i < data.comments.length; i++) {
                 var comment = data.comments[i];
-                var newClass = comment.is_new ? 'new-comment' : '';
+                var newClass = comment.timestamp > lastReadTimestamp ? 'new-comment' : '';
+                if (newClass) {
+                    newCommentCount++;
+                }
                 commentsHtml += `
                     <div class="recent-comment-item ${newClass}">
                         <a href="#">
@@ -679,7 +680,7 @@ function updateNotificationCount(count) {
 
 $('.read-all-btn').on('click', function(e) {
     e.preventDefault();
-    lastReadTimestamp = Date.now();
+    lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
     localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
     updateNotificationCount(0);
     $('.new-comment').removeClass('new-comment');

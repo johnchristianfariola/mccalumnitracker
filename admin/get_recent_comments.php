@@ -102,7 +102,7 @@ usort($all_comments, function ($a, $b) {
 });
 
 // Get the last read timestamp from a cookie or session
-$last_read_timestamp = isset($_COOKIE['last_read_timestamp']) ? $_COOKIE['last_read_timestamp'] : 0;
+$last_read_timestamp = isset($_GET['last_read_timestamp']) ? intval($_GET['last_read_timestamp']) : 0;
 
 $new_comment_count = 0;
 $formatted_comments = [];
@@ -113,26 +113,20 @@ foreach ($recent_comments as $comment) {
     $alumni_name = getAlumniName($comment['alumni_id'], $alumni);
     $item_title = getItemTitle($comment['item_id'], $comment['type'] == 'news' ? $news : ($comment['type'] == 'event' ? $events : $jobs));
     
-    $is_new = $comment['date'] > $last_read_timestamp;
-    if ($is_new) {
-        $new_comment_count++;
-    }
-
     $formatted_comments[] = [
         'alumni_name' => $alumni_name,
         'item_title' => $item_title,
         'comment' => htmlspecialchars($comment['comment']),
         'profile_url' => $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg',
         'time_elapsed' => timeElapsed($comment['date']),
-        'is_new' => $is_new
+        'timestamp' => $comment['date']
     ];
 }
 
 // Set the content type to JSON
 header('Content-Type: application/json');
 
-// Output the JSON-encoded comments and new comment count
+// Output the JSON-encoded comments
 echo json_encode([
-    'comments' => $formatted_comments,
-    'new_comment_count' => $new_comment_count
+    'comments' => $formatted_comments
 ]);
