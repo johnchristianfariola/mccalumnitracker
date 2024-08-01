@@ -36,8 +36,8 @@ function getAlumniName($alumni_id, $alumni)
 function getItemTitle($item_id, $items)
 {
     if (isset($items[$item_id])) {
-        return isset($items[$item_id]['news_author']) ? $items[$item_id]['news_author'] :
-            (isset($items[$item_id]['event_author']) ? $items[$item_id]['event_author'] :
+        return isset($items[$item_id]['news_title']) ? $items[$item_id]['news_title'] :
+            (isset($items[$item_id]['event_title']) ? $items[$item_id]['event_title'] :
                 (isset($items[$item_id]['job_title']) ? $items[$item_id]['job_title'] : "Unknown"));
     }
     return "Unknown";
