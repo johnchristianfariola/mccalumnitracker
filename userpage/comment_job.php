@@ -18,7 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "comment" => $comment,
         "date_commented" => $dateCommented,
         "liked_by" => [],
-        "heart_count" => 0
+        "heart_count" => 0,
+        "read_mark" => 0
     ];
 
     $result = $firebase->insert("job_comments", $newComment);
