@@ -1,4 +1,12 @@
-<header class="main-header">
+<header class="main-header" id="myHeader">
+  <style>
+    .sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+  </style>
   <!-- Logo -->
   <a href="index.php" class="logo">
     <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -49,6 +57,25 @@
 <?php include 'includes/profile_modal.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// Get the header
+var header = document.getElementById("myHeader");
+
+// Get the offset position of the navbar
+var sticky = header.offsetTop;
+
+// Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function makeSticky() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
+}
+
+// When the user scrolls the page, execute makeSticky
+window.onscroll = function() {makeSticky()};
+
+// Your existing script
 document.getElementById('signout_button').addEventListener('click', function(e) {
   e.preventDefault();
   Swal.fire({

@@ -180,7 +180,14 @@ usort($all_comments, function ($a, $b) {
 ?>
 
 <?php include 'includes/header.php'; ?>
+<style>
+ 
 
+.content-wrapper {
+ 
+}
+
+</style>
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
 
@@ -364,12 +371,12 @@ usort($all_comments, function ($a, $b) {
 
 
             <div class="recent-comments-wrapper">
-            <div class="recent-comments-header">
-    <h2>Recent Comments 
-        <span class="notification-count">0</span>
-    </h2>
-    <a href="#" class="read-all-btn">Read All</a>
-</div>
+              <div class="recent-comments-header">
+                <h2>Recent Comments
+                  <span class="notification-count">0</span>
+                </h2>
+                <a href="#" class="read-all-btn">Read All</a>
+              </div>
               <div id="recent-comments-list" class="recent-comments-list">
                 <?php
                 $count = 0;
@@ -414,7 +421,7 @@ usort($all_comments, function ($a, $b) {
           </div>
         </div>
     </div>
-   
+
   </div>
   </div>
 
@@ -614,23 +621,23 @@ usort($all_comments, function ($a, $b) {
 <script>
   let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
 
-function updateComments() {
+  function updateComments() {
     $.ajax({
-        url: 'get_recent_comments.php',
-        type: 'GET',
-        data: { last_read_timestamp: lastReadTimestamp },
-        dataType: 'json',
-        success: function(data) {
-            var commentsHtml = '';
-            var newCommentCount = 0;
-            
-            for (var i = 0; i < data.comments.length; i++) {
-                var comment = data.comments[i];
-                var newClass = comment.timestamp > lastReadTimestamp ? 'new-comment' : '';
-                if (newClass) {
-                    newCommentCount++;
-                }
-                commentsHtml += `
+      url: 'get_recent_comments.php',
+      type: 'GET',
+      data: { last_read_timestamp: lastReadTimestamp },
+      dataType: 'json',
+      success: function (data) {
+        var commentsHtml = '';
+        var newCommentCount = 0;
+
+        for (var i = 0; i < data.comments.length; i++) {
+          var comment = data.comments[i];
+          var newClass = comment.timestamp > lastReadTimestamp ? 'new-comment' : '';
+          if (newClass) {
+            newCommentCount++;
+          }
+          commentsHtml += `
                     <div class="recent-comment-item ${newClass}">
                         <a href="#">
                             <div class="comment-flex">
@@ -650,43 +657,43 @@ function updateComments() {
                         </a>
                     </div>
                 `;
-            }
-            
-            commentsHtml += `
+        }
+
+        commentsHtml += `
                 <div class="recent-comment-item view-all">
                     <a href="#">
                         <p>View All</p>
                     </a>
                 </div>
             `;
-            
-            $('#recent-comments-list').html(commentsHtml);
-            updateNotificationCount(newCommentCount);
-        },
-        error: function(xhr, status, error) {
-            console.error("Error fetching comments:", error);
-        }
-    });
-}
 
-function updateNotificationCount(count) {
+        $('#recent-comments-list').html(commentsHtml);
+        updateNotificationCount(newCommentCount);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching comments:", error);
+      }
+    });
+  }
+
+  function updateNotificationCount(count) {
     const notificationCount = $('.notification-count');
     if (count > 0) {
-        notificationCount.text(count).show();
+      notificationCount.text(count).show();
     } else {
-        notificationCount.hide();
+      notificationCount.hide();
     }
-}
+  }
 
-$('.read-all-btn').on('click', function(e) {
+  $('.read-all-btn').on('click', function (e) {
     e.preventDefault();
     lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
     localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
     updateNotificationCount(0);
     $('.new-comment').removeClass('new-comment');
-});
+  });
 
-// Update comments immediately and then every 5 seconds
-updateComments();
-setInterval(updateComments, 5000);
+  // Update comments immediately and then every 5 seconds
+  updateComments();
+  setInterval(updateComments, 5000);
 </script>
