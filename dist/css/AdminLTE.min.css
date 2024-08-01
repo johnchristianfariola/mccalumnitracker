@@ -5972,3 +5972,108 @@ table.text-center th {
     white-space: normal !important;
   }
 }
+
+
+/*=============Recent Comment Start Here===================*/
+
+.recent-comments-wrapper {
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  min-height: 20px;
+}
+
+.recent-comments-header h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.recent-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 620px;
+  /* Adjust the max height as needed */
+  overflow-y: auto;
+  padding-right: 10px;
+  /* Prevent content from hiding behind the scrollbar */
+}
+
+/* Styling the scrollbar */
+.recent-comments-list::-webkit-scrollbar {
+  width: 6px;
+  /* Width of the scrollbar */
+}
+
+.recent-comments-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* Background of the scrollbar track */
+}
+
+.recent-comments-list::-webkit-scrollbar-thumb {
+  background-color: #888;
+  /* Color of the scrollbar thumb */
+  border-radius: 10px;
+  /* Rounded corners for the scrollbar thumb */
+}
+
+.recent-comments-list::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  /* Color when hovering over the scrollbar thumb */
+}
+
+
+.recent-comment-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 20px;
+}
+
+.comment-flex {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.comment-img {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.comment-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comment-content {
+  flex-grow: 1;
+}
+
+.comment-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.comment-text p {
+  font-size: 1.2rem;
+  color: #555;
+  margin: 0;
+}
+
+.view-all {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.view-all p {
+  font-size: 0.875rem;
+  color: #007bff;
+}
