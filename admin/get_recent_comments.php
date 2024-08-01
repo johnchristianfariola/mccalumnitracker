@@ -43,6 +43,30 @@ function getItemTitle($item_id, $items)
     return "Unknown";
 }
 
+// Function to calculate time elapsed
+function timeElapsed($timestamp) {
+    $now = time();
+    $diff = $now - $timestamp;
+
+    if ($diff < 60) {
+        return "just now";
+    } elseif ($diff < 3600) {
+        $minutes = floor($diff / 60);
+        return $minutes == 1 ? "1 minute ago" : "$minutes minutes ago";
+    } elseif ($diff < 86400) {
+        $hours = floor($diff / 3600);
+        return $hours == 1 ? "1 hour ago" : "$hours hours ago";
+    } elseif ($diff < 604800) {
+        $days = floor($diff / 86400);
+        return $days == 1 ? "1 day ago" : "$days days ago";
+    } elseif ($diff < 2592000) {
+        $weeks = floor($diff / 604800);
+        return $weeks == 1 ? "1 week ago" : "$weeks weeks ago";
+    } else {
+        return date("F j, Y", $timestamp);
+    }
+}
+
 // Combine all comments
 $all_comments = [];
 foreach ($newsComments as $id => $comment) {
@@ -90,7 +114,8 @@ foreach ($recent_comments as $comment) {
         'alumni_name' => $alumni_name,
         'item_title' => $item_title,
         'comment' => htmlspecialchars($comment['comment']),
-        'profile_url' => $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'
+        'profile_url' => $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg',
+        'time_elapsed' => timeElapsed($comment['date'])
     ];
 }
 

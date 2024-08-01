@@ -685,7 +685,7 @@ usort($all_comments, function ($a, $b) {
   });
 </script>
 <script>
-function updateComments() {
+  function updateComments() {
     $.ajax({
         url: 'get_recent_comments.php',
         type: 'GET',
@@ -700,12 +700,13 @@ function updateComments() {
                         <a href="#">
                             <div class="comment-flex">
                                 <div class="comment-img">
-                                    <img src="../userpage/${comment.profile_url}" alt="${comment.alumni_name}" />
+                                    <img src="../userpage/uploads${comment.profile_url}" alt="${comment.alumni_name}" />
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
                                         <h3>${comment.alumni_name}</h3>
                                         <span>on ${comment.item_title}</span>
+                                        <span class="comment-time">${comment.time_elapsed}</span>
                                     </div>
                                     <div class="comment-text">
                                         <p>${comment.comment}</p>
