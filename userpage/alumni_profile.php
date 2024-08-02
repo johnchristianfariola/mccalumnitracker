@@ -75,20 +75,7 @@
     <?php include '../includes/navbar.php' ?>
 
 
-    <div class="container-fluid p-0 mb-5" style="height: 40%">
-    <div class="position-relative">
-        <img class="img-fluid" src="../homepage/img/carousel-1.png" alt="" style="height: 150px; width: 100%; object-fit: cover;">
-        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
-            style="background: rgba(24, 29, 56, .7);">
-            <div class="container">
-                <div class="row justify-content-start">
-                    <!-- Your content here -->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+        
     <div class="form-container">
         <form action="update_profile.php" method="POST" class="form" enctype="multipart/form-data">
             <!-- Hidden fields -->
@@ -182,11 +169,7 @@
                     <div class="input-field">
                         <label>Contact</label>
                         <input type="text" name="contactnumber" placeholder="Enter your contact number"
-       value="<?php echo htmlspecialchars($user['contactnumber']); ?>" 
-       pattern="\d{11}" maxlength="11" title="Please enter an 11-digit contact number" 
-       inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
-
-
+                            value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
                     </div>
                 </div>
 
