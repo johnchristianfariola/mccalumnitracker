@@ -11,13 +11,8 @@
         if (isset($_SESSION['alumni'])) {
             echo '
     <div class="navbar-nav ms-auto p-4 p-lg-0">
-        <a href="index.php" class="nav-item nav-link active">Home</a>
-        <a href="about.html" class="nav-item nav-link">News</a>
-        <a href="courses.html" class="nav-item nav-link">Event</a>
-        <a href="courses.html" class="nav-item nav-link">Job</a>
-        <a href="courses.html" class="nav-item nav-link">Forum</a>
-        <a href="contact.html" class="nav-item nav-link">Gallery</a>
-        <a href="profile.php" class="nav-item nav-link">' . $alumni['firstname'] . ' ' . $alumni['middlename'] . ' ' . $alumni['lastname'] . '</a>
+    
+        <a href="../logout.php" class="nav-item nav-link">LOGOUT</a>
     </div>
     ';
         } else {

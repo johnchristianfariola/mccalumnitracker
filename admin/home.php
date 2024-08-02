@@ -391,7 +391,7 @@ usort($all_comments, function ($a, $b) {
                       <div class="comment-flex">
                         <div class="comment-img">
                           <img
-                            src="../userpage/<?php echo $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'; ?>"
+                            src="../use rpage/<?php echo $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg'; ?>"
                             alt="<?php echo $alumni_name; ?>" />
                         </div>
                         <div class="comment-content">
