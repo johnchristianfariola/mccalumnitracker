@@ -182,7 +182,11 @@
                     <div class="input-field">
                         <label>Contact</label>
                         <input type="text" name="contactnumber" placeholder="Enter your contact number"
-                            value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
+       value="<?php echo htmlspecialchars($user['contactnumber']); ?>" 
+       pattern="\d{11}" maxlength="11" title="Please enter an 11-digit contact number" 
+       inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+
+
                     </div>
                 </div>
 
