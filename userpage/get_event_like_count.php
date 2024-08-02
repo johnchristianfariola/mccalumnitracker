@@ -6,7 +6,7 @@ $firebase = new firebaseRDB($databaseURL);
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $event_id = $_GET['event_id'];
-    $alumni_id = $_GET['alumni_id']; // Add this line to get the alumni_id
+    $alumni_id = $_GET['alumni_id'];
 
     // Retrieve current event data
     $event_data = $firebase->retrieve("event/{$event_id}");
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Check if the current user has liked the event
     $isLiked = false;
     if ($alumni_id && isset($event_data['likes']) && is_array($event_data['likes'])) {
-        $isLiked = in_array($alumni_id, $event_data['likes']);
+        $isLiked = array_key_exists($alumni_id, $event_data['likes']);
     }
 
     // Return updated data

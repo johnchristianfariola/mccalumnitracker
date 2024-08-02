@@ -12,7 +12,9 @@ if (isset($_GET['news_id']) && isset($_GET['alumni_id'])) {
     $news_data = json_decode($news_data, true);
 
     $like_count = isset($news_data['likes']) ? count($news_data['likes']) : 0;
-    $is_liked = isset($news_data['likes']) && in_array($alumni_id, $news_data['likes']);
+    
+    // Check if the alumni_id exists as a key in the likes array
+    $is_liked = isset($news_data['likes']) && array_key_exists($alumni_id, $news_data['likes']);
 
     $commentData = $firebase->retrieve("news_comments");
     $commentData = json_decode($commentData, true);

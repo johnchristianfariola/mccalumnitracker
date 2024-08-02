@@ -764,7 +764,6 @@ $(document).ready(function() {
         var $likeCount = $likeButton.siblings('.like-count');
         var isCurrentlyLiked = $likeButton.hasClass('liked');
 
-        // Play animation immediately on click if not currently liked
         if (!isCurrentlyLiked) {
             playLikeAnimation();
         }
@@ -782,7 +781,6 @@ $(document).ready(function() {
                     $likeButton.toggleClass('liked', data.is_liked);
                     $likeCount.text(data.like_count);
                     
-                    // Update button text while preserving the thumbs-up icon
                     $likeButton.html('<i class="fa fa-thumbs-up"></i> ' + (data.is_liked ? 'Liked' : 'Like'));
                 }
             }
@@ -805,7 +803,6 @@ $(document).ready(function() {
                     var $btn = $(this);
                     var isLiked = data.is_liked;
                     $btn.toggleClass('liked', isLiked);
-                    // Preserve the thumbs-up icon when updating the text
                     $btn.html('<i class="fa fa-thumbs-up"></i> ' + (isLiked ? 'Liked' : 'Like'));
                 });
             }
@@ -817,20 +814,25 @@ $(document).ready(function() {
 });
     </script>
     <style>
-        .fa-heart {
-            color: #ccc !important;
-            /* Default color */
-            cursor: pointer;
-        }
+     .btn-like {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s, color 0.3s;
+}
 
-        .fa-heart.liked {
-            color: red !important;
-            /* Color when liked */
-        }
-        .btn-like.liked {
-        background-color: blue;
-        color: white;
-    }
+.btn-like.liked {
+    background-color: blue;
+    color: white;
+}
+
+.fa-heart {
+    color: #ccc !important;
+    cursor: pointer;
+}
+
+.fa-heart.liked {
+    color: red !important;
+}
     </style>
 </body>
 

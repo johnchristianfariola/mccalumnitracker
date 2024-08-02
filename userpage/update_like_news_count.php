@@ -1,8 +1,10 @@
+<!--update_like_news_count.php-->
 <?php
 require_once "../includes/firebaseRDB.php";
 require_once "../includes/config.php";
 
 $firebase = new firebaseRDB($databaseURL);
+date_default_timezone_set('Asia/Manila');
 
 if (isset($_POST['news_id']) && isset($_POST['alumni_id'])) {
     $news_id = $_POST['news_id'];
@@ -15,19 +17,19 @@ if (isset($_POST['news_id']) && isset($_POST['alumni_id'])) {
         $news_data['likes'] = [];
     }
 
-    $is_liked = in_array($alumni_id, $news_data['likes']);
+    $current_timestamp = date("Y-m-d H:i:s");
 
-    if ($is_liked) {
-        $news_data['likes'] = array_diff($news_data['likes'], [$alumni_id]);
+    if (isset($news_data['likes'][$alumni_id])) {
+        unset($news_data['likes'][$alumni_id]);
     } else {
-        $news_data['likes'][] = $alumni_id;
+        $news_data['likes'][$alumni_id] = $current_timestamp;
     }
 
-    $firebase->update($table, "news/{$news_id}", $news_data);
+    $firebase->update("news", $news_id, $news_data);
 
     echo json_encode([
         'success' => true,
-        'is_liked' => !$is_liked,
+        'is_liked' => isset($news_data['likes'][$alumni_id]),
         'like_count' => count($news_data['likes'])
     ]);
 } else {

@@ -66,11 +66,13 @@ function timeElapsed($timestamp) {
     }
 }
 
-// Combine all comments
-$all_comments = [];
+// Combine all comments and likes
+$all_activities = [];
+
+// Process comments
 foreach ($newsComments as $id => $comment) {
-    $all_comments[] = [
-        'type' => 'news',
+    $all_activities[] = [
+        'type' => 'news_comment',
         'alumni_id' => $comment['alumni_id'],
         'comment' => $comment['comment'],
         'item_id' => $comment['news_id'],
@@ -78,8 +80,8 @@ foreach ($newsComments as $id => $comment) {
     ];
 }
 foreach ($eventComments as $id => $comment) {
-    $all_comments[] = [
-        'type' => 'event',
+    $all_activities[] = [
+        'type' => 'event_comment',
         'alumni_id' => $comment['alumni_id'],
         'comment' => $comment['comment'],
         'item_id' => $comment['event_id'],
@@ -87,8 +89,8 @@ foreach ($eventComments as $id => $comment) {
     ];
 }
 foreach ($jobComments as $id => $comment) {
-    $all_comments[] = [
-        'type' => 'job',
+    $all_activities[] = [
+        'type' => 'job_comment',
         'alumni_id' => $comment['alumni_id'],
         'comment' => $comment['comment'],
         'item_id' => $comment['job_id'],
@@ -96,37 +98,82 @@ foreach ($jobComments as $id => $comment) {
     ];
 }
 
-// Sort comments by date, newest first
-usort($all_comments, function ($a, $b) {
+// Process likes
+foreach ($news as $id => $item) {
+    if (isset($item['likes'])) {
+        foreach ($item['likes'] as $alumni_id => $timestamp) {
+            $all_activities[] = [
+                'type' => 'news_like',
+                'alumni_id' => $alumni_id,
+                'item_id' => $id,
+                'date' => strtotime($timestamp)
+            ];
+        }
+    }
+}
+foreach ($events as $id => $item) {
+    if (isset($item['likes'])) {
+        foreach ($item['likes'] as $alumni_id => $timestamp) {
+            $all_activities[] = [
+                'type' => 'event_like',
+                'alumni_id' => $alumni_id,
+                'item_id' => $id,
+                'date' => strtotime($timestamp)
+            ];
+        }
+    }
+}
+foreach ($jobs as $id => $item) {
+    if (isset($item['likes'])) {
+        foreach ($item['likes'] as $alumni_id => $timestamp) {
+            $all_activities[] = [
+                'type' => 'job_like',
+                'alumni_id' => $alumni_id,
+                'item_id' => $id,
+                'date' => strtotime($timestamp)
+            ];
+        }
+    }
+}
+
+// Sort activities by date, newest first
+usort($all_activities, function ($a, $b) {
     return $b['date'] - $a['date'];
 });
 
 // Get the last read timestamp from a cookie or session
 $last_read_timestamp = isset($_GET['last_read_timestamp']) ? intval($_GET['last_read_timestamp']) : 0;
 
-$new_comment_count = 0;
-$formatted_comments = [];
+$new_activity_count = 0;
+$formatted_activities = [];
 
-$recent_comments = array_slice($all_comments, 0, 5);
+$recent_activities = array_slice($all_activities, 0, 5);
 
-foreach ($recent_comments as $comment) {
-    $alumni_name = getAlumniName($comment['alumni_id'], $alumni);
-    $item_title = getItemTitle($comment['item_id'], $comment['type'] == 'news' ? $news : ($comment['type'] == 'event' ? $events : $jobs));
+foreach ($recent_activities as $activity) {
+    $alumni_name = getAlumniName($activity['alumni_id'], $alumni);
+    $item_title = getItemTitle($activity['item_id'], 
+        strpos($activity['type'], 'news') !== false ? $news : 
+        (strpos($activity['type'], 'event') !== false ? $events : $jobs));
     
-    $formatted_comments[] = [
+    $action = strpos($activity['type'], 'comment') !== false ? 'commented on' : 'liked';
+    $item_type = explode('_', $activity['type'])[0];
+    
+    $formatted_activities[] = [
         'alumni_name' => $alumni_name,
         'item_title' => $item_title,
-        'comment' => htmlspecialchars($comment['comment']),
-        'profile_url' => $alumni[$comment['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg',
-        'time_elapsed' => timeElapsed($comment['date']),
-        'timestamp' => $comment['date']
+        'action' => $action,
+        'item_type' => $item_type,
+        'comment' => isset($activity['comment']) ? htmlspecialchars($activity['comment']) : '',
+        'profile_url' => $alumni[$activity['alumni_id']]['profile_url'] ?? 'img/default-avatar.jpg',
+        'time_elapsed' => timeElapsed($activity['date']),
+        'timestamp' => $activity['date']
     ];
 }
 
 // Set the content type to JSON
 header('Content-Type: application/json');
 
-// Output the JSON-encoded comments
+// Output the JSON-encoded activities
 echo json_encode([
-    'comments' => $formatted_comments
+    'activities' => $formatted_activities
 ]);

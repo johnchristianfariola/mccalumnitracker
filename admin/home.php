@@ -372,7 +372,7 @@ usort($all_comments, function ($a, $b) {
 
             <div class="recent-comments-wrapper">
               <div class="recent-comments-header">
-                <h2>Recent Comments
+                <h2>Recent Notification
                   <span class="notification-count">0</span>
                 </h2>
                 <a href="#" class="read-all-btn">Read All</a>
@@ -619,47 +619,50 @@ usort($all_comments, function ($a, $b) {
   });
 </script>
 <script>
-  let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
+let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
 
-  function updateComments() {
+function updateActivities() {
     $.ajax({
-      url: 'get_recent_comments.php',
-      type: 'GET',
-      data: { last_read_timestamp: lastReadTimestamp },
-      dataType: 'json',
-      success: function (data) {
-        var commentsHtml = '';
-        var newCommentCount = 0;
+        url: 'get_recent_notification.php',
+        type: 'GET',
+        data: { last_read_timestamp: lastReadTimestamp },
+        dataType: 'json',
+        success: function (data) {
+            var activitiesHtml = '';
+            var newActivityCount = 0;
 
-        for (var i = 0; i < data.comments.length; i++) {
-          var comment = data.comments[i];
-          var newClass = comment.timestamp > lastReadTimestamp ? 'new-comment' : '';
-          if (newClass) {
-            newCommentCount++;
-          }
-          commentsHtml += `
+            for (var i = 0; i < data.activities.length; i++) {
+                var activity = data.activities[i];
+                var newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
+                if (newClass) {
+                    newActivityCount++;
+                }
+                
+                var activityContent = activity.action === 'commented on' 
+                    ? `<div class="comment-text"><p>  <i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
+                    : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
+
+                activitiesHtml += `
                     <div class="recent-comment-item ${newClass}">
                         <a href="#">
                             <div class="comment-flex">
                                 <div class="comment-img">
-                                    <img src="../userpage/${comment.profile_url}" alt="${comment.alumni_name}" />
+                                    <img src="../userpage/${activity.profile_url}" alt="${activity.alumni_name}" />
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
-                                        <h3>${comment.alumni_name} | <span class="comment-time">${comment.time_elapsed}</span></h3>
-                                        <span>on ${comment.item_title}</span>
+                                        <h3>${activity.alumni_name} | <span class="comment-time">${activity.time_elapsed}</span></h3>
+                                        <span>on ${activity.item_title}</span>
                                     </div>
-                                    <div class="comment-text">
-                                        <p>${comment.comment}</p>
-                                    </div>
+                                   ${activityContent}
                                 </div>
                             </div>
                         </a>
                     </div>
                 `;
-        }
+            }
 
-        commentsHtml += `
+            activitiesHtml += `
                 <div class="recent-comment-item view-all">
                     <a href="#">
                         <p>View All</p>
@@ -667,33 +670,33 @@ usort($all_comments, function ($a, $b) {
                 </div>
             `;
 
-        $('#recent-comments-list').html(commentsHtml);
-        updateNotificationCount(newCommentCount);
-      },
-      error: function (xhr, status, error) {
-        console.error("Error fetching comments:", error);
-      }
+            $('#recent-comments-list').html(activitiesHtml);
+            updateNotificationCount(newActivityCount);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching activities:", error);
+        }
     });
-  }
+}
 
-  function updateNotificationCount(count) {
+function updateNotificationCount(count) {
     const notificationCount = $('.notification-count');
     if (count > 0) {
-      notificationCount.text(count).show();
+        notificationCount.text(count).show();
     } else {
-      notificationCount.hide();
+        notificationCount.hide();
     }
-  }
+}
 
-  $('.read-all-btn').on('click', function (e) {
+$('.read-all-btn').on('click', function (e) {
     e.preventDefault();
     lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
     localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
     updateNotificationCount(0);
     $('.new-comment').removeClass('new-comment');
-  });
+});
 
-  // Update comments immediately and then every 5 seconds
-  updateComments();
-  setInterval(updateComments, 5000);
+// Update activities immediately and then every 5 seconds
+updateActivities();
+setInterval(updateActivities, 5000);
 </script>

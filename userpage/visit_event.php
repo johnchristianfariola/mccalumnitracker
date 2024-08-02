@@ -832,11 +832,10 @@ $(document).ready(function() {
     // Call updateHearts on page load
     updateHearts();
 });
-
 var eventId = $('.btn-like').data('event-id');
-    var alumniId = $('.btn-like').data('alumni-id');
+var alumniId = $('.btn-like').data('alumni-id');
 
-    var animation = lottie.loadAnimation({
+var animation = lottie.loadAnimation({
   container: document.getElementById('lottie-container'),
   renderer: 'svg',
   loop: false,
@@ -852,12 +851,8 @@ animation.resize();
 
 function resizeLottieAnimation() {
   var container = document.getElementById('lottie-container');
-  var desiredWidth = 500; // Set your desired width
-  var desiredHeight = 500; // Set your desired height
-
-  // You can make this responsive, for example:
-  // var desiredWidth = window.innerWidth * 0.5; // 50% of window width
-  // var desiredHeight = window.innerHeight * 0.5; // 50% of window height
+  var desiredWidth = 500;
+  var desiredHeight = 500;
 
   container.style.width = desiredWidth + 'px';
   container.style.height = desiredHeight + 'px';
@@ -867,74 +862,76 @@ function resizeLottieAnimation() {
   }
 }
 
-// Call this function when the window is resized
 window.addEventListener('resize', resizeLottieAnimation);
-
-// Call it once at the beginning to set initial size
 resizeLottieAnimation();
 
-    function updateLikeCount() {
-        $.ajax({
-            url: 'get_event_like_count.php',
-            method: 'GET',
-            data: {
-                event_id: eventId,
-                alumni_id: alumniId // Add this line
-            },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.success) {
-                    $('.like-count').text(data.likeCount);
-                    if (data.liked) {
-                        $('.btn-like').addClass('liked');
-                    } else {
-                        $('.btn-like').removeClass('liked');
-                    }
+function updateLikeStatus() {
+    $.ajax({
+        url: 'get_event_like_count.php',
+        method: 'GET',
+        data: {
+            event_id: eventId,
+            alumni_id: alumniId
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            if (data.success) {
+                $('.like-count').text(data.likeCount);
+                if (data.liked) {
+                    $('.btn-like').addClass('liked');
+                } else {
+                    $('.btn-like').removeClass('liked');
                 }
-            },
-            error: function() {
-                console.log('An error occurred while updating the like count.');
             }
-        });
-    }
+        },
+        error: function() {
+            console.log('An error occurred while updating the like status.');
+        }
+    });
+}
 
-    // Set interval to update like count every 5 seconds
-    setInterval(updateLikeCount, 5000);
+// Update like status on page load
+$(document).ready(function() {
+    updateLikeStatus();
+});
 
-    $(document).on('click', '.btn-like', function() {
-        var $button = $(this);
-        
-        $.ajax({
-            url: 'update_like_event_count.php',
-            method: 'POST',
-            data: {
-                event_id: eventId,
-                alumni_id: alumniId
-            },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.success) {
-                    $('.like-count').text(data.likeCount);
-                    if (data.liked) {
-                        $button.addClass('liked');
-                        
-                        // Show and play Lottie animation
-                        $('#lottie-container').show();
-                        animation.goToAndPlay(0);
-                        
-                        // Hide animation after it completes
-                        animation.addEventListener('complete', function() {
-                            $('#lottie-container').hide();
-                        });
-                    } else {
-                        $button.removeClass('liked');
-                    }
+// Set interval to update like count every 5 seconds
+setInterval(updateLikeStatus, 5000);
+
+$(document).on('click', '.btn-like', function() {
+    var $button = $(this);
+    
+    $button.toggleClass('liked');
+    
+    $.ajax({
+        url: 'update_like_event_count.php',
+        method: 'POST',
+        data: {
+            event_id: eventId,
+            alumni_id: alumniId
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            if (data.success) {
+                $('.like-count').text(data.likeCount);
+                if (data.liked) {
+                    $('#lottie-container').show();
+                    animation.goToAndPlay(0);
+                    
+                    animation.addEventListener('complete', function() {
+                        $('#lottie-container').hide();
+                    });
                 }
-            },
-            error: function() {
-                alert('An error occurred. Please try again.');
+            } else {
+                $button.toggleClass('liked');
             }
-        });
+        },
+        error: function() {
+            alert('An error occurred. Please try again.');
+            $button.toggleClass('liked');
+        }
+    });
+
 
 });
 
