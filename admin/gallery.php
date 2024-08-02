@@ -126,7 +126,6 @@ $galleries = json_decode($galleryData, true) ?: [];
     <?php include 'includes/scripts.php'; ?>
 </body>
 
-</html>
 
 <script>
     $(document).ready(function () {
