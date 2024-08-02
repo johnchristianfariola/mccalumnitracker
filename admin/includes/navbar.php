@@ -1,11 +1,17 @@
 <header class="main-header" id="myHeader">
   <style>
-    .sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
+   .main-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background-color: #fff; /* Adjust this to match your navbar background */
+    }
+    body {
+      padding-top: 50px; 
+    }
+  </style>
   </style>
   <!-- Logo -->
   <a href="index.php" class="logo">
@@ -57,24 +63,21 @@
 <?php include 'includes/profile_modal.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-// Get the header
-var header = document.getElementById("myHeader");
-
-// Get the offset position of the navbar
-var sticky = header.offsetTop;
-
-// Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
-function makeSticky() {
-  if (window.pageYOffset > sticky) {
-    header.classList.add("sticky");
-  } else {
-    header.classList.remove("sticky");
-  }
-}
-
-// When the user scrolls the page, execute makeSticky
-window.onscroll = function() {makeSticky()};
-
+// Your existing script for the signout button
+document.getElementById('signout_button').addEventListener('click', function(e) {
+  e.preventDefault();
+  Swal.fire({
+    title: 'Are you sure you want to leave this page?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, sign out',
+    cancelButtonText: 'No, stay here'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = 'logout.php';
+    }
+  });
+});
 // Your existing script
 document.getElementById('signout_button').addEventListener('click', function(e) {
   e.preventDefault();
