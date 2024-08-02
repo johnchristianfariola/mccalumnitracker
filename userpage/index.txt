@@ -1,777 +1,295 @@
 <?php include '../includes/session.php'; ?>
-<!doctype html>
-<html class="no-js" lang="">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <!-- Include header -->
-    <?php include 'includes/header.php'; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="../homepage/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="../homepage/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../homepage/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Template Stylesheet -->
+    <link href="../homepage/css/style.css" rel="stylesheet">
+    <link href="../homepage/css/styles-merged.css" rel="stylesheet">
+    <link href="alumni_profile.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <link rel="stylesheet" href="custom.css">
+    <title>Alumni Profile Update</title>
     <?php
 
-    require_once '../includes/firebaseRDB.php';
-    require_once '../includes/config.php';
-
-
-    $firebase = new firebaseRDB($databaseURL);
-    $jobId = $_GET['id'] ?? '';
-
-    if ($jobId) {
-        $job = json_decode($firebase->retrieve("job/" . $jobId), true);
-        if ($job) {
-            $workTime = $job['work_time'] ?? 'N/A';
-            $jobDetails = [
-                'title' => $job['job_title'] ?? 'N/A',
-                'workTime' => $workTime,
-                'company' => $job['company_name'] ?? 'N/A',
-                'description' => $job['job_description'] ?? 'No description available.',
-                'imagePath' => $job['image_path'] ?? 'N/A',
-                'job_created' => $job['job_created'] ?? 'N/A',
-                'backgroundColor' => ($workTime == 'Full-Time') ? '#e6f7ff' : '#fff0f5',
-                'color' => ($workTime == 'Full-Time') ? '#0066cc' : '#cc0066',
-            ];
-            $jobDetailsJson = json_encode($jobDetails);
-        }
-
-        $commentData = $firebase->retrieve("job_comments");
-        $commentData = json_decode($commentData, true);
-        $jobComments = [];
-        if (is_array($commentData)) {
-            foreach ($commentData as $commentId => $comment) {
-                if ($comment["job_id"] === $jobId) {
-                    $comment["date_ago"] = timeAgo($comment["date_commented"]);
-                    $jobComments[$commentId] = $comment;
-                }
-            }
-        }
-
-        $alumni_id = isset($_SESSION["user"]["id"]) ? $_SESSION["user"]["id"] : null;
-
-        // Retrieve alumni data
-        if ($alumni_id) {
-            $alumniData = $firebase->retrieve("alumni/{$alumni_id}");
-            $alumniData = json_decode($alumniData, true);
-            $alumniProfileUrl = $alumniData["profile_url"] ?? '';
-            $alumniFirstName = $alumniData["firstname"] ?? '';
-            $alumniLastName = $alumniData["lastname"] ?? '';
-        }
+    // If the user is not logged in, redirect to the main index page
+    if (!isset($_SESSION['alumni'])) {
+        header('location: ../index.php');
+        exit();
     }
 
-    $data = json_decode($firebase->retrieve("job"), true);
-    $jobsData = [];
-
-    $adminData = $firebase->retrieve("admin/admin");
-    $adminData = json_decode($adminData, true);
-
-
-    foreach ($data as $id => $job) {
-        if ($job['status'] === 'Active') {
-            $job['id'] = $id;  // Add the id to the job array
-            $jobsData[] = $job;
-        }
+    // If forms_completed is true, redirect to the user home page
+    if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == true) {
+        header('location: index.php');
+        exit();
     }
-    usort($jobsData, function ($a, $b) {
-        return strtotime($b['job_created']) - strtotime($a['job_created']);
-    });
+
+    if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed']) {
+        // Redirect to index.php if forms are completed
+        header('location: index.php');
+        exit();
+    }
+
+
     ?>
-
     <?php
-    function timeAgo($timestamp)
-    {
-        $currentTime = time();
-        $commentTime = strtotime($timestamp);
-        $difference = $currentTime - $commentTime;
-
-        if ($difference < 60) {
-            return "Just now";
-        } elseif ($difference >= 60 && $difference < 3600) {
-            $time = round($difference / 60);
-            return $time . " minute" . ($time > 1 ? "s" : "") . " ago";
-        } elseif ($difference >= 3600 && $difference < 86400) {
-            $time = round($difference / 3600);
-            return $time . " hour" . ($time > 1 ? "s" : "") . " ago";
-        } else {
-            $time = round($difference / 86400);
-            return $time . " day" . ($time > 1 ? "s" : "") . " ago";
-        }
-    }
+    // Fetch data from Firebase
+    $courseKey = "course"; // Replace with your actual Firebase path or key for courses
+    
+    $data = $firebase->retrieve($courseKey);
+    $data = json_decode($data, true); // Decode JSON data into associative arrays
+    
+    $batchYears = $firebase->retrieve("batch_yr");
+    $batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
     ?>
 </head>
 
-<body>
-    <!--[if lt IE 8]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+<body style="background:white; ">
 
-    <!-- Start Header Top Area -->
-    <?php include 'includes/navbar.php'; ?>
-    <!-- End Header Top Area -->
-
-    <!-- Mobile Menu start -->
-    <?php include 'includes/mobile_view.php'; ?>
-    <!-- Mobile Menu end -->
-
-    <!-- Main Menu area start -->
-    <?php include 'includes/main_menu.php'; ?>
-
-    <style>
-        li {
-            list-style: circle;
-            margin-left: 20px;
-        }
-
-        .job_img {
-            width: 100%;
-            height: 60vh;
-        }
-
-        .comments-list .comment-avatar {
-            width: 40px;
-            height: 40px;
-            position: relative;
-            z-index: 99;
-            float: left;
-            border: 3px solid #FFF;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            border-radius: 4px;
-            -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-
-        .comments-container {
-            width: 100%;
-            max-height: 500px;
-            /* Adjust based on your design */
-            overflow-y: auto;
-            /* Allows vertical scrolling if comments exceed the container height */
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .comments-list {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-        }
-
-        .comment-main-level {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .comment-avatar {
-            margin-right: 10px;
-        }
-
-        .comment-box {
-            flex: 1;
-        }
-
-        .reply-container {
-            margin-top: 10px;
-        }
-
-        .reply-list {
-            padding-left: 20px;
-            /* Indent replies */
-        }
-
-        .pb-cmnt-container {
-            margin-top: 20px;
-        }
-
-        .pb-cmnt-textarea {
-            width: calc(100% - 100px);
-            /* Adjust width based on button */
-            margin-bottom: 10px;
-        }
-
-        #submitComment {
-            float: right;
-        }
-
-        .pb-cmnt-container {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .panel-info {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .panel-body {
-            padding: 15px;
-        }
-
-        .pb-cmnt-textarea {
-            width: calc(100% - 110px);
-            /* Adjust width to account for the button */
-            margin-bottom: 10px;
-            resize: vertical;
-            /* Allows vertical resizing if needed */
-            box-sizing: border-box;
-        }
-
-        #submitComment {
-            float: right;
-            margin-top: 10px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
-    </style>
-
-    <!-- End Sale Statistic area -->
-    <div class="main-content"></div>
-    <div class="sale-statistic-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
-                    <!-- Job Articles -->
-                    <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-                        <!-- Example job item -->
-                        <div class="curved-inner-pro">
-                            <div class="curved-ctn">
-                                <div class="image-section">
-                                    <img class="profile" src="../admin/<?php echo $adminData["image_url"]; ?>" alt="">
-                                </div>
-                                <div class="info-section">
-                                    <h2> <?php echo $adminData["firstname"] . " " . $adminData["lastname"]; ?></h2>
-                                    <span><?= htmlspecialchars($jobDetails['job_created']) ?></span>
-                                </div>
-                            </div>
-                        </div>
-                        <?php if ($jobDetailsJson): ?>
-                            <?php $jobDetails = json_decode($jobDetailsJson, true); ?>
-                            <div class="content">
-                                <h3><?= htmlspecialchars($jobDetails['title']) ?></h3>
-                                <div class="job-timesced"
-                                    style="background-color: <?= $jobDetails['backgroundColor'] ?>; color: <?= $jobDetails['color'] ?>">
-                                    <?= htmlspecialchars($jobDetails['workTime']) ?>
-                                </div>
-                                <br>
-                                <h4><?= htmlspecialchars($jobDetails['company']) ?></h4>
-                                <div class="Job-description"><?= htmlspecialchars_decode($jobDetails['description']) ?>
-                                </div>
-                            </div>
-                            <br><br>
-                            <img style="border-radius: 1rem"
-                                src="../admin/<?= htmlspecialchars($jobDetails['imagePath']) ?>" class="job_img"
-                                alt="news image">
+    <?php include '../includes/navbar.php' ?>
 
 
-                            <br><br>
+        
+    <div class="form-container">
+        <form action="update_profile.php" method="POST" class="form" enctype="multipart/form-data">
+            <!-- Hidden fields -->
+            <input type="hidden" name="alumni_id" value="<?php echo htmlspecialchars($user['id']); ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token']); ?>">
+            <input type="hidden" name="batch_id" value="<?php echo htmlspecialchars($_SESSION['user']['batch_id']); ?>">
+            <input type="hidden" name="course_id"
+                value="<?php echo htmlspecialchars($_SESSION['user']['course_id']); ?>">
 
-                            <div class="comments-container">
-                                <h1><i class="fa fa-wechat"></i> Comments</h1>
-                                <ul id="comments-list" class="comments-list">
-                                    <?php if (empty($jobComments)): ?>
-                                        <li id="no-comments-message" class="center-message">Be the First to Comment</li>
-                                    <?php else: ?>
-                                        <?php foreach ($jobComments as $commentId => $comment): ?>
-                                            <?php
-                                            $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
-                                            $commenterData = json_decode($commenterData, true);
-                                            $commenterProfileUrl = $commenterData["profile_url"] ?? '';
-                                            $commenterFirstName = $commenterData["firstname"] ?? '';
-                                            $commenterLastName = $commenterData["lastname"] ?? '';
-                                            ?>
-                                            <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
-                                                <div class="comment-main-level">
-                                                    <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>"
-                                                            alt=""></div>
-                                                    <div class="comment-box">
-                                                        <div class="comment-head">
-                                                            <h6 class="comment-name by-author">
-                                                                <a
-                                                                    href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
-                                                            </h6>
-                                                            <span><?php echo $comment["date_ago"]; ?></span>
-                                                            <i class="fa fa-reply reply-button"></i>
-                                                            <i class="fa fa-heart heart-icon"
-                                                                data-comment-id="<?php echo $commentId; ?>"
-                                                                data-liked="<?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? "true" : "false"; ?>"></i>
-                                                            <span
-                                                                class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
-                                                        </div>
-                                                        <div class="comment-content">
-                                                            <?php echo htmlspecialchars($comment["comment"]); ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="reply-container" style="display: none;">
-                                                    <form class="reply-form">
-                                                        <textarea class="reply-textarea"
-                                                            placeholder="Write your reply here..."></textarea>
-                                                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                                                        <input type="hidden" name="parent_comment_id"
-                                                            value="<?php echo $commentId; ?>">
-                                                    </form>
-                                                </div>
-                                                <ul class="comments-list reply-list">
-                                                    <?php if (isset($comment["replies"]) && is_array($comment["replies"])): ?>
-                                                        <?php foreach ($comment["replies"] as $replyId => $reply): ?>
-                                                            <?php
-                                                            $replyAuthorData = $firebase->retrieve("alumni/{$reply["alumni_id"]}");
-                                                            $replyAuthorData = json_decode($replyAuthorData, true);
-                                                            ?>
-                                                            <li>
-                                                                <div class="comment-avatar"><img
-                                                                        src="<?php echo htmlspecialchars($replyAuthorData["profile_url"] ?? ''); ?>"
-                                                                        alt=""></div>
-                                                                <div class="comment-box">
-                                                                    <div class="comment-head">
-                                                                        <h6 class="comment-name by-author">
-                                                                            <a
-                                                                                href="#"><?php echo htmlspecialchars($replyAuthorData["firstname"] ?? '') . " " . htmlspecialchars($replyAuthorData["lastname"] ?? ''); ?></a>
-                                                                        </h6>
-                                                                        <span><?php echo timeAgo($reply["date_replied"]); ?></span>
-                                                                    </div>
-                                                                    <div class="comment-content">
-                                                                        <?php echo htmlspecialchars($reply["comment"]); ?>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </ul>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
+            <div class="form-section first active">
+                <h2><span class="step-icon">01</span> Personal Information</h2>
+                <p>Please correct any incorrect information and proceed to the next step.</p>
 
-                            <div class="container pb-cmnt-container" style="width:100%">
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-0">
-                                        <div id="uniquePanelInfo" class="panel panel-info">
-                                            <div id="uniquePanelBody" class="panel-body">
-                                                <form id="commentForm" method="POST" action="comment_job.php">
-                                                    <textarea name="comment" placeholder="Write your comment here!"
-                                                        class="pb-cmnt-textarea" id="uniqueCommentTextarea"></textarea>
-                                                    <button class="btn btn-primary pull-right" type="button"
-                                                        id="submitComment">Share</button>
-                                                    <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
-                                                    <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="custom-profile" id="profileDisplay">
+                    <label for="profileImageInput" class="custom-label">Choose Profile Image</label>
+                </div>
+                <input type="file" id="profileImageInput" name="profileImage" accept="image/*" required>
 
-                        <?php else: ?>
-                            <p>Job not found.</p>
-                        <?php endif; ?>
-
+                <div class="fields">
+                    <div class="input-field">
+                        <label>First Name</label>
+                        <input type="text" name="firstname" placeholder="Enter your name"
+                            value="<?php echo htmlspecialchars($user['firstname']); ?>" required>
                     </div>
-                    <!-- More Job items can be added similarly -->
+                    <div class="input-field">
+                        <label>Middle Name</label>
+                        <input type="text" name="middlename" placeholder="Enter your middle name"
+                            value="<?php echo htmlspecialchars($user['middlename'] ?? ''); ?>">
+                    </div>
+                    <div class="input-field">
+                        <label>Last Name</label>
+                        <input type="text" name="lastname" placeholder="Enter your lastname"
+                            value="<?php echo htmlspecialchars($user['lastname']); ?>" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Auxiliary Name</label>
+                        <input type="text" name="auxiliaryname" placeholder="Enter auxiliary name"
+                            value="<?php echo htmlspecialchars($user['auxiliaryname']); ?>" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Date of Birth</label>
+                        <input type="date" name="birthdate" value="<?php echo htmlspecialchars($user['birthdate']); ?>"
+                            required>
+                    </div>
+                    <div class="input-field">
+                        <label>Sex</label>
+                        <select name="gender" required>
+                            <option disabled>Select gender</option>
+                            <option value="Male" <?php echo ($user['gender'] === 'Male') ? 'selected' : ''; ?>>Male
+                            </option>
+                            <option value="Female" <?php echo ($user['gender'] === 'Female') ? 'selected' : ''; ?>>Female
+                            </option>
+                            <option value="Others" <?php echo ($user['gender'] === 'Others') ? 'selected' : ''; ?>>Others
+                            </option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Civil Status</label>
+                        <input type="text" name="civilstatus" placeholder="Enter your civil status"
+                            value="<?php echo htmlspecialchars($user['civilstatus']); ?>" required>
+                    </div>
                 </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
-                    <div class="right-section">
-                        <!-- Event Item Example -->
-                        <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
-                            data-wow-delay="0.2s">
-
-                            <?php foreach ($jobsData as $job) {
-                                // Skip the current job being viewed
-                                if ($job['id'] == $jobId)
-                                    continue;
-                                ?>
-                                <?php
-                                $jobTitle = htmlspecialchars($job['job_title']);
-                                $workTime = htmlspecialchars($job['work_time']);
-                                $company = htmlspecialchars($job['company_name']);
-                                $jobDate = htmlspecialchars($job['job_created']);
-                                $imagePath = htmlspecialchars($job['image_path'] ?? ''); // Get the image path
-                                $id = htmlspecialchars($job['id']);
-
-                                // Determine background color and text color based on work time
-                                $backgroundColor = ($workTime == 'Full-Time') ? '#e6f7ff' : '#fff0f5';
-                                $color = ($workTime == 'Full-Time') ? '#0066cc' : '#cc0066';
-                                ?>
-                                <a href="visit_job.php?id=<?php echo $id; ?>">
-                                    <div class="card">
-                                        <img src="../admin/<?php echo $imagePath; ?>" alt="Event Image" class="event_image">
-                                        <div class="card-content">
-                                            <div class="job-container">
-                                                <div class="job-title"><?php echo $jobTitle; ?></div>
-                                                <div class="job-timesced"
-                                                    style="background-color: <?php echo $backgroundColor; ?>; color: <?php echo $color; ?>;">
-                                                    <?php echo $workTime; ?>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="card-date"><?php echo $company; ?></div>
-                                            <div class="card-date">Posted on <?php echo $jobDate; ?></div>
-                                        </div>
-                                    </div>
-                                </a>
-                            <?php } ?>
-                        </div>
+                <h3>Contact Details</h3>
+                <div class="fields">
+                    <div class="input-field">
+                        <label>Address</label>
+                        <input type="text" name="addressline1" placeholder="Enter your address"
+                            value="<?php echo htmlspecialchars($user['addressline1']); ?>" required>
                     </div>
-                    <!-- End Event Item Example -->
+                    <div class="input-field">
+                        <label>City</label>
+                        <input type="text" name="city" placeholder="Enter your city"
+                            value="<?php echo htmlspecialchars($user['city']); ?>" required>
+                    </div>
+                    <div class="input-field">
+                        <label>State | Province | Region</label>
+                        <input type="text" name="state" placeholder="Enter your state"
+                            value="<?php echo htmlspecialchars($user['state']); ?>" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Zip Code</label>
+                        <input type="text" name="zipcode" placeholder="Enter your zip code"
+                            value="<?php echo htmlspecialchars($user['zipcode']); ?>" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="Enter your email"
+                            value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Contact</label>
+                        <input type="text" name="contactnumber" placeholder="Enter your contact number"
+                            value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
+                    </div>
+                </div>
 
-                    <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
+                <div class="buttons">
+                    <button type="button" class="nextBtn">Next</button>
+                </div>
+            </div>
 
+            <div class="form-section second">
+                <h2><span class="step-icon">02</span> Additional Information</h2>
 
+                <div class="fields">
+                    <div class="input-field">
+                        <label>Course</label>
+                        <select class="form-control" id="course" name="course" required>
+                            <option value="<?php echo htmlspecialchars($_SESSION['user']['course_id']); ?>">
+                                <?php echo htmlspecialchars($_SESSION['user']['course']); ?>
+                            </option>
+                            <?php
+                            if (is_array($data)) {
+                                foreach ($data as $courseId => $details) {
+                                    $courseCode = isset($details['courCode']) ? htmlspecialchars($details['courCode']) : 'Unknown';
+                                    echo "<option value=\"" . htmlspecialchars($courseId) . "\">" . $courseCode . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Batch</label>
+                        <select class="form-control" id="batch" name="batch" required>
+                            <option value="<?php echo htmlspecialchars($_SESSION['user']['batch_id']); ?>">
+                                <?php echo htmlspecialchars($_SESSION['user']['batch']); ?>
+                            </option>
+                            <?php
+                            if (!empty($batchYears) && is_array($batchYears)) {
+                                foreach ($batchYears as $batchId => $batchDetails) {
+                                    $batchYear = isset($batchDetails['batch_yrs']) ? htmlspecialchars($batchDetails['batch_yrs']) : 'Unknown';
+                                    echo "<option value=\"" . htmlspecialchars($batchId) . "\">" . $batchYear . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Current Work Status</label>
+                        <select class="form-control" name="work_status" id="work-status" required>
+                            <option value="">Select Status</option>
+                            <option value="Employed">Employed</option>
+                            <option value="Unemployed">Unemployed</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Date of 1st Employment</label>
+                        <input type="date" class="form-control" id="first_employment_date" name="first_employment_date">
+                    </div>
+                    <div class="input-field">
+                        <label>Date of Current Employment</label>
+                        <input type="date" class="form-control" id="date_for_current_employment"
+                            name="date_for_current_employment">
+                    </div>
+                    <div class="input-field">
+                        <label>Type of Work</label>
+                        <input type="text" class="form-control" id="type_of_work" name="type_of_work"
+                            placeholder="Type of Work">
+                    </div>
+                    <div class="input-field">
+                        <label>Work Position</label>
+                        <input type="text" class="form-control" id="work_position" name="work_position"
+                            placeholder="Work Position">
+                    </div>
+                    <div class="input-field">
+                        <label>Current Monthly Income</label>
+                        <input type="number" class="form-control" id="current_monthly_income"
+                            name="current_monthly_income" placeholder="Current Monthly Income">
+                    </div>
+                    <div class="input-field">
+                        <label>Is your job related to your undergraduate program?</label>
+                        <select class="form-control" name="work_related" id="work_related">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button type="button" class="backBtn">Back</button>
+                    
+                    <button type="submit" class="submitBtn">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div class="modal fade modern-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel"
+        aria-hidden="true" style="padding-right: 0px !important;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="welcomeModalLabel">Welcome, Alumni!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>We're excited to have you here at the Alumni Profile Update page. Your information is valuable to
+                        us and helps us serve you better.</p>
+                    <p>Please take a moment to review and update your details. This ensures you stay connected with our
+                        alumni community and receive relevant updates.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Let's Get Started</button>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
 
-
-    <!-- JavaScript -->
-    <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/wow.min.js"></script>
-    <script src="js/jquery-price-slider.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.scrollUp.min.js"></script>
-    <script src="js/meanmenu/jquery.meanmenu.js"></script>
-    <script src="js/counterup/jquery.counterup.min.js"></script>
-    <script src="js/counterup/waypoints.min.js"></script>
-    <script src="js/counterup/counterup-active.js"></script>
-    <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="js/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
-    <script src="js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="js/jvectormap/jvectormap-active.js"></script>
-    <script src="js/sparkline/jquery.sparkline.min.js"></script>
-    <script src="js/sparkline/sparkline-active.js"></script>
-    <script src="js/flot/jquery.flot.js"></script>
-    <script src="js/flot/jquery.flot.resize.js"></script>
-    <script src="js/flot/curvedLines.js"></script>
-    <script src="js/flot/flot-active.js"></script>
-    <script src="js/knob/jquery.knob.js"></script>
-    <script src="js/knob/jquery.appear.js"></script>
-    <script src="js/knob/knob-active.js"></script>
-    <script src="js/wave/waves.min.js"></script>
-    <script src="js/wave/wave-active.js"></script>
-    <script src="js/todo/jquery.todo.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/chat/moment.min.js"></script>
-    <script src="js/chat/jquery.chat.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/tawk-chat.js"></script>
-    <script src="js/dialog/sweetalert2.min.js"></script>
-    <script src="js/dialog/dialog-active.js"></script>
-
-    <!-- Custom JS -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const toggleButtons = document.querySelectorAll(".toggle-button");
-
-            toggleButtons.forEach(button => {
-                button.addEventListener("click", function () {
-                    const description = this.previousElementSibling;
-                    if (description.classList.contains("expanded")) {
-                        description.classList.remove("expanded");
-                        this.textContent = "Show More...";
-                    } else {
-                        description.classList.add("expanded");
-                        this.textContent = "Show Less";
-                    }
-                });
-
-                // Check if description needs expanding
-                const description = button.previousElementSibling;
-                if (description.scrollHeight > description.clientHeight) {
-                    button.style.display = "block";
-                } else {
-                    button.style.display = "none";
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var openReplyFormId = null;
-            var refreshInterval = 5000;
-            var lastUpdate = Date.now();
-            var currentOpenReplyContent = '';
-            var caretPosition = 0;
-            var isReplyFormOpen = false;
-            var heartedComments = new Set();
-
-            $('#submitComment').click(function () {
-                var $submitButton = $(this);
-                var $form = $('#commentForm');
-                var $textarea = $('.pb-cmnt-textarea');
-                var commentContent = $textarea.val().trim();
-
-                if (commentContent === "") {
-                    swal({
-                        title: 'Oops...',
-                        text: 'Please enter a comment before sharing.',
-                        type: 'warning',
-                        timer: 5000,
-                        onOpen: function () {
-                            swal.showLoading()
-                        }
-                    }).then(
-                        function () { },
-                        function (dismiss) {
-                            if (dismiss === 'timer') {
-                                console.log('I was closed by the timer')
-                            }
-                        }
-                    )
-                    return;
-                }
-
-                $submitButton.prop('disabled', true);
-                var formData = $form.serialize();
-                $textarea.val('');
-                $submitButton.prop('disabled', false);
-
-                var $tempMessage = $('<div class="temp-message">Submitting your comment...</div>');
-                $form.after($tempMessage);
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'comment_job.php',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (response) {
-                        $tempMessage.remove();
-                        if (response.status === 'success') {
-                            refreshComments();
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Your comment has been added.',
-                                icon: 'success',
-                                timer: 2000,
-                                timerProgressBar: true
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: response.message,
-                                icon: 'error'
-                            });
-                        }
-                    },
-                    error: function () {
-                        $tempMessage.remove();
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while submitting your comment.',
-                            icon: 'error'
-                        });
-                    }
-                });
-            });
-
-            function refreshComments() {
-                if (isReplyFormOpen) {
-                    return;
-                }
-
-                if (openReplyFormId) {
-                    var $currentOpenReplyForm = $(`#comments-list li[data-comment-id="${openReplyFormId}"] .reply-container`);
-                    var $currentTextarea = $currentOpenReplyForm.find('.reply-textarea');
-                    currentOpenReplyContent = $currentTextarea.val();
-                    caretPosition = $currentTextarea[0].selectionStart;
-                }
-
-                $.ajax({
-                    url: 'refresh_job.php',
-                    type: 'GET',
-                    data: { job_id: '<?php echo $jobId; ?>', last_update: lastUpdate, alumni_id: '<?php echo $alumni_id; ?>' },
-                    success: function (response) {
-                        var $commentsList = $('#comments-list');
-
-                        if (response.trim() !== '') {
-                            var $newCommentsList = $(response);
-
-                            heartedComments.forEach(function (commentId) {
-                                var $oldComment = $commentsList.find('li[data-comment-id="' + commentId + '"]');
-                                var $newComment = $newCommentsList.find('li[data-comment-id="' + commentId + '"]');
-
-                                if ($oldComment.length && $newComment.length) {
-                                    var $oldHeart = $oldComment.find('.fa-heart');
-                                    var $oldHeartCount = $oldComment.find('.heart-count');
-                                    var $newHeart = $newComment.find('.fa-heart');
-                                    var $newHeartCount = $newComment.find('.heart-count');
-
-                                    $newHeart.addClass('liked');
-                                    $newHeartCount.text($oldHeartCount.text());
-                                }
-                            });
-
-                            $commentsList.html($newCommentsList);
-                            lastUpdate = Date.now();
-                        }
-
-                        if (openReplyFormId) {
-                            var $newReplyContainer = $commentsList.find(`li[data-comment-id="${openReplyFormId}"] .reply-container`);
-                            $newReplyContainer.html(`
-                        <form class="reply-form">
-                            <textarea class="reply-textarea" placeholder="Write your reply here...">${currentOpenReplyContent}</textarea>
-                            <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                            <input type="hidden" name="parent_comment_id" value="${openReplyFormId}">
-                        </form>
-                    `).show();
-
-                            var $newTextarea = $newReplyContainer.find('.reply-textarea');
-                            $newTextarea.focus();
-                            $newTextarea[0].setSelectionRange(caretPosition, caretPosition);
-                        }
-
-                        attachEventListeners();
-                    },
-                    error: function () {
-                        console.log('Error refreshing comments');
-                    }
-                });
-            }
-
-            function attachEventListeners() {
-                $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
-                    var $commentItem = $(this).closest('li');
-                    var commentId = $commentItem.data('comment-id');
-                    var $replyContainer = $commentItem.find('.reply-container');
-
-                    if ($replyContainer.is(':empty')) {
-                        var replyForm = `
-                    <form class="reply-form">
-                        <textarea class="reply-textarea" placeholder="Write your reply here..."></textarea>
-                        <button type="submit" class="btn btn-primary submit-reply">Reply</button>
-                        <input type="hidden" name="parent_comment_id" value="${commentId}">
-                    </form>
-                `;
-                        $replyContainer.html(replyForm).show();
-                        openReplyFormId = commentId;
-                        isReplyFormOpen = true;
-                    } else {
-                        $replyContainer.toggle();
-                        isReplyFormOpen = $replyContainer.is(':visible');
-                        openReplyFormId = isReplyFormOpen ? commentId : null;
-                    }
-                });
-
-                $(document).off('submit', '.reply-form').on('submit', '.reply-form', function (e) {
-                    e.preventDefault();
-                    var $form = $(this);
-                    var $replyTextarea = $form.find('.reply-textarea');
-                    var replyContent = $replyTextarea.val().trim();
-                    var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
-
-                    if (replyContent === "") {
-                        Swal.fire({
-                            title: 'Oops...',
-                            text: 'Please enter a reply before submitting.',
-                            icon: 'warning',
-                            timer: 5000,
-                            timerProgressBar: true
-                        });
-                        return;
-                    }
-
-                    $replyTextarea.val('');
-
-                    var $tempMessage = $('<div class="temp-message">Submitting your reply...</div>');
-                    $form.after($tempMessage);
-
-                    $.ajax({
-                        type: 'POST',
-                        url: 'reply_job.php',
-                        data: {
-                            comment: replyContent,
-                            parent_comment_id: parentCommentId,
-                            job_id: '<?php echo $jobId; ?>',
-                            alumni_id: '<?php echo $alumni_id; ?>'
-                        },
-                        dataType: 'json',
-                        success: function (response) {
-                            $tempMessage.remove();
-                            if (response.status === 'success') {
-                                isReplyFormOpen = false;
-                                refreshComments();
-                                openReplyFormId = null;
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'Your reply has been added.',
-                                    icon: 'success',
-                                    timer: 2000,
-                                    timerProgressBar: true
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: response.message,
-                                    icon: 'error'
-                                });
-                            }
-                        },
-                        error: function () {
-                            $tempMessage.remove();
-                            Swal.fire({
-                                title: 'Error',
-                                text: 'An error occurred while submitting your reply.',
-                                icon: 'error'
-                            });
-                        }
-                    });
-                });
-            }
-
-            attachEventListeners();
-
-            setInterval(function () {
-                if (!isReplyFormOpen) {
-                    refreshComments();
-                }
-            }, refreshInterval);
-        });
-    </script>
-    <script>
-        $(document).on('click', '.heart-icon', function() {
-    var $heartIcon = $(this);
-    var commentId = $heartIcon.data('comment-id');
-    var alumniId = '<?php echo $alumni_id; ?>';
-
-    $.ajax({
-        type: 'POST',
-        url: 'like_job_comment.php',
-        data: {
-            comment_id: commentId,
-            alumni_id: alumniId
-        },
-        dataType: 'json',
-        success: function(response) {
-            if (response.status === 'success') {
-                if (response.action === 'liked') {
-                    $heartIcon.addClass('liked');
-                    heartedComments.add(commentId);
-                } else {
-                    $heartIcon.removeClass('liked');
-                    heartedComments.delete(commentId);
-                }
-                $heartIcon.siblings('.heart-count').text(response.heart_count);
-            } else {
-                console.error('Error updating like status:', response.message);
-            }
-        },
-        error: function() {
-            console.error('Error sending like/unlike request');
-        }
-    });
-});
-    </script>
+    <?php include 'includes/footer.php' ?>
+   
 </body>
 
 </html>
+
+<?php include 'includes/script.php' ?>
