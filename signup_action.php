@@ -1,6 +1,7 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 // Require PHPMailer files
 require 'phpmailer/src/Exception.php';
 require 'phpmailer/src/PHPMailer.php';
@@ -12,7 +13,7 @@ require_once 'includes/config.php'; // Include the config file
 $firebase = new firebaseRDB($databaseURL);
 
 
-if(isset($_POST['signup'])){
+if (isset($_POST['signup'])) {
     $lastname = $_POST['lastname'];
     $studentid = $_POST['schoolId'];
     $email = $_POST['email'];
@@ -20,14 +21,14 @@ if(isset($_POST['signup'])){
     $cpassword = $_POST['curpassword'];
     $errors = array();
 
-    if($password !== $cpassword){
+    if ($password !== $cpassword) {
         $errors['password'] = "Confirm password not matched!";
     }
 
     // Retrieve alumni data
     $data = $firebase->retrieve("alumni");
     $data = json_decode($data, true);
-   
+
     // Check if email already exists and is verified
     $email_exists = false;
     $email_verified = false;
@@ -49,9 +50,8 @@ if(isset($_POST['signup'])){
 
     $alumni_id = null;
     $already_verified = false;
-    // Check if there is a match for lastname and studentid
     foreach ($data as $id => $alumni) {
-        if ($alumni['lastname'] == $lastname && $alumni['studentid'] == $studentid) {
+        if (strcasecmp($alumni['lastname'], $lastname) == 0 && $alumni['studentid'] == $studentid) {
             $alumni_id = $id;
             // Check if the alumni is already verified
             if (isset($alumni['status']) && $alumni['status'] === 'verified') {
@@ -61,19 +61,19 @@ if(isset($_POST['signup'])){
         }
     }
 
-    if(!$alumni_id){
+    if (!$alumni_id) {
         $error_message = urlencode("No matching alumni found with the provided last name and student ID!");
         header("Location: index.php?error=$error_message");
         exit();
     }
 
-    if($already_verified){
+    if ($already_verified) {
         $error_message = urlencode("You are already verified. You cannot sign up again.");
         header("Location: index.php?error=$error_message");
         exit();
     }
 
-    if(count($errors) === 0){
+    if (count($errors) === 0) {
         $encpass = password_hash($password, PASSWORD_BCRYPT);
         $code = rand(999999, 111111);
         $status = "notverified";
@@ -127,7 +127,7 @@ if(isset($_POST['signup'])){
 
 // Display errors if any
 if (!empty($errors)) {
-    foreach($errors as $error) {
+    foreach ($errors as $error) {
         echo $error . "<br>";
     }
 }

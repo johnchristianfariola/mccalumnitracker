@@ -24,18 +24,21 @@ if (isset($_SESSION['error'])) {
 <div class="modal " id="uniqueModal">
   <div class="modal_popup_container wow fadeInDown" data-wow-delay="0.1s" id="uniqueContainer">
     <div class="form_container sign_up_container">
-      <form class="form_action" action="signup_action.php" method="POST" autocomplete="">
-        <h1 class="form_title" style="font-size:30px">Enter Your Alumni Information</h1>
-        <input class="form_input" type="text" name="schoolId" placeholder="School ID" required />
-        <input class="form_input" type="text" name="lastname" required
-          value="<?php echo isset($lastname) ? $lastname : '' ?>" placeholder="Last Name" />
-        <input class="form_input" type="email" name="email" required value="<?php echo isset($email) ? $email : '' ?>"
-          placeholder="Email" />
-        <input class="form_input" type="password" name="password" placeholder="Password" required />
-        <input class="form_input" type="password" name="curpassword" placeholder="Confirm Password" required />
-        <button class="form_button" type="submit" name="signup">Sign Up</button>
-      </form>
-
+    <form class="form_action" action="signup_action.php" method="POST" autocomplete="">
+  <h1 class="form_title" style="font-size:30px">Enter Your Alumni Information</h1>
+  <input class="form_input" type="text" name="schoolId" placeholder="School ID (e.g., 1234-5678)" required 
+         pattern="\d{4}-\d{4}" maxlength="9" 
+         oninput="this.value = this.value.replace(/[^0-9-]/g, '').replace(/(\..*)\./g, '$1');"
+         onkeyup="if(this.value.length == 4) this.value += '-';"
+         title="Please enter 8 digits in the format 1234-5678" />
+  <input class="form_input" type="text" name="lastname" required 
+         value="<?php echo isset($lastname) ? $lastname : '' ?>" 
+         placeholder="Last Name" />
+  <input class="form_input" type="email" name="email" required value="<?php echo isset($email) ? $email : '' ?>" placeholder="Email" />
+  <input class="form_input" type="password" name="password" placeholder="Password" required />
+  <input class="form_input" type="password" name="curpassword" placeholder="Confirm Password" required />
+  <button class="form_button" type="submit" name="signup">Sign Up</button>
+</form>
     </div>
     <div class="form_container sign_in_container">
       <form class="form_action" method="POST" action="login.php">
