@@ -1,6 +1,6 @@
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector(".form");
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector(".form");
     const nextBtn = form.querySelector(".nextBtn");
     const backBtn = form.querySelector(".backBtn");
     const formSections = form.querySelectorAll(".form-section");
@@ -112,9 +112,32 @@
             }
         });
     });
+        });
+
+      
+document.addEventListener('DOMContentLoaded', function () {
+  var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'), {
+    keyboard: false
+  });
+  
+  welcomeModal.show();
+  
+  // Remove any inline padding-right that Bootstrap might add
+  document.body.style.paddingRight = '';
+  document.querySelector('.modal').style.paddingRight = '';
+  
+  // Ensure body doesn't scroll when modal is open
+  var modalElement = document.getElementById('welcomeModal');
+  modalElement.addEventListener('show.bs.modal', function () {
+    document.body.classList.add('modal-open');
+  });
+  modalElement.addEventListener('hidden.bs.modal', function () {
+    document.body.classList.remove('modal-open');
+  });
 });
 
-</script>
+
+    </script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
