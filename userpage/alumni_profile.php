@@ -7,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -75,6 +73,22 @@
 <body style="background:white; ">
 
     <?php include '../includes/navbar.php' ?>
+
+
+    <div class="container-fluid p-0 mb-5" style="height: 40%">
+    <div class="position-relative">
+        <img class="img-fluid" src="../homepage/img/carousel-1.png" alt="" style="height: 150px; width: 100%; object-fit: cover;">
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+            style="background: rgba(24, 29, 56, .7);">
+            <div class="container">
+                <div class="row justify-content-start">
+                    <!-- Your content here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     <div class="form-container">
         <form action="update_profile.php" method="POST" class="form" enctype="multipart/form-data">
             <!-- Hidden fields -->
