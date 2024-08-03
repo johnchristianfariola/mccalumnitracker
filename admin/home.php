@@ -262,7 +262,7 @@ usort($all_comments, function ($a, $b) {
                   <div class="icon">
                     <i class="fa fa-graduation-cap"></i>
                   </div>
-                  <a href="book.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                  <a href="alumni.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
               </div>
               <div class="col-lg-3 col-xs-6">
@@ -274,7 +274,7 @@ usort($all_comments, function ($a, $b) {
                   <div class="icon">
                     <i class="fa fa-weixin"></i>
                   </div>
-                  <a href="student.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                  <a class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
               </div>
               <div class="col-lg-3 col-xs-6">
@@ -286,7 +286,7 @@ usort($all_comments, function ($a, $b) {
                   <div class="icon">
                     <i class="fa fa-tasks"></i>
                   </div>
-                  <a href="return.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                  <a href="job.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
               </div>
               <div class="col-lg-3 col-xs-6">
@@ -298,7 +298,7 @@ usort($all_comments, function ($a, $b) {
                   <div class="icon">
                     <i class="fa fa-clock-o"></i>
                   </div>
-                  <a href="borrow.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                  <a href="event.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
               </div>
             </div>
