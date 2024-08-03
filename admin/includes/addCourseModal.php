@@ -109,7 +109,6 @@ echo '</script>';
   fetchDepartments();
 
   // Set interval to fetch departments periodically (e.g., every 30 seconds)
-  setInterval(fetchDepartments, 10000);
 
   document.getElementById('addCourseForm').addEventListener('submit', function (event) {
     var courseName = document.getElementById('course_name').value.trim();
