@@ -237,21 +237,7 @@ usort($all_comments, function ($a, $b) {
         <div class="row">
           <!-- Left Column (70% width) -->
           <div class="col-lg-9 col-md-9 col-sm-12">
-            <div class="row">
-              <div class="col-xs-12">
-                <div class="box">
-                  <div class="with-border">
-                    <div class="box-tools pull-right"></div>
-                  </div>
-                  <div class="box-body">
-                    <div class="card-header"></div>
-                    <div class="card-body">
-                      <div id="line-chart-1"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+           
             <div class="row">
               <div class="col-lg-3 col-xs-6">
                 <div class="small-box" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
@@ -336,7 +322,23 @@ usort($all_comments, function ($a, $b) {
                     <div class="chart">
                       <br>
                       <div id="legend" class="text-center"></div>
-                      <canvas id="barChart" style="height:550px"></canvas>
+                      <canvas id="myBarChart" width="400" height="200"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+             <div class="row">
+              <div class="col-xs-12">
+                <div class="box">
+                  <div class="with-border">
+                    <div class="box-tools pull-right"></div>
+                  </div>
+                  <div class="box-body">
+                    <div class="card-header"></div>
+                    <div class="card-body">
+                      <div id="line-chart-1"></div>
                     </div>
                   </div>
                 </div>
@@ -438,92 +440,52 @@ usort($all_comments, function ($a, $b) {
 
   <!-- End Chart Data -->
   <?php include 'includes/scripts.php'; ?>
-  <script>
-    'use strict';
-    var courseLabels = <?php echo $courseCodesJson; ?>;
-    var courseData = <?php echo $courseCountsJson; ?>;
-    var data = {
-      labels: courseLabels,
-      datasets: [{
-        label: 'Number of Alumni',
-        data: courseData,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255,99,132,1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1,
-        fill: false
-      }]
-    };
 
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: data,
-      options: {
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+   const ctx = document.getElementById('myBarChart').getContext('2d');
+
+const courseCodes = <?php echo $courseCodesJson; ?>;
+const courseCounts = <?php echo $courseCountsJson; ?>;
+
+const myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: courseCodes,
+        datasets: [{
+            label: 'Number of Alumni',
+            data: courseCounts,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
         scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
-  </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const ctx = document.getElementById('visitorChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: <?php echo json_encode($labels); ?>,
-          datasets: [{
-            label: 'Visitors',
-            data: <?php echo json_encode($visitors); ?>,
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            tension: 0.1,
-            fill: true
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            title: {
-              display: true,
-              text: 'Website Visitors Over Time'
-            }
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Date'
-              }
-            },
             y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Number of Visitors'
-              }
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1, // Ensure whole numbers
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : ''; // Only display whole numbers
+                    }
+                }
             }
-          }
         }
-      });
-    });
+    }
+});
   </script>
 
 </body>
@@ -536,48 +498,56 @@ usort($all_comments, function ($a, $b) {
 <script src="../plugins/chart/apexcharts.min.js"></script>
 <script src="../plugins/chart/chart-apex.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var options = {
-      chart: {
-        height: 300,
-        type: 'line',
-        zoom: {
-          enabled: false
-        }
-      },
-      dataLabels: {
-        enabled: false,
-        width: 2,
-      },
-      stroke: {
-        curve: 'straight',
-      },
-      colors: ["#4680ff"],
-      series: [{
-        name: "Visitors",
-        data: <?php echo json_encode($visitors); ?>
-      }],
-      title: {
-        text: 'Web Visitor By Month',
-        align: 'left'
-      },
-      grid: {
-        row: {
-          colors: ['#f3f6ff', 'transparent'],
-          opacity: 0.5
-        },
-      },
-      xaxis: {
-        categories: <?php echo json_encode($categories); ?>,
+ document.addEventListener('DOMContentLoaded', function () {
+  var options = {
+    chart: {
+      height: 300,
+      type: 'line',
+      zoom: {
+        enabled: false
       }
-    };
+    },
+    dataLabels: {
+      enabled: false,
+      width: 2,
+    },
+    stroke: {
+      curve: 'straight',
+    },
+    colors: ["#4680ff"],
+    series: [{
+      name: "Visitors",
+      data: <?php echo json_encode($visitors); ?>
+    }],
+    title: {
+      text: 'Web Visitor By Month',
+      align: 'left'
+    },
+    grid: {
+      row: {
+        colors: ['#f3f6ff', 'transparent'],
+        opacity: 0.5
+      },
+    },
+    xaxis: {
+      categories: <?php echo json_encode($categories); ?>,
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return Math.round(value);
+        }
+      }
+    }
+  };
 
-    var chart = new ApexCharts(
-      document.querySelector("#line-chart-1"),
-      options
-    );
-    chart.render();
-  });
+  var chart = new ApexCharts(
+    document.querySelector("#line-chart-1"),
+    options
+  );
+  chart.render();
+});
+
 
   $(function () {
     var options = {
