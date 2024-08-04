@@ -1,12 +1,11 @@
 <?php
-session_start(); // Start the session
+session_start();
 
-header('Content-Type: application/json'); // Set the content type to JSON
+header('Content-Type: application/json');
 
 $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ensure student ID field is set and not empty
     if (isset($_POST['studentid']) && !empty($_POST['studentid'])) {
         $studentid = $_POST['studentid'];
 
@@ -14,6 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!preg_match('/^\d{4}-\d{4}$/', $studentid)) {
             $response['status'] = 'error';
             $response['message'] = 'Alumni ID must be in the format 1234-5678';
+            echo json_encode($response);
+            exit;
+        }
+
+        // Validate the year in the student ID
+        $currentYear = date('Y');
+        $idYear = substr($studentid, 0, 4);
+        if ($currentYear - $idYear < 4) {
+            $response['status'] = 'error';
+            $response['message'] = 'Alumni ID year must be at least 4 years ago';
             echo json_encode($response);
             exit;
         }
@@ -35,71 +44,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $course = $_POST['course'] ?? '';
         $batch = $_POST['batch'] ?? '';
 
-        // Include Firebase RDB class and initialize
         require_once 'includes/firebaseRDB.php';
-        require_once 'includes/config.php'; // Include your config file
+        require_once 'includes/config.php';
         $firebase = new firebaseRDB($databaseURL);
 
-        // Function to check if student ID already exists
-        function isStudentIdExists($firebase, $studentid) {
-            $table = 'alumni';
-            $result = $firebase->retrieve($table);
-            $result = json_decode($result, true);
-            if ($result) {
-                foreach ($result as $record) {
-                    if (isset($record['studentid']) && $record['studentid'] === $studentid) {
-                        return true;
-                    }
+        // Check if student ID or email already exists
+        $table = 'alumni';
+        $result = $firebase->retrieve($table);
+        $result = json_decode($result, true);
+        
+        $isStudentIdExists = false;
+        $isEmailExists = false;
+        
+        if ($result) {
+            foreach ($result as $record) {
+                if (isset($record['studentid']) && $record['studentid'] === $studentid) {
+                    $isStudentIdExists = true;
+                }
+                if (isset($record['email']) && $record['email'] === $email) {
+                    $isEmailExists = true;
                 }
             }
-            return false;
         }
 
-        // Check if student ID already exists
-        if (isStudentIdExists($firebase, $studentid)) {
+        if ($isStudentIdExists) {
             $response['status'] = 'error';
             $response['message'] = 'Alumni ID already exists. It cannot be reused.';
+            echo json_encode($response);
+            exit;
+        }
+
+        if ($isEmailExists) {
+            $response['status'] = 'error';
+            $response['message'] = 'Email already exists. Please use a different email.';
+            echo json_encode($response);
+            exit;
+        }
+
+        // Prepare alumni data
+        $alumniData = array(
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'middlename' => $middlename,
+            'auxiliaryname' => $auxiliaryname,
+            'birthdate' => $birthdate,
+            'civilstatus' => $civilstatus,
+            'gender' => $gender,
+            'addressline1' => $addressline1,
+            'city' => $city,
+            'state' => $state,
+            'zipcode' => $zipcode,
+            'contactnumber' => $contactnumber,
+            'email' => $email,
+            'course' => $course,
+            'batch' => $batch,
+            'studentid' => $studentid,
+            'forms_completed' => false
+        );
+
+        // Add alumni data
+        $result = $firebase->insert($table, $alumniData);
+
+        // Check result
+        if ($result === null) {
+            $response['status'] = 'error';
+            $response['message'] = 'Failed to add alumni data to Firebase.';
+            error_log('Firebase error: Failed to insert alumni data.');
         } else {
-            // Function to add alumni data
-            function addAlumniData($firebase, $data) {
-                $table = 'alumni';
-                $result = $firebase->insert($table, $data);
-                return $result;
-            }
-
-            // Prepare alumni data
-            $alumniData = array(
-                'firstname' => $firstname,
-                'lastname' => $lastname,
-                'middlename' => $middlename,
-                'auxiliaryname' => $auxiliaryname,
-                'birthdate' => $birthdate,
-                'civilstatus' => $civilstatus,
-                'gender' => $gender,
-                'addressline1' => $addressline1,
-                'city' => $city,
-                'state' => $state,
-                'zipcode' => $zipcode,
-                'contactnumber' => $contactnumber,
-                'email' => $email,
-                'course' => $course,
-                'batch' => $batch,
-                'studentid' => $studentid,
-                'forms_completed' => false
-            );
-
-            // Add alumni data
-            $result = addAlumniData($firebase, $alumniData);
-
-            // Check result
-            if ($result === null) {
-                $response['status'] = 'error';
-                $response['message'] = 'Failed to add alumni data to Firebase.';
-                error_log('Firebase error: Failed to insert alumni data.');
-            } else {
-                $response['status'] = 'success';
-                $response['message'] = 'Alumni data added successfully!';
-            }
+            $response['status'] = 'success';
+            $response['message'] = 'Alumni data added successfully!';
         }
 
         echo json_encode($response);

@@ -1,19 +1,17 @@
 <?php
-session_start(); // Start the session
+session_start();
 
-header('Content-Type: application/json'); // Set the response format to JSON
+header('Content-Type: application/json');
 
 $response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ensure the necessary data (studentid) is provided and not empty
     if (!isset($_POST['edit_studentid']) || empty($_POST['edit_studentid'])) {
         $response['message'] = 'Alumni ID is required.';
         echo json_encode($response);
         exit;
     }
 
-    // Validate Alumni ID format
     $studentid = $_POST['edit_studentid'];
     if (!preg_match('/^\d{4}-\d{4}$/', $studentid)) {
         $response['message'] = 'Alumni ID must be in the format 1234-5678';
@@ -21,12 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Include FirebaseRDB class and initialize
+    // Validate the year in the student ID
+    $currentYear = date('Y');
+    $idYear = substr($studentid, 0, 4);
+    if ($currentYear - $idYear < 4) {
+        $response['message'] = 'Alumni ID year must be at least 4 years ago';
+        echo json_encode($response);
+        exit;
+    }
+
     require_once 'includes/firebaseRDB.php';
-    require_once 'includes/config.php'; // Include your config file
+    require_once 'includes/config.php';
     $firebase = new firebaseRDB($databaseURL);
 
-    // Extract ID and data to update
     $id = $_POST['id'];
     $updateData = [
         "firstname" => $_POST['edit_firstname'] ?? '',
@@ -47,37 +52,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "studentid" => $studentid
     ];
 
-    // Function to check if Alumni ID already exists
-    function isStudentIdExists($firebase, $studentid, $excludeId) {
-        $table = 'alumni';
-        $result = $firebase->retrieve($table);
-        $result = json_decode($result, true);
-        if ($result) {
-            foreach ($result as $key => $record) {
-                if ($key !== $excludeId && isset($record['studentid']) && $record['studentid'] === $studentid) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    // Function to get existing data
-    function getExistingData($firebase, $id) {
-        $table = 'alumni';
-        $result = $firebase->retrieve($table . '/' . $id);
-        return json_decode($result, true);
-    }
-
     // Get existing data
-    $existingData = getExistingData($firebase, $id);
+    $existingData = $firebase->retrieve('alumni/' . $id);
+    $existingData = json_decode($existingData, true);
 
-    // Check if the Alumni ID is changing and if the new Alumni ID already exists
-    if ($existingData['studentid'] !== $updateData['studentid']) {
-        if (isStudentIdExists($firebase, $updateData['studentid'], $id)) {
-            $response['message'] = 'Cannot update. The new Alumni ID already exists.';
-            echo json_encode($response);
-            exit;
+    if (!$existingData) {
+        $response['message'] = 'Alumni record not found.';
+        echo json_encode($response);
+        exit;
+    }
+
+    // Check if the Alumni ID or email is changing and if they already exist
+    $allAlumni = $firebase->retrieve('alumni');
+    $allAlumni = json_decode($allAlumni, true);
+
+    foreach ($allAlumni as $key => $alumni) {
+        if ($key !== $id) {
+            if ($alumni['studentid'] === $updateData['studentid']) {
+                $response['message'] = 'Cannot update. The new Alumni ID already exists.';
+                echo json_encode($response);
+                exit;
+            }
+            if ($alumni['email'] === $updateData['email'] && $updateData['email'] !== $existingData['email']) {
+                $response['message'] = 'Cannot update. The new email already exists.';
+                echo json_encode($response);
+                exit;
+            }
         }
     }
 
@@ -94,17 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response['status'] = 'info';
         $response['message'] = 'You have not made any changes';
     } else {
-        // Function to update alumni data
-        function updateAlumniData($firebase, $id, $updateData) {
-            $table = 'alumni'; // Assuming 'alumni' is your Firebase database node for alumni data
-            $result = $firebase->update($table, $id, $updateData);
-            return $result;
-        }
-
         // Perform update
-        $result = updateAlumniData($firebase, $id, $updateData);
+        $result = $firebase->update('alumni', $id, $updateData);
 
-        // Check result
         if ($result === null) {
             $response['message'] = 'Failed to update alumni data in Firebase.';
             error_log('Firebase error: Failed to update alumni data.');
@@ -117,6 +109,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response['message'] = 'Invalid request method.';
 }
 
-// Return the JSON response
 echo json_encode($response);
 ?>

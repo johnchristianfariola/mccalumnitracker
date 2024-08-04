@@ -87,6 +87,22 @@ if (is_array($filteredAlumni)) {
   }
 }
 
+// Count employed and unemployed alumni
+$employedCount = 0;
+$unemployedCount = 0;
+
+if (is_array($alumni)) {
+  foreach ($alumni as $alum) {
+    if (isset($alum['work_status'])) {
+      if ($alum['work_status'] === 'Employed') {
+        $employedCount++;
+      } elseif ($alum['work_status'] === 'Unemployed') {
+        $unemployedCount++;
+      }
+    }
+  }
+}
+
 // Convert the course counts array to a JSON string for JavaScript
 $courseCountsJson = json_encode(array_values($courseCounts));
 $courseCodesJson = json_encode(array_keys($courseCounts));
@@ -181,13 +197,9 @@ usort($all_comments, function ($a, $b) {
 
 <?php include 'includes/header.php'; ?>
 <style>
- 
-
-.content-wrapper {
- 
-}
 
 </style>
+
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
 
@@ -237,7 +249,7 @@ usort($all_comments, function ($a, $b) {
         <div class="row">
           <!-- Left Column (70% width) -->
           <div class="col-lg-9 col-md-9 col-sm-12">
-           
+
             <div class="row">
               <div class="col-lg-3 col-xs-6">
                 <div class="small-box" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
@@ -289,21 +301,19 @@ usort($all_comments, function ($a, $b) {
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-12">
+              <div class="col-xs-12 col-md-6">
                 <div class="box">
                   <div class="box-header with-border">
-                    <h3 class="box-title" style="color:white;">Alumni Report </h3>
+                    <h3 class="box-title" style="color:white;">Alumni Report</h3>
                     <div class="box-tools pull-right">
                       <form class="form-inline">
                         <div class="form-group">
                           <label style="color:white;">Select Year: </label>
-                          <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_year">
+                          <select class="form-control input-sm" style="height:15px; font-size:10px" id="select_year">
                             <?php
                             for ($i = 2001; $i <= 2065; $i++) {
                               $selected = ($i == $year) ? 'selected' : '';
-                              echo "
-                        <option value='" . $i . "' " . $selected . ">" . $i . "</option>
-                      ";
+                              echo "<option value='" . $i . "' " . $selected . ">" . $i . "</option>";
                             }
                             ?>
                           </select>
@@ -318,19 +328,16 @@ usort($all_comments, function ($a, $b) {
                       </script>
                     </div>
                   </div>
-                  <div class="box-body">
-                    <div class="chart">
-                      <br>
-                      <div id="legend" class="text-center"></div>
-                      <canvas id="myBarChart" width="400" height="150"></canvas>
+                  <div class="box-body" style="height: 355px; display: flex; flex-direction: column;">
+                    <div id="legend" class="text-center"></div>
+                    <div class="chart" style="flex-grow: 1;">
+                      <canvas id="myBarChart"></canvas>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-             <div class="row">
-              <div class="col-xs-12">
+              <div class="col-xs-12 col-md-6">
                 <div class="box">
                   <div class="with-border">
                     <div class="box-tools pull-right"></div>
@@ -339,11 +346,13 @@ usort($all_comments, function ($a, $b) {
                     <div class="card-header"></div>
                     <div class="card-body">
                       <div id="line-chart-1"></div>
+
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
 
           <!-- Right Column (30% width, Empty) -->
@@ -359,7 +368,7 @@ usort($all_comments, function ($a, $b) {
                     </div>
                   </div>
                   <div class="box-body">
-                    <div class="card" style="background:white;">
+                    <div class="card" style="background:white; min-height:100px">
                       <div class="card-header">
                       </div>
                       <div class="card-body">
@@ -371,8 +380,30 @@ usort($all_comments, function ($a, $b) {
               </div>
             </div>
 
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="box">
+                  <div class="box-header with-border">
+                    <h3 class="box-title" style="color:white;">Alumni Status</h3>
+                    <div class="box-tools pull-right">
+                    </div>
+                  </div>
+                  <div class="box-body">
+                    <div class="card" style="background:white;">
+                      <div class="card-header">
+                      </div>
+                      <div class="card-body">
+                        <div id="pie-chart-2" style="width:100%"></div>
 
-            <div class="recent-comments-wrapper">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!--   <div class="recent-comments-wrapper">
               <div class="recent-comments-header">
                 <h2>Recent Notification
                   <span class="notification-count">0</span>
@@ -418,7 +449,7 @@ usort($all_comments, function ($a, $b) {
                   </a>
                 </div>
               </div>
-            </div>
+            </div>-->
 
           </div>
         </div>
@@ -443,49 +474,56 @@ usort($all_comments, function ($a, $b) {
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-   const ctx = document.getElementById('myBarChart').getContext('2d');
+    const ctx = document.getElementById('myBarChart').getContext('2d');
 
-const courseCodes = <?php echo $courseCodesJson; ?>;
-const courseCounts = <?php echo $courseCountsJson; ?>;
+    const courseCodes = <?php echo $courseCodesJson; ?>;
+    const courseCounts = <?php echo $courseCountsJson; ?>;
 
-const myBarChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
+    const myBarChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
         labels: courseCodes,
         datasets: [{
-            label: 'Number of Alumni',
-            data: courseCounts,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)'
-            ],
-            borderWidth: 1
+          label: 'Number of Alumni',
+          data: courseCounts,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)'
+          ],
+          borderWidth: 1
         }]
-    },
-    options: {
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false // Hide default legend if you're using a custom one
+          }
+        },
         scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1, // Ensure whole numbers
-                    callback: function(value) {
-                        return Number.isInteger(value) ? value : ''; // Only display whole numbers
-                    }
-                }
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              callback: function (value) {
+                return Number.isInteger(value) ? value : '';
+              }
             }
+          }
         }
-    }
-});
+      }
+    });
   </script>
 
 </body>
@@ -498,61 +536,61 @@ const myBarChart = new Chart(ctx, {
 <script src="../plugins/chart/apexcharts.min.js"></script>
 <script src="../plugins/chart/chart-apex.js"></script>
 <script>
- document.addEventListener('DOMContentLoaded', function () {
-  var options = {
-    chart: {
-      height: 300,
-      type: 'line',
-      zoom: {
-        enabled: false
-      }
-    },
-    dataLabels: {
-      enabled: false,
-      width: 2,
-    },
-    stroke: {
-      curve: 'straight',
-    },
-    colors: ["#4680ff"],
-    series: [{
-      name: "Visitors",
-      data: <?php echo json_encode($visitors); ?>
-    }],
-    title: {
-      text: 'Web Visitor By Month',
-      align: 'left'
-    },
-    grid: {
-      row: {
-        colors: ['#f3f6ff', 'transparent'],
-        opacity: 0.5
+  document.addEventListener('DOMContentLoaded', function () {
+    var options = {
+      chart: {
+        height: 355,
+        type: 'line',
+        zoom: {
+          enabled: false
+        }
       },
-    },
-    xaxis: {
-      categories: <?php echo json_encode($categories); ?>,
-    },
-    yaxis: {
-      labels: {
-        formatter: function (value) {
-          return Math.round(value);
+      dataLabels: {
+        enabled: false,
+        width: 2,
+      },
+      stroke: {
+        curve: 'straight',
+      },
+      colors: ["#4680ff"],
+      series: [{
+        name: "Visitors",
+        data: <?php echo json_encode($visitors); ?>
+      }],
+      title: {
+        text: 'Web Visitor By Month',
+        align: 'left'
+      },
+      grid: {
+        row: {
+          colors: ['#f3f6ff', 'transparent'],
+          opacity: 0.5
+        },
+      },
+      xaxis: {
+        categories: <?php echo json_encode($categories); ?>,
+      },
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            return Math.round(value);
+          }
         }
       }
-    }
-  };
+    };
 
-  var chart = new ApexCharts(
-    document.querySelector("#line-chart-1"),
-    options
-  );
-  chart.render();
-});
+    var chart = new ApexCharts(
+      document.querySelector("#line-chart-1"),
+      options
+    );
+    chart.render();
+  });
 
 
   $(function () {
     var options = {
       chart: {
-        height: 350,
+        height: 220,
         type: 'radialBar',
       },
       plotOptions: {
@@ -587,32 +625,81 @@ const myBarChart = new Chart(ctx, {
     );
     chart.render();
   });
+  $(function () {
+    var options = {
+      chart: {
+        height: 220,
+        type: 'donut',
+      },
+      series: [<?php echo $employedCount; ?>, <?php echo $unemployedCount; ?>],
+      labels: ['Employed', 'Unemployed'],
+      colors: ["#4680ff", "#ff5252"],
+      legend: {
+        show: true,
+        position: 'bottom',
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              name: {
+                show: true
+              },
+              value: {
+                show: true
+              }
+            }
+          }
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        dropShadow: {
+          enabled: false,
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    }
+    var chart = new ApexCharts(
+      document.querySelector("#pie-chart-2"),
+      options
+    );
+    chart.render();
+  });
 </script>
 <script>
-let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
+  let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
 
-function updateActivities() {
+  function updateActivities() {
     $.ajax({
-        url: 'get_recent_notification.php',
-        type: 'GET',
-        data: { last_read_timestamp: lastReadTimestamp },
-        dataType: 'json',
-        success: function (data) {
-            var activitiesHtml = '';
-            var newActivityCount = 0;
+      url: 'get_recent_notification.php',
+      type: 'GET',
+      data: { last_read_timestamp: lastReadTimestamp },
+      dataType: 'json',
+      success: function (data) {
+        var activitiesHtml = '';
+        var newActivityCount = 0;
 
-            for (var i = 0; i < data.activities.length; i++) {
-                var activity = data.activities[i];
-                var newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
-                if (newClass) {
-                    newActivityCount++;
-                }
-                
-                var activityContent = activity.action === 'commented on' 
-                    ? `<div class="comment-text"><p>  <i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
-                    : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
+        for (var i = 0; i < data.activities.length; i++) {
+          var activity = data.activities[i];
+          var newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
+          if (newClass) {
+            newActivityCount++;
+          }
 
-                activitiesHtml += `
+          var activityContent = activity.action === 'commented on'
+            ? `<div class="comment-text"><p>  <i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
+            : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
+
+          activitiesHtml += `
                     <div class="recent-comment-item ${newClass}">
                         <a href="#">
                             <div class="comment-flex">
@@ -630,9 +717,9 @@ function updateActivities() {
                         </a>
                     </div>
                 `;
-            }
+        }
 
-            activitiesHtml += `
+        activitiesHtml += `
                 <div class="recent-comment-item view-all">
                     <a href="#">
                         <p>View All</p>
@@ -640,33 +727,33 @@ function updateActivities() {
                 </div>
             `;
 
-            $('#recent-comments-list').html(activitiesHtml);
-            updateNotificationCount(newActivityCount);
-        },
-        error: function (xhr, status, error) {
-            console.error("Error fetching activities:", error);
-        }
+        $('#recent-comments-list').html(activitiesHtml);
+        updateNotificationCount(newActivityCount);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching activities:", error);
+      }
     });
-}
+  }
 
-function updateNotificationCount(count) {
+  function updateNotificationCount(count) {
     const notificationCount = $('.notification-count');
     if (count > 0) {
-        notificationCount.text(count).show();
+      notificationCount.text(count).show();
     } else {
-        notificationCount.hide();
+      notificationCount.hide();
     }
-}
+  }
 
-$('.read-all-btn').on('click', function (e) {
+  $('.read-all-btn').on('click', function (e) {
     e.preventDefault();
     lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
     localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
     updateNotificationCount(0);
     $('.new-comment').removeClass('new-comment');
-});
+  });
 
-// Update activities immediately and then every 5 seconds
-updateActivities();
-setInterval(updateActivities, 5000);
+  // Update activities immediately and then every 5 seconds
+  updateActivities();
+  setInterval(updateActivities, 5000);
 </script>
