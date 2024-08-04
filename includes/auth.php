@@ -26,7 +26,7 @@ if (isset($_SESSION['error'])) {
     <div class="form_container sign_up_container">
     <form class="form_action" action="signup_action.php" method="POST" autocomplete="">
   <h1 class="form_title" style="font-size:30px">Enter Your Alumni Information</h1>
-  <input class="form_input" type="text" name="schoolId" placeholder="School ID (e.g., 1234-5678)" required 
+  <input class="form_input" type="text" name="schoolId" placeholder="Alumni ID (e.g., 1234-5678)" required 
          pattern="\d{4}-\d{4}" maxlength="9" 
          oninput="this.value = this.value.replace(/[^0-9-]/g, '').replace(/(\..*)\./g, '$1');"
          onkeyup="if(this.value.length == 4) this.value += '-';"

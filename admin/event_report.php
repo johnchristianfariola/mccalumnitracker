@@ -94,7 +94,7 @@
                       <thead>
                         <tr>
                           <th style="display:none;"></th>
-                          <th>Student ID</th>
+                          <th>Alumni ID</th>
                           <th>Name</th>
                           <th>Course</th>
                           <th>Batch</th>

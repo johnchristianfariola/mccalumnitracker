@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validate the student ID format
         if (!preg_match('/^\d{4}-\d{4}$/', $studentid)) {
             $response['status'] = 'error';
-            $response['message'] = 'Student ID must be in the format 1234-5678';
+            $response['message'] = 'Alumni ID must be in the format 1234-5678';
             echo json_encode($response);
             exit;
         }
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if student ID already exists
         if (isStudentIdExists($firebase, $studentid)) {
             $response['status'] = 'error';
-            $response['message'] = 'Student ID already exists. It cannot be reused.';
+            $response['message'] = 'Alumni ID already exists. It cannot be reused.';
         } else {
             // Function to add alumni data
             function addAlumniData($firebase, $data) {
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } else {
         $response['status'] = 'error';
-        $response['message'] = 'Student ID is required.';
+        $response['message'] = 'Alumni ID is required.';
         echo json_encode($response);
         exit;
     }

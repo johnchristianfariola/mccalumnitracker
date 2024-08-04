@@ -8,15 +8,15 @@ $response = array('status' => 'error', 'message' => 'An unexpected error occurre
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure the necessary data (studentid) is provided and not empty
     if (!isset($_POST['edit_studentid']) || empty($_POST['edit_studentid'])) {
-        $response['message'] = 'Student ID is required.';
+        $response['message'] = 'Alumni ID is required.';
         echo json_encode($response);
         exit;
     }
 
-    // Validate student ID format
+    // Validate Alumni ID format
     $studentid = $_POST['edit_studentid'];
     if (!preg_match('/^\d{4}-\d{4}$/', $studentid)) {
-        $response['message'] = 'Student ID must be in the format 1234-5678';
+        $response['message'] = 'Alumni ID must be in the format 1234-5678';
         echo json_encode($response);
         exit;
     }
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "studentid" => $studentid
     ];
 
-    // Function to check if student ID already exists
+    // Function to check if Alumni ID already exists
     function isStudentIdExists($firebase, $studentid, $excludeId) {
         $table = 'alumni';
         $result = $firebase->retrieve($table);
@@ -72,10 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get existing data
     $existingData = getExistingData($firebase, $id);
 
-    // Check if the student ID is changing and if the new student ID already exists
+    // Check if the Alumni ID is changing and if the new Alumni ID already exists
     if ($existingData['studentid'] !== $updateData['studentid']) {
         if (isStudentIdExists($firebase, $updateData['studentid'], $id)) {
-            $response['message'] = 'Cannot update. The new Student ID already exists.';
+            $response['message'] = 'Cannot update. The new Alumni ID already exists.';
             echo json_encode($response);
             exit;
         }

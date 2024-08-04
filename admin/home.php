@@ -322,7 +322,7 @@ usort($all_comments, function ($a, $b) {
                     <div class="chart">
                       <br>
                       <div id="legend" class="text-center"></div>
-                      <canvas id="myBarChart" width="400" height="200"></canvas>
+                      <canvas id="myBarChart" width="400" height="150"></canvas>
                     </div>
                   </div>
                 </div>

@@ -170,11 +170,11 @@ echo '</script>';
 
 
                   <div class="col-sm-6 mb-3">
-                    <label for="studentid" class="col-form-label">Student ID</label>
+                    <label for="studentid" class="col-form-label">Alumni ID</label>
                     <input type="text" class="form-control" id="studentid" name="studentid">
                     <small id="studentidHelp" class="form-text text-muted">Format: 1234-5678</small>
                     <small id="studentidErrorMessage" style="display:none; color:red;">
-                      <i class="fa fa-info-circle"></i> This Student ID Already Exists
+                      <i class="fa fa-info-circle"></i> This Alumni ID Already Exists
                     </small>
                   </div>
                 </div>
@@ -340,11 +340,11 @@ echo '</script>';
                   </div>
 
                   <div class="col-sm-6 mb-3">
-                    <label for="edit_studentid" class="col-form-label">Student ID</label>
+                    <label for="edit_studentid" class="col-form-label">Alumni ID</label>
                     <input type="text" class="form-control" id="editStudentid" name="edit_studentid">
                     <small id="studentidHelp" class="form-text text-muted">Format: 1234-5678</small>
                     <small id="editstudentidErrorMessage" style="display:none; color:red;">
-                      <i class="fa fa-info-circle"></i> This Student ID Already Exists
+                      <i class="fa fa-info-circle"></i> This Alumni ID Already Exists
                     </small>
 
                   </div>
@@ -473,7 +473,7 @@ echo '</script>';
           <thead>
             <tr>
               <th></th> <!-- Checkbox column -->
-              <th>Student ID</th>
+              <th>Alumnni ID</th>
               <th>Name</th>
               <th>Email</th>
               <th>Sex</th>

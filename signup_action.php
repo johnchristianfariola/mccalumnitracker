@@ -62,7 +62,7 @@ if (isset($_POST['signup'])) {
     }
 
     if (!$alumni_id) {
-        $error_message = urlencode("No matching alumni found with the provided last name and student ID!");
+        $error_message = urlencode("No matching alumni found with the provided last name and Alumni ID!");
         header("Location: index.php?error=$error_message");
         exit();
     }

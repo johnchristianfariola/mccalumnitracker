@@ -182,7 +182,7 @@
       <table id="printTable" class="printable-table">
         <thead>
           <tr>
-            <th>Student ID</th>
+            <th>Alumni ID</th>
             <th>Name</th>
             <th>Course</th>
             <th>Batch</th>
