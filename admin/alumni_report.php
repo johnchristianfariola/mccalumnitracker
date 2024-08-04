@@ -195,6 +195,12 @@
             $('#work_position').text(response.work_position || 'N/A');
             $('#current_monthly_income').text(response.current_monthly_income || 'N/A');
             $('#work_related').text(response.work_related || 'N/A');
+            $('#work_classification').text(response.work_classification || 'N/A');
+            $('#name_company').text(response.name_company || 'N/A');
+            $('#work_employment_status').text(response.work_employment_status || 'N/A');
+            $('#employment_location').text(response.employment_location || 'N/A');
+            $('#job_satisfaction').text(response.job_satisfaction || 'N/A');
+            
 
             // Show the edit modal
             $('#reportModal').modal('show');

@@ -177,7 +177,8 @@ echo '</script>';
                       <i class="fa fa-info-circle"></i> This Alumni ID Already Exists
                     </small>
                     <small id="studentidYearInfoMessage" style="display:none; color:red;">
-                      <i class="fa fa-info-circle"></i> This Alumni ID Is Not Yet An Alumni, the ID should be lower to 4 years 
+                      <i class="fa fa-info-circle"></i> This Alumni ID Is Not Yet An Alumni, the ID should be lower to 4
+                      years
                     </small>
                   </div>
                 </div>
@@ -441,22 +442,22 @@ echo '</script>';
                 </div>
               </div>
             </div>
-         
-              <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-              </div>
+
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             </div>
-            <div id="uploadStatus" style="margin-top: 10px;"></div>
           </div>
-          <div class="modal-footer" style="margin-top:30px">
-            <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn"
-              style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
-              <i class="fa fa-save"></i> Save
-            </button>
-          </div>
-        </form>
+          <div id="uploadStatus" style="margin-top: 10px;"></div>
       </div>
+      <div class="modal-footer" style="margin-top:30px">
+        <button type="submit" class="btn btn-flat pull-right btn-class" name="import_excel_btn"
+          style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+          <i class="fa fa-save"></i> Save
+        </button>
+      </div>
+      </form>
     </div>
   </div>
+</div>
 </div>
 
 
@@ -583,150 +584,150 @@ echo '</script>';
 
 <script>
   $(document).ready(function () {
-  $('.datepicker-year').datepicker({
-    format: 'yyyy',
-    viewMode: 'years',
-    minViewMode: 'years',
-    autoclose: true
-  });
+    $('.datepicker-year').datepicker({
+      format: 'yyyy',
+      viewMode: 'years',
+      minViewMode: 'years',
+      autoclose: true
+    });
 
-  const studentIdInput = document.getElementById('studentid');
-  const editStudentIdInput = document.getElementById('editStudentid');
+    const studentIdInput = document.getElementById('studentid');
+    const editStudentIdInput = document.getElementById('editStudentid');
 
-  function validateStudentId(input) {
-    let value = input.value.replace(/\D/g, ''); // Remove all non-digit characters
+    function validateStudentId(input) {
+      let value = input.value.replace(/\D/g, ''); // Remove all non-digit characters
 
-    if (value.length > 8) {
-      value = value.substring(0, 8); // Limit to 8 digits
-    }
+      if (value.length > 8) {
+        value = value.substring(0, 8); // Limit to 8 digits
+      }
 
-    // Format with dash in the middle
-    if (value.length > 4) {
-      value = value.slice(0, 4) + '-' + value.slice(4);
-    }
+      // Format with dash in the middle
+      if (value.length > 4) {
+        value = value.slice(0, 4) + '-' + value.slice(4);
+      }
 
-    input.value = value;
+      input.value = value;
 
-    // Check if the ID is valid and if the year is at least 4 years behind the current year
-    const isValid = /^\d{4}-\d{4}$/.test(value);
-    const currentYear = new Date().getFullYear();
-    const idYear = parseInt(value.slice(0, 4), 10);
-    const isYearValid = currentYear - idYear >= 4;
+      // Check if the ID is valid and if the year is at least 4 years behind the current year
+      const isValid = /^\d{4}-\d{4}$/.test(value);
+      const currentYear = new Date().getFullYear();
+      const idYear = parseInt(value.slice(0, 4), 10);
+      const isYearValid = currentYear - idYear >= 4;
 
-    if (isValid && isYearValid) {
-      input.classList.remove('error');
-      document.getElementById('studentidYearInfoMessage').style.display = 'none';
-    } else {
-      input.classList.add('error');
-      if (!isYearValid && isValid) {
-        document.getElementById('studentidYearInfoMessage').style.display = 'block';
-      } else {
+      if (isValid && isYearValid) {
+        input.classList.remove('error');
         document.getElementById('studentidYearInfoMessage').style.display = 'none';
+      } else {
+        input.classList.add('error');
+        if (!isYearValid && isValid) {
+          document.getElementById('studentidYearInfoMessage').style.display = 'block';
+        } else {
+          document.getElementById('studentidYearInfoMessage').style.display = 'none';
+        }
       }
+
+      return isValid && isYearValid;
     }
 
-    return isValid && isYearValid;
-  }
+    studentIdInput.addEventListener('input', function () {
+      validateStudentId(this);
+    });
 
-  studentIdInput.addEventListener('input', function () {
-    validateStudentId(this);
-  });
+    editStudentIdInput.addEventListener('input', function () {
+      validateStudentId(this);
+    });
 
-  editStudentIdInput.addEventListener('input', function () {
-    validateStudentId(this);
-  });
+    document.getElementById('contactnumber').addEventListener('input', function (e) {
+      const input = e.target;
+      input.value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+    });
 
-  document.getElementById('contactnumber').addEventListener('input', function (e) {
-    const input = e.target;
-    input.value = input.value.replace(/\D/g, ''); // Remove non-digit characters
-  });
+    // Handle form submission for adding alumni
+    document.getElementById('addAlumniForm').addEventListener('submit', function (event) {
+      var email = document.getElementById('email').value.trim();
+      var studentId = document.getElementById('studentid').value.trim();
 
-  // Handle form submission for adding alumni
-  document.getElementById('addAlumniForm').addEventListener('submit', function (event) {
-    var email = document.getElementById('email').value.trim();
-    var studentId = document.getElementById('studentid').value.trim();
+      var isEmailExisting = false;
+      var isStudentIdExisting = false;
 
-    var isEmailExisting = false;
-    var isStudentIdExisting = false;
-
-    // Ensure existingAlumni is defined
-    if (typeof existingAlumni !== 'undefined') {
-      for (var key in existingAlumni) {
-        if (existingAlumni.hasOwnProperty(key)) {
-          var alumni = existingAlumni[key];
-          if (alumni['email'].toLowerCase() === email.toLowerCase()) {
-            isEmailExisting = true;
-          }
-          if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
-            isStudentIdExisting = true;
+      // Ensure existingAlumni is defined
+      if (typeof existingAlumni !== 'undefined') {
+        for (var key in existingAlumni) {
+          if (existingAlumni.hasOwnProperty(key)) {
+            var alumni = existingAlumni[key];
+            if (alumni['email'].toLowerCase() === email.toLowerCase()) {
+              isEmailExisting = true;
+            }
+            if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
+              isStudentIdExisting = true;
+            }
           }
         }
       }
-    }
 
-    // Display error messages and prevent form submission if needed
-    if (isEmailExisting) {
-      event.preventDefault();
-      document.getElementById('emailErrorMessage').style.display = 'block';
-    } else {
-      document.getElementById('emailErrorMessage').style.display = 'none';
-    }
+      // Display error messages and prevent form submission if needed
+      if (isEmailExisting) {
+        event.preventDefault();
+        document.getElementById('emailErrorMessage').style.display = 'block';
+      } else {
+        document.getElementById('emailErrorMessage').style.display = 'none';
+      }
 
-    if (isStudentIdExisting) {
-      event.preventDefault();
-      document.getElementById('studentidErrorMessage').style.display = 'block';
-    } else {
-      document.getElementById('studentidErrorMessage').style.display = 'none';
-    }
+      if (isStudentIdExisting) {
+        event.preventDefault();
+        document.getElementById('studentidErrorMessage').style.display = 'block';
+      } else {
+        document.getElementById('studentidErrorMessage').style.display = 'none';
+      }
 
-    if (!validateStudentId(studentIdInput)) {
-      event.preventDefault();
-    }
-  });
+      if (!validateStudentId(studentIdInput)) {
+        event.preventDefault();
+      }
+    });
 
-  // Handle form submission for editing alumni
-  document.getElementById('editAlumniForm').addEventListener('submit', function (event) {
-    var email = document.getElementById('editEmail').value.trim();
-    var studentId = document.getElementById('editStudentid').value.trim();
+    // Handle form submission for editing alumni
+    document.getElementById('editAlumniForm').addEventListener('submit', function (event) {
+      var email = document.getElementById('editEmail').value.trim();
+      var studentId = document.getElementById('editStudentid').value.trim();
 
-    var isEditEmailExisting = false;
-    var isEditStudentIdExisting = false;
+      var isEditEmailExisting = false;
+      var isEditStudentIdExisting = false;
 
-    // Ensure existingAlumni is defined
-    if (typeof existingAlumni !== 'undefined') {
-      for (var key in existingAlumni) {
-        if (existingAlumni.hasOwnProperty(key)) {
-          var alumni = existingAlumni[key];
-          if (alumni['email'].toLowerCase() === email.toLowerCase()) {
-            isEditEmailExisting = true;
-          }
-          if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
-            isEditStudentIdExisting = true;
+      // Ensure existingAlumni is defined
+      if (typeof existingAlumni !== 'undefined') {
+        for (var key in existingAlumni) {
+          if (existingAlumni.hasOwnProperty(key)) {
+            var alumni = existingAlumni[key];
+            if (alumni['email'].toLowerCase() === email.toLowerCase()) {
+              isEditEmailExisting = true;
+            }
+            if (alumni['studentid'].toLowerCase() === studentId.toLowerCase()) {
+              isEditStudentIdExisting = true;
+            }
           }
         }
       }
-    }
 
-    // Display error messages and prevent form submission if needed
-    if (isEditEmailExisting) {
-      event.preventDefault();
-      document.getElementById('editEmailErrorMessage').style.display = 'block';
-    } else {
-      document.getElementById('editEmailErrorMessage').style.display = 'none';
-    }
+      // Display error messages and prevent form submission if needed
+      if (isEditEmailExisting) {
+        event.preventDefault();
+        document.getElementById('editEmailErrorMessage').style.display = 'block';
+      } else {
+        document.getElementById('editEmailErrorMessage').style.display = 'none';
+      }
 
-    if (isEditStudentIdExisting) {
-      event.preventDefault();
-      document.getElementById('editStudentidErrorMessage').style.display = 'block';
-    } else {
-      document.getElementById('editStudentidErrorMessage').style.display = 'none';
-    }
+      if (isEditStudentIdExisting) {
+        event.preventDefault();
+        document.getElementById('editStudentidErrorMessage').style.display = 'block';
+      } else {
+        document.getElementById('editStudentidErrorMessage').style.display = 'none';
+      }
 
-    if (!validateStudentId(editStudentIdInput)) {
-      event.preventDefault();
-    }
+      if (!validateStudentId(editStudentIdInput)) {
+        event.preventDefault();
+      }
+    });
   });
-});
 
 
 </script>

@@ -74,13 +74,24 @@ if ($work_status === 'Employed') {
     $work_position = htmlspecialchars($_POST['work_position'] ?? '');
     $current_monthly_income = htmlspecialchars($_POST['current_monthly_income'] ?? '');
     $work_related = htmlspecialchars($_POST['work_related'] ?? '');
+    $work_classification = htmlspecialchars($_POST['work_classification'] ?? '');
+    $name_company = htmlspecialchars($_POST['name_company'] ?? '');
+    $work_employment_status = htmlspecialchars($_POST['work_employment_status'] ?? '');
+    $employment_location = htmlspecialchars($_POST['employment_location'] ?? '');
+    $job_satisfaction = htmlspecialchars($_POST['job_satisfaction'] ?? '');
 
+    
     $updateData['first_employment_date'] = $first_employment_date;
     $updateData['date_for_current_employment'] = $date_for_current_employment;
     $updateData['type_of_work'] = $type_of_work;
     $updateData['work_position'] = $work_position;
     $updateData['current_monthly_income'] = $current_monthly_income;
     $updateData['work_related'] = $work_related;
+    $updateData['work_classification'] = $work_classification;
+    $updateData['name_company'] = $name_company;
+    $updateData['work_employment_status'] = $work_employment_status;
+    $updateData['employment_location'] = $employment_location;
+    $updateData['job_satisfaction'] = $job_satisfaction;
 }
 
 try {

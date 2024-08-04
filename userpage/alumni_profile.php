@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -32,7 +34,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 
     <link rel="stylesheet" href="custom.css">
     <title>Alumni Profile Update</title>
@@ -75,21 +77,21 @@
     <?php include '../includes/navbar.php' ?>
 
     <div class="container-fluid p-0 mb-5" style="height: 40%">
-    <div class="position-relative">
-      <img class="img-fluid" src="../homepage/img/carousel-1.png" alt=""
-        style="height: 150px; width: 100%; object-fit: cover;">
-      <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
-        style="background: rgba(24, 29, 56, .7);">
-        <div class="container">
-          <div class="row justify-content-start">
-            <!-- Your content here -->
-          </div>
+        <div class="position-relative">
+            <img class="img-fluid" src="../homepage/img/carousel-1.png" alt=""
+                style="height: 150px; width: 100%; object-fit: cover;">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                style="background: rgba(24, 29, 56, .7);">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <!-- Your content here -->
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-        
+
     <div class="form-container">
         <form action="update_profile.php" method="POST" class="form" enctype="multipart/form-data">
             <!-- Hidden fields -->
@@ -166,7 +168,7 @@
                             value="<?php echo htmlspecialchars($user['city']); ?>" required>
                     </div>
                     <div class="input-field">
-                        <label>State | Province | Region</label>
+                        <label>Province</label>
                         <input type="text" name="state" placeholder="Enter your state"
                             value="<?php echo htmlspecialchars($user['state']); ?>" required>
                     </div>
@@ -237,6 +239,10 @@
                         </select>
                     </div>
                     <div class="input-field">
+                        <label>Name of the Organization/Company</label>
+                        <input type="text" class="form-control" id="name_company" name="name_company">
+                    </div>
+                    <div class="input-field">
                         <label>Date of 1st Employment</label>
                         <input type="date" class="form-control" id="first_employment_date" name="first_employment_date">
                     </div>
@@ -255,10 +261,33 @@
                         <input type="text" class="form-control" id="work_position" name="work_position"
                             placeholder="Work Position">
                     </div>
+                    
+                    <div class="input-field">
+                        <label>Current Employment Status</label>
+                        <select class="form-control" name="work_employment_status" id="work_employment_status">
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Part-Time">Part-Time</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Location of Employment</label>
+                        <input type="text" class="form-control" id="employment_location" name="employment_location"
+                            placeholder="Location of Employment">
+                    </div>
                     <div class="input-field">
                         <label>Current Monthly Income</label>
                         <input type="number" class="form-control" id="current_monthly_income"
                             name="current_monthly_income" placeholder="Current Monthly Income">
+                    </div>
+                    <div class="input-field">
+                        <label>Job Satisfaction</label>
+                        <select class="form-control" name="job_satisfaction" id="job_satisfaction">
+                            <option value="Very satisfied">Very satisfied</option>
+                            <option value="Satisfied">Satisfied</option>
+                            <option value="Neutral">Neutral</option>
+                            <option value="Dissatisfied">Dissatisfied</option>
+                            <option value="Very dissatisfied">Very dissatisfied</option>
+                        </select>
                     </div>
                     <div class="input-field">
                         <label>Is your job related to your undergraduate program?</label>
@@ -267,11 +296,30 @@
                             <option value="No">No</option>
                         </select>
                     </div>
+                    <div class="input-field">
+                        <label>Field of Work</label><br>
+                        <select class="form-control" name="work_classification" id="work_classification">
+                            <option value="Industry">Industry (Corporate/Commercial)</option>
+                            <option value="Academia">Academia (Education/Research)</option>
+                            <option value="Government">Government (Public Sector)</option>
+                            <option value="Nonprofit">Nonprofit Sector (NGOs/Charities)</option>
+                            <option value="Freelance">Freelance/Consulting</option>
+                            <option value="Entrepreneurship">Entrepreneurship/Startups</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Hospitality">Hospitality and Tourism</option>
+                            <option value="Creative Arts">Creative Arts and Media</option>
+                            <option value="Agriculture">Agriculture and Natural Resources</option>
+                            <option value="Skilled Trades">Skilled Trades</option>
+                            <option value="Information Technology">Information Technology (IT)</option>
+                        </select>
+                    </div>
+
+
                 </div>
 
                 <div class="buttons">
                     <button type="button" class="backBtn">Back</button>
-                    
+
                     <button type="submit" class="submitBtn">Submit</button>
                 </div>
             </div>
@@ -301,7 +349,7 @@
     </div>
 
     <?php include 'includes/footer.php' ?>
-   
+
 </body>
 
 </html>

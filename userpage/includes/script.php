@@ -69,12 +69,12 @@
     function toggleEmploymentFields() {
         const selectedStatus = document.getElementById('work-status').value;
         if (selectedStatus === 'Employed') {
-            document.querySelectorAll('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').forEach(field => {
+            document.querySelectorAll('#job_satisfaction, #employment_location, #work_employment_status, #name_company, #first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related, #work_classification').forEach(field => {
                 field.closest('.input-field').style.display = 'block';
                 field.setAttribute('required', true);
             });
         } else {
-            document.querySelectorAll('#first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related').forEach(field => {
+            document.querySelectorAll('#job_satisfaction, #employment_location, #work_employment_status, #name_company, #first_employment_date, #date_for_current_employment, #type_of_work, #work_position, #current_monthly_income, #work_related, #work_classification').forEach(field => {
                 field.closest('.input-field').style.display = 'none';
                 field.removeAttribute('required');
             });
