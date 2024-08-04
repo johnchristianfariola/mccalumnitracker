@@ -29,6 +29,7 @@
         </a>
         <ul class="treeview-menu">
           <li><a href="alumni.php"><i class="fa fa-angle-right"></i> Manage Alumni</a></li>
+          <li><a href="field_of_work.php"><i class="fa fa-angle-right"></i> Field of Work</a></li>
 
         </ul>
       </li>
@@ -66,7 +67,7 @@
       </li>
       <li class="treeview">
         <a href="#">
-        <i class="fa fa-check-square-o "></i>
+        <i class="fa fa-book"></i>
           <span>Report</span>
           <span class="pull-right-container">
           

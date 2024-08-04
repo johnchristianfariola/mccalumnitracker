@@ -396,3 +396,32 @@ td {
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
 }
+
+/*===========CUSTOM SubMenu==================*/
+
+.alumni-count-container {
+  padding-top: 20px;
+}
+.course-container {
+  display: flex;
+  align-items: center;
+}
+.work-status-dropdown {
+  margin-left: 10px;
+}
+.collapsible, .collaps-department {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+  outline: none;
+}
+.contents {
+  display: none;
+}
+.contents.active {
+  display: block;
+}
+.arrow {
+  float: right;
+}
