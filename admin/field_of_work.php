@@ -51,10 +51,10 @@ $totalCount = 0;
           </h1>
           <div class="box-inline">
 
-            <a href="#print" data-toggle="modal" id="showModalButton"
+          <!--  <a href="#print" data-toggle="modal" id="showModalButton"
               class="btn-add-class btn btn-primary btn-sm btn-flat">
               <i class="fa fa-print"></i>&nbsp;&nbsp; Print
-            </a>
+            </a>-->
 
             <div class="search-container">
               <input type="text" class="search-input" id="search-input" placeholder="Search...">
