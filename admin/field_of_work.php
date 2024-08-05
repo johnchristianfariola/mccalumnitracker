@@ -146,6 +146,7 @@ $totalCount = 0;
                       <thead>
                         <tr>
                           <th style="display:none;"></th>
+                          <th>Profile </th>
                           <th>Alumni ID</th>
                           <th>Name</th>
                           <th>Course</th>
