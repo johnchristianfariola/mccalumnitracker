@@ -29,7 +29,8 @@
         </a>
         <ul class="treeview-menu">
           <li><a href="alumni.php"><i class="fa fa-angle-right"></i> Manage Alumni</a></li>
-          <li><a href="field_of_work.php"><i class="fa fa-angle-right"></i> Field of Work</a></li>
+          <li><a href="field_of_work.php"><i class="fa fa-angle-right"></i> Alumni Status</a></li>
+          <li><a href="category.php"><i class="fa fa-angle-right"></i> Category</a></li>
 
         </ul>
       </li>

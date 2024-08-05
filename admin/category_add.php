@@ -9,10 +9,7 @@ header('Content-Type: application/json');
 $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['categoryId']) && !empty($_POST['categoryId']) && 
-        isset($_POST['categoryName']) && !empty($_POST['categoryName'])) {
-        
-        $categoryId = $_POST['categoryId'];
+    if (isset($_POST['categoryName']) && !empty($_POST['categoryName'])) {
         $categoryName = $_POST['categoryName'];
 
         try {
@@ -20,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once 'includes/config.php';
             $firebase = new firebaseRDB($databaseURL);
 
-            function categoryExistsExcept($firebase, $categoryName, $exceptId) {
+            function categoryExists($firebase, $categoryName) {
                 $table = 'category';
                 $categories = $firebase->retrieve($table);
                 $categories = json_decode($categories, true);
@@ -30,35 +27,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 foreach ($categories as $key => $category) {
-                    if ($key !== $exceptId && 
-                        is_array($category) && 
-                        isset($category['category_name']) && 
-                        strcasecmp($category['category_name'], $categoryName) == 0) {
+                    if (is_array($category) && isset($category['category_name']) && strcasecmp($category['category_name'], $categoryName) == 0) {
                         return true;
                     }
                 }
                 return false;
             }
 
-            function updateCategory($firebase, $categoryId, $categoryName) {
+            function addCategory($firebase, $categoryName) {
                 $table = 'category';
                 $data = array('category_name' => $categoryName);
-                $result = $firebase->update($table, $categoryId, $data);
+                $result = $firebase->insert($table, $data);
                 
                 if ($result === false || $result === 'null') {
-                    throw new Exception('Failed to update category');
+                    throw new Exception('Failed to add category');
                 }
                 
                 return $result;
             }
 
-            if (categoryExistsExcept($firebase, $categoryName, $categoryId)) {
+            if (categoryExists($firebase, $categoryName)) {
                 $response['status'] = 'error';
-                $response['message'] = 'A category with this name already exists.';
+                $response['message'] = 'Category already exists.';
             } else {
-                $result = updateCategory($firebase, $categoryId, $categoryName);
+                $result = addCategory($firebase, $categoryName);
                 $response['status'] = 'success';
-                $response['message'] = 'Category updated successfully!';
+                $response['message'] = 'Category added successfully!';
             }
         } catch (Exception $e) {
             $response['status'] = 'error';
@@ -66,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         $response['status'] = 'error';
-        $response['message'] = 'Category ID and name are required.';
+        $response['message'] = 'Category name is required.';
     }
 } else {
     $response['status'] = 'error';

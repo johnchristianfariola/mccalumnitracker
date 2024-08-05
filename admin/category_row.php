@@ -1,12 +1,20 @@
-<?php 
-	include 'includes/session.php';
+<?php
+// fetch_alumni.php
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
 
-	if(isset($_POST['id'])){
-		$id = $_POST['id'];
-		$sql = "SELECT * FROM category WHERE id = '$id'";
-		$query = $conn->query($sql);
-		$row = $query->fetch_assoc();
+    // Include FirebaseRDB class
+    require_once 'includes/firebaseRDB.php';
 
-		echo json_encode($row);
-	}
+    // Firebase Realtime Database URL
+    require_once 'includes/config.php'; // Include your config file
+    $firebase = new firebaseRDB($databaseURL);
+
+    // Retrieve specific alumni data
+    $event = $firebase->retrieve("category/$id");
+    $event = json_decode($event, true);
+
+    // Output alumni data as JSON
+    echo json_encode($event);
+}
 ?>

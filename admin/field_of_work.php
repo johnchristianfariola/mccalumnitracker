@@ -78,8 +78,18 @@
                         <label style="color:white;">Select Status: </label>
                         <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_status">
                           <option value="">All</option>
-                          <option value="Employed">Employed</option>
-                          <option value="Unemployed">Unemployed</option>
+                          <option value="Industry">Industry (Corporate/Commercial)</option>
+                            <option value="Academia">Academia (Education/Research)</option>
+                            <option value="Government">Government (Public Sector)</option>
+                            <option value="Nonprofit">Nonprofit Sector (NGOs/Charities)</option>
+                            <option value="Freelance">Freelance/Consulting</option>
+                            <option value="Entrepreneurship">Entrepreneurship/Startups</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Hospitality">Hospitality and Tourism</option>
+                            <option value="Creative Arts">Creative Arts and Media</option>
+                            <option value="Agriculture">Agriculture and Natural Resources</option>
+                            <option value="Skilled Trades">Skilled Trades</option>
+                            <option value="Information Technology">Information Technology (IT)</option>
                         </select>
                       </div>
                     </form>
