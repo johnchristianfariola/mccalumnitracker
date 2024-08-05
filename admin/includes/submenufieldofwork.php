@@ -46,7 +46,7 @@ foreach ($alumni as $alumniId => $alumniDetails) {
 
 <div>
     <div class="alumni-count-container">
-        <span class="all-alumni"><a href="field_of_work.php">All Respondent</a></span>
+        <span class="all-alumni"><a href="field_of_work.php">All Alumni</a></span>
         <div class="count"><?php echo $totalAlumniCount; ?></div>
     </div>
 </div>

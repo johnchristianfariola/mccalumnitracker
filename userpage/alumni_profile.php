@@ -63,12 +63,14 @@
     <?php
     // Fetch data from Firebase
     $courseKey = "course"; // Replace with your actual Firebase path or key for courses
-    
     $data = $firebase->retrieve($courseKey);
     $data = json_decode($data, true); // Decode JSON data into associative arrays
     
     $batchYears = $firebase->retrieve("batch_yr");
     $batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
+    
+    $categoriesData = $firebase->retrieve('category');
+    $categories = json_decode($categoriesData, true);
     ?>
 </head>
 
@@ -261,7 +263,7 @@
                         <input type="text" class="form-control" id="work_position" name="work_position"
                             placeholder="Work Position">
                     </div>
-                    
+
                     <div class="input-field">
                         <label>Current Employment Status</label>
                         <select class="form-control" name="work_employment_status" id="work_employment_status">
@@ -299,18 +301,15 @@
                     <div class="input-field">
                         <label>Field of Work</label><br>
                         <select class="form-control" name="work_classification" id="work_classification">
-                            <option value="Industry">Industry (Corporate/Commercial)</option>
-                            <option value="Academia">Academia (Education/Research)</option>
-                            <option value="Government">Government (Public Sector)</option>
-                            <option value="Nonprofit">Nonprofit Sector (NGOs/Charities)</option>
-                            <option value="Freelance">Freelance/Consulting</option>
-                            <option value="Entrepreneurship">Entrepreneurship/Startups</option>
-                            <option value="Healthcare">Healthcare</option>
-                            <option value="Hospitality">Hospitality and Tourism</option>
-                            <option value="Creative Arts">Creative Arts and Media</option>
-                            <option value="Agriculture">Agriculture and Natural Resources</option>
-                            <option value="Skilled Trades">Skilled Trades</option>
-                            <option value="Information Technology">Information Technology (IT)</option>
+                            <option value="">Select a category</option>
+                            <?php
+                            if (!empty($categories) && is_array($categories)) {
+                                foreach ($categories as $categoryId => $categoryDetails) {
+                                    $categoryName = isset($categoryDetails['category_name']) ? htmlspecialchars($categoryDetails['category_name']) : 'Unknown';
+                                    echo "<option value=\"" . htmlspecialchars($categoryId) . "\">" . $categoryName . "</option>";
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
 

@@ -1,6 +1,39 @@
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
+<?php
+require_once 'includes/firebaseRDB.php';
+require_once 'includes/config.php'; // Include your config file
 
+$firebase = new firebaseRDB($databaseURL);
+
+function getFirebaseData($firebase, $path)
+{
+    $data = $firebase->retrieve($path);
+    return json_decode($data, true);
+}
+
+function sanitizeInput($data)
+{
+    return htmlspecialchars(strip_tags($data));
+}
+
+$alumniData = getFirebaseData($firebase, "alumni");
+$batchData = getFirebaseData($firebase, "batch_yr");
+$courseData = getFirebaseData($firebase, "course");
+$categoryData = getFirebaseData($firebase, "category");
+
+$filterCourse = isset($_GET['course']) ? sanitizeInput($_GET['course']) : '';
+$filterBatch = isset($_GET['batch']) ? sanitizeInput($_GET['batch']) : '';
+$filterStatus = isset($_GET['work_status']) ? sanitizeInput($_GET['work_status']) : '';
+$filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput($_GET['work_classification']) : '';
+
+// Initialize counters
+$employedCount = 0;
+$unemployedCount = 0;
+$totalCount = 0;
+
+
+?>
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
 
@@ -74,38 +107,35 @@
                 <div class="box-header">
                   <div class="box-tools pull-right">
                     <form class="form-inline">
+                    <form class="form-inline">
                       <div class="form-group">
                         <label style="color:white;">Select Status: </label>
-                        <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_status">
+                        <select  class="form-control input-sm" style="height:25px; font-size:10px" id="select_work_classification">
                           <option value="">All</option>
-                          <option value="Industry">Industry (Corporate/Commercial)</option>
-                            <option value="Academia">Academia (Education/Research)</option>
-                            <option value="Government">Government (Public Sector)</option>
-                            <option value="Nonprofit">Nonprofit Sector (NGOs/Charities)</option>
-                            <option value="Freelance">Freelance/Consulting</option>
-                            <option value="Entrepreneurship">Entrepreneurship/Startups</option>
-                            <option value="Healthcare">Healthcare</option>
-                            <option value="Hospitality">Hospitality and Tourism</option>
-                            <option value="Creative Arts">Creative Arts and Media</option>
-                            <option value="Agriculture">Agriculture and Natural Resources</option>
-                            <option value="Skilled Trades">Skilled Trades</option>
-                            <option value="Information Technology">Information Technology (IT)</option>
+                          <?php
+                          $categoryData = getFirebaseData($firebase, "category");
+                          if (!empty($categoryData) && is_array($categoryData)) {
+                            foreach ($categoryData as $categoryId => $categoryDetails) {
+                              $categoryName = isset($categoryDetails['category_name']) ? htmlspecialchars($categoryDetails['category_name']) : 'Unknown';
+                              echo "<option value=\"" . htmlspecialchars($categoryId) . "\">" . $categoryName . "</option>";
+                            }
+                          }
+                          ?>
                         </select>
                       </div>
                     </form>
                     <script>
                       $(function () {
-                        var params = new URLSearchParams(window.location.search);
-                        var status = params.get('status');
-                        if (status) {
-                          $('#select_status').val(status);
-                        }
-
-                        $('#select_status').change(function () {
-                          window.location.href = 'field_of_work.php?status=' + $(this).val();
+                        $('#select_work_classification').change(function () {
+                          var url = new URL(window.location.href);
+                          url.searchParams.set('work_classification', $(this).val());
+                          window.location.href = url.toString();
                         });
+
+                        // Add your existing JavaScript here
                       });
                     </script>
+
 
 
                   </div>
@@ -121,13 +151,14 @@
                           <th>Course</th>
                           <th>Batch</th>
                           <th>Status</th>
-                          <th>Date Responded</th>
+                          <th>Field of Work</th>
                           <th>Tools</th>
                         </tr>
                       </thead>
                       <tbody>
+                    
+                      <?php include 'fetch_data/fetch_dataFieldOfWork.php'?>
 
-                        <?php include 'fetch_data/fetch_dataFieldOfWork.php' ?>
 
 
                       </tbody>
@@ -200,7 +231,7 @@
             $('#work_employment_status').text(response.work_employment_status || 'N/A');
             $('#employment_location').text(response.employment_location || 'N/A');
             $('#job_satisfaction').text(response.job_satisfaction || 'N/A');
-            
+
 
             // Show the edit modal
             $('#reportModal').modal('show');

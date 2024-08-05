@@ -1,6 +1,30 @@
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
+<?php
+require_once 'includes/firebaseRDB.php';
+require_once 'includes/config.php'; // Include your config file
 
+$firebase = new firebaseRDB($databaseURL);
+
+function getFirebaseData($firebase, $path) {
+    $data = $firebase->retrieve($path);
+    return json_decode($data, true);
+}
+
+function sanitizeInput($data) {
+    return htmlspecialchars(strip_tags($data));
+}
+
+$alumniData = getFirebaseData($firebase, "alumni");
+$batchData = getFirebaseData($firebase, "batch_yr");
+$courseData = getFirebaseData($firebase, "course");
+$categoryData = getFirebaseData($firebase, "category");
+
+$filterCourse = isset($_GET['course']) ? sanitizeInput($_GET['course']) : '';
+$filterBatch = isset($_GET['batch']) ? sanitizeInput($_GET['batch']) : '';
+$filterStatus = isset($_GET['status']) ? sanitizeInput($_GET['status']) : '';
+$filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput($_GET['work_classification']) : '';
+?>
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
 
@@ -83,29 +107,38 @@
               <div class="box">
                 <div class="box-header">
                   <div class="box-tools pull-right">
-                    <form class="form-inline">
-                      <div class="form-group">
-                        <label style="color:white;">Select Status: </label>
-                        <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_status">
-                          <option value="">All</option>
-                          <option value="Employed">Employed</option>
-                          <option value="Unemployed">Unemployed</option>
-                        </select>
-                      </div>
-                    </form>
+                  <form class="form-inline">
+        <div class="form-group">
+            <label style="color:white;">Select Status: </label>
+            <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_status" name="status">
+                <option value="">All</option>
+                <option value="Employed" <?php echo ($filterStatus == 'Employed') ? 'selected' : ''; ?>>Employed</option>
+                <option value="Unemployed" <?php echo ($filterStatus == 'Unemployed') ? 'selected' : ''; ?>>Unemployed</option>
+            </select>
+        </div>
+  
+        <!-- Keep your existing filters here -->
+    </form>
                     <script>
-                      $(function () {
-                        var params = new URLSearchParams(window.location.search);
-                        var status = params.get('status');
-                        if (status) {
-                          $('#select_status').val(status);
-                        }
+    $(function () {
+        var params = new URLSearchParams(window.location.search);
+        
+        function updateFilters() {
+            var url = new URL(window.location.href);
+            url.searchParams.set('status', $('#select_status').val());
+            window.location.href = url.toString();
+        }
 
-                        $('#select_status').change(function () {
-                          window.location.href = 'alumni_report.php?status=' + $(this).val();
-                        });
-                      });
-                    </script>
+        $('#select_status').change(updateFilters);
+
+        // Set initial values
+        var status = params.get('status');
+        if (status) {
+            $('#select_status').val(status);
+        }
+
+    });
+    </script>
 
 
                   </div>
@@ -126,10 +159,9 @@
                         </tr>
                       </thead>
                       <tbody>
-
-                        <?php include 'fetch_data/fetch_dataAlumniReport.php' ?>
-
-
+                      
+                      <?php include 'fetch_data/fetch_dataAlumniReport.php'?>
+                      
                       </tbody>
                     </table>
 
