@@ -146,11 +146,24 @@ $totalCount = 0;
                   <div class="table-responsive"> <!-- Add this div for responsive behavior -->
                     <table id="example1" class="table table-bordered">
                       <thead>
-                        <th>Job Category</th>
-                        <th>Actions</th>
+                        <tr>
+                          <th style="display:none;"></th>
+                          <th>Profile </th>
+                          <th>Alumni ID</th>
+                          <th>Name</th>
+                          <th>Course</th>
+                          <th>Batch</th>
+                          <th>Status</th>
+                          <th>Field of Work</th>
+                          <th>Tools</th>
+                        </tr>
                       </thead>
                       <tbody>
-                        <?php include 'fetch_data/fetch_dataFieldOfWork.php'; ?>
+
+                        <?php include 'fetch_data/fetch_dataFieldOfWork.php' ?>
+
+
+
                       </tbody>
                     </table>
 

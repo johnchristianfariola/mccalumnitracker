@@ -6,13 +6,15 @@ require_once 'includes/config.php'; // Include your config file
 
 $firebase = new firebaseRDB($databaseURL);
 
-function getFirebaseData($firebase, $path) {
-    $data = $firebase->retrieve($path);
-    return json_decode($data, true);
+function getFirebaseData($firebase, $path)
+{
+  $data = $firebase->retrieve($path);
+  return json_decode($data, true);
 }
 
-function sanitizeInput($data) {
-    return htmlspecialchars(strip_tags($data));
+function sanitizeInput($data)
+{
+  return htmlspecialchars(strip_tags($data));
 }
 
 $alumniData = getFirebaseData($firebase, "alumni");
@@ -25,6 +27,7 @@ $filterBatch = isset($_GET['batch']) ? sanitizeInput($_GET['batch']) : '';
 $filterStatus = isset($_GET['status']) ? sanitizeInput($_GET['status']) : '';
 $filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput($_GET['work_classification']) : '';
 ?>
+
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
 
@@ -107,38 +110,41 @@ $filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput(
               <div class="box">
                 <div class="box-header">
                   <div class="box-tools pull-right">
-                  <form class="form-inline">
-        <div class="form-group">
-            <label style="color:white;">Select Status: </label>
-            <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_status" name="status">
-                <option value="">All</option>
-                <option value="Employed" <?php echo ($filterStatus == 'Employed') ? 'selected' : ''; ?>>Employed</option>
-                <option value="Unemployed" <?php echo ($filterStatus == 'Unemployed') ? 'selected' : ''; ?>>Unemployed</option>
-            </select>
-        </div>
-  
-        <!-- Keep your existing filters here -->
-    </form>
+                    <form class="form-inline">
+                      <div class="form-group">
+                        <label style="color:white;">Select Status: </label>
+                        <select class="form-control input-sm" style="height:25px; font-size:10px" id="select_status"
+                          name="status">
+                          <option value="">All</option>
+                          <option value="Employed" <?php echo ($filterStatus == 'Employed') ? 'selected' : ''; ?>>Employed
+                          </option>
+                          <option value="Unemployed" <?php echo ($filterStatus == 'Unemployed') ? 'selected' : ''; ?>>
+                            Unemployed</option>
+                        </select>
+                      </div>
+
+                      <!-- Keep your existing filters here -->
+                    </form>
                     <script>
-    $(function () {
-        var params = new URLSearchParams(window.location.search);
-        
-        function updateFilters() {
-            var url = new URL(window.location.href);
-            url.searchParams.set('status', $('#select_status').val());
-            window.location.href = url.toString();
-        }
+                      $(function () {
+                        var params = new URLSearchParams(window.location.search);
 
-        $('#select_status').change(updateFilters);
+                        function updateFilters() {
+                          var url = new URL(window.location.href);
+                          url.searchParams.set('status', $('#select_status').val());
+                          window.location.href = url.toString();
+                        }
 
-        // Set initial values
-        var status = params.get('status');
-        if (status) {
-            $('#select_status').val(status);
-        }
+                        $('#select_status').change(updateFilters);
 
-    });
-    </script>
+                        // Set initial values
+                        var status = params.get('status');
+                        if (status) {
+                          $('#select_status').val(status);
+                        }
+
+                      });
+                    </script>
 
 
                   </div>
@@ -159,9 +165,9 @@ $filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput(
                         </tr>
                       </thead>
                       <tbody>
-                      
-                      <?php include 'fetch_data/fetch_dataAlumniReport.php'?>
-                      
+
+                        <?php include 'fetch_data/fetch_dataAlumniReport.php' ?>
+
                       </tbody>
                     </table>
 
@@ -184,7 +190,7 @@ $filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput(
     </div>
 
 
-    <?php include 'includes/footer.php'; ?>
+
     <?php include 'includes/alumni_report_modal.php'; ?>
 
 
@@ -232,7 +238,7 @@ $filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput(
             $('#work_employment_status').text(response.work_employment_status || 'N/A');
             $('#employment_location').text(response.employment_location || 'N/A');
             $('#job_satisfaction').text(response.job_satisfaction || 'N/A');
-            
+
 
             // Show the edit modal
             $('#reportModal').modal('show');

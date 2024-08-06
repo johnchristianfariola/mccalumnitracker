@@ -44,7 +44,7 @@ if (is_array($alumniData) && count($alumniData) > 0) {
         $image_html = "<img src='../userpage/{$profileImage}' alt='Profile Image' width='65px' height=65px'>";
 
         echo "<tr>
-        
+        <td style='display:none;'></td>
                         <td>{$image_html}</td>
                         <td>{$alumni['studentid']}</td>
                         <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
