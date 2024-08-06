@@ -195,16 +195,25 @@ usort($all_comments, function ($a, $b) {
 
 ?>
 
-<?php include 'includes/header.php'; ?>
-<style>
+<!DOCTYPE html>
+<html>
 
-</style>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 2 | Dashboard</title>
+  <!-- Tell the browser to be responsive to screen width -->
+<?php include 'includes/header.php'; ?>
+</head>
 
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
-
     <?php include 'includes/navbar.php'; ?>
+    <!-- Left side column. contains the logo and sidebar -->
+
     <?php include 'includes/menubar.php'; ?>
+
+
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -460,19 +469,24 @@ usort($all_comments, function ($a, $b) {
 
 
   </section>
-  <!-- right col -->
-  </div>
-  <?php include 'includes/footer.php'; ?>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
 
   </div>
-  <!-- ./wrapper -->
+ <?php include 'includes/scripts.php';?>
+</body>
 
-  <!-- Chart Data -->
+</html>
 
-  <!-- End Chart Data -->
-  <?php include 'includes/scripts.php'; ?>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const ctx = document.getElementById('myBarChart').getContext('2d');
 
@@ -525,16 +539,6 @@ usort($all_comments, function ($a, $b) {
       }
     });
   </script>
-
-</body>
-
-</html>
-
-
-<script src="../plugins/chart/Chart.min.js"></script>
-<script src="../plugins/chart/chart.js"></script>
-<script src="../plugins/chart/apexcharts.min.js"></script>
-<script src="../plugins/chart/chart-apex.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var options = {

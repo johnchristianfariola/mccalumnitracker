@@ -25,9 +25,13 @@ if (is_array($alumniData) && count($alumniData) > 0) {
 
         // Count based on work status
         if ($workStatus === 'Employed') {
+            $status_html = '<span class="label label-success" style="font-size: 12px !important; padding: 5px 20px !important; background: #4caf50 !important">EMPLOYED</span>';
             $employedCount++;
         } elseif ($workStatus === 'Unemployed') {
+            $status_html = '<span class="label label-danger" style="font-size: 12px !important; padding: 5px 20px !important; background: #ff5252 !important">UNEMPLOYED</span>';
             $unemployedCount++;
+        } else {
+            $status_html = '<span class="label label-default" style="font-size: 12px !important; padding: 5px 20px !important; background: #b0bec5 !important">UNKNOWN</span>';
         }
         $totalCount++;
 
@@ -46,7 +50,7 @@ if (is_array($alumniData) && count($alumniData) > 0) {
             <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
             <td>{$courseName}</td>
             <td>{$batchName}</td>
-            <td>{$alumni['work_status']}</td>
+            <td style='text-align:center;'>{$status_html}</td>
             <td>{$workClassificationName}</td>
             <td>
                 <a class='btn btn-warning btn-sm btn-flat open-modal' data-id='$id'>VIEW</a>

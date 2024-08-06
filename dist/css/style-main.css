@@ -99,7 +99,7 @@ ul {
 
 li {
   text-align: left; /* Align text to the left */
-  margin-bottom: 10px; /* Add some space between items */
+  /*margin-bottom: 10px; /* Add some space between items */
 }
 
 .sub-side-modal {

@@ -436,7 +436,7 @@ a:focus {
   position: absolute;
   top: 0;
   left: 0;
- /* padding-top: 50px;*/
+  padding-top: 50px;
   min-height: 100%;
   width: 230px;
   z-index: 810;
@@ -1885,14 +1885,13 @@ a:focus {
   }
 }
 .box {
-  
   position: relative;
   border-radius: 15px;
   background: #ffffff;
   border-top: 3px solid #d2d6de;
   margin-bottom: 20px;
   width: 100%;
-  
+
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 .box.box-primary {
@@ -3349,7 +3348,6 @@ table.text-center th {
   background: rgba(0, 0, 0, 0.3);
 }
 .modal-content {
-  
   border-radius: 10px;
   -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
@@ -5967,11 +5965,9 @@ table.text-center th {
   }
 }
 
+/*=============Recent Comment Start Here===================*/
 
-
- /*=============Recent Comment Start Here===================*/
- 
- .recent-comments-wrapper {
+.recent-comments-wrapper {
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -6055,7 +6051,6 @@ table.text-center th {
   background-color: #555;
   /* Color when hovering over the scrollbar thumb */
 }
-
 
 .recent-comment-item {
   display: flex;

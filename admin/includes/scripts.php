@@ -9,7 +9,6 @@
 <!-- DataTables -->
 <script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-
 <script src="../bower_components/datatables.net-bs/js/filterTable.js"></script>
 <!-- ChartJS -->
 <script src="../bower_components/chart.js/Chart.js"></script>
@@ -20,30 +19,46 @@
 <script src="../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <!-- bootstrap time picker -->
 <script src="../plugins/timepicker/bootstrap-timepicker.min.js"></script>
-<!-- Slimscroll -->
+<!-- SlimScroll -->
 <script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
 <script src="../bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="../dist/js/adminlte.min.js"></script>
+<!-- Sparkline -->
+<script src="../bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+<!-- jvectormap -->
+<script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../dist/js/pages/dashboard2.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../dist/js/demo.js"></script>
+
+<!-- Additional Chart Libraries -->
+<script src="../plugins/chart/Chart.min.js"></script>
+<script src="../plugins/chart/chart.js"></script>
+<script src="../plugins/chart/apexcharts.min.js"></script>
+<script src="../plugins/chart/chart-apex.js"></script>
+
 <!-- Active Script -->
 <script>
 $(function(){
-	/** add active class and stay opened when selected */
-	var url = window.location;
+    /** add active class and stay opened when selected */
+    var url = window.location;
 
-	// for sidebar menu entirely but not cover treeview
-	$('ul.sidebar-menu a').filter(function() {
-	    return this.href == url;
-	}).parent().addClass('active');
+    // for sidebar menu entirely but not cover treeview
+    $('ul.sidebar-menu a').filter(function() {
+        return this.href == url;
+    }).parent().addClass('active');
 
-	// for treeview
-	$('ul.treeview-menu a').filter(function() {
-	    return this.href == url;
-	}).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
-
+    // for treeview
+    $('ul.treeview-menu a').filter(function() {
+        return this.href == url;
+    }).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
 });
 </script>
+
 <!-- Data Table Initialize -->
 <script>
   $(function () {
@@ -60,6 +75,7 @@ $(function(){
     })
   })
 </script>
+
 <!-- Date and Timepicker -->
 <script>
   //Date picker
@@ -72,5 +88,3 @@ $(function(){
     format: 'yyyy-mm-dd'
   }) 
 </script>
-
-
