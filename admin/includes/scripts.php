@@ -45,7 +45,7 @@
 <script>
 $(function(){
     /** add active class and stay opened when selected */
-    var url = window.location;
+    var url = window.location.href;
 
     // for sidebar menu entirely but not cover treeview
     $('ul.sidebar-menu a').filter(function() {
@@ -56,6 +56,10 @@ $(function(){
     $('ul.treeview-menu a').filter(function() {
         return this.href == url;
     }).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
+
+    // Expand only the active treeview menu
+    $('.sidebar-menu .active').parents('.treeview').addClass('menu-open');
+    $('.sidebar-menu .active').parents('.treeview-menu').show();
 });
 </script>
 

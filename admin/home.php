@@ -6,11 +6,10 @@ require_once 'includes/firebaseRDB.php';
 
 $firebase = new firebaseRDB($databaseURL);
 
-$today = date('Y-m-d');
-$year = date('Y');
-if (isset($_GET['year'])) {
-  $year = $_GET['year'];
-}
+$current_year = date("Y");
+$default_year = 2020;
+$dynamic_year = $default_year + (intval($current_year) - 2024);
+$year = isset($_GET['year']) ? $_GET['year'] : $dynamic_year;
 
 // Fetch data from Firebase
 $courseData = $firebase->retrieve("course");
