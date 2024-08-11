@@ -444,7 +444,7 @@
                     </div>
                     <!-- End Event Item Example -->
 
-                    <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
+                    <a href="userpage/job_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
 
 
                 </div>
