@@ -29,7 +29,7 @@
                                         </div>
                                     </div>
                                     <div class="button_container">
-                                        <a class="btn" id="log">Logout</a>
+                                        <a class="btn" id="logoutBtn">Logout</a>
                                     </div>';
                                 }
                                 ?>

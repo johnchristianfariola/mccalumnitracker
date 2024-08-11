@@ -183,7 +183,7 @@
     <script src="js/dialog/dialog-active.js"></script>
     <!--  Custom JS-->
     <script>
-        $('#log').on('click', function () {
+          $('#logoutBtn').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",

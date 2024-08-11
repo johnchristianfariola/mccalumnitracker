@@ -502,7 +502,7 @@
 
     <!--  Custom JS-->
     <script>
-       $('#log').on('click', function () {
+          $('#logoutBtn').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",
@@ -520,6 +520,9 @@
                 }
             });
         });
+    </script>
+    <script>
+      
         // JavaScript for handling participation and commenting
         document.getElementById('participateBtn').addEventListener('click', function () {
             var eventId = this.getAttribute('data-event-id');
