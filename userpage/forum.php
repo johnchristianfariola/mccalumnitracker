@@ -53,7 +53,60 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 <head>
     <?php include 'includes/header.php' ?>
     <!-- Bootstrap CSS -->
-    <!-- Bootstrap JS and jQuery -->
+    <style>
+    .dropdown {
+        position: relative; /* Position relative for dropdown positioning */
+    }
+
+    .dropdown-menu {
+        display: none; /* Initially hide the dropdown menu */
+        position: absolute; /* Position absolute to appear below the button */
+        top: 100%; /* Align the dropdown menu below the button */
+        right: 0; /* Align the dropdown menu to the right of the button */
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000; /* Ensure it appears above other content */
+        transform: translate(-120px);
+
+    }
+
+    .dropdown-item {
+        display: block;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .dropdown-item i {
+        margin-right: 0.5rem;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .curved-inner-pro {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Space out items */
+        padding: 1rem; /* Add some padding */
+    }
+
+    .image-section {
+        flex-shrink: 0; /* Prevent image section from shrinking */
+    }
+
+    .info-section {
+        flex-grow: 1; /* Allow info section to grow and take available space */
+        margin-right: 1rem; /* Add margin to the right of info section */
+    }
+
+    .btn-icon-notika {
+        margin-left: auto; /* Push the button to the right */
+    }
+</style>
 
 
 
@@ -89,62 +142,76 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                         </div>
 
                         <?php
-if (!empty($forum_data)) {
-    // Sort forum data by 'createdAt' in descending order
-    usort($forum_data, function($a, $b) {
-        return strtotime($b['createdAt']) - strtotime($a['createdAt']);
-    });
+                        if (!empty($forum_data)) {
+                            // Sort forum data by 'createdAt' in descending order
+                            usort($forum_data, function ($a, $b) {
+                                return strtotime($b['createdAt']) - strtotime($a['createdAt']);
+                            });
 
-    foreach ($forum_data as $forum_id => $forum_post) {
-        $alumni_id = $forum_post['alumniId'] ?? null;
-        $current_alumni = $alumni_data[$alumni_id] ?? null;
+                            foreach ($forum_data as $forum_id => $forum_post) {
+                                $alumni_id = $forum_post['alumniId'] ?? null;
+                                $current_alumni = $alumni_data[$alumni_id] ?? null;
 
-        $alumni_name = 'Unknown Alumni';
-        $profile_url = '../images/profile.png';
+                                $alumni_name = 'Unknown Alumni';
+                                $profile_url = '../images/profile.png';
 
-        if ($current_alumni) {
-            $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
-            $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
-        }
+                                if ($current_alumni) {
+                                    $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
+                                    $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
+                                }
 
-        $created_at = $forum_post['createdAt'] ?? null;
-        $formatted_date = 'Unknown Date';
-        $time_ago = '';
+                                $created_at = $forum_post['createdAt'] ?? null;
+                                $formatted_date = 'Unknown Date';
+                                $time_ago = '';
 
-        if ($created_at) {
-            $date = new DateTime($created_at);
-            $formatted_date = $date->format('F j, Y');
-            $time_ago = time_elapsed_string($created_at);
-        }
-        ?>
+                                if ($created_at) {
+                                    $date = new DateTime($created_at);
+                                    $formatted_date = $date->format('F j, Y');
+                                    $time_ago = time_elapsed_string($created_at);
+                                }
+                                ?>
 
-        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-            <div class="curved-inner-pro">
-                <div class="curved-ctn">
-                    <div class="image-section">
-                        <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>" alt="profile image">
-                    </div>
-                    <div class="info-section">
-                        <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
-                        <span><?php echo htmlspecialchars($formatted_date); ?> &bull; <?php echo $time_ago; ?></span>
-                    </div>
-                </div>
-            </div>
-            <div class="content">
-                <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
-                <div class="news-description">
-                    <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
-                </div>
-            </div>
-        </div>
+                                <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+                                    <div class="curved-inner-pro">
+                                        <div class="image-section">
+                                            <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>"
+                                                alt="profile image">
+                                        </div>
+                                        <div class="info-section">
+                                            <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
+                                            <span><?php echo htmlspecialchars($formatted_date); ?> &bull;
+                                                <?php echo $time_ago; ?></span>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-default btn-icon-notika dropdown-toggle"
+                                                onclick="toggleDropdown()">
+                                                <i class="notika-icon notika-menu"></i>
+                                            </button>
+                                            <div id="dropdown-menu" class="dropdown-menu">
+                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-edit"></i>
+                                                    Edit</a>
+                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-trash"></i>
+                                                    Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="content">
+                                        <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
+                                        <div class="news-description">
+                                            <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
+                                        </div>
+                                    </div>
+                                </div>
 
-        <?php
-    }
-} else {
-    // Display a message if there are no forums available
-    echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
-}
-?>
+
+
+                                <?php
+                            }
+                        } else {
+                            // Display a message if there are no forums available
+                            echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
+                        }
+                        ?>
 
                     </div>
 
@@ -228,6 +295,18 @@ if (!empty($forum_data)) {
                 });
             });
         });
+        function toggleDropdown() {
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        dropdownMenu.style.display = (dropdownMenu.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const isClickInside = document.querySelector('.dropdown').contains(event.target);
+        if (!isClickInside) {
+            document.getElementById('dropdown-menu').style.display = 'none';
+        }
+    });
     </script>
     <script>
         $('#logoutBtn').on('click', function () {
@@ -274,34 +353,50 @@ if (!empty($forum_data)) {
             });
         });
     </script>
-<script>
-    $(document).ready(function () {
-        $('#addForumForm').on('submit', function (e) {
-            e.preventDefault();
+    <script>
+        $(document).ready(function () {
+            $('#addForumForm').on('submit', function (e) {
+                e.preventDefault();
 
-            $.ajax({
-                url: 'forum_add.php',
-                type: 'POST',
-                data: $(this).serialize(),
-                dataType: 'json',
-                success: function (response) {
-                    if (response.status === 'success') {
-                        swal({
-                            title: "Success!",
-                            text: response.message,
-                            type: "success",
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
+                $.ajax({
+                    url: 'forum_add.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            swal({
+                                title: "Success!",
+                                text: response.message,
+                                type: "success",
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
 
-                        // Refresh the page after the timer
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1500);
-                    } else {
+                            // Refresh the page after the timer
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            swal({
+                                title: "Oops...",
+                                text: response.message,
+                                type: "error",
+                                timer: 3000,
+                                showConfirmButton: true
+                            });
+
+                            // Optional: Refresh the page after the error alert (comment out if not needed)
+                            // setTimeout(function() {
+                            //     window.location.reload();
+                            // }, 3000);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX error:', textStatus, errorThrown);
                         swal({
                             title: "Oops...",
-                            text: response.message,
+                            text: "Something went wrong! Error: " + textStatus,
                             type: "error",
                             timer: 3000,
                             showConfirmButton: true
@@ -312,26 +407,10 @@ if (!empty($forum_data)) {
                         //     window.location.reload();
                         // }, 3000);
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('AJAX error:', textStatus, errorThrown);
-                    swal({
-                        title: "Oops...",
-                        text: "Something went wrong! Error: " + textStatus,
-                        type: "error",
-                        timer: 3000,
-                        showConfirmButton: true
-                    });
-
-                    // Optional: Refresh the page after the error alert (comment out if not needed)
-                    // setTimeout(function() {
-                    //     window.location.reload();
-                    // }, 3000);
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
 
 
 
