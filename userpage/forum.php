@@ -54,59 +54,71 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     <?php include 'includes/header.php' ?>
     <!-- Bootstrap CSS -->
     <style>
-    .dropdown {
-        position: relative; /* Position relative for dropdown positioning */
-    }
+        .dropdown {
+            position: relative;
+            /* Position relative for dropdown positioning */
+        }
 
-    .dropdown-menu {
-        display: none; /* Initially hide the dropdown menu */
-        position: absolute; /* Position absolute to appear below the button */
-        top: 100%; /* Align the dropdown menu below the button */
-        right: 0; /* Align the dropdown menu to the right of the button */
-        background-color: white;
-        border: 1px solid #ddd;
-        border-radius: 0.25rem;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1000; /* Ensure it appears above other content */
-        transform: translate(-120px);
+        .dropdown-menu {
+            display: none;
+            /* Initially hide the dropdown menu */
+            position: absolute;
+            /* Position absolute to appear below the button */
+            top: 100%;
+            /* Align the dropdown menu below the button */
+            right: 0;
+            /* Align the dropdown menu to the right of the button */
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            /* Ensure it appears above other content */
+            transform: translate(-115px);
 
-    }
+        }
 
-    .dropdown-item {
-        display: block;
-        padding: 0.5rem 1rem;
-        text-decoration: none;
-        color: #333;
-    }
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #333;
+        }
 
-    .dropdown-item i {
-        margin-right: 0.5rem;
-    }
+        .dropdown-item i {
+            margin-right: 0.5rem;
+        }
 
-    .dropdown-item:hover {
-        background-color: #f8f9fa;
-    }
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
 
-    .curved-inner-pro {
-        display: flex;
-        align-items: center;
-        justify-content: space-between; /* Space out items */
-        padding: 1rem; /* Add some padding */
-    }
+        .curved-inner-pro {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* Space out items */
+            padding: 1rem;
+            /* Add some padding */
+        }
 
-    .image-section {
-        flex-shrink: 0; /* Prevent image section from shrinking */
-    }
+        .image-section {
+            flex-shrink: 0;
+            /* Prevent image section from shrinking */
+        }
 
-    .info-section {
-        flex-grow: 1; /* Allow info section to grow and take available space */
-        margin-right: 1rem; /* Add margin to the right of info section */
-    }
+        .info-section {
+            flex-grow: 1;
+            /* Allow info section to grow and take available space */
+            margin-right: 1rem;
+            /* Add margin to the right of info section */
+        }
 
-    .btn-icon-notika {
-        margin-left: auto; /* Push the button to the right */
-    }
-</style>
+        .btn-icon-notika {
+            margin-left: auto;
+            /* Push the button to the right */
+        }
+    </style>
 
 
 
@@ -142,69 +154,74 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                         </div>
 
                         <?php
-if (!empty($forum_data)) {
-    // Sort forum data by 'createdAt' in descending order
-    usort($forum_data, function ($a, $b) {
-        return strtotime($b['createdAt']) - strtotime($a['createdAt']);
-    });
+                        if (!empty($forum_data)) {
+                            // Sort forum data by 'createdAt' in descending order
+                            usort($forum_data, function ($a, $b) {
+                                return strtotime($b['createdAt']) - strtotime($a['createdAt']);
+                            });
 
-    foreach ($forum_data as $index => $forum_post) {
-        $alumni_id = $forum_post['alumniId'] ?? null;
-        $current_alumni = $alumni_data[$alumni_id] ?? null;
+                            foreach ($forum_data as $forum_id => $forum_post) {
+                                $alumni_id = $forum_post['alumniId'] ?? null;
+                                $current_alumni = $alumni_data[$alumni_id] ?? null;
 
-        $alumni_name = 'Unknown Alumni';
-        $profile_url = '../images/profile.png';
+                                $alumni_name = 'Unknown Alumni';
+                                $profile_url = '../images/profile.png';
 
-        if ($current_alumni) {
-            $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
-            $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
-        }
+                                if ($current_alumni) {
+                                    $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
+                                    $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
+                                }
 
-        $created_at = $forum_post['createdAt'] ?? null;
-        $formatted_date = 'Unknown Date';
-        $time_ago = '';
+                                $created_at = $forum_post['createdAt'] ?? null;
+                                $formatted_date = 'Unknown Date';
+                                $time_ago = '';
 
-        if ($created_at) {
-            $date = new DateTime($created_at);
-            $formatted_date = $date->format('F j, Y');
-            $time_ago = time_elapsed_string($created_at);
-        }
-        ?>
+                                if ($created_at) {
+                                    $date = new DateTime($created_at);
+                                    $formatted_date = $date->format('F j, Y');
+                                    $time_ago = time_elapsed_string($created_at);
+                                }
+                                ?>
 
-        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-            <div class="curved-inner-pro">
-                <div class="image-section">
-                    <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>" alt="profile image">
-                </div>
-                <div class="info-section">
-                    <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
-                    <span><?php echo htmlspecialchars($formatted_date); ?> &bull; <?php echo $time_ago; ?></span>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-default btn-icon-notika dropdown-toggle" onclick="toggleDropdown(<?php echo $index; ?>)">
-                        <i class="notika-icon notika-menu"></i>
-                    </button>
-                    <div id="dropdown-menu-<?php echo $index; ?>" class="dropdown-menu" style="display: none;">
-                        <a href="#" class="dropdown-item"><i class="notika-icon notika-edit"></i> Edit</a>
-                        <a href="#" class="dropdown-item"><i class="notika-icon notika-trash"></i> Delete</a>
-                    </div>
-                </div>
-            </div>
-            <div class="content">
-                <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
-                <div class="news-description">
-                    <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
-                </div>
-            </div>
-        </div>
+                                <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+                                    <div class="curved-inner-pro">
+                                        <div class="image-section">
+                                            <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>"
+                                                alt="profile image">
+                                        </div>
+                                        <div class="info-section">
+                                            <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
+                                            <span><?php echo htmlspecialchars($formatted_date); ?> &bull;
+                                                <?php echo $time_ago; ?></span>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-default btn-icon-notika dropdown-toggle"
+                                                onclick="toggleDropdown('<?php echo $forum_id; ?>')">
+                                                <i class="notika-icon notika-menu"></i>
+                                            </button>
+                                            <div id="dropdown-menu-<?php echo $forum_id; ?>" class="dropdown-menu">
+                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-edit"></i>
+                                                    Edit</a>
+                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-trash"></i>
+                                                    Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="content">
+                                        <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
+                                        <div class="news-description">
+                                            <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
+                                        </div>
+                                    </div>
+                                </div>
 
-        <?php
-    }
-} else {
-    // Display a message if there are no forums available
-    echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
-}
-?>
+                                <?php
+                            }
+                        } else {
+                            // Display a message if there are no forums available
+                            echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
+                        }
+                        ?>
 
 
                     </div>
@@ -289,27 +306,23 @@ if (!empty($forum_data)) {
                 });
             });
         });
-        function toggleDropdown(index) {
-    // Hide all dropdowns
-    document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
-        menu.style.display = 'none';
-    });
+        function toggleDropdown(forumId) {
+            var dropdownMenu = document.getElementById('dropdown-menu-' + forumId);
+            dropdownMenu.classList.toggle('show');
+        }
 
-    // Toggle the specific dropdown
-    var dropdownMenu = document.getElementById('dropdown-menu-' + index);
-    if (dropdownMenu) {
-        dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
-    }
-}
-
-// Close dropdowns when clicking outside
-window.addEventListener('click', function(event) {
-    if (!event.target.matches('.dropdown-toggle')) {
-        document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
-            menu.style.display = 'none';
-        });
-    }
-});
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropdown-toggle')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
     </script>
     <script>
         $('#logoutBtn').on('click', function () {
