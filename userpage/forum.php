@@ -152,7 +152,6 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                 +
                             </button>
                         </div>
-
                         <?php
                         if (!empty($forum_data)) {
                             // Sort forum data by 'createdAt' in descending order
@@ -195,15 +194,15 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                                 <?php echo $time_ago; ?></span>
                                         </div>
                                         <div class="dropdown">
-                                            <button class="btn btn-default btn-icon-notika dropdown-toggle"
-                                                onclick="toggleDropdown('<?php echo $forum_id; ?>')">
+                                            <button class="btn btn-default btn-icon-notika dropdown-toggle" type="button"
+                                                id="dropdownMenu<?php echo $forum_id; ?>" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
                                                 <i class="notika-icon notika-menu"></i>
                                             </button>
-                                            <div id="dropdown-menu-<?php echo $forum_id; ?>" class="dropdown-menu">
-                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-edit"></i>
-                                                    Edit</a>
-                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-trash"></i>
-                                                    Delete</a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenu<?php echo $forum_id; ?>">
+                                                <a class="dropdown-item" href="#">Edit</a>
+                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#">View</a>
                                             </div>
                                         </div>
                                     </div>
@@ -306,23 +305,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                 });
             });
         });
-        function toggleDropdown(forumId) {
-            var dropdownMenu = document.getElementById('dropdown-menu-' + forumId);
-            dropdownMenu.classList.toggle('show');
-        }
 
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function (event) {
-            if (!event.target.matches('.dropdown-toggle')) {
-                var dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
     </script>
     <script>
         $('#logoutBtn').on('click', function () {
