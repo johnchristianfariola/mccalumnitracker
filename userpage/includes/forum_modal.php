@@ -7,9 +7,9 @@
 
             </div>
             <div class="modal-body">
-                <form id="addForumForm" method="POST" action="forum_add.php">
+                <form id="addForumForm" method="POST" action="forum_add.php" onsubmit="return submitForm();">
                     <div class="mb-3">
-                        <label for="forumName" class="form-label">Forum Topic (Minimum Length:80)</label>
+                        <label for="forumName" class="form-label">Forum Topic</label>
                         <input type="text" class="form-control shadow-sm rounded-pill" id="forumName" name="forumName" required autocomplete="off">
                         <div id="forumErrorMessage" class="form-text text-danger mt-1 d-none">
                             

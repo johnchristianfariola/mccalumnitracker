@@ -1,6 +1,54 @@
 <?php include '../includes/session.php'; ?>
 <!doctype html>
 <html class="no-js" lang="">
+<?php
+require_once '../includes/firebaseRDB.php';
+require_once '../includes/config.php';
+
+$firebase = new firebaseRDB($databaseURL);
+
+$forum_data = $firebase->retrieve("forum");
+$forum_data = json_decode($forum_data, true);
+
+$alumni_data = $firebase->retrieve("alumni");
+$alumni_data = json_decode($alumni_data, true);
+
+function time_elapsed_string($datetime, $full = false)
+{
+    $now = new DateTime('now', new DateTimeZone('Asia/Manila')); // Adjust to your local timezone
+    $ago = new DateTime($datetime, new DateTimeZone('Asia/Manila')); // Adjust to your local timezone
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full)
+        $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+}
+
+// Set the default timezone to your local timezone
+date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
+
+?>
 
 <head>
     <?php include 'includes/header.php' ?>
@@ -40,10 +88,63 @@
                             </button>
                         </div>
 
-                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+                        <?php
+if (!empty($forum_data)) {
+    // Sort forum data by 'createdAt' in descending order
+    usort($forum_data, function($a, $b) {
+        return strtotime($b['createdAt']) - strtotime($a['createdAt']);
+    });
 
-                        </div>
+    foreach ($forum_data as $forum_id => $forum_post) {
+        $alumni_id = $forum_post['alumniId'] ?? null;
+        $current_alumni = $alumni_data[$alumni_id] ?? null;
 
+        $alumni_name = 'Unknown Alumni';
+        $profile_url = '../images/profile.png';
+
+        if ($current_alumni) {
+            $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
+            $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
+        }
+
+        $created_at = $forum_post['createdAt'] ?? null;
+        $formatted_date = 'Unknown Date';
+        $time_ago = '';
+
+        if ($created_at) {
+            $date = new DateTime($created_at);
+            $formatted_date = $date->format('F j, Y');
+            $time_ago = time_elapsed_string($created_at);
+        }
+        ?>
+
+        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+            <div class="curved-inner-pro">
+                <div class="curved-ctn">
+                    <div class="image-section">
+                        <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>" alt="profile image">
+                    </div>
+                    <div class="info-section">
+                        <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
+                        <span><?php echo htmlspecialchars($formatted_date); ?> &bull; <?php echo $time_ago; ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
+                <div class="news-description">
+                    <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
+                </div>
+            </div>
+        </div>
+
+        <?php
+    }
+} else {
+    // Display a message if there are no forums available
+    echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
+}
+?>
 
                     </div>
 
@@ -100,17 +201,33 @@
     <script src="bootsrap/js/bootstrap.min.js"></script>
     <script src="../bower_components/ckeditor/ckeditor.js"></script>
     <script src="js/jquery/jquery-3.5.1.min.js"></script>
- 
+
 
 
     <script>
+        function submitForm() {
+            // Sync CKEditor content before form submission
+            for (var instanceName in CKEDITOR.instances) {
+                CKEDITOR.instances[instanceName].updateElement();
+            }
+            return true;
+        }
+
         $(function () {
-            // Replace the <textarea id="editor1"> with a CKEditor
-            // instance, using default configuration.
-            CKEDITOR.replace('editor1')
-            //bootstrap WYSIHTML5 - text editor
-            $('.textarea').wysihtml5()
-        })
+            // Replace the <textarea id="editor1"> with a CKEditor instance
+            CKEDITOR.replace('editor1');
+
+            // Optional: If you want to prevent the form from submitting when pressing Enter in the CKEditor
+            CKEDITOR.on('instanceReady', function (evt) {
+                evt.editor.on('contentDom', function () {
+                    evt.editor.document.on('keydown', function (event) {
+                        if (event.data.getKeystroke() == 13) {
+                            event.cancel();
+                        }
+                    });
+                });
+            });
+        });
     </script>
     <script>
         $('#logoutBtn').on('click', function () {
@@ -157,53 +274,65 @@
             });
         });
     </script>
+<script>
+    $(document).ready(function () {
+        $('#addForumForm').on('submit', function (e) {
+            e.preventDefault();
 
+            $.ajax({
+                url: 'forum_add.php',
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            type: "success",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
 
-    <script>
-     $(document).ready(function () {
-    $('#addForumForm').on('submit', function (e) {
-        e.preventDefault();
+                        // Refresh the page after the timer
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        swal({
+                            title: "Oops...",
+                            text: response.message,
+                            type: "error",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
 
-        $.ajax({
-            url: 'forum_add.php',
-            type: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json',
-            success: function (response) {
-                if (response.status === 'success') {
-                    swal({
-                        title: "Success!",
-                        text: response.message,
-                        type: "success",
-                        timer: 1500,
-                        showConfirmButton: false
-                    }, function() {
-                        // Reload the page after the alert closes
-                        window.location.reload();
-                    });
-                } else {
+                        // Optional: Refresh the page after the error alert (comment out if not needed)
+                        // setTimeout(function() {
+                        //     window.location.reload();
+                        // }, 3000);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX error:', textStatus, errorThrown);
                     swal({
                         title: "Oops...",
-                        text: response.message,
+                        text: "Something went wrong! Error: " + textStatus,
                         type: "error",
-                        timer: 2000,
-                        showConfirmButton: false
+                        timer: 3000,
+                        showConfirmButton: true
                     });
+
+                    // Optional: Refresh the page after the error alert (comment out if not needed)
+                    // setTimeout(function() {
+                    //     window.location.reload();
+                    // }, 3000);
                 }
-            },
-            error: function () {
-                swal({
-                    title: "Oops...",
-                    text: "Something went wrong!",
-                    type: "error",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
+            });
         });
     });
-});
-    </script>
+</script>
+
 
 
 
