@@ -142,76 +142,70 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                         </div>
 
                         <?php
-                        if (!empty($forum_data)) {
-                            // Sort forum data by 'createdAt' in descending order
-                            usort($forum_data, function ($a, $b) {
-                                return strtotime($b['createdAt']) - strtotime($a['createdAt']);
-                            });
+if (!empty($forum_data)) {
+    // Sort forum data by 'createdAt' in descending order
+    usort($forum_data, function ($a, $b) {
+        return strtotime($b['createdAt']) - strtotime($a['createdAt']);
+    });
 
-                            foreach ($forum_data as $forum_id => $forum_post) {
-                                $alumni_id = $forum_post['alumniId'] ?? null;
-                                $current_alumni = $alumni_data[$alumni_id] ?? null;
+    foreach ($forum_data as $index => $forum_post) {
+        $alumni_id = $forum_post['alumniId'] ?? null;
+        $current_alumni = $alumni_data[$alumni_id] ?? null;
 
-                                $alumni_name = 'Unknown Alumni';
-                                $profile_url = '../images/profile.png';
+        $alumni_name = 'Unknown Alumni';
+        $profile_url = '../images/profile.png';
 
-                                if ($current_alumni) {
-                                    $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
-                                    $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
-                                }
+        if ($current_alumni) {
+            $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
+            $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
+        }
 
-                                $created_at = $forum_post['createdAt'] ?? null;
-                                $formatted_date = 'Unknown Date';
-                                $time_ago = '';
+        $created_at = $forum_post['createdAt'] ?? null;
+        $formatted_date = 'Unknown Date';
+        $time_ago = '';
 
-                                if ($created_at) {
-                                    $date = new DateTime($created_at);
-                                    $formatted_date = $date->format('F j, Y');
-                                    $time_ago = time_elapsed_string($created_at);
-                                }
-                                ?>
+        if ($created_at) {
+            $date = new DateTime($created_at);
+            $formatted_date = $date->format('F j, Y');
+            $time_ago = time_elapsed_string($created_at);
+        }
+        ?>
 
-                                <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-                                    <div class="curved-inner-pro">
-                                        <div class="image-section">
-                                            <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>"
-                                                alt="profile image">
-                                        </div>
-                                        <div class="info-section">
-                                            <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
-                                            <span><?php echo htmlspecialchars($formatted_date); ?> &bull;
-                                                <?php echo $time_ago; ?></span>
-                                        </div>
-                                        <div class="dropdown">
-                                            <button class="btn btn-default btn-icon-notika dropdown-toggle"
-                                                onclick="toggleDropdown()">
-                                                <i class="notika-icon notika-menu"></i>
-                                            </button>
-                                            <div id="dropdown-menu" class="dropdown-menu">
-                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-edit"></i>
-                                                    Edit</a>
-                                                <a href="#" class="dropdown-item"><i class="notika-icon notika-trash"></i>
-                                                    Delete</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="content">
-                                        <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
-                                        <div class="news-description">
-                                            <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+            <div class="curved-inner-pro">
+                <div class="image-section">
+                    <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>" alt="profile image">
+                </div>
+                <div class="info-section">
+                    <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
+                    <span><?php echo htmlspecialchars($formatted_date); ?> &bull; <?php echo $time_ago; ?></span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-default btn-icon-notika dropdown-toggle" onclick="toggleDropdown(<?php echo $index; ?>)">
+                        <i class="notika-icon notika-menu"></i>
+                    </button>
+                    <div id="dropdown-menu-<?php echo $index; ?>" class="dropdown-menu" style="display: none;">
+                        <a href="#" class="dropdown-item"><i class="notika-icon notika-edit"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i class="notika-icon notika-trash"></i> Delete</a>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
+                <div class="news-description">
+                    <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
+                </div>
+            </div>
+        </div>
 
+        <?php
+    }
+} else {
+    // Display a message if there are no forums available
+    echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
+}
+?>
 
-
-                                <?php
-                            }
-                        } else {
-                            // Display a message if there are no forums available
-                            echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
-                        }
-                        ?>
 
                     </div>
 
@@ -295,18 +289,27 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                 });
             });
         });
-        function toggleDropdown() {
-        const dropdownMenu = document.getElementById('dropdown-menu');
-        dropdownMenu.style.display = (dropdownMenu.style.display === 'block') ? 'none' : 'block';
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        const isClickInside = document.querySelector('.dropdown').contains(event.target);
-        if (!isClickInside) {
-            document.getElementById('dropdown-menu').style.display = 'none';
-        }
+        function toggleDropdown(index) {
+    // Hide all dropdowns
+    document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
+        menu.style.display = 'none';
     });
+
+    // Toggle the specific dropdown
+    var dropdownMenu = document.getElementById('dropdown-menu-' + index);
+    if (dropdownMenu) {
+        dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+// Close dropdowns when clicking outside
+window.addEventListener('click', function(event) {
+    if (!event.target.matches('.dropdown-toggle')) {
+        document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
+            menu.style.display = 'none';
+        });
+    }
+});
     </script>
     <script>
         $('#logoutBtn').on('click', function () {
