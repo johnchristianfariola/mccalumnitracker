@@ -557,7 +557,7 @@ body {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
 }
 
 .comments-section h1 {
@@ -1482,3 +1482,151 @@ body {
     color: #666;
 }
 
+/*================Custom Comment for Dropdown Forum=================*/
+
+.dropdown {
+  position: relative;
+  /* Position relative for dropdown positioning */
+}
+
+.dropdown-menu {
+  display: none;
+  /* Initially hide the dropdown menu */
+  position: absolute;
+  /* Position absolute to appear below the button */
+  top: 100%;
+  /* Align the dropdown menu below the button */
+  right: 0;
+  /* Align the dropdown menu to the right of the button */
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  /* Ensure it appears above other content */
+  transform: translate(-115px);
+
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #333;
+}
+
+.dropdown-item i {
+  margin-right: 0.5rem;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.curved-inner-pro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Space out items */
+  padding: 1rem;
+  /* Add some padding */
+}
+
+.image-section {
+  flex-shrink: 0;
+  /* Prevent image section from shrinking */
+}
+
+.info-section {
+  flex-grow: 1;
+  /* Allow info section to grow and take available space */
+  margin-right: 1rem;
+  /* Add margin to the right of info section */
+}
+
+.btn-icon-notika {
+  margin-left: auto;
+  /* Push the button to the right */
+}
+
+/*===================Comment for Forum=================*/
+.comments-section {
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.add-comment {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.comment-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+}
+
+.add-comment-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.comment-list {
+  margin-top: 10px;
+}
+
+.comment {
+  margin-bottom: 20px;
+}
+
+.comment-author, .reply-author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.comment-author img, .reply-author img {
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-author span, .reply-author span {
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.comment-content, .reply-content {
+  margin-left: 50px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.reply-section {
+  margin-left: 50px;
+  margin-top: 10px;
+}
+
+.reply-btn {
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.reply-list {
+  margin-top: 10px;
+}
+
+.reply {
+  margin-top: 10px;
+}

@@ -54,70 +54,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     <?php include 'includes/header.php' ?>
     <!-- Bootstrap CSS -->
     <style>
-        .dropdown {
-            position: relative;
-            /* Position relative for dropdown positioning */
-        }
-
-        .dropdown-menu {
-            display: none;
-            /* Initially hide the dropdown menu */
-            position: absolute;
-            /* Position absolute to appear below the button */
-            top: 100%;
-            /* Align the dropdown menu below the button */
-            right: 0;
-            /* Align the dropdown menu to the right of the button */
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 0.25rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            /* Ensure it appears above other content */
-            transform: translate(-115px);
-
-        }
-
-        .dropdown-item {
-            display: block;
-            padding: 0.5rem 1rem;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .dropdown-item i {
-            margin-right: 0.5rem;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .curved-inner-pro {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            /* Space out items */
-            padding: 1rem;
-            /* Add some padding */
-        }
-
-        .image-section {
-            flex-shrink: 0;
-            /* Prevent image section from shrinking */
-        }
-
-        .info-section {
-            flex-grow: 1;
-            /* Allow info section to grow and take available space */
-            margin-right: 1rem;
-            /* Add margin to the right of info section */
-        }
-
-        .btn-icon-notika {
-            margin-left: auto;
-            /* Push the button to the right */
-        }
+   
     </style>
 
 
@@ -154,12 +91,17 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                         </div>
                         <?php
                         if (!empty($forum_data)) {
-                            // Sort forum data by 'createdAt' in descending order
-                            usort($forum_data, function ($a, $b) {
+                            $forum_data_with_id = [];
+                            foreach ($forum_data as $forum_id => $forum_post) {
+                                $forum_data_with_id[] = array_merge(['forum_id' => $forum_id], $forum_post);
+                            }
+
+                            usort($forum_data_with_id, function ($a, $b) {
                                 return strtotime($b['createdAt']) - strtotime($a['createdAt']);
                             });
 
-                            foreach ($forum_data as $forum_id => $forum_post) {
+                            foreach ($forum_data_with_id as $forum_post) {
+                                $forum_id = $forum_post['forum_id'];
                                 $alumni_id = $forum_post['alumniId'] ?? null;
                                 $current_alumni = $alumni_data[$alumni_id] ?? null;
 
@@ -190,7 +132,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                         </div>
                                         <div class="info-section">
                                             <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
-                                            <span><?php echo htmlspecialchars($formatted_date); ?> &bull;
+                                            <span style="font-size:11px"><?php echo htmlspecialchars($formatted_date); ?> &bull;
                                                 <?php echo $time_ago; ?></span>
                                         </div>
                                         <div class="dropdown">
@@ -202,22 +144,75 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenu<?php echo $forum_id; ?>">
                                                 <a class="dropdown-item" href="#">Edit</a>
                                                 <a class="dropdown-item" href="#">Delete</a>
-                                                <a class="dropdown-item" href="#">View</a>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="content">
                                         <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
-                                        <div class="news-description">
+                                        <div class="description">
                                             <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
+                                        </div>
+                                        <div class="comments-section">
+                                            <div class="add-comment">
+                                                <input type="text" class="comment-input" placeholder="Add a comment..." data-forum-id="<?php echo $forum_id; ?>">
+                                                <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>">Post</button>
+                                            </div>
+                                            <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
+                                                <?php
+                                                $all_comments = $firebase->retrieve("forum_comments");
+                                                $all_comments = json_decode($all_comments, true);
+                                                
+                                                $forum_comments = array_filter($all_comments, function($comment) use ($forum_id) {
+                                                    return $comment['forum_id'] === $forum_id;
+                                                });
+
+                                                if ($forum_comments) {
+                                                    foreach ($forum_comments as $comment_id => $comment) {
+                                                        $commenter = $alumni_data[$comment['alumni_id']] ?? null;
+                                                        $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
+                                                        $commenter_profile = $commenter['profile_url'] ?? '../images/profile.png';
+                                                        ?>
+                                                        <div class="comment">
+                                                            <div class="comment-author">
+                                                                <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author">
+                                                                <span><?php echo htmlspecialchars($commenter_name); ?></span>
+                                                                <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <?php echo htmlspecialchars($comment['comment']); ?>
+                                                            </div>
+                                                            <div class="reply-section">
+                                                            <button class="reply-btn">Reply</button>
+                                                            <div class="reply-list">
+                                                                <!-- Example reply -->
+                                                                <div class="reply">
+                                                                    <div class="reply-author">
+                                                                        <img src="../images/profile.png" class="comment-avatar" alt="author">
+                                                                        <span>John Doe</span>
+                                                                        <span class="reply-time">2 hours ago</span>
+                                                                    </div>
+                                                                    <div class="reply-content">
+                                                                        This is an example reply to the comment.
+                                                                    </div>
+                                                                </div>
+                                                                <!-- More replies can be added here -->
+                                                            </div>
+                                                        </div>
+
+                                                        </div>
+                                                        <?php
+                                                    }
+                                                } else {
+                                                    echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+                                                }
+                                                ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <?php
                             }
                         } else {
-                            // Display a message if there are no forums available
                             echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
                         }
                         ?>
@@ -412,7 +407,86 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     </script>
 
 
+<script>
+    $(document).ready(function() {
+    $('.add-comment-btn').click(function() {
+        var forumId = $(this).data('forum-id');
+        var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
+        var commentContent = $input.val().trim();
 
+        if (commentContent === "") {
+            swal({
+                title: 'Oops...',
+                text: 'Please enter a comment before posting.',
+                type: 'warning',
+                timer: 5000,
+                showConfirmButton: false
+            });
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: 'comment_forum.php',
+            data: {
+                comment: commentContent,
+                forum_id: forumId,
+                alumni_id: '<?php echo $_SESSION['user']['id']; ?>'
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    $input.val('');
+                    refreshComments(forumId);
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Your comment has been added.',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.message,
+                        icon: 'error'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while submitting your comment.',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.reply-btn', function() {
+        var $replyList = $(this).next('.reply-list');
+        if ($replyList.is(':visible')) {
+            $replyList.hide();
+        } else {
+            $replyList.show();
+        }
+    });
+
+    function refreshComments(forumId) {
+        $.ajax({
+            url: 'refresh_forum_comments.php',
+            type: 'GET',
+            data: { forum_id: forumId },
+            success: function(response) {
+                $('#comment-list-' + forumId).html(response);
+            },
+            error: function() {
+                console.log('Error refreshing comments');
+            }
+        });
+    }
+});
+</script>
 
 </body>
 
