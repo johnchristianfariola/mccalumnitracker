@@ -54,7 +54,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     <?php include 'includes/header.php' ?>
     <!-- Bootstrap CSS -->
     <style>
-   
+
     </style>
 
 
@@ -90,132 +90,152 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                             </button>
                         </div>
                         <?php
-                        if (!empty($forum_data)) {
-                            $forum_data_with_id = [];
-                            foreach ($forum_data as $forum_id => $forum_post) {
-                                $forum_data_with_id[] = array_merge(['forum_id' => $forum_id], $forum_post);
-                            }
+if (!empty($forum_data)) {
+    $forum_data_with_id = [];
+    foreach ($forum_data as $forum_id => $forum_post) {
+        $forum_data_with_id[] = array_merge(['forum_id' => $forum_id], $forum_post);
+    }
 
-                            usort($forum_data_with_id, function ($a, $b) {
-                                return strtotime($b['createdAt']) - strtotime($a['createdAt']);
-                            });
+    usort($forum_data_with_id, function ($a, $b) {
+        return strtotime($b['createdAt']) - strtotime($a['createdAt']);
+    });
 
-                            foreach ($forum_data_with_id as $forum_post) {
-                                $forum_id = $forum_post['forum_id'];
-                                $alumni_id = $forum_post['alumniId'] ?? null;
-                                $current_alumni = $alumni_data[$alumni_id] ?? null;
+    foreach ($forum_data_with_id as $forum_post) {
+        $forum_id = $forum_post['forum_id'];
+        $alumni_id = $forum_post['alumniId'] ?? null;
+        $current_alumni = $alumni_data[$alumni_id] ?? null;
 
-                                $alumni_name = 'Unknown Alumni';
-                                $profile_url = '../images/profile.png';
+        $alumni_name = 'Unknown Alumni';
+        $profile_url = '../images/profile.png';
 
-                                if ($current_alumni) {
-                                    $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
-                                    $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
-                                }
+        if ($current_alumni) {
+            $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
+            $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
+        }
 
-                                $created_at = $forum_post['createdAt'] ?? null;
-                                $formatted_date = 'Unknown Date';
-                                $time_ago = '';
+        $created_at = $forum_post['createdAt'] ?? null;
+        $formatted_date = 'Unknown Date';
+        $time_ago = '';
 
-                                if ($created_at) {
-                                    $date = new DateTime($created_at);
-                                    $formatted_date = $date->format('F j, Y');
-                                    $time_ago = time_elapsed_string($created_at);
-                                }
-                                ?>
+        if ($created_at) {
+            $date = new DateTime($created_at);
+            $formatted_date = $date->format('F j, Y');
+            $time_ago = time_elapsed_string($created_at);
+        }
+        ?>
 
-                                <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-                                    <div class="curved-inner-pro">
-                                        <div class="image-section">
-                                            <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>"
-                                                alt="profile image">
-                                        </div>
-                                        <div class="info-section">
-                                            <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
-                                            <span style="font-size:11px"><?php echo htmlspecialchars($formatted_date); ?> &bull;
-                                                <?php echo $time_ago; ?></span>
-                                        </div>
-                                        <div class="dropdown">
-                                            <button class="btn btn-default btn-icon-notika dropdown-toggle" type="button"
-                                                id="dropdownMenu<?php echo $forum_id; ?>" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                <i class="notika-icon notika-menu"></i>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenu<?php echo $forum_id; ?>">
-                                                <a class="dropdown-item" href="#">Edit</a>
-                                                <a class="dropdown-item" href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="content">
-                                        <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
-                                        <div class="description">
-                                            <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
-                                        </div>
-                                        <div class="comments-section">
-                                            <div class="add-comment">
-                                                <input type="text" class="comment-input" placeholder="Add a comment..." data-forum-id="<?php echo $forum_id; ?>">
-                                                <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>">Post</button>
-                                            </div>
-                                            <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
-                                                <?php
-                                                $all_comments = $firebase->retrieve("forum_comments");
-                                                $all_comments = json_decode($all_comments, true);
-                                                
-                                                $forum_comments = array_filter($all_comments, function($comment) use ($forum_id) {
-                                                    return $comment['forum_id'] === $forum_id;
-                                                });
+        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+            <div class="curved-inner-pro">
+                <div class="image-section">
+                    <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>" alt="profile image">
+                </div>
+                <div class="info-section">
+                    <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
+                    <span style="font-size:11px"><?php echo htmlspecialchars($formatted_date); ?> &bull; <?php echo $time_ago; ?></span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-default btn-icon-notika dropdown-toggle" type="button"
+                        id="dropdownMenu<?php echo $forum_id; ?>" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="notika-icon notika-menu"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu<?php echo $forum_id; ?>">
+                        <a class="dropdown-item" href="#">Edit</a>
+                        <a class="dropdown-item" href="#">Delete</a>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
+                <div class="description">
+                    <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
+                </div>
+                <div class="comments-section">
+                    <div class="add-comment">
+                        <input type="text" class="comment-input" placeholder="Add a comment..."
+                            data-forum-id="<?php echo $forum_id; ?>">
+                        <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>">Post</button>
+                    </div>
+                    <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
+                        <?php
+                        $all_comments = $firebase->retrieve("forum_comments");
 
-                                                if ($forum_comments) {
-                                                    foreach ($forum_comments as $comment_id => $comment) {
-                                                        $commenter = $alumni_data[$comment['alumni_id']] ?? null;
-                                                        $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
-                                                        $commenter_profile = $commenter['profile_url'] ?? '../images/profile.png';
-                                                        ?>
-                                                        <div class="comment">
-                                                            <div class="comment-author">
-                                                                <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author">
-                                                                <span><?php echo htmlspecialchars($commenter_name); ?></span>
-                                                                <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
-                                                            </div>
-                                                            <div class="comment-content">
-                                                                <?php echo htmlspecialchars($comment['comment']); ?>
-                                                            </div>
-                                                            <div class="reply-section">
-                                                            <button class="reply-btn">Reply</button>
-                                                            <div class="reply-list">
-                                                                <!-- Example reply -->
-                                                                <div class="reply">
-                                                                    <div class="reply-author">
-                                                                        <img src="../images/profile.png" class="comment-avatar" alt="author">
-                                                                        <span>John Doe</span>
-                                                                        <span class="reply-time">2 hours ago</span>
-                                                                    </div>
-                                                                    <div class="reply-content">
-                                                                        This is an example reply to the comment.
-                                                                    </div>
-                                                                </div>
-                                                                <!-- More replies can be added here -->
-                                                            </div>
-                                                        </div>
-
-                                                        </div>
-                                                        <?php
-                                                    }
-                                                } else {
-                                                    echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
-                                                }
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php
-                            }
+                        if ($all_comments === null) {
+                            echo '<div class="no-comments">Unable to retrieve comments at this time.</div>';
                         } else {
-                            echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
+                            $all_comments = json_decode($all_comments, true);
+
+                            if (!is_array($all_comments)) {
+                                echo '<div class="no-comments">Error processing comments data.</div>';
+                            } else {
+                                $forum_comments = array_filter($all_comments, function ($comment) use ($forum_id) {
+                                    return isset($comment['forum_id']) && $comment['forum_id'] === $forum_id;
+                                });
+
+                                if ($forum_comments) {
+                                    foreach ($forum_comments as $comment_id => $comment) {
+                                        $commenter = $alumni_data[$comment['alumni_id']] ?? null;
+                                        $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
+                                        $commenter_profile = $commenter['profile_url'] ?? '../images/profile.png';
+                                        ?>
+                                        <div class="comment">
+                                            <div class="comment-author">
+                                                <img src="<?php echo htmlspecialchars($commenter_profile); ?>"
+                                                    class="comment-avatar" alt="author">
+                                                <span><?php echo htmlspecialchars($commenter_name); ?></span>
+                                                <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
+                                            </div>
+                                            <div class="comment-content">
+                                                <?php echo htmlspecialchars($comment['comment']); ?>
+                                            </div>
+                                            <div class="reply-section">
+                                                <button class="reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
+                                                <div class="reply-input-area" style="display: none;">
+                                                    <input type="text" class="reply-input" placeholder="Write a reply...">
+                                                    <button class="submit-reply-btn" data-comment-id="<?php echo $comment_id; ?>">Submit</button>
+                                                </div>
+                                                <div class="reply-list">
+                                                    <?php 
+                                                    if (isset($comment['replies'])) {
+                                                        $replies = is_array($comment['replies']) ? $comment['replies'] : [$comment['replies']];
+                                                        foreach ($replies as $reply_id => $reply):
+                                                            $replier = $alumni_data[$reply['alumni_id']] ?? null;
+                                                            $replier_name = $replier ? $replier['firstname'] . ' ' . $replier['lastname'] : 'Unknown Alumni';
+                                                            ?>
+                                                            <div class="reply">
+                                                                <div class="reply-author">
+                                                                    <span><?php echo htmlspecialchars($replier_name); ?></span>
+                                                                    <span class="reply-time"><?php echo time_elapsed_string($reply['date_replied']); ?></span>
+                                                                </div>
+                                                                <div class="reply-content">
+                                                                    <?php echo htmlspecialchars($reply['reply']); ?>
+                                                                </div>
+                                                            </div>
+                                                        <?php 
+                                                        endforeach;
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                } else {
+                                    echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+                                }
+                            }
                         }
                         ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+} else {
+    echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
+}
+?>
 
 
                     </div>
@@ -407,86 +427,95 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     </script>
 
 
-<script>
-    $(document).ready(function() {
-    $('.add-comment-btn').click(function() {
-        var forumId = $(this).data('forum-id');
-        var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
-        var commentContent = $input.val().trim();
+    <script>
+        $(document).ready(function () {
+            $('.add-comment-btn').click(function () {
+                var forumId = $(this).data('forum-id');
+                var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
+                var commentContent = $input.val().trim();
 
-        if (commentContent === "") {
-            swal({
-                title: 'Oops...',
-                text: 'Please enter a comment before posting.',
-                type: 'warning',
-                timer: 5000,
-                showConfirmButton: false
-            });
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: 'comment_forum.php',
-            data: {
-                comment: commentContent,
-                forum_id: forumId,
-                alumni_id: '<?php echo $_SESSION['user']['id']; ?>'
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    $input.val('');
-                    refreshComments(forumId);
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Your comment has been added.',
-                        icon: 'success',
-                        timer: 2000,
-                        timerProgressBar: true
+                if (commentContent === "") {
+                    swal({
+                        title: 'Oops...',
+                        text: 'Please enter a comment before posting.',
+                        type: 'warning',
+                        timer: 5000,
+                        showConfirmButton: false
                     });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: response.message,
-                        icon: 'error'
-                    });
+                    return;
                 }
-            },
-            error: function() {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while submitting your comment.',
-                    icon: 'error'
-                });
-            }
-        });
-    });
 
-    $(document).on('click', '.reply-btn', function() {
-        var $replyList = $(this).next('.reply-list');
-        if ($replyList.is(':visible')) {
-            $replyList.hide();
-        } else {
-            $replyList.show();
+                $.ajax({
+                    type: 'POST',
+                    url: 'comment_forum.php',
+                    data: {
+                        comment: commentContent,
+                        forum_id: forumId,
+                        alumni_id: '<?php echo $_SESSION['user']['id']; ?>'
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            $input.val('');
+                            refreshComments(forumId);
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Your comment has been added.',
+                                icon: 'success',
+                                timer: 2000,
+                                timerProgressBar: true
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while submitting your comment.',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
+
+        });
+
+        $(document).ready(function () {
+            $('.reply-btn').click(function () {
+                $(this).siblings('.reply-input-area').toggle();
+            });
+
+            $('.submit-reply-btn').click(function () {
+    var commentId = $(this).data('comment-id');
+    var replyContent = $(this).siblings('.reply-input').val();
+    var forumId = $(this).closest('.sale-statistic-inner').find('.add-comment-btn').data('forum-id');
+
+    $.ajax({
+        url: 'reply_forum.php',
+        method: 'POST',
+        data: {
+            forum_id: forumId,
+            comment_id: commentId,
+            reply: replyContent
+        },
+        success: function (response) {
+            location.reload(); // Reload the page to show the new reply
+        },
+        error: function (xhr, status, error) {
+            alert('Error: ' + error);
         }
     });
-
-    function refreshComments(forumId) {
-        $.ajax({
-            url: 'refresh_forum_comments.php',
-            type: 'GET',
-            data: { forum_id: forumId },
-            success: function(response) {
-                $('#comment-list-' + forumId).html(response);
-            },
-            error: function() {
-                console.log('Error refreshing comments');
-            }
-        });
-    }
 });
-</script>
+        });
+
+
+    </script>
 
 </body>
 
