@@ -1550,10 +1550,12 @@ body {
 }
 
 /*===================Comment for Forum=================*/
-.comments-section {
-  margin-top: 20px;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+.comment-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
 }
 
 .add-comment {
@@ -1562,13 +1564,6 @@ body {
   margin-bottom: 20px;
 }
 
-.comment-input {
-  flex-grow: 1;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  outline: none;
-}
 
 .add-comment-btn {
   background-color: #007bff;
@@ -1580,12 +1575,22 @@ body {
   cursor: pointer;
 }
 
-.comment-list {
-  margin-top: 10px;
+
+.comments-section {
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
 }
 
-.comment {
+.comment, .reply {
   margin-bottom: 20px;
+}
+
+.comment-content, .reply-content {
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .comment-author, .reply-author {
@@ -1594,25 +1599,38 @@ body {
   margin-bottom: 10px;
 }
 
-.comment-author img, .reply-author img {
+.comment-avatar, .reply-author img {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-right: 10px;
+  object-fit: cover;
 }
 
-.comment-author span, .reply-author span {
-  margin-right: 10px;
+.author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: bold;
   font-size: 14px;
 }
 
-.comment-content, .reply-content {
-  margin-left: 50px;
+.comment-time, .reply-time {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.comment-text, .reply-text {
+  margin-top: 10px;
   font-size: 15px;
   line-height: 1.5;
 }
 
 .reply-section {
-  margin-left: 50px;
   margin-top: 10px;
+
 }
 
 .reply-btn {
@@ -1621,6 +1639,41 @@ body {
   color: #007bff;
   cursor: pointer;
   font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  transition: background-color 0.3s;
+}
+
+.reply-btn:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.reply-input-area {
+  margin-top: 10px;
+  display: flex;
+}
+
+.reply-input {
+  flex-grow: 1;
+  padding: 8px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+}
+
+.submit-reply-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-reply-btn:hover {
+  background-color: #0056b3;
 }
 
 .reply-list {
@@ -1628,5 +1681,5 @@ body {
 }
 
 .reply {
-  margin-top: 10px;
+  margin-left: 20px;
 }

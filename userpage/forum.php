@@ -90,152 +90,141 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                             </button>
                         </div>
                         <?php
-if (!empty($forum_data)) {
-    $forum_data_with_id = [];
-    foreach ($forum_data as $forum_id => $forum_post) {
-        $forum_data_with_id[] = array_merge(['forum_id' => $forum_id], $forum_post);
-    }
+                        if (!empty($forum_data)) {
+                            $forum_data_with_id = [];
+                            foreach ($forum_data as $forum_id => $forum_post) {
+                                $forum_data_with_id[] = array_merge(['forum_id' => $forum_id], $forum_post);
+                            }
 
-    usort($forum_data_with_id, function ($a, $b) {
-        return strtotime($b['createdAt']) - strtotime($a['createdAt']);
-    });
+                            usort($forum_data_with_id, function ($a, $b) {
+                                return strtotime($b['createdAt']) - strtotime($a['createdAt']);
+                            });
 
-    foreach ($forum_data_with_id as $forum_post) {
-        $forum_id = $forum_post['forum_id'];
-        $alumni_id = $forum_post['alumniId'] ?? null;
-        $current_alumni = $alumni_data[$alumni_id] ?? null;
+                            foreach ($forum_data_with_id as $forum_post) {
+                                $forum_id = $forum_post['forum_id'];
+                                $alumni_id = $forum_post['alumniId'] ?? null;
+                                $current_alumni = $alumni_data[$alumni_id] ?? null;
 
-        $alumni_name = 'Unknown Alumni';
-        $profile_url = '../images/profile.png';
+                                $alumni_name = 'Unknown Alumni';
+                                $profile_url = '../images/profile.png';
 
-        if ($current_alumni) {
-            $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
-            $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
-        }
+                                if ($current_alumni) {
+                                    $alumni_name = $current_alumni['firstname'] . ' ' . $current_alumni['lastname'];
+                                    $profile_url = $current_alumni['profile_url'] ?? '../images/profile.png';
+                                }
 
-        $created_at = $forum_post['createdAt'] ?? null;
-        $formatted_date = 'Unknown Date';
-        $time_ago = '';
+                                $created_at = $forum_post['createdAt'] ?? null;
+                                $formatted_date = 'Unknown Date';
+                                $time_ago = '';
 
-        if ($created_at) {
-            $date = new DateTime($created_at);
-            $formatted_date = $date->format('F j, Y');
-            $time_ago = time_elapsed_string($created_at);
-        }
-        ?>
+                                if ($created_at) {
+                                    $date = new DateTime($created_at);
+                                    $formatted_date = $date->format('F j, Y');
+                                    $time_ago = time_elapsed_string($created_at);
+                                }
+                                ?>
 
-        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-            <div class="curved-inner-pro">
-                <div class="image-section">
-                    <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>" alt="profile image">
-                </div>
-                <div class="info-section">
-                    <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
-                    <span style="font-size:11px"><?php echo htmlspecialchars($formatted_date); ?> &bull; <?php echo $time_ago; ?></span>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-default btn-icon-notika dropdown-toggle" type="button"
-                        id="dropdownMenu<?php echo $forum_id; ?>" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="notika-icon notika-menu"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenu<?php echo $forum_id; ?>">
-                        <a class="dropdown-item" href="#">Edit</a>
-                        <a class="dropdown-item" href="#">Delete</a>
-                    </div>
-                </div>
-            </div>
-            <div class="content">
-                <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
-                <div class="description">
-                    <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
-                </div>
-                <div class="comments-section">
-                    <div class="add-comment">
-                        <input type="text" class="comment-input" placeholder="Add a comment..."
-                            data-forum-id="<?php echo $forum_id; ?>">
-                        <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>">Post</button>
-                    </div>
-                    <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
-                        <?php
-                        $all_comments = $firebase->retrieve("forum_comments");
-
-                        if ($all_comments === null) {
-                            echo '<div class="no-comments">Unable to retrieve comments at this time.</div>';
-                        } else {
-                            $all_comments = json_decode($all_comments, true);
-
-                            if (!is_array($all_comments)) {
-                                echo '<div class="no-comments">Error processing comments data.</div>';
-                            } else {
-                                $forum_comments = array_filter($all_comments, function ($comment) use ($forum_id) {
-                                    return isset($comment['forum_id']) && $comment['forum_id'] === $forum_id;
-                                });
-
-                                if ($forum_comments) {
-                                    foreach ($forum_comments as $comment_id => $comment) {
-                                        $commenter = $alumni_data[$comment['alumni_id']] ?? null;
-                                        $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
-                                        $commenter_profile = $commenter['profile_url'] ?? '../images/profile.png';
-                                        ?>
-                                        <div class="comment">
-                                            <div class="comment-author">
-                                                <img src="<?php echo htmlspecialchars($commenter_profile); ?>"
-                                                    class="comment-avatar" alt="author">
-                                                <span><?php echo htmlspecialchars($commenter_name); ?></span>
-                                                <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
-                                            </div>
-                                            <div class="comment-content">
-                                                <?php echo htmlspecialchars($comment['comment']); ?>
-                                            </div>
-                                            <div class="reply-section">
-                                                <button class="reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
-                                                <div class="reply-input-area" style="display: none;">
-                                                    <input type="text" class="reply-input" placeholder="Write a reply...">
-                                                    <button class="submit-reply-btn" data-comment-id="<?php echo $comment_id; ?>">Submit</button>
-                                                </div>
-                                                <div class="reply-list">
-                                                    <?php 
-                                                    if (isset($comment['replies'])) {
-                                                        $replies = is_array($comment['replies']) ? $comment['replies'] : [$comment['replies']];
-                                                        foreach ($replies as $reply_id => $reply):
-                                                            $replier = $alumni_data[$reply['alumni_id']] ?? null;
-                                                            $replier_name = $replier ? $replier['firstname'] . ' ' . $replier['lastname'] : 'Unknown Alumni';
-                                                            ?>
-                                                            <div class="reply">
-                                                                <div class="reply-author">
-                                                                    <span><?php echo htmlspecialchars($replier_name); ?></span>
-                                                                    <span class="reply-time"><?php echo time_elapsed_string($reply['date_replied']); ?></span>
-                                                                </div>
-                                                                <div class="reply-content">
-                                                                    <?php echo htmlspecialchars($reply['reply']); ?>
-                                                                </div>
-                                                            </div>
-                                                        <?php 
-                                                        endforeach;
-                                                    }
-                                                    ?>
-                                                </div>
+                                <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+                                    <div class="curved-inner-pro">
+                                        <div class="image-section">
+                                            <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>"
+                                                alt="profile image">
+                                        </div>
+                                        <div class="info-section">
+                                            <h2><?php echo htmlspecialchars($alumni_name); ?></h2>
+                                            <span style="font-size:11px"><?php echo htmlspecialchars($formatted_date); ?> &bull;
+                                                <?php echo $time_ago; ?></span>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-default btn-icon-notika dropdown-toggle" type="button"
+                                                id="dropdownMenu<?php echo $forum_id; ?>" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                <i class="notika-icon notika-menu"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenu<?php echo $forum_id; ?>">
+                                                <a class="dropdown-item" href="#">Edit</a>
+                                                <a class="dropdown-item" href="#">Delete</a>
                                             </div>
                                         </div>
-                                        <?php
-                                    }
-                                } else {
-                                    echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
-                                }
+                                    </div>
+                                    <div class="content">
+                                        <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
+                                        <div class="description">
+                                            <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
+                                        </div>
+                                        <div class="comments-section">
+                                            <div class="add-comment">
+                                                <input type="text" class="comment-input" placeholder="Add a comment..."
+                                                    data-forum-id="<?php echo $forum_id; ?>">
+                                                <button class="add-comment-btn"
+                                                    data-forum-id="<?php echo $forum_id; ?>">Post</button>
+                                            </div>
+                                            <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
+                                                <?php
+                                                $all_comments = $firebase->retrieve("forum_comments");
+
+                                                if ($all_comments === null) {
+                                                    echo '<div class="no-comments">Unable to retrieve comments at this time.</div>';
+                                                } else {
+                                                    $all_comments = json_decode($all_comments, true);
+
+                                                    if (!is_array($all_comments)) {
+                                                        echo '<div class="no-comments">Error processing comments data.</div>';
+                                                    } else {
+                                                        $forum_comments = array_filter($all_comments, function ($comment) use ($forum_id) {
+                                                            return isset($comment['forum_id']) && $comment['forum_id'] === $forum_id;
+                                                        });
+
+                                                        if ($forum_comments) {
+                                                            foreach ($forum_comments as $comment_id => $comment) {
+                                                                $commenter = $alumni_data[$comment['alumni_id']] ?? null;
+                                                                $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
+                                                                $commenter_profile = $commenter['profile_url'] ?? '../images/profile.png';
+                                                                ?>
+                                                               <div class="comment" data-comment-id="<?php echo $comment_id; ?>">
+                                                                    <div class="comment-author">
+                                                                        <img src="<?php echo htmlspecialchars($commenter_profile); ?>"
+                                                                            class="comment-avatar" alt="author">
+                                                                        <span><?php echo htmlspecialchars($commenter_name); ?></span>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <span
+                                                                            class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
+                                                                    </div>
+                                                                    <div class="comment-content">
+                                                                        <?php echo htmlspecialchars($comment['comment']); ?>
+                                                                    </div>
+                                                                    <div class="reply-section">
+                                                                        <button class="reply-btn"
+                                                                            data-comment-id="<?php echo $comment_id; ?>">Reply</button>
+                                                                        <div class="reply-input-area" style="display: none;">
+                                                                            <input type="text" class="reply-input"
+                                                                                placeholder="Write a reply...">
+                                                                            <button class="submit-reply-btn"
+                                                                                data-comment-id="<?php echo $comment_id; ?>">Submit</button>
+                                                                        </div>
+                                                                        <div class="reply-list">
+                                                                            <!-- Replies go here -->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <?php
+                                                            }
+                                                        } else {
+                                                            echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
                             }
+                        } else {
+                            echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
                         }
                         ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-} else {
-    echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
-}
-?>
 
 
                     </div>
@@ -294,207 +283,135 @@ if (!empty($forum_data)) {
     <script src="../bower_components/ckeditor/ckeditor.js"></script>
     <script src="js/jquery/jquery-3.5.1.min.js"></script>
 
+<script>
+  $(document).ready(function () {
+    initializeEventListeners();
 
-
-    <script>
-        function submitForm() {
-            // Sync CKEditor content before form submission
-            for (var instanceName in CKEDITOR.instances) {
-                CKEDITOR.instances[instanceName].updateElement();
+    // Refresh comments for all forums every 5 seconds
+    setInterval(function () {
+        $('.sale-statistic-inner').each(function () {
+            var forumId = $(this).find('.add-comment-btn').data('forum-id');
+            if (forumId) {
+                refreshComments(forumId);
             }
-            return true;
+        });
+    }, 5000);
+});
+
+function initializeEventListeners() {
+    $(document).on('click', '.add-comment-btn', addComment);
+    $(document).on('click', '.reply-btn', toggleReplyInput);
+    $(document).on('click', '.submit-reply-btn', submitReply);
+    $('#addForumForm').on('submit', addForumPost);
+    $('#logoutBtn').on('click', handleLogout);
+}
+
+function refreshComments(forumId) {
+    $.ajax({
+        url: 'get_forum_comment.php',
+        method: 'GET',
+        data: { forum_id: forumId },
+        success: function (response) {
+            var $commentList = $('#comment-list-' + forumId);
+            var $addCommentSection = $commentList.find('.add-comment').detach();
+            
+            // Store the state of reply input areas
+            var replyStates = {};
+            $commentList.find('.reply-input-area').each(function() {
+                var commentId = $(this).closest('.comment').data('comment-id');
+                replyStates[commentId] = $(this).is(':visible');
+            });
+
+            $commentList.html(response);
+            $commentList.prepend($addCommentSection);
+
+            // Restore the state of reply input areas
+            $commentList.find('.reply-input-area').each(function() {
+                var commentId = $(this).closest('.comment').data('comment-id');
+                if (replyStates[commentId]) {
+                    $(this).show();
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error refreshing comments:', error);
         }
+    });
+}
 
-        $(function () {
-            // Replace the <textarea id="editor1"> with a CKEditor instance
-            CKEDITOR.replace('editor1');
+function toggleReplyInput() {
+    $(this).siblings('.reply-input-area').toggle();
+}
 
-            // Optional: If you want to prevent the form from submitting when pressing Enter in the CKEditor
-            CKEDITOR.on('instanceReady', function (evt) {
-                evt.editor.on('contentDom', function () {
-                    evt.editor.document.on('keydown', function (event) {
-                        if (event.data.getKeystroke() == 13) {
-                            event.cancel();
-                        }
-                    });
+function addComment() {
+    var forumId = $(this).data('forum-id');
+    var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
+    var commentContent = $input.val().trim();
+
+    if (commentContent === "") {
+        Swal.fire({
+            title: 'Oops...',
+            text: 'Please enter a comment before posting.',
+            icon: 'warning',
+            timer: 5000,
+            showConfirmButton: false
+        });
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: 'comment_forum.php',
+        data: {
+            comment: commentContent,
+            forum_id: forumId,
+            alumni_id: '<?php echo $_SESSION['user']['id']; ?>'
+        },
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                $input.val('');
+                refreshComments(forumId);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your comment has been added.',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true
                 });
-            });
-        });
-
-    </script>
-    <script>
-        $('#logoutBtn').on('click', function () {
-            swal({
-                title: "Are you sure?",
-                text: "You will be directed to the main page!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, Logout!",
-                cancelButtonText: "No, cancel!",
-            }).then(function (isConfirm) {
-                if (isConfirm) {
-                    swal("Logout!", "Logging out", "success").then(function () {
-                        window.location.href = '../logout.php';
-                    });
-                } else {
-                    swal("Cancelled", "Your Logout is Cancelled :)", "error");
-                }
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const toggleButtons = document.querySelectorAll(".toggle-button");
-
-            toggleButtons.forEach(button => {
-                button.addEventListener("click", function () {
-                    const description = this.previousElementSibling;
-                    if (description.classList.contains("expanded")) {
-                        description.classList.remove("expanded");
-                        this.textContent = "Show More...";
-                    } else {
-                        description.classList.add("expanded");
-                        this.textContent = "Show Less";
-                    }
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: response.message,
+                    icon: 'error'
                 });
-
-                // Check if description needs expanding
-                const description = button.previousElementSibling;
-                if (description.scrollHeight > description.clientHeight) {
-                    button.style.display = "block";
-                } else {
-                    button.style.display = "none";
-                }
+            }
+        },
+        error: function () {
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while submitting your comment.',
+                icon: 'error'
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#addForumForm').on('submit', function (e) {
-                e.preventDefault();
+        }
+    });
+}
 
-                $.ajax({
-                    url: 'forum_add.php',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                type: "success",
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-
-                            // Refresh the page after the timer
-                            setTimeout(function () {
-                                window.location.reload();
-                            }, 1500);
-                        } else {
-                            swal({
-                                title: "Oops...",
-                                text: response.message,
-                                type: "error",
-                                timer: 3000,
-                                showConfirmButton: true
-                            });
-
-                            // Optional: Refresh the page after the error alert (comment out if not needed)
-                            // setTimeout(function() {
-                            //     window.location.reload();
-                            // }, 3000);
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error('AJAX error:', textStatus, errorThrown);
-                        swal({
-                            title: "Oops...",
-                            text: "Something went wrong! Error: " + textStatus,
-                            type: "error",
-                            timer: 3000,
-                            showConfirmButton: true
-                        });
-
-                        // Optional: Refresh the page after the error alert (comment out if not needed)
-                        // setTimeout(function() {
-                        //     window.location.reload();
-                        // }, 3000);
-                    }
-                });
-            });
-        });
-    </script>
-
-
-    <script>
-        $(document).ready(function () {
-            $('.add-comment-btn').click(function () {
-                var forumId = $(this).data('forum-id');
-                var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
-                var commentContent = $input.val().trim();
-
-                if (commentContent === "") {
-                    swal({
-                        title: 'Oops...',
-                        text: 'Please enter a comment before posting.',
-                        type: 'warning',
-                        timer: 5000,
-                        showConfirmButton: false
-                    });
-                    return;
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'comment_forum.php',
-                    data: {
-                        comment: commentContent,
-                        forum_id: forumId,
-                        alumni_id: '<?php echo $_SESSION['user']['id']; ?>'
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            $input.val('');
-                            refreshComments(forumId);
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Your comment has been added.',
-                                icon: 'success',
-                                timer: 2000,
-                                timerProgressBar: true
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: response.message,
-                                icon: 'error'
-                            });
-                        }
-                    },
-                    error: function () {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while submitting your comment.',
-                            icon: 'error'
-                        });
-                    }
-                });
-            });
-
-
-        });
-
-        $(document).ready(function () {
-            $('.reply-btn').click(function () {
-                $(this).siblings('.reply-input-area').toggle();
-            });
-
-            $('.submit-reply-btn').click(function () {
+function submitReply() {
     var commentId = $(this).data('comment-id');
-    var replyContent = $(this).siblings('.reply-input').val();
+    var replyContent = $(this).siblings('.reply-input').val().trim();
     var forumId = $(this).closest('.sale-statistic-inner').find('.add-comment-btn').data('forum-id');
+
+    if (replyContent === "") {
+        Swal.fire({
+            title: 'Oops...',
+            text: 'Please enter a reply before submitting.',
+            icon: 'warning',
+            timer: 3000,
+            showConfirmButton: false
+        });
+        return;
+    }
 
     $.ajax({
         url: 'reply_forum.php',
@@ -505,18 +422,88 @@ if (!empty($forum_data)) {
             reply: replyContent
         },
         success: function (response) {
-            location.reload(); // Reload the page to show the new reply
+            refreshComments(forumId);
+            Swal.fire({
+                title: 'Success!',
+                text: 'Your reply has been added.',
+                icon: 'success',
+                timer: 2000,
+                timerProgressBar: true
+            });
         },
         error: function (xhr, status, error) {
-            alert('Error: ' + error);
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while submitting your reply.',
+                icon: 'error'
+            });
         }
     });
-});
-        });
+}
 
+function addForumPost(e) {
+    e.preventDefault();
 
-    </script>
+    $.ajax({
+        url: 'forum_add.php',
+        type: 'POST',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
 
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                Swal.fire({
+                    title: "Oops...",
+                    text: response.message,
+                    icon: "error",
+                    timer: 3000,
+                    showConfirmButton: true
+                });
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('AJAX error:', textStatus, errorThrown);
+            Swal.fire({
+                title: "Oops...",
+                text: "Something went wrong! Error: " + textStatus,
+                icon: "error",
+                timer: 3000,
+                showConfirmButton: true
+            });
+        }
+    });
+}
+
+function handleLogout() {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You will be directed to the main page!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Logout!",
+        cancelButtonText: "No, cancel!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire("Logout!", "Logging out", "success").then(function () {
+                window.location.href = '../logout.php';
+            });
+        } else {
+            Swal.fire("Cancelled", "Your Logout is Cancelled :)", "error");
+        }
+    });
+}
+</script>
 </body>
 
 </html>

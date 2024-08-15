@@ -4,6 +4,7 @@ require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
 
 $firebase = new firebaseRDB($databaseURL);
+date_default_timezone_set('Asia/Manila');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $forum_id = htmlspecialchars($_POST['forum_id'], ENT_QUOTES, 'UTF-8');
