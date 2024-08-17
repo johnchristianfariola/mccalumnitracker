@@ -156,8 +156,8 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                             <div class="add-comment">
                                                 <input type="text" class="comment-input" placeholder="Add a comment..."
                                                     data-forum-id="<?php echo $forum_id; ?>">
-                                                <button class="add-comment-btn"
-                                                    data-forum-id="<?php echo $forum_id; ?>">Post</button>
+                                                <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>"
+                                                    id="comment-btn-<?php echo $forum_id; ?>">Post</button>
                                             </div>
                                             <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
                                                 <?php
@@ -181,7 +181,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                                                 $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
                                                                 $commenter_profile = $commenter['profile_url'] ?? '../images/profile.png';
                                                                 ?>
-                                                               <div class="comment" data-comment-id="<?php echo $comment_id; ?>">
+                                                                <div class="comment" data-comment-id="<?php echo $comment_id; ?>">
                                                                     <div class="comment-author">
                                                                         <img src="<?php echo htmlspecialchars($commenter_profile); ?>"
                                                                             class="comment-avatar" alt="author">
@@ -194,13 +194,26 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                                                         <?php echo htmlspecialchars($comment['comment']); ?>
                                                                     </div>
                                                                     <div class="reply-section">
+                                                                        <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
+                                                                            <i
+                                                                                class="fa <?php echo in_array($_SESSION['user']['id'], $comment['liked_by'] ?? []) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="heart-count"><?php echo $comment['heart_count'] ?? 0; ?></span>
+                                                                        &nbsp;&nbsp;
+                                                                        <span class="dislike-btn" data-comment-id="<?php echo $comment_id; ?>">
+                                                                            <i
+                                                                                class="fa <?php echo in_array($_SESSION['user']['id'], $comment['disliked_by'] ?? []) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="dislike-count"><?php echo $comment['dislike_count'] ?? 0; ?></span>
                                                                         <button class="reply-btn"
                                                                             data-comment-id="<?php echo $comment_id; ?>">Reply</button>
                                                                         <div class="reply-input-area" style="display: none;">
                                                                             <input type="text" class="reply-input"
                                                                                 placeholder="Write a reply...">
                                                                             <button class="submit-reply-btn"
-                                                                                data-comment-id="<?php echo $comment_id; ?>">Submit</button>
+                                                                                data-comment-id="<?php echo $comment_id; ?>">Reply</button>
                                                                         </div>
                                                                         <div class="reply-list">
                                                                             <!-- Replies go here -->
@@ -283,227 +296,423 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     <script src="../bower_components/ckeditor/ckeditor.js"></script>
     <script src="js/jquery/jquery-3.5.1.min.js"></script>
 
-<script>
-  $(document).ready(function () {
-    initializeEventListeners();
 
-    // Refresh comments for all forums every 5 seconds
-    setInterval(function () {
-        $('.sale-statistic-inner').each(function () {
-            var forumId = $(this).find('.add-comment-btn').data('forum-id');
-            if (forumId) {
-                refreshComments(forumId);
+    <script>
+        function submitForm() {
+            // Sync CKEditor content before form submission
+            for (var instanceName in CKEDITOR.instances) {
+                CKEDITOR.instances[instanceName].updateElement();
             }
-        });
-    }, 5000);
-});
+            return true;
+        }
 
-function initializeEventListeners() {
-    $(document).on('click', '.add-comment-btn', addComment);
-    $(document).on('click', '.reply-btn', toggleReplyInput);
-    $(document).on('click', '.submit-reply-btn', submitReply);
-    $('#addForumForm').on('submit', addForumPost);
-    $('#logoutBtn').on('click', handleLogout);
-}
+        $(function () {
+            // Replace the <textarea id="editor1"> with a CKEditor instance
+            CKEDITOR.replace('editor1');
 
-function refreshComments(forumId) {
-    $.ajax({
-        url: 'get_forum_comment.php',
-        method: 'GET',
-        data: { forum_id: forumId },
-        success: function (response) {
-            var $commentList = $('#comment-list-' + forumId);
-            var $addCommentSection = $commentList.find('.add-comment').detach();
-            
-            // Store the state of reply input areas
-            var replyStates = {};
-            $commentList.find('.reply-input-area').each(function() {
-                var commentId = $(this).closest('.comment').data('comment-id');
-                replyStates[commentId] = $(this).is(':visible');
+            // Optional: If you want to prevent the form from submitting when pressing Enter in the CKEditor
+            CKEDITOR.on('instanceReady', function (evt) {
+                evt.editor.on('contentDom', function () {
+                    evt.editor.document.on('keydown', function (event) {
+                        if (event.data.getKeystroke() == 13) {
+                            event.cancel();
+                        }
+                    });
+                });
             });
+        });
 
-            $commentList.html(response);
-            $commentList.prepend($addCommentSection);
-
-            // Restore the state of reply input areas
-            $commentList.find('.reply-input-area').each(function() {
-                var commentId = $(this).closest('.comment').data('comment-id');
-                if (replyStates[commentId]) {
-                    $(this).show();
+        $('#logoutBtn').on('click', function () {
+            swal({
+                title: "Are you sure?",
+                text: "You will be directed to the main page!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Logout!",
+                cancelButtonText: "No, cancel!",
+            }).then(function (isConfirm) {
+                if (isConfirm) {
+                    swal("Logout!", "Logging out", "success").then(function () {
+                        window.location.href = '../logout.php';
+                    });
+                } else {
+                    swal("Cancelled", "Your Logout is Cancelled :)", "error");
                 }
             });
-        },
-        error: function (xhr, status, error) {
-            console.error('Error refreshing comments:', error);
-        }
-    });
-}
-
-function toggleReplyInput() {
-    $(this).siblings('.reply-input-area').toggle();
-}
-
-function addComment() {
-    var forumId = $(this).data('forum-id');
-    var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
-    var commentContent = $input.val().trim();
-
-    if (commentContent === "") {
-        Swal.fire({
-            title: 'Oops...',
-            text: 'Please enter a comment before posting.',
-            icon: 'warning',
-            timer: 5000,
-            showConfirmButton: false
         });
-        return;
-    }
 
-    $.ajax({
-        type: 'POST',
-        url: 'comment_forum.php',
-        data: {
-            comment: commentContent,
-            forum_id: forumId,
-            alumni_id: '<?php echo $_SESSION['user']['id']; ?>'
-        },
-        dataType: 'json',
-        success: function (response) {
-            if (response.status === 'success') {
-                $input.val('');
-                refreshComments(forumId);
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Your comment has been added.',
-                    icon: 'success',
-                    timer: 2000,
-                    timerProgressBar: true
+        $(document).ready(function () {
+            $('#addForumForm').on('submit', function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: 'forum_add.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            swal({
+                                title: "Success!",
+                                text: response.message,
+                                type: "success",
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            // Refresh the page after the timer
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            swal({
+                                title: "Oops...",
+                                text: response.message,
+                                type: "error",
+                                timer: 3000,
+                                showConfirmButton: true
+                            });
+
+                            // Optional: Refresh the page after the error alert (comment out if not needed)
+                            // setTimeout(function() {
+                            //     window.location.reload();
+                            // }, 3000);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX error:', textStatus, errorThrown);
+                        swal({
+                            title: "Oops...",
+                            text: "Something went wrong! Error: " + textStatus,
+                            type: "error",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+
+                        // Optional: Refresh the page after the error alert (comment out if not needed)
+                        // setTimeout(function() {
+                        //     window.location.reload();
+                        // }, 3000);
+                    }
                 });
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: response.message,
-                    icon: 'error'
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('.add-comment-btn').click(function () {
+                var forumId = $(this).data('forum-id');
+                var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
+                var commentContent = $input.val().trim();
+
+                if (commentContent === "") {
+                    swal({
+                        title: 'Oops...',
+                        text: 'Please enter a comment before posting.',
+                        type: 'warning',
+                        timer: 5000,
+                        showConfirmButton: false
+                    });
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'comment_forum.php',
+                    data: {
+                        comment: commentContent,
+                        forum_id: forumId,
+                        alumni_id: '<?php echo $_SESSION['user']['id']; ?>'
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            $input.val('');
+                            refreshComments(forumId);
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Your comment has been added.',
+                                icon: 'success',
+                                timer: 2000,
+                                timerProgressBar: true
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while submitting your comment.',
+                            icon: 'error'
+                        });
+                    }
                 });
+            });
+
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            initializeEventListeners();
+
+            // Refresh comments for all forums every 5 seconds
+            setInterval(function () {
+                $('.sale-statistic-inner').each(function () {
+                    var forumId = $(this).find('.add-comment-btn').data('forum-id');
+                    if (forumId) {
+                        refreshComments(forumId);
+                    }
+                });
+            }, 5000);
+        });
+
+        function initializeEventListeners() {
+            $(document).on('click', '.add-comment-btn', addCommentWithCooldown);
+            $(document).on('click', '.reply-btn', toggleReplyInput);
+            $(document).on('click', '.submit-reply-btn', submitReply);
+        }
+
+        function addCommentWithCooldown() {
+            var $btn = $(this);
+            if ($btn.prop('disabled')) {
+                return;
             }
-        },
-        error: function () {
-            Swal.fire({
-                title: 'Error',
-                text: 'An error occurred while submitting your comment.',
-                icon: 'error'
-            });
+
+            addComment.call(this);
+
+            // Disable the button and start cooldown
+            $btn.prop('disabled', true);
+            var originalText = $btn.text();
+            var countdown = 5;
+
+            var intervalId = setInterval(function () {
+                $btn.text(originalText + ' (' + countdown + ')');
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(intervalId);
+                    $btn.prop('disabled', false).text(originalText);
+                }
+            }, 1000);
         }
-    });
-}
 
-function submitReply() {
-    var commentId = $(this).data('comment-id');
-    var replyContent = $(this).siblings('.reply-input').val().trim();
-    var forumId = $(this).closest('.sale-statistic-inner').find('.add-comment-btn').data('forum-id');
+        function addComment() {
+            var forumId = $(this).data('forum-id');
+            var $input = $('.comment-input[data-forum-id="' + forumId + '"]');
+            var commentContent = $input.val().trim();
 
-    if (replyContent === "") {
-        Swal.fire({
-            title: 'Oops...',
-            text: 'Please enter a reply before submitting.',
-            icon: 'warning',
-            timer: 3000,
-            showConfirmButton: false
-        });
-        return;
-    }
-
-    $.ajax({
-        url: 'reply_forum.php',
-        method: 'POST',
-        data: {
-            forum_id: forumId,
-            comment_id: commentId,
-            reply: replyContent
-        },
-        success: function (response) {
-            refreshComments(forumId);
-            Swal.fire({
-                title: 'Success!',
-                text: 'Your reply has been added.',
-                icon: 'success',
-                timer: 2000,
-                timerProgressBar: true
-            });
-        },
-        error: function (xhr, status, error) {
-            Swal.fire({
-                title: 'Error',
-                text: 'An error occurred while submitting your reply.',
-                icon: 'error'
-            });
-        }
-    });
-}
-
-function addForumPost(e) {
-    e.preventDefault();
-
-    $.ajax({
-        url: 'forum_add.php',
-        type: 'POST',
-        data: $(this).serialize(),
-        dataType: 'json',
-        success: function (response) {
-            if (response.status === 'success') {
+            if (commentContent === "") {
                 Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success",
-                    timer: 1500,
+                    title: 'Oops...',
+                    text: 'Please enter a comment before posting.',
+                    icon: 'warning',
+                    timer: 3000,
                     showConfirmButton: false
                 });
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                Swal.fire({
-                    title: "Oops...",
-                    text: response.message,
-                    icon: "error",
-                    timer: 3000,
-                    showConfirmButton: true
-                });
+                return;
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error('AJAX error:', textStatus, errorThrown);
-            Swal.fire({
-                title: "Oops...",
-                text: "Something went wrong! Error: " + textStatus,
-                icon: "error",
-                timer: 3000,
-                showConfirmButton: true
-            });
-        }
-    });
-}
 
-function handleLogout() {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You will be directed to the main page!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Logout!",
-        cancelButtonText: "No, cancel!",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire("Logout!", "Logging out", "success").then(function () {
-                window.location.href = '../logout.php';
-            });
-        } else {
-            Swal.fire("Cancelled", "Your Logout is Cancelled :)", "error");
+            // Removed the AJAX call to comment_forum.php
+            // Instead, call a function that will handle the comment submission
+            submitComment(forumId, commentContent);
         }
+
+        function submitComment(forumId, commentContent) {
+            // TO DO: Implement the logic to submit the comment
+            // You can use a JavaScript function or a different AJAX call to handle the comment submission
+            console.log('Comment submitted:', forumId, commentContent);
+        }
+
+        function refreshComments(forumId) {
+            $.ajax({
+                url: 'get_forum_comment.php',
+                method: 'GET',
+                data: { forum_id: forumId },
+                success: function (response) {
+                    var $commentList = $('#comment-list-' + forumId);
+                    var $addCommentSection = $commentList.find('.add-comment').detach();
+
+                    // Store the state, content, and focus of reply input areas
+                    var replyStates = {};
+                    var focusedInputId = null;
+                    $commentList.find('.comment').each(function () {
+                        var commentId = $(this).find('.submit-reply-btn').data('comment-id');
+                        var $replyArea = $(this).find('.reply-input-area');
+                        var $replyInput = $replyArea.find('.reply-input');
+                        replyStates[commentId] = {
+                            isVisible: $replyArea.is(':visible'),
+                            content: $replyInput.val()
+                        };
+                        if ($replyInput.is(':focus')) {
+                            focusedInputId = commentId;
+                        }
+                    });
+
+                    $commentList.html(response);
+                    $commentList.prepend($addCommentSection);
+
+                    // Restore the state, content, and focus of reply input areas
+                    $commentList.find('.comment').each(function () {
+                        var commentId = $(this).find('.submit-reply-btn').data('comment-id');
+                        if (replyStates[commentId]) {
+                            var $replyArea = $(this).find('.reply-input-area');
+                            var $replyInput = $replyArea.find('.reply-input');
+                            if (replyStates[commentId].isVisible) {
+                                $replyArea.show();
+                            }
+                            $replyInput.val(replyStates[commentId].content);
+                            if (commentId === focusedInputId) {
+                                $replyInput.focus();
+                                // Set cursor position to the end of the input
+                                var inputLength = $replyInput.val().length;
+                                $replyInput[0].setSelectionRange(inputLength, inputLength);
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error refreshing comments:', error);
+                }
+            });
+        }
+
+        function toggleReplyInput() {
+            $(this).siblings('.reply-input-area').toggle();
+        }
+        function submitReply() {
+            var $btn = $(this);
+            if ($btn.prop('disabled')) {
+                return;
+            }
+
+            var commentId = $btn.data('comment-id');
+            var $replyInput = $btn.siblings('.reply-input');
+            var replyContent = $replyInput.val().trim();
+            var forumId = $btn.closest('.sale-statistic-inner').find('.add-comment-btn').data('forum-id');
+
+            if (replyContent === "") {
+                Swal.fire({
+                    title: 'Oops...',
+                    text: 'Please enter a reply before submitting.',
+                    icon: 'warning',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            // Disable the button and start cooldown
+            $btn.prop('disabled', true);
+            var originalText = $btn.text();
+            var countdown = 5;
+
+            var intervalId = setInterval(function () {
+                $btn.text(originalText + ' (' + countdown + ')');
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(intervalId);
+                    $btn.prop('disabled', false).text(originalText);
+                }
+            }, 1000);
+
+            $.ajax({
+                url: 'reply_forum.php',
+                method: 'POST',
+                data: {
+                    forum_id: forumId,
+                    comment_id: commentId,
+                    reply: replyContent
+                },
+                success: function (response) {
+                    refreshComments(forumId);
+                    $replyInput.val(''); // Clear the input after successful submission
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Your reply has been added.',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'An error occurred while submitting your reply.',
+                        icon: 'error'
+                    });
+                    // In case of error, enable the button immediately
+                    clearInterval(intervalId);
+                    $btn.prop('disabled', false).text(originalText);
+                }
+            });
+        }
+
+
+    </script>
+    <script>
+       $(document).ready(function() {
+    $(document).on('click', '.heart-btn, .dislike-btn', function() {
+        var $this = $(this);
+        var commentId = $this.data('comment-id');
+        var action = $this.hasClass('heart-btn') ? 'like' : 'dislike';
+
+        $.ajax({
+            url: 'update_heart_forum.php',
+            method: 'POST',
+            data: {
+                comment_id: commentId,
+                action: action
+            },
+            success: function(response) {
+                console.log('Response:', response); // For debugging
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    $this.siblings('.' + action + '-count').text(data[action + '_count']);
+                    
+                    // Toggle the icon
+                    var $icon = $this.find('i');
+                    if (action === 'like') {
+                        if (data.liked) {
+                            $icon.removeClass('fa-heart-o').addClass('fa-heart');
+                        } else {
+                            $icon.removeClass('fa-heart').addClass('fa-heart-o');
+                        }
+                    } else {
+                        if (data.disliked) {
+                            $icon.removeClass('fa-thumbs-o-down').addClass('fa-thumbs-down');
+                        } else {
+                            $icon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
+                        }
+                    }
+                    
+                    // Update the opposite button if needed
+                    var $oppositeBtn = action === 'like' ? $('.dislike-btn[data-comment-id="' + commentId + '"]') : $('.heart-btn[data-comment-id="' + commentId + '"]');
+                    var $oppositeIcon = $oppositeBtn.find('i');
+                    if (action === 'like' && data.liked) {
+                        $oppositeIcon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
+                    } else if (action === 'dislike' && data.disliked) {
+                        $oppositeIcon.removeClass('fa-heart').addClass('fa-heart-o');
+                    }
+                    $oppositeBtn.siblings('.' + (action === 'like' ? 'dislike' : 'heart') + '-count').text(data[action === 'like' ? 'dislike_count' : 'heart_count']);
+                } else {
+                    console.error('Error updating rating:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX error:', error);
+            }
+        });
     });
-}
-</script>
+});
+    </script>
 </body>
 
 </html>

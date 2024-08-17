@@ -40,10 +40,10 @@ function time_elapsed_string($datetime, $full = false)
 
 if (isset($_GET['forum_id'])) {
     $forum_id = $_GET['forum_id'];
-    
+
     $all_comments = $firebase->retrieve("forum_comments");
     $all_comments = json_decode($all_comments, true);
-    
+
     $alumni_data = $firebase->retrieve("alumni");
     $alumni_data = json_decode($alumni_data, true);
 
@@ -65,8 +65,7 @@ if (isset($_GET['forum_id'])) {
                     ?>
                     <div class="comment">
                         <div class="comment-author">
-                            <img src="<?php echo htmlspecialchars($commenter_profile); ?>"
-                                class="comment-avatar" alt="author">
+                            <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author">
                             <span><?php echo htmlspecialchars($commenter_name); ?></span>
                             &nbsp;&nbsp;&nbsp;
                             <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
@@ -75,10 +74,21 @@ if (isset($_GET['forum_id'])) {
                             <?php echo htmlspecialchars($comment['comment']); ?>
                         </div>
                         <div class="reply-section">
+                            <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
+                                <i
+                                    class="fa <?php echo in_array($_SESSION['user']['id'], $comment['liked_by'] ?? []) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
+                            </span>
+                            <span class="heart-count"><?php echo $comment['heart_count'] ?? 0; ?></span>
+                            &nbsp;&nbsp;
+                            <span class="dislike-btn" data-comment-id="<?php echo $comment_id; ?>">
+                                <i
+                                    class="fa <?php echo in_array($_SESSION['user']['id'], $comment['disliked_by'] ?? []) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
+                            </span>
+                            <span class="dislike-count"><?php echo $comment['dislike_count'] ?? 0; ?></span>
                             <button class="reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
                             <div class="reply-input-area" style="display: none;">
                                 <input type="text" class="reply-input" placeholder="Write a reply...">
-                                <button class="submit-reply-btn" data-comment-id="<?php echo $comment_id; ?>">Submit</button>
+                                <button class="submit-reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
                             </div>
                             <div class="reply-list">
                                 <?php
