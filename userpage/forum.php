@@ -54,7 +54,72 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     <?php include 'includes/header.php' ?>
     <!-- Bootstrap CSS -->
     <style>
+        .reaction-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
 
+        .reaction-btn {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #606770;
+            background-color: #f1f1f1;
+            transition: background-color 0.3s;
+        }
+
+        .reaction-btn i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        .reaction-btn:hover {
+            background-color: #e4e6eb;
+        }
+
+        .reaction-btn.active {
+            color: #4267B2;
+            background-color: #e7f3ff;
+        }
+
+        .reaction-label {
+            margin-right: 5px;
+        }
+
+        .reaction-count {
+            font-weight: bold;
+            margin-left: 3px;
+        }
+
+        /* Specific colors for each reaction type */
+        .reaction-btn[data-reaction="like"].active i {
+            color: #4267B2;
+        }
+
+        .reaction-btn[data-reaction="love"].active i {
+            color: #f02849;
+        }
+
+        .reaction-btn[data-reaction="laugh"].active i {
+            color: #f7b125;
+        }
+
+        .reaction-btn[data-reaction="wow"].active i {
+            color: #f7b125;
+        }
+
+        .reaction-btn[data-reaction="sad"].active i {
+            color: #f7b125;
+        }
+
+        .reaction-btn[data-reaction="angry"].active i {
+            color: #e94848;
+        }
     </style>
 
 
@@ -152,6 +217,38 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                         <div class="description">
                                             <?php echo $forum_post['forumDescription'] ?? 'No description available'; ?>
                                         </div>
+
+                                        <!-- Reaction buttons -->
+                                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem"
+                                            data-forum-id="<?php echo $forum_id; ?>">
+                                            <!-- ... other forum post content ... -->
+                                            <div class="reaction-buttons">
+                                                <span class="reaction-btn" data-reaction="like">
+                                                    <i class="fa fa-thumbs-up"></i> Like <span class="reaction-count"> 0</span>
+                                                </span>
+                                                <span class="reaction-btn" data-reaction="love">
+                                                    <i class="fa fa-heart"></i> Love <span class="reaction-count">
+                                                        0</span>
+                                                </span>
+                                                <span class="reaction-btn" data-reaction="laugh">
+                                                    <i class="fa fa-smile-o"></i> Haha <span class="reaction-count">
+                                                        0</span>
+                                                </span>
+                                                <span class="reaction-btn" data-reaction="wow">
+                                                    <i class="fa fa-surprise"></i> Wow <span class="reaction-count">
+                                                        0</span>
+                                                </span>
+                                                <span class="reaction-btn" data-reaction="sad">
+                                                    <i class="fa fa-sad-tear"></i> Sad <span class="reaction-count">
+                                                        0</span>
+                                                </span>
+                                                <span class="reaction-btn" data-reaction="angry">
+                                                    <i class="fa fa-angry"></i> Angry <span class="reaction-count">
+                                                        0</span>
+                                                </span>
+                                            </div>
+                                        </div>
+
                                         <div class="comments-section">
                                             <div class="add-comment">
                                                 <input type="text" class="comment-input" placeholder="Add a comment..."
@@ -193,6 +290,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                                                     <div class="comment-content">
                                                                         <?php echo htmlspecialchars($comment['comment']); ?>
                                                                     </div>
+
                                                                     <div class="reply-section">
                                                                         <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
                                                                             <i
@@ -238,8 +336,6 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                             echo '<div class="no-forum-message" style="text-align:center; padding:20px; font-size:18px;">NO FORUM AVAILABLE AT THE MOMENT</div>';
                         }
                         ?>
-
-
                     </div>
 
                     <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
@@ -658,60 +754,141 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 
     </script>
     <script>
-       $(document).ready(function() {
-    $(document).on('click', '.heart-btn, .dislike-btn', function() {
-        var $this = $(this);
-        var commentId = $this.data('comment-id');
-        var action = $this.hasClass('heart-btn') ? 'like' : 'dislike';
+        $(document).ready(function () {
+            $(document).on('click', '.heart-btn, .dislike-btn', function () {
+                var $this = $(this);
+                var commentId = $this.data('comment-id');
+                var action = $this.hasClass('heart-btn') ? 'like' : 'dislike';
 
-        $.ajax({
-            url: 'update_heart_forum.php',
-            method: 'POST',
-            data: {
-                comment_id: commentId,
-                action: action
-            },
-            success: function(response) {
-                console.log('Response:', response); // For debugging
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    $this.siblings('.' + action + '-count').text(data[action + '_count']);
-                    
-                    // Toggle the icon
-                    var $icon = $this.find('i');
-                    if (action === 'like') {
-                        if (data.liked) {
-                            $icon.removeClass('fa-heart-o').addClass('fa-heart');
+                $.ajax({
+                    url: 'update_heart_forum.php',
+                    method: 'POST',
+                    data: {
+                        comment_id: commentId,
+                        action: action
+                    },
+                    success: function (response) {
+                        console.log('Response:', response); // For debugging
+                        var data = JSON.parse(response);
+                        if (data.status === 'success') {
+                            $this.siblings('.' + action + '-count').text(data[action + '_count']);
+
+                            // Toggle the icon
+                            var $icon = $this.find('i');
+                            if (action === 'like') {
+                                if (data.liked) {
+                                    $icon.removeClass('fa-heart-o').addClass('fa-heart');
+                                } else {
+                                    $icon.removeClass('fa-heart').addClass('fa-heart-o');
+                                }
+                            } else {
+                                if (data.disliked) {
+                                    $icon.removeClass('fa-thumbs-o-down').addClass('fa-thumbs-down');
+                                } else {
+                                    $icon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
+                                }
+                            }
+
+                            // Update the opposite button if needed
+                            var $oppositeBtn = action === 'like' ? $('.dislike-btn[data-comment-id="' + commentId + '"]') : $('.heart-btn[data-comment-id="' + commentId + '"]');
+                            var $oppositeIcon = $oppositeBtn.find('i');
+                            if (action === 'like' && data.liked) {
+                                $oppositeIcon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
+                            } else if (action === 'dislike' && data.disliked) {
+                                $oppositeIcon.removeClass('fa-heart').addClass('fa-heart-o');
+                            }
+                            $oppositeBtn.siblings('.' + (action === 'like' ? 'dislike' : 'heart') + '-count').text(data[action === 'like' ? 'dislike_count' : 'heart_count']);
                         } else {
-                            $icon.removeClass('fa-heart').addClass('fa-heart-o');
+                            console.error('Error updating rating:', data.message);
                         }
-                    } else {
-                        if (data.disliked) {
-                            $icon.removeClass('fa-thumbs-o-down').addClass('fa-thumbs-down');
-                        } else {
-                            $icon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
-                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error:', error);
                     }
-                    
-                    // Update the opposite button if needed
-                    var $oppositeBtn = action === 'like' ? $('.dislike-btn[data-comment-id="' + commentId + '"]') : $('.heart-btn[data-comment-id="' + commentId + '"]');
-                    var $oppositeIcon = $oppositeBtn.find('i');
-                    if (action === 'like' && data.liked) {
-                        $oppositeIcon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
-                    } else if (action === 'dislike' && data.disliked) {
-                        $oppositeIcon.removeClass('fa-heart').addClass('fa-heart-o');
-                    }
-                    $oppositeBtn.siblings('.' + (action === 'like' ? 'dislike' : 'heart') + '-count').text(data[action === 'like' ? 'dislike_count' : 'heart_count']);
-                } else {
-                    console.error('Error updating rating:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX error:', error);
-            }
+                });
+            });
         });
-    });
-});
+
+        $(document).ready(function () {
+            // Function to update reaction buttons
+            function updateReactionButtons($reactionButtons, reactionCounts, userReaction) {
+                $reactionButtons.find('.reaction-btn').removeClass('active');
+                $reactionButtons.find('.reaction-count').text('0');
+
+                $.each(reactionCounts, function (reaction, count) {
+                    $reactionButtons.find('[data-reaction="' + reaction + '"] .reaction-count').text(count);
+                });
+
+                if (userReaction) {
+                    $reactionButtons.find('[data-reaction="' + userReaction + '"]').addClass('active');
+                }
+            }
+
+            // Load initial reaction data
+            function loadInitialReactions() {
+                $('.sale-statistic-inner').each(function () {
+                    var $forumPost = $(this);
+                    var forumId = $forumPost.data('forum-id');
+
+                    $.ajax({
+                        url: 'get_forum_like_count.php',
+                        method: 'GET',
+                        data: { forum_id: forumId },
+                        success: function (response) {
+                            var data = JSON.parse(response);
+                            if (data.status === 'success') {
+                                updateReactionButtons($forumPost.find('.reaction-buttons'), data.reaction_counts, data.user_reaction);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error loading reactions:', error);
+                        }
+                    });
+                });
+            }
+
+            // Load initial reactions when the page loads
+            loadInitialReactions();
+
+            // Handle reaction button clicks
+            $(document).ready(function () {
+                $('.reaction-btn').on('click', function () {
+                    var $this = $(this);
+                    var forumId = $this.closest('.sale-statistic-inner').data('forum-id');
+                    var reactionType = $this.data('reaction');
+
+                    $.ajax({
+                        url: 'update_reaction_forum.php',
+                        method: 'POST',
+                        data: {
+                            forum_id: forumId,
+                            reaction_type: reactionType
+                        },
+                        success: function (response) {
+                            var data = JSON.parse(response);
+                            if (data.status === 'success') {
+                                // Update reaction counts
+                                $this.closest('.reaction-buttons').find('.reaction-count').text('0');
+                                $.each(data.reaction_counts, function (reaction, count) {
+                                    $this.closest('.reaction-buttons').find('[data-reaction="' + reaction + '"] .reaction-count').text(count);
+                                });
+
+                                // Update user's reaction
+                                $this.closest('.reaction-buttons').find('.reaction-btn').removeClass('active');
+                                if (data.user_reaction) {
+                                    $this.closest('.reaction-buttons').find('[data-reaction="' + data.user_reaction + '"]').addClass('active');
+                                }
+                            } else {
+                                console.error('Error updating reaction:', data.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX error:', error);
+                        }
+                    });
+                });
+            });
+        });
     </script>
 </body>
 

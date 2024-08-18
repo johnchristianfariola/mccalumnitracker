@@ -57,8 +57,9 @@
     
     <link rel="stylesheet" href="css/responsive.css">
 
-    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../bower_components/fontawesome-pro-5.15.3-web/css/all.min.css">
 
+    <link rel="stylesheet" href="../bower_components/fontawesome-pro-5.15.3-web/css/fontawesome.min.css">
     
     <link rel="stylesheet" href="custom.css">
 
