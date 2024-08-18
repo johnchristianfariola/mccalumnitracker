@@ -293,7 +293,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 
                                                                     <div class="reply-section">
                                                                         <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
-                                                                            <i
+                                                                            <i  
                                                                                 class="fa <?php echo in_array($_SESSION['user']['id'], $comment['liked_by'] ?? []) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
                                                                         </span>
                                                                         <span

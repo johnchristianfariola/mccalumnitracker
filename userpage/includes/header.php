@@ -59,7 +59,7 @@
 
     <link rel="stylesheet" href="../bower_components/fontawesome-pro-5.15.3-web/css/all.min.css">
 
-    <link rel="stylesheet" href="../bower_components/fontawesome-pro-5.15.3-web/css/fontawesome.min.css">
+   <link rel="stylesheet" href="../bower_components/fontawesome-pro-5.15.3-web/css/v4-shims.min.css">
     
     <link rel="stylesheet" href="custom.css">
 
