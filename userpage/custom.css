@@ -1,3 +1,5 @@
+@import url(css/animation/animate.css);
+
 .nav-tabs li {
   background-color: transparent;
   transition: background-color 0.3s;
@@ -437,7 +439,7 @@ ul {
 
 body {
   font-family: 'Roboto', Arial, Helvetica, Sans-serif, Verdana;
-  background: #dee1e3;
+  background: #f7f7f9;
 }
 
 .comments-container {
@@ -691,10 +693,6 @@ ul {
   list-style-type: none;
 }
 
-body {
-  font-family: 'Roboto', Arial, Helvetica, Sans-serif, Verdana;
-  background: #dee1e3;
-}
 
 /* Navigation Tabs */
 .nav-tabs li {
@@ -1683,3 +1681,75 @@ body {
 .reply {
   margin-left: 20px;
 }
+
+
+
+/*==================Forum Start Here===============*/
+
+.reaction-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.reaction-btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #606770;
+  background-color: #f1f1f1;
+  transition: background-color 0.3s;
+}
+
+.reaction-btn i {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.reaction-btn:hover {
+  background-color: #e4e6eb;
+}
+
+.reaction-btn.active {
+  color: #4267B2;
+  background-color: #e7f3ff;
+}
+
+.reaction-label {
+  margin-right: 5px;
+}
+
+.reaction-count {
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+/* Specific colors for each reaction type */
+.reaction-btn[data-reaction="like"].active i {
+  color: #4267B2;
+}
+
+.reaction-btn[data-reaction="love"].active i {
+  color: #f02849;
+}
+
+.reaction-btn[data-reaction="laugh"].active i {
+  color: #f7b125;
+}
+
+.reaction-btn[data-reaction="wow"].active i {
+  color: #f7b125;
+}
+
+.reaction-btn[data-reaction="sad"].active i {
+  color: #f7b125;
+}
+
+.reaction-btn[data-reaction="angry"].active i {
+  color: #e94848;
+}
+
