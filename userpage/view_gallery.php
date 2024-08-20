@@ -1,4 +1,5 @@
 <?php include '../includes/session.php'; ?>
+
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -6,6 +7,20 @@
     <?php include 'includes/header.php'; ?>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/jquery.fancybox.css">
+
+    <?php
+
+    require_once '../includes/firebaseRDB.php';
+    require_once '../includes/config.php';
+
+    $firebase = new firebaseRDB($databaseURL);
+
+    $album_data = $firebase->retrieve("gallery");
+    $album_data = json_decode($album_data, true);
+
+
+    ?>
+
     <style>
         /* Modernized Gallery Section */
         .gallery_section_inner {
@@ -121,119 +136,28 @@
                                             </div>
                                             <div class="full gallery_section_inner">
                                                 <div class="row">
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4 col-md-3 margin_bottom_30">
-                                                        <div class="column">
-                                                            <a data-fancybox="gallery" href="img/g1.jpg"><img
-                                                                    class="img-responsive" src="img/g1.jpg"
-                                                                    alt="Gallery Image 1" /></a>
-                                                        </div>
-                                                        <div class="heading_section">
-                                                            <h4>Sed ut perspiciatis</h4>
-                                                        </div>
-                                                    </div>
-
-
-
+                                                    <?php
+                                                    if (!empty($album_data)) {
+                                                        foreach ($album_data as $gallery_id => $gallery) {
+                                                            ?>
+                                                            <div class="col-sm-4 col-md-3 margin_bottom_30">
+                                                                <div class="column">
+                                                                    <a href="">
+                                                                        <img class="img-responsive"
+                                                                            src="<?php echo $gallery['image_url']; ?>"
+                                                                            alt="Gallery Image" />
+                                                                    </a>
+                                                                </div>
+                                                                <div class="heading_section">
+                                                                    <h4><?php echo $gallery['gallery_name']; ?></h4>
+                                                                </div>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                    } else {
+                                                        echo "No galleries found.";
+                                                    }
+                                                    ?>
                                                 </div>
                                                 <!-- Add more gallery items as needed -->
                                             </div>
