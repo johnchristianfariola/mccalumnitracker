@@ -144,7 +144,7 @@
                                                                 <div class="column">
                                                                     <a href="">
                                                                         <img class="img-responsive"
-                                                                            src="<?php echo $gallery['image_url']; ?>"
+                                                                            src="..admin/<?php echo $gallery['image_url']; ?>"
                                                                             alt="Gallery Image" />
                                                                     </a>
                                                                 </div>
