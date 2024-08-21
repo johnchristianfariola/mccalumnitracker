@@ -154,7 +154,7 @@
                                                                 </a>
                                                             </div>
                                                             <div class="heading_section">
-                                                                <h4><?php echo basename($gallery_view_item['image_url']); ?></h4>
+                                                                <h4 title="jk"><?php echo basename($gallery_view_item['image_url']); ?></h4>
                                                             </div>
                                                         </div>
                                                         <?php
