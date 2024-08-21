@@ -142,7 +142,8 @@
                                                             ?>
                                                             <div class="col-sm-4 col-md-3 margin_bottom_30">
                                                                 <div class="column">
-                                                                    <a href="">
+                                                                    <a
+                                                                        href="gallery_view.php?gallery_id=<?php echo $gallery_id; ?>">
                                                                         <img class="img-responsive"
                                                                             src="../admin/<?php echo $gallery['image_url']; ?>"
                                                                             alt="Gallery Image" />
