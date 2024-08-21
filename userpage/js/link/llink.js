@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('forum').classList.add('active');
             break;
         case 'view_gallery.php':
+            case 'visit_gallery.php':
             document.getElementById('gallery').classList.add('active');
             break;
         default:
