@@ -75,6 +75,9 @@
         .heading_section h4 {
             margin: 0;
             font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .container-fluid {
