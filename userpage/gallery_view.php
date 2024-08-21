@@ -32,12 +32,10 @@
     ?>
 
     <style>
-         /* Modernized Gallery Section */
-         .gallery_section_inner {
+       /* Modernized Gallery Section */
+       .gallery_section_inner {
             padding: 20px;
             background-color: white;
-
-
         }
 
         .gallery_section_inner .column {
@@ -56,7 +54,10 @@
 
         .gallery_section_inner img {
             width: 100%;
-            height: auto;
+            height: 200px;
+            /* Set a fixed height */
+            object-fit: cover;
+            /* Ensure images are scaled and cropped to fit */
             display: block;
             border-bottom: 2px solid #ddd;
         }
@@ -79,8 +80,6 @@
         .container-fluid {
             padding: 0 15px;
         }
-
-
 
         @media screen (max-width: 767px) {
             .gallery_section_inner {
@@ -150,6 +149,9 @@
                                                                 <a data-fancybox="gallery" href="../admin/<?php echo $gallery_view_item['image_url']; ?>">
                                                                     <img class="img-responsive" src="../admin/<?php echo $gallery_view_item['image_url']; ?>" alt="Gallery Image" />
                                                                 </a>
+                                                            </div>
+                                                            <div class="heading_section">
+                                                                <h4><?php echo basename($gallery_view_item['image_url']); ?></h4>
                                                             </div>
                                                         </div>
                                                         <?php
