@@ -136,7 +136,7 @@
                                         <div class="white_shd full margin_bottom_30">
                                             <div class="full graph_head">
                                                 <div class="heading1 margin_0">
-                                                    <h2><?php echo $gallery_data['gallery_name']; ?></h2>
+                                                    <h2><i class="fa fa-image"></i> <?php echo $gallery_data['gallery_name']; ?></h2>
                                                 </div>
                                             </div>
                                             <div class="full gallery_section_inner">
