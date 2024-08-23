@@ -79,8 +79,7 @@ if (is_array($jobData)) {
     <!-- Mobile Menu start -->
     <?php include 'includes/mobile_view.php' ?>
     <!-- Mobile Menu end -->
-    <!-- Main Menu area start-->
-    <?php include 'includes/main_menu.php' ?>
+ 
 
     <!-- End Sale Statistic area-->
     <div class="main-content">

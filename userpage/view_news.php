@@ -15,11 +15,7 @@
     <!-- Start Header Top Area -->
     <?php include 'includes/navbar.php' ?>
     <!-- End Header Top Area -->
-    <!-- Mobile Menu start -->
-    <?php include 'includes/mobile_view.php' ?>
-    <!-- Mobile Menu end -->
-    <!-- Main Menu area start-->
-    <?php include 'includes/main_menu.php' ?>
+  
 
 
     <?php
