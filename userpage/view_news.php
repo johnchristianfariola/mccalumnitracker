@@ -61,10 +61,10 @@
             $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news_item['news_description'])));
             $news_title = htmlspecialchars($news_item['news_title']);
             ?>
+            
             <div class="breadcomb-area wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>">
                 <div class="container">
                     <div class="row">
-                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="main_card">
                                 <div class="news_card">
@@ -90,7 +90,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
