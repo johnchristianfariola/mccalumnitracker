@@ -10,8 +10,7 @@
 
 <body>
     <?php include "includes/navbar.php"; ?>
-    <?php include "includes/mobile_view.php"; ?>
-    <?php include "includes/main_menu.php"; ?>
+
 
     <?php
     require_once "../includes/firebaseRDB.php";
