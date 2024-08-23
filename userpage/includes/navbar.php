@@ -9,7 +9,7 @@
 
     <div class="nav-center">
         <ul>
-            <a href="home.php">
+            <a href="index.php">
                 <li class="line-bottom-visited  line1 "><img src="../images/logo/hompage_colored.png" alt=""></li>
             </a>
             <a href="view_news.php">
