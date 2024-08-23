@@ -8,49 +8,24 @@
     </div>
 
     <div class="nav-center">
-        <ul id="navList">
-            <a href="index.php">
-                <li class="line1"><img src="../images/logo/hompage_colored.png" alt=""></li>
+        <ul>
+            <a href="home.php">
+                <li class="line-bottom-visited  line1 "><img src="../images/logo/hompage_colored.png" alt=""></li>
             </a>
             <a href="view_news.php">
-                <li class="line1"><img src="../images/logo/video.png" alt=""></li>
+                <li class="line1 border-line-bottom"><img src="../images/logo/video.png" alt=""></li>
             </a>
             <a href="event_view.php">
-                <li class="line1"><img src="../images/logo/marketplaces.png" alt=""></li>
+                <li class="line1 border-line-bottom"><img src="../images/logo/marketplaces.png" alt=""></li>
             </a>
             <a href="job_view.php">
-                <li class="line1"><img src="../images/logo/peoples.png" alt=""></li>
+                <li class="line1 border-line-bottom"><img src="../images/logo/peoples.png" alt=""></li>
             </a>
             <a href="forum.php">
-                <li class="line1"><img src="../images/logo/menus.png" alt=""></li>
+                <li class="line1 border-line-bottom"><img src="../images/logo/menus.png" alt=""></li>
             </a>
+
         </ul>
-
-        <script>
-            // Function to set active link
-            function setActiveLink() {
-                const links = document.querySelectorAll('#navList li');
-                const activePage = localStorage.getItem('activePage');
-
-                links.forEach(link => {
-                    link.classList.remove('line-bottom-visited'); // Remove the active class
-                    if (link.querySelector('a').href === activePage) {
-                        link.classList.add('line-bottom-visited'); // Add the active class to the stored active page
-                    }
-                });
-            }
-
-            // Store the clicked link's URL
-            document.querySelectorAll('#navList a').forEach(item => {
-                item.addEventListener('click', function () {
-                    localStorage.setItem('activePage', this.href); // Save the URL of the clicked link
-                });
-            });
-
-            // Run the function to set the active link on page load
-            setActiveLink();
-        </script>
-
     </div>
 
     <div class="nav-right">
