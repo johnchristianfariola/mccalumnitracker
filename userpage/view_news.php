@@ -15,7 +15,7 @@
     <!-- Start Header Top Area -->
     <?php include 'includes/navbar.php' ?>
     <!-- End Header Top Area -->
-  
+
 
 
     <?php
@@ -64,6 +64,7 @@
             <div class="breadcomb-area wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>">
                 <div class="container">
                     <div class="row">
+                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="main_card">
                                 <div class="news_card">
@@ -89,6 +90,7 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -179,7 +181,7 @@
     <script src="js/dialog/dialog-active.js"></script>
     <!--  Custom JS-->
     <script>
-          $('#logoutBtn').on('click', function () {
+        $('#logoutBtn').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",
