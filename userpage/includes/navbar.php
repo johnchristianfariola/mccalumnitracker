@@ -142,7 +142,7 @@ $alumni_data = json_decode($alumni_data, true);
             </div>
             <div class="settings-links">
                 <img src="../images/logout.png" class="settings-icon">
-                <a href="logout.php">Logout <img src="../images/arrow.png" width="10px"></a>
+                <a href="../logout.php">Logout <img src="../images/arrow.png" width="10px"></a>
             </div>
         </div>
     </div>
