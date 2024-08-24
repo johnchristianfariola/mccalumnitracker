@@ -485,6 +485,14 @@ nav {
 
 }
 
+.nav-center svg {
+  width: 30px;
+  margin-right: 50px;
+  /* Adjust as needed */
+  position: relative;
+  left: 36px;
+}
+
 .nav-center img {
   width: 30px;
   margin-right: 50px;
