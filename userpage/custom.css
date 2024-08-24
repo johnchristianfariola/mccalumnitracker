@@ -758,10 +758,10 @@ nav {
 
 /*==============NEWS START HERE===================*/
 .main_card {
-  background-color: white;
+ 
   position: relative;
   padding: 20px; /* Optional: Add padding for better appearance */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for a card effect */
+
   border-radius: 15px;
   overflow: hidden; /* Ensure the image fits within the specified dimensions */
 }
@@ -1444,115 +1444,7 @@ ul {
 }
 
 /* News Card */
-.main_card {
-  background-color: white;
-  position: relative;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  overflow: hidden;
-}
 
-.news_card {
-  display: flex;
-  align-items: stretch;
-  gap: 20px;
-}
-
-.news_image {
-  flex: 0 0 200px;
-  overflow: hidden;
-}
-
-.news_image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.news_content {
-  flex: 1;
-  padding: 20px;
-}
-
-.news_content h3 {
-  border-bottom: 3px solid rgb(80, 80, 80);
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-}
-
-.border-bottom {
-  border-bottom: 2px solid black;
-  margin-bottom: 10px;
-  width: 98%;
-}
-
-.post_info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.post_info p {
-  margin: 0;
-}
-
-.date_posted {
-  margin-left: auto;
-}
-
-.description {
-  margin-top: 20px;
-}
-
-@media (max-width: 600px) {
-  .news_card {
-    flex-direction: column;
-  }
-
-  .news_image {
-    width: 100%;
-    height: auto;
-  }
-
-  .news_content {
-    padding: 20px 0;
-  }
-}
-
-/* Breadcomb List */
-.breadcomb-list .row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.breadcomb-wp {
-  display: flex;
-  align-items: center;
-}
-
-.breadcomb-icon {
-  margin-right: 15px;
-}
-
-.breadcomb-ctn {
-  flex-grow: 1;
-}
-
-.visited-content {
-  display: flex;
-}
-
-.uploader {
-  margin-right: 15px;
-}
-
-.date-uploaded {
-  text-align: right;
-}
 
 /* Event Page */
 .description {
