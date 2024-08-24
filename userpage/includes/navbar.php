@@ -26,7 +26,7 @@
         <ul>
             <a href="index.php" class="<?php echo isActive('index.php') ? 'line-bottom-visited' : ''; ?>">
                 <li class="line1 <?php echo isActive('index.php') ? 'border-line-bottom' : ''; ?>">
-                <img src="../images/logo/newspaper.png" alt="">
+                <img src="../images/logo/home1.png" alt="">
                 </li>
             </a>
             <a href="view_news.php" class="<?php echo isActive('view_news') ? 'line-bottom-visited' : ''; ?>">
@@ -36,25 +36,25 @@
             </a>
             <a href="event_view.php" class="<?php echo isActive('event') ? 'line-bottom-visited' : ''; ?>">
                 <li class="line1 <?php echo isActive('event') ? 'border-line-bottom' : ''; ?>">
-                <img src="../images/logo/newspaper.png" alt="">
+                <img src="../images/logo/calendar.png" alt="">
 
                 </li>
             </a>
             <a href="job_view.php" class="<?php echo isActive('job') ? 'line-bottom-visited' : ''; ?>">
                 <li class="line1 <?php echo isActive('job') ? 'border-line-bottom' : ''; ?>">
-                <img src="../images/logo/newspaper.png" alt="">
+                <img src="../images/logo/suitcase.png" alt="">
 
                 </li>
             </a>
             <a href="forum.php" class="<?php echo isActive('forum') ? 'line-bottom-visited' : ''; ?>">
                 <li class="line1 <?php echo isActive('forum') ? 'border-line-bottom' : ''; ?>">
-                <img src="../images/logo/newspaper.png" alt="">
+                <img src="../images/logo/chat.png" alt="">
 
                 </li>
             </a>
             <a href="view_gallery.php" class="<?php echo isActive('gallery') ? 'line-bottom-visited' : ''; ?>">
                 <li class="line1 <?php echo isActive('gallery') ? 'border-line-bottom' : ''; ?>">
-                <img src="../images/logo/newspaper.png" alt="">
+                <img src="../images/logo/photo-gallery.png" alt="">
 
                 </li>
             </a>

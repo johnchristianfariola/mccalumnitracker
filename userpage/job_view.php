@@ -131,8 +131,8 @@
 
 
     <!-- News items would be dynamically inserted here -->
-    <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1s">
-        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+    <div class="breadcomb-area " >
+        <div class="text-center " >
             <h6 class="section-title bg-white text-center  px-3">ACTIVE JOB</h6>
             <h1 class="mb-5">ACTIVE JOB</h1>
         </div>
@@ -177,8 +177,8 @@
     </div>
 
 
-    <div class="breadcomb-area wow fadeInUp" data-wow-delay="0.1s">
-        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+    <div class="breadcomb-area " >
+        <div class="text-center ">
             <h6 class="section-title bg-white text-center  px-3">ARCHIVE JOB</h6>
             <h1 class="mb-5">ARCHIVE JOB</h1>
         </div>
