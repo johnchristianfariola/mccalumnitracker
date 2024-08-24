@@ -40,7 +40,7 @@
             <div class="pd-left">
                 <div class="pd-row">
                     <!---PROFILE PICTURE-->
-                    <img src="../admin/<?php echo htmlspecialchars($current_user['profile_url'] ?? '../images/profile.png'); ?>"
+                    <img src="<?php echo htmlspecialchars($current_user['profile_url'] ?? '../images/profile.png'); ?>"
                         alt="Profile Picture" class="pd-image">
                     <div>
                         <h3><?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['middlename'] . ' ' . $current_user['lastname']); ?>
