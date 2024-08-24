@@ -113,7 +113,7 @@ $alumni_data = json_decode($alumni_data, true);
                     $user_data = $alumni_data[$user_id];
                     $profile_picture = isset($user_data['profile_picture']) ? $user_data['profile_picture'] : 'upload/default-pp.png';
                     $full_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
-                    echo '<img src="' . $profile_picture . '" alt="Profile Picture">';
+                    echo '<img src="../admin/' . $profile_picture . '" alt="Profile Picture">';
                     echo '<div class="">';
                     echo '<p>' . $full_name . '</p>';
                     echo '<a href="profile.php">See your profile</a>';
