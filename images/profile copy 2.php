@@ -438,7 +438,7 @@ $row = mysqli_fetch_array($user_query);
 
 	<!-----POFILE PAGE---->
 	<div class="profile-container">
-		<img src="images/cover.jpg" class="cover-img">
+		<img src="images/cover.jpg" class="	">
 		<div class="profile-details">
 			<div class="pd-left">
 				<div class="pd-row">
@@ -464,7 +464,7 @@ $row = mysqli_fetch_array($user_query);
 				<button type="button"> <img src="images/add-friends.png"> Friends</button>
 				<button type="button"> <img src="images/message.png"> Message</button>
 				<br>
-				<a href=""><img src="images/more.png"></a>
+				<a href=""><img src="../images/more.png"></a>
 			</div>
 		</div>
 
@@ -712,13 +712,13 @@ $row = mysqli_fetch_array($user_query);
 					</div>
 				</div>
 				<!-----------THIRD IMAGE----------->
-				
+
 				<!-----------FOURTH IMAGE----------->
-				
+
 				<!-----------FIFTH IMAGE----------->
-				
+
 				<!-----------SIXTH IMAGE----------->
-			
+
 
 				<div class="footer">
 					<p>Copright 2023 - for secure programming only</p>

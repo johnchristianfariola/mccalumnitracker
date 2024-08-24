@@ -2,7 +2,7 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: 'poppins', sans-serif;
+  font-family: "poppins", sans-serif;
   box-sizing: border-box;
 }
 
@@ -55,7 +55,6 @@
   border-radius: 50%;
   margin-top: 12px;
 }
-
 .pd-right button {
   background: var(--nav-color);
   border: 0;
@@ -68,21 +67,17 @@
   margin-left: 10px;
   cursor: pointer;
 }
-
 .pd-right button img {
   height: 15px;
   margin-right: 10px;
 }
-
 .pd-right button:first-child {
   background: #e4e6eb;
   color: #000;
 }
-
 .pd-right {
   text-align: right;
 }
-
 .pd-right a {
   background: var(--bg-color);
   border-radius: 3px;
@@ -90,7 +85,6 @@
   display: inline-flex;
   margin-top: 30px;
 }
-
 .pd-right a img {
   width: 20px;
 }
@@ -354,7 +348,7 @@ nav {
 }
 
 .online::after {
-  content: '';
+  content: "";
   width: 7px;
   height: 7px;
   border: var(--bg-color);
@@ -482,7 +476,6 @@ nav {
 .nav-center li {
   width: 93%;
   margin-right: 35px;
-
 }
 
 .nav-center svg {
@@ -513,10 +506,10 @@ nav {
 }
 
 .line-bottom-visited {
-  border-bottom: 4px solid #0866FF;
+  border-bottom: 4px solid #0866ff;
   border-radius: none;
 }
- 
+
 .line1 {
   padding-bottom: 5px;
   padding: 8px;
@@ -547,7 +540,6 @@ nav {
   width: 93%;
   position: relative;
   right: -30px;
-
 }
 
 .nav-right img {
@@ -559,7 +551,6 @@ nav {
 
 .nav-right {
   margin-right: -30px;
-
 }
 
 .background-circle {
@@ -569,21 +560,19 @@ nav {
 }
 
 .background-circle:before {
-  content: '';
+  content: "";
   position: absolute;
   top: 45%;
   left: 235%;
   transform: translate(-50%, -50%);
   width: 40px;
   /* Adjust the width and height as needed */
-  height: 40PX;
+  height: 40px;
   background-color: var(--web-wash);
   /* Replace with your desired background color */
   border-radius: 50%;
   z-index: -1;
 }
-
-
 
 /*--Nav-Left--*/
 
@@ -630,7 +619,7 @@ nav {
 }
 
 .online::after {
-  content: '';
+  content: "";
   width: 7px;
   height: 7px;
   border: 2px solid #fff;
@@ -683,23 +672,20 @@ nav {
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 4.5em; /* Adjust based on line height */
-  
 }
 
 .toggle-button {
   background-color: transparent; /* Transparent background */
-  color: black  ;
+  color: black;
   border: none;
   padding: 5px 10px;
   cursor: pointer;
-  
 }
 
 .expanded {
   -webkit-line-clamp: initial;
   max-height: none;
 }
-
 
 .card {
   border: 1px solid #ddd;
@@ -748,17 +734,15 @@ nav {
   display: flex;
   justify-content: space-between; /* To push items to the sides */
   align-items: center; /* Center items vertically */
-  
 }
-.job-timesced{
+.job-timesced {
   padding: 5px;
- border: 1px solid black;
+  border: 1px solid black;
   border-radius: 5px;
 }
 
 /*==============NEWS START HERE===================*/
 .main_card {
- 
   position: relative;
   padding: 20px; /* Optional: Add padding for better appearance */
 
@@ -823,12 +807,12 @@ nav {
   .news_card {
     flex-direction: column;
   }
-  
+
   .news_image {
     width: 100%;
     height: auto;
   }
-  
+
   .news_content {
     padding: 20px 0;
   }
@@ -865,7 +849,6 @@ nav {
   text-align: right;
 }
 
-
 /*===============EVENT PAGE START HERE===============*/
 
 .description {
@@ -888,14 +871,13 @@ nav {
   width: 100%;
   object-fit: cover;
   object-position: center;
-
 }
 
-.carousel-inner>.item>a>img,
-.carousel-inner>.item>img,
+.carousel-inner > .item > a > img,
+.carousel-inner > .item > img,
 .img-responsive,
-.thumbnail a>img,
-.thumbnail>img {
+.thumbnail a > img,
+.thumbnail > img {
   display: block;
   width: 100%;
   height: 100%;
@@ -933,8 +915,8 @@ nav {
   margin-left: 10px;
   margin-right: 10px;
   top: -30px;
-  -webkit-transition: .3s all;
-  transition: .3s all;
+  -webkit-transition: 0.3s all;
+  transition: 0.3s all;
   border-bottom: 3px solid #6a41ed;
 }
 
@@ -976,14 +958,22 @@ nav {
 .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-date,
 .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-location,
 .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-date,
-.probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-location {
+.probootstrap-featured-news-box:focus
+  .probootstrap-text
+  .probootstrap-location {
   color: rgba(255, 255, 255, 0.8);
 }
 
 .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-date i,
-.probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-location i,
+.probootstrap-featured-news-box:hover
+  .probootstrap-text
+  .probootstrap-location
+  i,
 .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-date i,
-.probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-location i {
+.probootstrap-featured-news-box:focus
+  .probootstrap-text
+  .probootstrap-location
+  i {
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -1025,12 +1015,11 @@ ul {
 }
 
 body {
-  font-family: 'Roboto', Arial, Helvetica, Sans-serif, Verdana;
+  font-family: "Roboto", Arial, Helvetica, Sans-serif, Verdana;
   background: #f7f7f9;
 }
 
 .comments-container {
-
   width: 768px;
 }
 
@@ -1051,7 +1040,7 @@ body {
 }
 
 .comments-list:before {
-  content: '';
+  content: "";
   width: 2px;
   height: 100%;
   background: #c7cacb;
@@ -1061,7 +1050,7 @@ body {
 }
 
 .comments-list:after {
-  content: '';
+  content: "";
   position: absolute;
   background: #c7cacb;
   bottom: 0;
@@ -1080,7 +1069,7 @@ body {
 }
 
 .reply-list li:before {
-  content: '';
+  content: "";
   width: 60px;
   height: 2px;
   background: #c7cacb;
@@ -1089,7 +1078,6 @@ body {
   left: -55px;
 }
 
-
 .comments-list li {
   margin-bottom: 15px;
   /* display: block;*/
@@ -1097,7 +1085,7 @@ body {
 }
 
 .comments-list li:after {
-  content: '';
+  content: "";
   display: block;
   clear: both;
   height: 0;
@@ -1116,7 +1104,7 @@ body {
   position: relative;
   z-index: 99;
   float: left;
-  border: 3px solid #FFF;
+  border: 3px solid #fff;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -1132,7 +1120,6 @@ body {
   background: white;
 }
 
-
 /*===============Custom Comment for Job=========================*/
 
 .job_img {
@@ -1146,7 +1133,7 @@ body {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
- /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
 }
 
 .comments-section h1 {
@@ -1270,7 +1257,6 @@ body {
 
 /* General Styles */
 
-
 a {
   color: #03658c;
   text-decoration: none;
@@ -1279,7 +1265,6 @@ a {
 ul {
   list-style-type: none;
 }
-
 
 /* Navigation Tabs */
 .nav-tabs li {
@@ -1445,7 +1430,6 @@ ul {
 
 /* News Card */
 
-
 /* Event Page */
 .description {
   display: -webkit-box;
@@ -1459,11 +1443,11 @@ ul {
 }
 
 .owl-carousel .owl-item img,
-.carousel-inner>.item>a>img,
-.carousel-inner>.item>img,
+.carousel-inner > .item > a > img,
+.carousel-inner > .item > img,
 .img-responsive,
-.thumbnail a>img,
-.thumbnail>img,
+.thumbnail a > img,
+.thumbnail > img,
 .fixed-dimension-img,
 .probootstrap-media img {
   display: block;
@@ -1487,7 +1471,7 @@ ul {
   margin-left: 10px;
   margin-right: 10px;
   top: -30px;
-  transition: .3s all;
+  transition: 0.3s all;
   border-bottom: 3px solid #6a41ed;
 }
 
@@ -1521,14 +1505,22 @@ ul {
 .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-date,
 .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-location,
 .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-date,
-.probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-location {
+.probootstrap-featured-news-box:focus
+  .probootstrap-text
+  .probootstrap-location {
   color: rgba(255, 255, 255, 0.8);
 }
 
 .probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-date i,
-.probootstrap-featured-news-box:hover .probootstrap-text .probootstrap-location i,
+.probootstrap-featured-news-box:hover
+  .probootstrap-text
+  .probootstrap-location
+  i,
 .probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-date i,
-.probootstrap-featured-news-box:focus .probootstrap-text .probootstrap-location i {
+.probootstrap-featured-news-box:focus
+  .probootstrap-text
+  .probootstrap-location
+  i {
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -1547,7 +1539,6 @@ ul {
   display: flex;
   align-items: center;
 }
-
 
 .post {
   display: flex;
@@ -1598,14 +1589,14 @@ ul {
 .share-count i,
 .comment-count i {
   margin-right: 5px;
-} 
+}
 .reply-list .comment-avatar {
   width: 50px;
   height: 50px;
 }
 
 .comment-main-level:after {
-  content: '';
+  content: "";
   width: 0;
   height: 0;
   display: block;
@@ -1623,33 +1614,30 @@ ul {
 
 .comments-list .comment-box:before,
 .comments-list .comment-box:after {
-  content: '';
+  content: "";
   height: 0;
   width: 0;
   position: absolute;
   display: block;
   border-width: 10px 12px 10px 0;
   border-style: solid;
-  border-color: transparent #EEEDEB;
+  border-color: transparent #eeedeb;
   top: 8px;
   left: -11px;
-
 }
 
 .comments-list .comment-box:before {
   border-width: 11px 13px 11px 0;
   border-color: transparent rgba(0, 0, 0, 0.05);
   left: -12px;
-
 }
 
 .reply-list .comment-box {
   width: 610px;
-
 }
 
 .comment-box .comment-head {
-  background: #EEEDEB;
+  background: #eeedeb;
   padding: 10px 12px;
   border-bottom: 1px solid red;
   overflow: hidden;
@@ -1663,7 +1651,7 @@ ul {
   margin-left: 14px;
   position: relative;
   top: 2px;
-  color: #A6A6A6;
+  color: #a6a6a6;
   cursor: pointer;
   -webkit-transition: color 0.3s ease;
   -o-transition: color 0.3s ease;
@@ -1695,7 +1683,7 @@ ul {
 }
 
 .comment-box .comment-content {
-  background: #FFF;
+  background: #fff;
   padding: 12px;
   font-size: 15px;
   color: #595959;
@@ -1714,9 +1702,9 @@ ul {
 }
 
 .comment-box .comment-name.by-author:after {
-  content: 'author';
+  content: "author";
   background: #03658c;
-  color: #FFF;
+  color: #fff;
   font-size: 12px;
   padding: 3px 5px;
   font-weight: 700;
@@ -1725,7 +1713,6 @@ ul {
   -moz-border-radius: 3px;
   border-radius: 3px;
 }
-
 
 /* New styles for reply functionality */
 /* Reply form styles */
@@ -1840,7 +1827,7 @@ ul {
   padding: 20px;
   height: 130px;
   width: 100%;
-  border: 1px solid #F2F2F2;
+  border: 1px solid #f2f2f2;
 }
 
 .center-message {
@@ -1866,97 +1853,95 @@ ul {
 }
 /* Unique CSS for the comment chatbox */
 #uniquePanelInfo {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #uniquePanelBody {
-    padding: 20px;
-    background-color: #f9f9f9;
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 
 #uniqueCommentTextarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 16px;
-    resize: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+  resize: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 #uniqueCommentTextarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
-    outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+  outline: none;
 }
 
-
 .btn-primary {
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
-
 #uniqueCommentList {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 #uniqueCommentList li {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
 }
 
 #uniqueCommentMainLevel {
-    display: flex;
-    align-items: flex-start;
+  display: flex;
+  align-items: flex-start;
 }
 
 #uniqueCommentAvatar img {
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    margin-right: 10px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
 }
 
 #uniqueCommentBox {
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
 }
 
 #uniqueCommentHead {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
 }
 
 #uniqueCommentName {
-    font-weight: bold;
-    color: #333;
+  font-weight: bold;
+  color: #333;
 }
 
 #uniqueCommentContent {
-    color: #666;
+  color: #666;
 }
 
 /*================Custom Comment for Dropdown Forum=================*/
@@ -1982,7 +1967,6 @@ ul {
   z-index: 1000;
   /* Ensure it appears above other content */
   transform: translate(-115px);
-
 }
 
 .dropdown-item {
@@ -2041,7 +2025,6 @@ ul {
   margin-bottom: 20px;
 }
 
-
 .add-comment-btn {
   background-color: #007bff;
   color: #fff;
@@ -2052,31 +2035,34 @@ ul {
   cursor: pointer;
 }
 
-
 .comments-section {
   margin-top: 20px;
   border-top: 1px solid #ddd;
   padding-top: 10px;
 }
 
-.comment, .reply {
+.comment,
+.reply {
   margin-bottom: 20px;
 }
 
-.comment-content, .reply-content {
+.comment-content,
+.reply-content {
   background-color: #f8f9fa;
   border-radius: 15px;
   padding: 15px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.comment-author, .reply-author {
+.comment-author,
+.reply-author {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.comment-avatar, .reply-author img {
+.comment-avatar,
+.reply-author img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -2094,12 +2080,14 @@ ul {
   font-size: 14px;
 }
 
-.comment-time, .reply-time {
+.comment-time,
+.reply-time {
   font-size: 12px;
   color: #6c757d;
 }
 
-.comment-text, .reply-text {
+.comment-text,
+.reply-text {
   margin-top: 10px;
   font-size: 15px;
   line-height: 1.5;
@@ -2107,7 +2095,6 @@ ul {
 
 .reply-section {
   margin-top: 10px;
-
 }
 
 .reply-btn {
@@ -2161,8 +2148,6 @@ ul {
   margin-left: 20px;
 }
 
-
-
 /*==================Forum Start Here===============*/
 
 .reaction-buttons {
@@ -2194,7 +2179,7 @@ ul {
 }
 
 .reaction-btn.active {
-  color: #4267B2;
+  color: #4267b2;
   background-color: #e7f3ff;
 }
 
@@ -2209,7 +2194,7 @@ ul {
 
 /* Specific colors for each reaction type */
 .reaction-btn[data-reaction="like"].active i {
-  color: #4267B2;
+  color: #4267b2;
 }
 
 .reaction-btn[data-reaction="love"].active i {
@@ -2234,82 +2219,82 @@ ul {
 
 /*===============Gallery Start Here================*/
 
-  /* Modernized Gallery Section */
-  .gallery_section_inner {
-    padding: 20px;
-    background-color: white;
+/* Modernized Gallery Section */
+.gallery_section_inner {
+  padding: 20px;
+  background-color: white;
 }
 
 .gallery_section_inner .column {
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .gallery_section_inner .column:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 .gallery_section_inner img {
-    width: 100%;
-    height: 200px;
-    /* Set a fixed height */
-    object-fit: cover;
-    /* Ensure images are scaled and cropped to fit */
-    display: block;
-    border-bottom: 2px solid #ddd;
+  width: 100%;
+  height: 200px;
+  /* Set a fixed height */
+  object-fit: cover;
+  /* Ensure images are scaled and cropped to fit */
+  display: block;
+  border-bottom: 2px solid #ddd;
 }
 
 .heading_section {
-    padding: 10px;
-    background: #1ed085;
-    color: #fff;
-    text-align: center;
-    font-size: 16px;
-    border-radius: 0 0 8px 8px;
-    margin-bottom: 20px;
+  padding: 10px;
+  background: #1ed085;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 20px;
 }
 
 .heading_section h4 {
-    margin: 0;
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  margin: 0;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .container-fluid {
-    padding: 0 15px;
+  padding: 0 15px;
 }
 
-@media  (max-width: 767px) {
-    .gallery_section_inner {
-        padding: 10px;
-    }
+@media (max-width: 767px) {
+  .gallery_section_inner {
+    padding: 10px;
+  }
 
-    .heading_section {
-        font-size: 14px;
-    }
+  .heading_section {
+    font-size: 14px;
+  }
 }
 
 .white_shd {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
 .graph_head {
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
 }
 
 .heading1 h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 600;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
 }
