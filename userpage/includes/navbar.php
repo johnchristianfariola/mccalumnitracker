@@ -116,7 +116,7 @@ $alumni_data = json_decode($alumni_data, true);
                     echo '<img src="' . $profile_url . '" alt="Profile Picture">';
                     echo '<div class="">';
                     echo '<p>' . $full_name . '</p>';
-                    echo '<a href="profile.php">See your profile</a>';
+                    echo '<a href="view_profile.php">See your profile</a>';
                     echo '</div>';
                 } else {
                     echo '<img src="upload/default-pp.png" alt="Default Profile Picture">';
@@ -130,7 +130,7 @@ $alumni_data = json_decode($alumni_data, true);
             <hr>
             <div class="settings-links">
                 <img src="../images/setting.png" class="settings-icon">
-                <a href="view_profile.php">Settings & Privacy <img src="../images/arrow.png" width="10px"></a>
+                <a href="update_profile_account.php">Settings & Privacy <img src="../images/arrow.png" width="10px"></a>
             </div>
             <div class="settings-links">
                 <img src="../images/help.png" class="settings-icon">
