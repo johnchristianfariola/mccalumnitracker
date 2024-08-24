@@ -90,8 +90,8 @@ $alumni_data = json_decode($alumni_data, true);
             if (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) {
                 $user_id = $_SESSION['user']['id'];
                 $user_data = $alumni_data[$user_id];
-                $profile_picture = isset($user_data['profile_picture']) ? $user_data['profile_picture'] : '../images/profile.jpg';
-                echo '<img src="' . $profile_picture . '" alt="Profile Picture">';
+                $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : '../images/profile.jpg';
+                echo '<img src="' . $profile_url . '" alt="Profile Picture">';
             } else {
                 echo '<img src="../images/profile.jpg" alt="Default Profile Picture">';
             }
@@ -111,9 +111,9 @@ $alumni_data = json_decode($alumni_data, true);
                 if (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) {
                     $user_id = $_SESSION['user']['id'];
                     $user_data = $alumni_data[$user_id];
-                    $profile_picture = isset($user_data['profile_picture']) ? $user_data['profile_picture'] : 'upload/default-pp.png';
+                    $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : 'upload/default-pp.png';
                     $full_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
-                    echo '<img src="../admin/' . $profile_picture . '" alt="Profile Picture">';
+                    echo '<img src="../admin/' . $profile_url . '" alt="Profile Picture">';
                     echo '<div class="">';
                     echo '<p>' . $full_name . '</p>';
                     echo '<a href="profile.php">See your profile</a>';
