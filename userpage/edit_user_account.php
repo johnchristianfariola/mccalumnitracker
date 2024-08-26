@@ -14,38 +14,18 @@ if (!$user_id) {
 // Prepare the data to be updated
 $update_data = [];
 
-// Update 'firstname' if provided
-if (!empty($_POST['firstname'])) {
-    $update_data['firstname'] = htmlspecialchars($_POST['firstname']);
+// Helper function to sanitize and validate input
+function sanitize_input($data) {
+    return htmlspecialchars(trim($data));
 }
 
-// Update 'middlename' if provided
-if (!empty($_POST['middlename'])) {
-    $update_data['middlename'] = htmlspecialchars($_POST['middlename']);
+// Update fields if provided
+$fields = ['firstname', 'middlename', 'lastname', 'birthdate', 'gender', 'civilstatus', 'state', 'city', 'barangay'];
+foreach ($fields as $field) {
+    if (!empty($_POST[$field])) {
+        $update_data[$field] = sanitize_input($_POST[$field]);
+    }
 }
-
-// Update 'lastname' if provided
-if (!empty($_POST['lastname'])) {
-    $update_data['lastname'] = htmlspecialchars($_POST['lastname']);
-}
-
-// Update 'birthdate' if provided
-if (!empty($_POST['birthdate'])) {
-    $update_data['birthdate'] = htmlspecialchars($_POST['birthdate']);
-}
-
-// Update 'gender' if provided
-if (!empty($_POST['gender'])) {
-    $update_data['gender'] = htmlspecialchars($_POST['gender']);
-}
-
-// Update 'civilstatus' if provided
-if (!empty($_POST['civilstatus'])) {
-    $update_data['civilstatus'] = htmlspecialchars($_POST['civilstatus']);
-}
-
-// The following fields are excluded as specified
-// 'region', 'province', 'city', 'barangay'
 
 // Check if there is any data to update
 if (empty($update_data)) {
@@ -54,7 +34,7 @@ if (empty($update_data)) {
 
 // Update the data in Firebase
 try {
-    $result = $firebase->update("alumni", $user_id, $update_data);
+    $result = $firebase->update("alumni/", $user_id, $update_data);
 
     if ($result) {
         echo 'Profile updated successfully';

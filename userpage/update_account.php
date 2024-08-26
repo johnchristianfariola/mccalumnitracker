@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    
+
     <?php include 'includes/header.php'; ?>
     <?php
     require_once '../includes/firebaseRDB.php';
@@ -537,215 +537,215 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const regionSelect = document.getElementById('regionSelect');
-    const provinceSelect = document.getElementById('provinceSelect');
-    const citySelect = document.getElementById('citySelect');
-    const barangaySelect = document.getElementById('barangaySelect');
-    let regionsData = [];
-    let provincesData = [];
-    let municipalitiesData = [];
-    let barangaysData = [];
+        const regionSelect = document.getElementById('regionSelect');
+        const provinceSelect = document.getElementById('provinceSelect');
+        const citySelect = document.getElementById('citySelect');
+        const barangaySelect = document.getElementById('barangaySelect');
+        let regionsData = [];
+        let provincesData = [];
+        let municipalitiesData = [];
+        let barangaysData = [];
 
-    // Fetch the JSON data for regions
-    fetch('json/regions.json')
-        .then(response => response.json())
-        .then(data => {
-            regionsData = data;
-            populateRegions();
-        })
-        .catch(error => {
-            console.error('Error loading regions:', error);
-            regionSelect.innerHTML = '<option value="">Error loading regions</option>';
+        // Fetch the JSON data for regions
+        fetch('json/regions.json')
+            .then(response => response.json())
+            .then(data => {
+                regionsData = data;
+                populateRegions();
+            })
+            .catch(error => {
+                console.error('Error loading regions:', error);
+                regionSelect.innerHTML = '<option value="">Error loading regions</option>';
+                $(regionSelect).selectpicker('refresh');
+            });
+
+        // Fetch the JSON data for provinces
+        fetch('json/provinces.json')
+            .then(response => response.json())
+            .then(data => {
+                provincesData = data;
+            })
+            .catch(error => {
+                console.error('Error loading provinces:', error);
+            });
+
+        // Fetch the JSON data for municipalities
+        fetch('json/municipalities.json')
+            .then(response => response.json())
+            .then(data => {
+                municipalitiesData = data;
+            })
+            .catch(error => {
+                console.error('Error loading municipalities:', error);
+            });
+
+        // Fetch the JSON data for barangays
+        fetch('json/barangays.json')
+            .then(response => response.json())
+            .then(data => {
+                barangaysData = data;
+            })
+            .catch(error => {
+                console.error('Error loading barangays:', error);
+            });
+
+        function populateRegions() {
+            regionSelect.innerHTML = '<option value="">Select a region</option>';
+            regionsData.forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.designation;
+                option.textContent = `${region.designation} - ${region.name}`;
+                regionSelect.appendChild(option);
+            });
             $(regionSelect).selectpicker('refresh');
-        });
-
-    // Fetch the JSON data for provinces
-    fetch('json/provinces.json')
-        .then(response => response.json())
-        .then(data => {
-            provincesData = data;
-        })
-        .catch(error => {
-            console.error('Error loading provinces:', error);
-        });
-
-    // Fetch the JSON data for municipalities
-    fetch('json/municipalities.json')
-        .then(response => response.json())
-        .then(data => {
-            municipalitiesData = data;
-        })
-        .catch(error => {
-            console.error('Error loading municipalities:', error);
-        });
-
-    // Fetch the JSON data for barangays
-    fetch('json/barangays.json')
-        .then(response => response.json())
-        .then(data => {
-            barangaysData = data;
-        })
-        .catch(error => {
-            console.error('Error loading barangays:', error);
-        });
-
-    function populateRegions() {
-        regionSelect.innerHTML = '<option value="">Select a region</option>';
-        regionsData.forEach(region => {
-            const option = document.createElement('option');
-            option.value = region.designation;
-            option.textContent = `${region.designation} - ${region.name}`;
-            regionSelect.appendChild(option);
-        });
-        $(regionSelect).selectpicker('refresh');
-    }
-
-    function populateProvinces(regionDesignation) {
-        provinceSelect.innerHTML = '<option value="">Select a province</option>';
-        const filteredProvinces = provincesData.filter(province => province.region === regionDesignation);
-
-        let currentStateSelected = false;
-
-        filteredProvinces.forEach(province => {
-            const option = document.createElement('option');
-            option.value = province.name;
-            option.textContent = province.name;
-
-            if (province.name === '<?php echo $current_state; ?>') {
-                option.selected = true;
-                currentStateSelected = true;
-            }
-
-            provinceSelect.appendChild(option);
-        });
-
-        if (!currentStateSelected && '<?php echo $current_state; ?>' !== '') {
-            const option = document.createElement('option');
-            option.value = '<?php echo $current_state; ?>';
-            option.textContent = '<?php echo $current_state; ?>';
-            option.selected = true;
-            provinceSelect.appendChild(option);
         }
 
-        $(provinceSelect).selectpicker('refresh');
+        function populateProvinces(regionDesignation) {
+            provinceSelect.innerHTML = '<option value="">Select a province</option>';
+            const filteredProvinces = provincesData.filter(province => province.region === regionDesignation);
 
-    }
+            let currentStateSelected = false;
 
-    function populateMunicipalities(provinceName) {
-        citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
-        const filteredMunicipalities = municipalitiesData.filter(municipality => municipality.province === provinceName);
+            filteredProvinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province.name;
+                option.textContent = province.name;
 
-        let currentCitySelected = false;
+                if (province.name === '<?php echo $current_state; ?>') {
+                    option.selected = true;
+                    currentStateSelected = true;
+                }
 
-        filteredMunicipalities.forEach(municipality => {
-            const option = document.createElement('option');
-            option.value = municipality.name;
-            option.textContent = municipality.name;
+                provinceSelect.appendChild(option);
+            });
 
-            if (municipality.name === '<?php echo $current_city; ?>') {
+            if (!currentStateSelected && '<?php echo $current_state; ?>' !== '') {
+                const option = document.createElement('option');
+                option.value = '<?php echo $current_state; ?>';
+                option.textContent = '<?php echo $current_state; ?>';
                 option.selected = true;
-                currentCitySelected = true;
+                provinceSelect.appendChild(option);
             }
 
-            citySelect.appendChild(option);
-        });
+            $(provinceSelect).selectpicker('refresh');
 
-        // If the current city is not in the list of municipalities for the selected province,
-        // add it as an option
-        if (!currentCitySelected && '<?php echo $current_city; ?>' !== '') {
-            const option = document.createElement('option');
-            option.value = '<?php echo $current_city; ?>';
-            option.textContent = '<?php echo $current_city; ?>';
-            option.selected = true;
-            citySelect.appendChild(option);
         }
 
-        $(citySelect).selectpicker('refresh');
-    }
+        function populateMunicipalities(provinceName) {
+            citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
+            const filteredMunicipalities = municipalitiesData.filter(municipality => municipality.province === provinceName);
 
-    function populateBarangays(cityName) {
-        barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
-        const filteredBarangays = barangaysData.filter(barangay => barangay.citymun === cityName);
+            let currentCitySelected = false;
 
-        let currentBarangaySelected = false;
+            filteredMunicipalities.forEach(municipality => {
+                const option = document.createElement('option');
+                option.value = municipality.name;
+                option.textContent = municipality.name;
 
-        filteredBarangays.forEach(barangay => {
-            const option = document.createElement('option');
-            option.value = barangay.name;
-            option.textContent = barangay.name;
+                if (municipality.name === '<?php echo $current_city; ?>') {
+                    option.selected = true;
+                    currentCitySelected = true;
+                }
 
-            if (barangay.name === '<?php echo $current_barangay; ?>') {
+                citySelect.appendChild(option);
+            });
+
+            // If the current city is not in the list of municipalities for the selected province,
+            // add it as an option
+            if (!currentCitySelected && '<?php echo $current_city; ?>' !== '') {
+                const option = document.createElement('option');
+                option.value = '<?php echo $current_city; ?>';
+                option.textContent = '<?php echo $current_city; ?>';
                 option.selected = true;
-                currentBarangaySelected = true;
+                citySelect.appendChild(option);
             }
 
-            barangaySelect.appendChild(option);
-        });
-
-        // If the current barangay is not in the list of barangays for the selected city,
-        // add it as an option
-        if (!currentBarangaySelected && '<?php echo $current_barangay; ?>' !== '') {
-            const option = document.createElement('option');
-            option.value = '<?php echo $current_barangay; ?>';
-            option.textContent = '<?php echo $current_barangay; ?>';
-            option.selected = true;
-            barangaySelect.appendChild(option);
+            $(citySelect).selectpicker('refresh');
         }
 
-        $(barangaySelect).selectpicker('refresh');
-    }
+        function populateBarangays(cityName) {
+            barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
+            const filteredBarangays = barangaysData.filter(barangay => barangay.citymun === cityName);
 
-    regionSelect.addEventListener('change', (event) => {
-        const selectedRegion = event.target.value;
-        provinceSelect.innerHTML = '<option value="">Select a province</option>';
-        citySelect.innerHTML = '<option value="">Select a province first</option>';
-        barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            let currentBarangaySelected = false;
 
-        if (selectedRegion) {
-            populateProvinces(selectedRegion);
-        } else {
-            provinceSelect.innerHTML = '<option value="">Select a region first</option>';
+            filteredBarangays.forEach(barangay => {
+                const option = document.createElement('option');
+                option.value = barangay.name;
+                option.textContent = barangay.name;
+
+                if (barangay.name === '<?php echo $current_barangay; ?>') {
+                    option.selected = true;
+                    currentBarangaySelected = true;
+                }
+
+                barangaySelect.appendChild(option);
+            });
+
+            // If the current barangay is not in the list of barangays for the selected city,
+            // add it as an option
+            if (!currentBarangaySelected && '<?php echo $current_barangay; ?>' !== '') {
+                const option = document.createElement('option');
+                option.value = '<?php echo $current_barangay; ?>';
+                option.textContent = '<?php echo $current_barangay; ?>';
+                option.selected = true;
+                barangaySelect.appendChild(option);
+            }
+
+            $(barangaySelect).selectpicker('refresh');
+        }
+
+        regionSelect.addEventListener('change', (event) => {
+            const selectedRegion = event.target.value;
+            provinceSelect.innerHTML = '<option value="">Select a province</option>';
             citySelect.innerHTML = '<option value="">Select a province first</option>';
             barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-        }
 
-        $(provinceSelect).selectpicker('refresh');
-        $(citySelect).selectpicker('refresh');
-        $(barangaySelect).selectpicker('refresh');
-    });
+            if (selectedRegion) {
+                populateProvinces(selectedRegion);
+            } else {
+                provinceSelect.innerHTML = '<option value="">Select a region first</option>';
+                citySelect.innerHTML = '<option value="">Select a province first</option>';
+                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            }
 
-    provinceSelect.addEventListener('change', (event) => {
-        const selectedProvince = event.target.value;
-        citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
-        barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            $(provinceSelect).selectpicker('refresh');
+            $(citySelect).selectpicker('refresh');
+            $(barangaySelect).selectpicker('refresh');
+        });
 
-        if (selectedProvince) {
-            populateMunicipalities(selectedProvince);
-        } else {
-            citySelect.innerHTML = '<option value="">Select a province first</option>';
+        provinceSelect.addEventListener('change', (event) => {
+            const selectedProvince = event.target.value;
+            citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
             barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-        }
 
-        $(citySelect).selectpicker('refresh');
-        $(barangaySelect).selectpicker('refresh');
+            if (selectedProvince) {
+                populateMunicipalities(selectedProvince);
+            } else {
+                citySelect.innerHTML = '<option value="">Select a province first</option>';
+                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            }
+
+            $(citySelect).selectpicker('refresh');
+            $(barangaySelect).selectpicker('refresh');
+        });
+
+        citySelect.addEventListener('change', (event) => {
+            const selectedCity = event.target.value;
+            barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
+
+            if (selectedCity) {
+                populateBarangays(selectedCity);
+            } else {
+                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            }
+
+            $(barangaySelect).selectpicker('refresh');
+        });
+
+        barangaySelect.addEventListener('change', (event) => {
+            console.log('Selected barangay:', event.target.value);
+        });
     });
-
-    citySelect.addEventListener('change', (event) => {
-        const selectedCity = event.target.value;
-        barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
-
-        if (selectedCity) {
-            populateBarangays(selectedCity);
-        } else {
-            barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-        }
-
-        $(barangaySelect).selectpicker('refresh');
-    });
-
-    barangaySelect.addEventListener('change', (event) => {
-        console.log('Selected barangay:', event.target.value);
-    });
-});
 
 </script>
