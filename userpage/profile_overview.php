@@ -39,7 +39,7 @@
 
 
     <!-----PROFILE PAGE---->
-   <?php include 'includes/sidebar.php';?>
+    <?php include 'includes/sidebar.php'; ?>
 
     <div class="profile-content">
         <div id="personal-info" class="profile-section">
@@ -71,46 +71,56 @@
 
 
                 <div class="post-container">
-    <div class="profile-image-container">
-        <img src="<?php echo getValue($current_user, 'profile_url'); ?>" alt="Profile Picture"
-            onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
-    </div>  
-    <div class="profile-info">
-        <!-- Personal Info Column -->
-        <div class="personal-info">
-            <h3>Personal Info</h3>
-            <p><strong>Name:</strong> <?php echo getValue($current_user, 'auxiliaryname') . ' ' . getValue($current_user, 'firstname') . ' ' . getValue($current_user, 'middlename') . ' ' . getValue($current_user, 'lastname'); ?></p>
-            <p><strong>Birthday:</strong> <?php echo getValue($current_user, 'birthdate'); ?></p>
-            <p><strong>Gender:</strong> <?php echo getValue($current_user, 'gender'); ?></p>
-            <p><strong>Address:</strong> <?php echo getValue($current_user, 'addressline1'); ?></p>
-            <p><strong>Civil Status:</strong> <?php echo getValue($current_user, 'civilstatus'); ?></p>
-            <p><strong>Student ID:</strong> <?php echo getValue($current_user, 'studentid'); ?></p>
-        </div>
+                    <div class="profile-image-container">
+                        <img src="<?php echo getValue($current_user, 'profile_url'); ?>" alt="Profile Picture"
+                            onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                    </div>
+                    <div class="profile-info">
+                        <!-- Personal Info Column -->
+                        <div class="personal-info">
+                            <h3>Personal Info</h3>
+                            <p><strong>Name:</strong>
+                                <?php echo getValue($current_user, 'auxiliaryname') . ' ' . getValue($current_user, 'firstname') . ' ' . getValue($current_user, 'middlename') . ' ' . getValue($current_user, 'lastname'); ?>
+                            </p>
+                            <p><strong>Birthday:</strong> <?php echo getValue($current_user, 'birthdate'); ?></p>
+                            <p><strong>Gender:</strong> <?php echo getValue($current_user, 'gender'); ?></p>
+                            <p><strong>Address:</strong> <?php echo getValue($current_user, 'addressline1'); ?></p>
+                            <p><strong>Civil Status:</strong> <?php echo getValue($current_user, 'civilstatus'); ?></p>
+                            <p><strong>Student ID:</strong> <?php echo getValue($current_user, 'studentid'); ?></p>
+                        </div>
 
-        <!-- Employment Info Column -->
-        <div class="employment-info">
-            <h3>Employment Info</h3>
-            <p><strong>Status:</strong> <span class=" btn-warning notika-btn-warning" style="padding:5px 10px 5px 10px; border-radius:10px"><?php echo getValue($current_user, 'work_status'); ?></span> </p>
-            <p><strong>Company:</strong> <?php echo getValue($current_user, 'name_company'); ?></p>
-            <p><strong>Position:</strong> <?php echo getValue($current_user, 'work_position'); ?></p>
-            <p><strong>Start Date:</strong> <?php echo getValue($current_user, 'first_employment_date'); ?></p>
-            <p><strong>Work Status:</strong> <?php echo getValue($current_user, 'work_employment_status'); ?></p>
-            <p><strong>Work Classification:</strong> <?php echo getValue($current_user, 'work_classification'); ?></p>
-            <p><strong>Monthly Income:</strong> <?php echo getValue($current_user, 'current_monthly_income'); ?></p>
-            <p><strong>Job Satisfaction:</strong> <?php echo getValue($current_user, 'job_satisfaction'); ?></p>
-        </div>
+                        <!-- Employment Info Column -->
+                        <div class="employment-info">
+                            <h3>Employment Info</h3>
+                            <p><strong>Status:</strong> <span class=" btn-warning notika-btn-warning"
+                                    style="padding:5px 10px 5px 10px; border-radius:10px"><?php echo getValue($current_user, 'work_status'); ?></span>
+                            </p>
+                            <p><strong>Company:</strong> <?php echo getValue($current_user, 'name_company'); ?></p>
+                            <p><strong>Position:</strong> <?php echo getValue($current_user, 'work_position'); ?></p>
+                            <p><strong>Start Date:</strong>
+                                <?php echo getValue($current_user, 'first_employment_date'); ?></p>
+                            <p><strong>Work Status:</strong>
+                                <?php echo getValue($current_user, 'work_employment_status'); ?></p>
+                            <p><strong>Work Classification:</strong>
+                                <?php echo getValue($current_user, 'work_classification'); ?></p>
+                            <p><strong>Monthly Income:</strong>
+                                <?php echo getValue($current_user, 'current_monthly_income'); ?></p>
+                            <p><strong>Job Satisfaction:</strong>
+                                <?php echo getValue($current_user, 'job_satisfaction'); ?></p>
+                        </div>
 
-        <!-- Contact Info Column -->
-        <div class="contact-info">
-            <h3>Contact Info</h3>
-            <p><strong>Email:</strong> <?php echo getValue($current_user, 'email'); ?></p>
-            <p><strong>Phone Number:</strong> <?php echo getValue($current_user, 'contactnumber'); ?></p>
-            <p><strong>City:</strong> <?php echo getValue($current_user, 'city'); ?></p>
-            <p><strong>State:</strong> <?php echo getValue($current_user, 'state'); ?></p>
-            <p><strong>Zip Code:</strong> <?php echo getValue($current_user, 'zipcode'); ?></p>
-        </div>
-    </div>
-</div>
+                        <!-- Contact Info Column -->
+                        <div class="contact-info">
+                            <h3>Contact Info</h3>
+                            <p><strong>Email:</strong> <?php echo getValue($current_user, 'email'); ?></p>
+                            <p><strong>Phone Number:</strong> <?php echo getValue($current_user, 'contactnumber'); ?>
+                            </p>
+                            <p><strong>City:</strong> <?php echo getValue($current_user, 'city'); ?></p>
+                            <p><strong>State:</strong> <?php echo getValue($current_user, 'state'); ?></p>
+                            <p><strong>Zip Code:</strong> <?php echo getValue($current_user, 'zipcode'); ?></p>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 

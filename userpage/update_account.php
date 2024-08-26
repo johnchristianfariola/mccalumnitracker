@@ -13,6 +13,10 @@
     $alumni_data = $firebase->retrieve("alumni");
     $alumni_data = json_decode($alumni_data, true);
 
+
+    $categoriesData = $firebase->retrieve('category');
+    $categories = json_decode($categoriesData, true);
+
     // Assuming you have the current user's ID stored in a session variable
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
@@ -27,13 +31,94 @@
     {
         return isset($array[$key]) && !empty($array[$key]) ? $array[$key] : "N/A";
     }
+
+    // Retrieve the birthdate from the user data
+    $birthdate = getValue($current_user, 'birthdate');
+
+    // Convert the date from YYYY-MM-DD to DD/MM/YYYY
+    $birthdateFormatted = date("d/m/Y", strtotime($birthdate));
+
+    // Retrieve the first employment date from the user data
+    $firstEmploymentDate = getValue($current_user, 'first_employment_date');
+
+    // Replace hyphens with slashes
+    $firstEmploymentDateFormatted = str_replace('-', '/', $firstEmploymentDate);
+
+    // Retrieve the date for current employment from the user data
+    $currentEmploymentDate = getValue($current_user, 'date_for_current_employment');
+
+    // Replace hyphens with slashes
+    $currentEmploymentDateFormatted = str_replace('-', '/', $currentEmploymentDate);
+
+    // Retrieve the current monthly income from the user data
+    $monthlyIncome = getValue($current_user, 'current_monthly_income');
+
+    // Format the income as a decimal with commas and two decimal places
+    $formattedIncome = number_format($monthlyIncome, 2);
     ?>
-    <link rel="stylesheet" href="css/bootstrap-select/bootstrap-select.css">
+
     <style>
         .dropup .dropdown-menu {
             top: auto;
             bottom: 100%;
             margin-bottom: 5px;
+        }
+
+        /* Modern and GUI-friendly styles for post-container */
+
+
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #f4f4f4;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Profile Content Styles */
+        .profile-content {
+            margin-left: 250px;
+            /* Adjust according to sidebar width */
+            padding: 20px;
+            width: calc(100% - 250px);
+            /* Ensure it takes the full width minus the sidebar width */
+        }
+
+        .post-col {
+            width: 100%;
+            /* Ensure it uses the full width of .profile-content */
+            box-sizing: border-box;
+            /* Include padding and border in the element's total width */
+        }
+
+
+        .profile-section {
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -49,385 +134,355 @@
     <?php include 'includes/sidebar.php'; ?>
 
     <div class="profile-content">
-        <div id="personal-info" class="profile-section">
-            <h3>Personal Information</h3>
-
-
-
-            <div class="post-col" style="width:100% !important">
-
-
-                <!-- Post Section -->
-
-
-                <div class="post-container">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <label for="">First Name</label>
-                            <div class="form-group">
-                                <div class="nk-int-st">
-                                    <input type="text" class="form-control" placeholder="col-lg-4">
+        <form id="updateProfileForm" action="edit_user_account.php" method="POST">
+            <div id="personal-info" class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="post-col" style="width:100% !important">
+                    <!-- Post Section -->
+                    <div class="post-container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <label for="firstname">First Name</label>
+                                <div class="form-group">
+                                    <div class="nk-int-st">
+                                        <input type="text" id="firstname" class="form-control" placeholder="Firstname"
+                                            value="<?php echo getValue($current_user, 'firstname'); ?>">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="">Middle Name</label>
-                                <div class="nk-int-st">
-                                    <input type="text" class="form-control" placeholder="col-lg-4">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="middlename">Middle Name</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="middlename" class="form-control" placeholder="Middlename"
+                                            value="<?php echo getValue($current_user, 'middlename'); ?>">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="">Last Name</label>
-                                <div class="nk-int-st">
-                                    <input type="text" class="form-control" placeholder="col-lg-4">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="lastname">Last Name</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="lastname" class="form-control" placeholder="Lastname"
+                                            value="<?php echo getValue($current_user, 'lastname'); ?>">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="">Birth Date</label>
-                                <div class="nk-int-st">
-                                    <input type="text" class="form-control" data-mask="99/99/9999"
-                                        placeholder="dd/mm/yyyy">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="regionSelect">Region</label>
+                                    <div class="nk-int-st">
+                                        <select id="regionSelect" class="form-control selectpicker"
+                                            data-live-search="true">
+                                            <option value="">Loading regions...</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="">Gender</label>
-                                <div class="nk-int-st ">
-                                    <select class="form-control selectpicker">
-                                        <option>Male</option>
-                                        <option>Female</option>
-
-                                    </select>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="provinceSelect">Province</label>
+                                    <div class="nk-int-st">
+                                        <select id="provinceSelect" class="form-control selectpicker"
+                                            data-live-search="true">
+                                            <option value="">Select a region first</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="">Address</label>
-                                <div class="nk-int-st">
-                                    <input type="text" class="form-control" placeholder="col-lg-4">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="citySelect">City/Municipality</label>
+                                    <div class="nk-int-st">
+                                        <select id="citySelect" class="form-control selectpicker"
+                                            data-live-search="true">
+                                            <option value="">Select a province first</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="">Civil Status</label>
-                                <div class="nk-int-st ">
-                                    <select class="form-control selectpicker">
-                                        <option>Single</option>
-                                        <option>Married</option>
-
-                                    </select>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="barangaySelect">Barangay</label>
+                                    <div class="nk-int-st">
+                                        <select id="barangaySelect" class="form-control selectpicker"
+                                            data-live-search="true">
+                                            <option value="">Select a city/municipality first</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            <h3>Employement Information</h3>
-
-
-
-            <div class="post-col" style="width:100% !important">
-
-
-                <!-- Post Section -->
-
-
-                <div class="post-container">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <label for="work_status">Employment Status</label>
-                            <div class="form-group">
-                                <div class="nk-int-st">
-                                    <select id="work_status" class="form-control selectpicker">
-                                        <option>Select Status</option>
-                                        <option>Employed</option>
-                                        <option>Unemployed</option>
-                                    </select>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="birthdate">Birth Date</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="birthdate" class="form-control" data-mask="99/99/9999"
+                                            placeholder="dd/mm/yyyy" value="<?php echo $birthdateFormatted; ?>">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="first_employment_date">First Employment Date</label>
-                                <div class="nk-int-st">
-                                    <input type="text" class="form-control" data-mask="99/99/9999"
-                                        placeholder="dd/mm/yyyy">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="gender">Gender</label>
+                                    <div class="nk-int-st">
+                                        <select id="gender" class="form-control selectpicker">
+                                            <option value="Male" <?php echo (getValue($current_user, 'gender') == 'Male') ? 'selected' : ''; ?>>Male</option>
+                                            <option value="Female" <?php echo (getValue($current_user, 'gender') == 'Female') ? 'selected' : ''; ?>>Female</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="current_employment_date">Date for Current Employment</label>
-                                <div class="nk-int-st">
-                                    <input type="text" class="form-control" data-mask="99/99/9999"
-                                        placeholder="dd/mm/yyyy">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="company_name">Name of Company</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="company_name" class="form-control"
-                                        placeholder="Company Name">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="employment_location">Employment Location</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="employment_location" class="form-control"
-                                        placeholder="Location">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="type_of_work">Type of Work</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="type_of_work" class="form-control"
-                                        placeholder="Type of Work">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="work_classification">Work Classification</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="work_classification" class="form-control"
-                                        placeholder="Classification">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="work_position">Work Position</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="work_position" class="form-control" placeholder="Position">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="monthly_income">Current Monthly Income</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="monthly_income" class="form-control" placeholder="Income">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="job_satisfaction">Job Satisfaction</label>
-                                <div class="nk-int-st dropup">
-                                    <select id="job_satisfaction" class="form-control selectpicker"
-                                        data-live-search="true">
-                                        <option>Very Satisfied</option>
-                                        <option>Satisfied</option>
-                                        <option>Neutral</option>
-                                        <option>Dissatisfied</option>
-                                        <option>Very Dissatisfied</option>
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="work_related">Work Related to Course</label>
-                                <div class="nk-int-st">
-                                    <select id="work_related" class="form-control selectpicker" data-live-search="true">
-                                        <option>YES</option>
-                                        <option>NO</option>
-
-                                    </select>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="civilstatus">Civil Status</label>
+                                    <div class="nk-int-st">
+                                        <select id="civilstatus" class="form-control selectpicker">
+                                            <option value="Single" <?php echo (getValue($current_user, 'civilstatus') == 'Single') ? 'selected' : ''; ?>>Single</option>
+                                            <option value="Married" <?php echo (getValue($current_user, 'civilstatus') == 'Married') ? 'selected' : ''; ?>>Married</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
-            </div>
-
-            <h3>Contact</h3>
-
-
-
-            <div class="post-col" style="width:100% !important">
-
-
-                <!-- Post Section -->
-
-
-                <div class="post-container">
-                    <div class="row">
-                        <!-- Contact Number -->
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="contactnumber">Contact Number</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="contactnumber" class="form-control" value="9092013785"
-                                        placeholder="Contact Number">
+                <h3>Contact</h3>
+                <div class="post-col" style="width:100% !important">
+                    <!-- Post Section -->
+                    <div class="post-container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="contactnumber">Contact Number</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="contactnumber" class="form-control"
+                                            value="<?php echo getValue($current_user, 'contactnumber'); ?>"
+                                            placeholder="Contact Number">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="contactnumber" class="form-control" value="9092013785"
-                                        placeholder="Contact Number">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="reserve_email">Email</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="reserve_email" class="form-control"
+                                            value="<?php echo getValue($current_user, 'reserve_email'); ?>"
+                                            placeholder="Email">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Address -->
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="addressline1">Address</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="addressline1" class="form-control"
-                                        value="Kodia, Madridejos, Cebu" placeholder="Address">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="addressline1">Address</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="addressline1" class="form-control"
+                                            value="<?php echo getValue($current_user, 'addressline1'); ?>"
+                                            placeholder="Address">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-
-
-                        <!-- City -->
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-    <div class="form-group">
-        <label for="region">Region</label>
-        <div class="nk-int-st">
-            <select id="regionSelect" class="form-control selectpicker" data-live-search="true">
-                <option value="">Select a region</option>
-            </select>
-        </div>
-    </div>
-</div>
-<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-    <div class="form-group">
-        <label for="province">Province</label>
-        <div class="nk-int-st">
-            <select id="provinceSelect" class="form-control selectpicker" data-live-search="true">
-                <option value="">Select a region first</option>
-            </select>
-        </div>
-    </div>
-</div>
-<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-    <div class="form-group">
-        <label for="city">City/Municipality</label>
-        <div class="nk-int-st">
-            <select id="citySelect" class="form-control selectpicker" data-live-search="true">
-                <option value="">Select a province first</option>
-            </select>
-        </div>
-    </div>
-</div>
-
-                        <!-- Zip Code -->
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <div class="form-group">
-                                <label for="zipcode">Zip Code</label>
-                                <div class="nk-int-st">
-                                    <input type="text" id="zipcode" class="form-control" value="6053"
-                                        placeholder="Zip Code">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="zipcode">Zip Code</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="zipcode" class="form-control"
+                                            value="<?php echo getValue($current_user, 'zipcode'); ?>"
+                                            placeholder="Zip Code">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
 
+                <h3>Employment Information</h3>
+                <div class="post-col" style="width:100% !important">
+                    <!-- Post Section -->
+                    <div class="post-container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="work_status">Employment Status</label>
+                                    <div class="nk-int-st">
+                                        <select id="work_status" class="form-control selectpicker">
+                                            <option>Select Status</option>
+                                            <option value="Employed" <?php echo (getValue($current_user, 'work_status') == 'Employed') ? 'selected' : ''; ?>>Employed</option>
+                                            <option value="Unemployed" <?php echo (getValue($current_user, 'work_status') == 'Unemployed') ? 'selected' : ''; ?>>Unemployed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="first_employment_date">First Employment Date</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="first_employment_date" class="form-control"
+                                            data-mask="99/99/9999" placeholder="dd/mm/yyyy"
+                                            value="<?php echo $firstEmploymentDateFormatted; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="current_employment_date">Current Employment Date</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="current_employment_date" class="form-control"
+                                            data-mask="99/99/9999" placeholder="dd/mm/yyyy"
+                                            value="<?php echo $currentEmploymentDateFormatted; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="company_name">Company Name</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="company_name" class="form-control"
+                                            value="<?php echo getValue($current_user, 'company_name'); ?>"
+                                            placeholder="Company Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="employment_location">Employment Location</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="employment_location" class="form-control"
+                                            value="<?php echo getValue($current_user, 'employment_location'); ?>"
+                                            placeholder="Employment Location">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="type_of_work">Type of Work</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="type_of_work" class="form-control"
+                                            value="<?php echo getValue($current_user, 'type_of_work'); ?>"
+                                            placeholder="Type of Work">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="work_position">Position</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="work_position" class="form-control"
+                                            value="<?php echo getValue($current_user, 'work_position'); ?>"
+                                            placeholder="Position">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="employment_status">Employment Status</label>
+                                    <div class="nk-int-st">
+                                        <select id="employment_status" class="form-control selectpicker">
+                                            <option>Select Status</option>
+                                            <option value="Active" <?php echo (getValue($current_user, 'employment_status') == 'Active') ? 'selected' : ''; ?>>Active</option>
+                                            <option value="Archive" <?php echo (getValue($current_user, 'employment_status') == 'Archive') ? 'selected' : ''; ?>>Archive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="monthly_income">Monthly Income</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="monthly_income" class="form-control"
+                                            value="<?php echo getValue($current_user, 'monthly_income'); ?>"
+                                            placeholder="Monthly Income">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="job_satisfaction">Job Satisfaction</label>
+                                    <div class="nk-int-st">
+                                        <select id="job_satisfaction" class="form-control selectpicker">
+                                            <option value="Very Satisfied" <?php echo (getValue($current_user, 'job_satisfaction') == 'Very Satisfied') ? 'selected' : ''; ?>>Very
+                                                Satisfied
+                                            </option>
+                                            <option value="Satisfied" <?php echo (getValue($current_user, 'job_satisfaction') == 'Satisfied') ? 'selected' : ''; ?>>Satisfied
+                                            </option>
+                                            <option value="Neutral" <?php echo (getValue($current_user, 'job_satisfaction') == 'Neutral') ? 'selected' : ''; ?>>Neutral</option>
+                                            <option value="Dissatisfied" <?php echo (getValue($current_user, 'job_satisfaction') == 'Dissatisfied') ? 'selected' : ''; ?>>Dissatisfied
+                                            </option>
+                                            <option value="Very Dissatisfied" <?php echo (getValue($current_user, 'job_satisfaction') == 'Very Dissatisfied') ? 'selected' : ''; ?>>Very
+                                                Dissatisfied</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="related_to_course">Related to Course of Study?</label>
+                                    <div class="nk-int-st">
+                                        <select id="related_to_course" class="form-control selectpicker">
+                                            <option value="Yes" <?php echo (getValue($current_user, 'related_to_course') == 'Yes') ? 'selected' : ''; ?>>Yes</option>
+                                            <option value="No" <?php echo (getValue($current_user, 'related_to_course') == 'No') ? 'selected' : ''; ?>>No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Education Information</h3>
+                <div class="post-col" style="width:100% !important">
+                    <!-- Post Section -->
+                    <div class="post-container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="degree">Degree</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="degree" class="form-control"
+                                            value="<?php echo getValue($current_user, 'degree'); ?>"
+                                            placeholder="Degree">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="major">Major</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="major" class="form-control"
+                                            value="<?php echo getValue($current_user, 'major'); ?>" placeholder="Major">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="university">University</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="university" class="form-control"
+                                            value="<?php echo getValue($current_user, 'university'); ?>"
+                                            placeholder="University">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="graduation_year">Year of Graduation</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="graduation_year" class="form-control"
+                                            value="<?php echo getValue($current_user, 'graduation_year'); ?>"
+                                            placeholder="Year of Graduation">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Profile</button>
             </div>
+        </form>
 
+    </div>
 
-        </div>
-        <style>
-            /* Modern and GUI-friendly styles for post-container */
-
-
-
-            /* Sidebar Styles */
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 250px;
-                height: 100%;
-                background-color: #f4f4f4;
-                padding: 15px;
-                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-                overflow-y: auto;
-            }
-
-            .sidebar h2 {
-                margin-top: 0;
-            }
-
-            .sidebar ul {
-                list-style-type: none;
-                padding: 0;
-            }
-
-            .sidebar ul li {
-                margin: 10px 0;
-            }
-
-            .sidebar ul li a {
-                text-decoration: none;
-                color: #333;
-                font-weight: bold;
-            }
-
-            /* Profile Content Styles */
-            .profile-content {
-                margin-left: 250px;
-                /* Adjust according to sidebar width */
-                padding: 20px;
-                width: calc(100% - 250px);
-                /* Ensure it takes the full width minus the sidebar width */
-            }
-
-            .post-col {
-                width: 100%;
-                /* Ensure it uses the full width of .profile-content */
-                box-sizing: border-box;
-                /* Include padding and border in the element's total width */
-            }
-
-
-            .profile-section {
-                margin-bottom: 30px;
-            }
-        </style>
-        <?php include 'includes/profile_modal.php'; ?>
+    <?php include 'includes/profile_modal.php'; ?>
 </body>
 
 </html>
@@ -442,99 +497,158 @@
 <script src="js/bootstrap-select/bootstrap-select.js"></script>
 <script src="js/jasny-bootstrap.min.js"></script>
 
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const regionSelect = document.getElementById('regionSelect');
-    const provinceSelect = document.getElementById('provinceSelect');
-    const citySelect = document.getElementById('citySelect');
-    let regionsData = [];
+    document.addEventListener('DOMContentLoaded', function () {
+        const regionSelect = document.getElementById('regionSelect');
+        const provinceSelect = document.getElementById('provinceSelect');
+        const citySelect = document.getElementById('citySelect');
+        const barangaySelect = document.getElementById('barangaySelect');
+        let regionsData = [];
+        let provincesData = [];
+        let municipalitiesData = [];
+        let barangaysData = [];
 
-    // Fetch the JSON data from your file
-    fetch('json/regions.json')
-        .then(response => response.json())
-        .then(data => {
-            regionsData = data;
-            populateRegions();
-        })
-        .catch(error => {
-            console.error('Error loading regions:', error);
-            regionSelect.innerHTML = '<option value="">Error loading regions</option>';
+        // Fetch the JSON data for regions
+        fetch('json/regions.json')
+            .then(response => response.json())
+            .then(data => {
+                regionsData = data;
+                populateRegions();
+            })
+            .catch(error => {
+                console.error('Error loading regions:', error);
+                regionSelect.innerHTML = '<option value="">Error loading regions</option>';
+                $(regionSelect).selectpicker('refresh');
+            });
+
+        // Fetch the JSON data for provinces
+        fetch('json/provinces.json')
+            .then(response => response.json())
+            .then(data => {
+                provincesData = data;
+            })
+            .catch(error => {
+                console.error('Error loading provinces:', error);
+            });
+
+        // Fetch the JSON data for municipalities
+        fetch('json/municipalities.json')
+            .then(response => response.json())
+            .then(data => {
+                municipalitiesData = data;
+            })
+            .catch(error => {
+                console.error('Error loading municipalities:', error);
+            });
+
+        // Fetch the JSON data for barangays
+        fetch('json/barangays.json')
+            .then(response => response.json())
+            .then(data => {
+                barangaysData = data;
+            })
+            .catch(error => {
+                console.error('Error loading barangays:', error);
+            });
+
+        function populateRegions() {
+            regionSelect.innerHTML = '<option value="">Select a region</option>';
+            regionsData.forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.designation;
+                option.textContent = `${region.designation} - ${region.name}`;
+                regionSelect.appendChild(option);
+            });
             $(regionSelect).selectpicker('refresh');
-        });
-
-    function populateRegions() {
-        regionSelect.innerHTML = '<option value="">Select a region</option>';
-        regionsData.forEach(region => {
-            const option = document.createElement('option');
-            option.value = region.designation;
-            option.textContent = `${region.designation} - ${region.name}`;
-            regionSelect.appendChild(option);
-        });
-        $(regionSelect).selectpicker('refresh');
-    }
-
-    // You'll need to implement or fetch province and city data
-    function fetchProvinces(regionDesignation) {
-        // Placeholder: Replace with actual data fetching logic
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(['Province 1', 'Province 2', 'Province 3']);
-            }, 500);
-        });
-    }
-
-    function fetchCities(province) {
-        // Placeholder: Replace with actual data fetching logic
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(['City 1', 'City 2', 'City 3']);
-            }, 500);
-        });
-    }
-
-    regionSelect.addEventListener('change', (event) => {
-        const selectedRegion = event.target.value;
-        provinceSelect.innerHTML = '<option value="">Select a province</option>';
-        citySelect.innerHTML = '<option value="">Select a province first</option>';
-        
-        if (selectedRegion) {
-            fetchProvinces(selectedRegion).then(provinces => {
-                provinces.forEach(province => {
-                    const option = document.createElement('option');
-                    option.value = province;
-                    option.textContent = province;
-                    provinceSelect.appendChild(option);
-                });
-                $(provinceSelect).selectpicker('refresh');
-            });
         }
-        
-        $(provinceSelect).selectpicker('refresh');
-        $(citySelect).selectpicker('refresh');
-    });
 
-    provinceSelect.addEventListener('change', (event) => {
-        const selectedProvince = event.target.value;
-        citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
-        
-        if (selectedProvince) {
-            fetchCities(selectedProvince).then(cities => {
-                cities.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-                $(citySelect).selectpicker('refresh');
+        function populateProvinces(regionDesignation) {
+            provinceSelect.innerHTML = '<option value="">Select a province</option>';
+            const filteredProvinces = provincesData.filter(province => province.region === regionDesignation);
+            filteredProvinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province.name;
+                option.textContent = province.name;
+                provinceSelect.appendChild(option);
             });
+            $(provinceSelect).selectpicker('refresh');
         }
-        
-        $(citySelect).selectpicker('refresh');
+
+        function populateMunicipalities(provinceName) {
+            citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
+            const filteredMunicipalities = municipalitiesData.filter(municipality => municipality.province === provinceName);
+            filteredMunicipalities.forEach(municipality => {
+                const option = document.createElement('option');
+                option.value = municipality.name;
+                option.textContent = municipality.name;
+                citySelect.appendChild(option);
+            });
+            $(citySelect).selectpicker('refresh');
+        }
+
+        function populateBarangays(cityName) {
+            barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
+            const filteredBarangays = barangaysData.filter(barangay => barangay.citymun === cityName);
+            filteredBarangays.forEach(barangay => {
+                const option = document.createElement('option');
+                option.value = barangay.code;
+                option.textContent = barangay.name;
+                barangaySelect.appendChild(option);
+            });
+            $(barangaySelect).selectpicker('refresh');
+        }
+
+        regionSelect.addEventListener('change', (event) => {
+            const selectedRegion = event.target.value;
+            provinceSelect.innerHTML = '<option value="">Select a province</option>';
+            citySelect.innerHTML = '<option value="">Select a province first</option>';
+            barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+
+            if (selectedRegion) {
+                populateProvinces(selectedRegion);
+            } else {
+                provinceSelect.innerHTML = '<option value="">Select a region first</option>';
+                citySelect.innerHTML = '<option value="">Select a province first</option>';
+                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            }
+
+            $(provinceSelect).selectpicker('refresh');
+            $(citySelect).selectpicker('refresh');
+            $(barangaySelect).selectpicker('refresh');
+        });
+
+        provinceSelect.addEventListener('change', (event) => {
+            const selectedProvince = event.target.value;
+            citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
+            barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+
+            if (selectedProvince) {
+                populateMunicipalities(selectedProvince);
+            } else {
+                citySelect.innerHTML = '<option value="">Select a province first</option>';
+                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            }
+
+            $(citySelect).selectpicker('refresh');
+            $(barangaySelect).selectpicker('refresh');
+        });
+
+        citySelect.addEventListener('change', (event) => {
+            const selectedCity = event.target.value;
+            barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
+
+            if (selectedCity) {
+                populateBarangays(selectedCity);
+            } else {
+                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+            }
+
+            $(barangaySelect).selectpicker('refresh');
+        });
+
+        barangaySelect.addEventListener('change', (event) => {
+            console.log('Selected barangay:', event.target.value);
+        });
     });
 
-    citySelect.addEventListener('change', (event) => {
-        console.log('Selected city/municipality:', event.target.value);
-    });
-});
 </script>

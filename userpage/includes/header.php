@@ -63,6 +63,8 @@
     
     <link rel="stylesheet" href="custom.css">
 
+    <link rel="stylesheet" href="css/bootstrap-select/bootstrap-select.css">
+
     <!-- modernizr JS
 		============================================ -->
 
