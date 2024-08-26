@@ -5,6 +5,7 @@ include '../includes/firebaseRDB.php';
 // Firebase Realtime Database URL
 require_once '../includes/config.php'; // Include your config file
 $firebase = new firebaseRDB($databaseURL);
+
 // Validate the CSRF token
 if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
     header('location: alumni_profile.php?error=invalid_token');
@@ -31,6 +32,7 @@ $batch = htmlspecialchars($_POST['batch']);
 
 // New fields
 $work_status = htmlspecialchars($_POST['work_status'] ?? '');
+$barangay = htmlspecialchars($_POST['barangay']); // New barangay field
 
 // Handle file upload
 $profileImage = $_FILES['profileImage'];
@@ -61,6 +63,7 @@ $updateData = [
     'course' => $course,
     'batch' => $batch,
     'work_status' => $work_status,
+    'barangay' => $barangay, // Add the barangay to the update data
     'profile_url' => $profile_url, // Add the profile URL to the update data
     'forms_completed' => true,
     'date_responded' => date('F j, Y'),
@@ -80,7 +83,6 @@ if ($work_status === 'Employed') {
     $employment_location = htmlspecialchars($_POST['employment_location'] ?? '');
     $job_satisfaction = htmlspecialchars($_POST['job_satisfaction'] ?? '');
 
-    
     $updateData['first_employment_date'] = $first_employment_date;
     $updateData['date_for_current_employment'] = $date_for_current_employment;
     $updateData['type_of_work'] = $type_of_work;

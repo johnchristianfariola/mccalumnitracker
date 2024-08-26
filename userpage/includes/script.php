@@ -153,3 +153,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <!-- Template Javascript -->
     <script src="../homepage/js/main.js"></script>
+    <script src="js/geo_location/location.js"></script>

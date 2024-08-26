@@ -3,6 +3,7 @@
 <html>
 
 <head>
+    
     <?php include 'includes/header.php'; ?>
     <?php
     require_once '../includes/firebaseRDB.php';
@@ -12,7 +13,6 @@
 
     $alumni_data = $firebase->retrieve("alumni");
     $alumni_data = json_decode($alumni_data, true);
-
 
     $categoriesData = $firebase->retrieve('category');
     $categories = json_decode($categoriesData, true);
@@ -30,6 +30,18 @@
     function getValue($array, $key)
     {
         return isset($array[$key]) && !empty($array[$key]) ? $array[$key] : "N/A";
+    }
+
+    function formatValue($value)
+    {
+        // Check if the value is numeric
+        if (is_numeric($value)) {
+            // Convert to float and format it with 2 decimal places
+            return number_format((float) $value, 2);
+        } else {
+            // Return a default message or value for non-numeric values
+            return 'N/A';
+        }
     }
 
     // Retrieve the birthdate from the user data
@@ -54,8 +66,9 @@
     $monthlyIncome = getValue($current_user, 'current_monthly_income');
 
     // Format the income as a decimal with commas and two decimal places
-    $formattedIncome = number_format($monthlyIncome, 2);
+    $formattedIncome = formatValue($monthlyIncome);
     ?>
+
 
     <style>
         .dropup .dropdown-menu {
@@ -135,6 +148,7 @@
 
     <div class="profile-content">
         <form id="updateProfileForm" action="edit_user_account.php" method="POST">
+            <input type="hidden" name="user_id" value="<?php echo $current_user_id; ?>">
             <div id="personal-info" class="profile-section">
                 <h3>Personal Information</h3>
                 <div class="post-col" style="width:100% !important">
@@ -145,7 +159,8 @@
                                 <label for="firstname">First Name</label>
                                 <div class="form-group">
                                     <div class="nk-int-st">
-                                        <input type="text" id="firstname" class="form-control" placeholder="Firstname"
+                                        <input type="text" id="firstname" name="firstname" class="form-control"
+                                            placeholder="Firstname"
                                             value="<?php echo getValue($current_user, 'firstname'); ?>">
                                     </div>
                                 </div>
@@ -154,7 +169,8 @@
                                 <div class="form-group">
                                     <label for="middlename">Middle Name</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="middlename" class="form-control" placeholder="Middlename"
+                                        <input type="text" id="middlename" name="middlename" class="form-control"
+                                            placeholder="Middlename"
                                             value="<?php echo getValue($current_user, 'middlename'); ?>">
                                     </div>
                                 </div>
@@ -163,7 +179,8 @@
                                 <div class="form-group">
                                     <label for="lastname">Last Name</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="lastname" class="form-control" placeholder="Lastname"
+                                        <input type="text" id="lastname" name="lastname" class="form-control"
+                                            placeholder="Lastname"
                                             value="<?php echo getValue($current_user, 'lastname'); ?>">
                                     </div>
                                 </div>
@@ -172,9 +189,10 @@
                                 <div class="form-group">
                                     <label for="regionSelect">Region</label>
                                     <div class="nk-int-st">
-                                        <select id="regionSelect" class="form-control selectpicker"
+                                        <select id="regionSelect" name="region" class="form-control selectpicker"
                                             data-live-search="true">
                                             <option value="">Loading regions...</option>
+
                                         </select>
                                     </div>
                                 </div>
@@ -183,9 +201,15 @@
                                 <div class="form-group">
                                     <label for="provinceSelect">Province</label>
                                     <div class="nk-int-st">
-                                        <select id="provinceSelect" class="form-control selectpicker"
+                                        <select id="provinceSelect" name="province" class="form-control selectpicker"
                                             data-live-search="true">
                                             <option value="">Select a region first</option>
+                                            <?php
+                                            $current_state = getValue($current_user, 'state');
+                                            if (!empty($current_state)) {
+                                                echo "<option value=\"$current_state\" selected>$current_state</option>";
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -194,9 +218,15 @@
                                 <div class="form-group">
                                     <label for="citySelect">City/Municipality</label>
                                     <div class="nk-int-st">
-                                        <select id="citySelect" class="form-control selectpicker"
+                                        <select id="citySelect" name="city" class="form-control selectpicker"
                                             data-live-search="true">
                                             <option value="">Select a province first</option>
+                                            <?php
+                                            $current_city = getValue($current_user, 'city');
+                                            if (!empty($current_city)) {
+                                                echo "<option value=\"$current_city\" selected>$current_city</option>";
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -205,9 +235,15 @@
                                 <div class="form-group">
                                     <label for="barangaySelect">Barangay</label>
                                     <div class="nk-int-st">
-                                        <select id="barangaySelect" class="form-control selectpicker"
+                                        <select id="barangaySelect" name="barangay" class="form-control selectpicker"
                                             data-live-search="true">
                                             <option value="">Select a city/municipality first</option>
+                                            <?php
+                                            $current_barangay = getValue($current_user, 'barangay');
+                                            if (!empty($current_barangay)) {
+                                                echo "<option value=\"$current_barangay\" selected>$current_barangay</option>";
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -216,8 +252,9 @@
                                 <div class="form-group">
                                     <label for="birthdate">Birth Date</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="birthdate" class="form-control" data-mask="99/99/9999"
-                                            placeholder="dd/mm/yyyy" value="<?php echo $birthdateFormatted; ?>">
+                                        <input type="text" id="birthdate" name="birthdate" class="form-control"
+                                            data-mask="99/99/9999" placeholder="dd/mm/yyyy"
+                                            value="<?php echo $birthdateFormatted; ?>">
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +262,7 @@
                                 <div class="form-group">
                                     <label for="gender">Gender</label>
                                     <div class="nk-int-st">
-                                        <select id="gender" class="form-control selectpicker">
+                                        <select id="gender" name="gender" class="form-control selectpicker">
                                             <option value="Male" <?php echo (getValue($current_user, 'gender') == 'Male') ? 'selected' : ''; ?>>Male</option>
                                             <option value="Female" <?php echo (getValue($current_user, 'gender') == 'Female') ? 'selected' : ''; ?>>Female</option>
                                         </select>
@@ -236,7 +273,7 @@
                                 <div class="form-group">
                                     <label for="civilstatus">Civil Status</label>
                                     <div class="nk-int-st">
-                                        <select id="civilstatus" class="form-control selectpicker">
+                                        <select id="civilstatus" name="civilstatus" class="form-control selectpicker">
                                             <option value="Single" <?php echo (getValue($current_user, 'civilstatus') == 'Single') ? 'selected' : ''; ?>>Single</option>
                                             <option value="Married" <?php echo (getValue($current_user, 'civilstatus') == 'Married') ? 'selected' : ''; ?>>Married</option>
                                         </select>
@@ -245,6 +282,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <h3>Contact</h3>
@@ -499,156 +537,215 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const regionSelect = document.getElementById('regionSelect');
-        const provinceSelect = document.getElementById('provinceSelect');
-        const citySelect = document.getElementById('citySelect');
-        const barangaySelect = document.getElementById('barangaySelect');
-        let regionsData = [];
-        let provincesData = [];
-        let municipalitiesData = [];
-        let barangaysData = [];
+    const regionSelect = document.getElementById('regionSelect');
+    const provinceSelect = document.getElementById('provinceSelect');
+    const citySelect = document.getElementById('citySelect');
+    const barangaySelect = document.getElementById('barangaySelect');
+    let regionsData = [];
+    let provincesData = [];
+    let municipalitiesData = [];
+    let barangaysData = [];
 
-        // Fetch the JSON data for regions
-        fetch('json/regions.json')
-            .then(response => response.json())
-            .then(data => {
-                regionsData = data;
-                populateRegions();
-            })
-            .catch(error => {
-                console.error('Error loading regions:', error);
-                regionSelect.innerHTML = '<option value="">Error loading regions</option>';
-                $(regionSelect).selectpicker('refresh');
-            });
-
-        // Fetch the JSON data for provinces
-        fetch('json/provinces.json')
-            .then(response => response.json())
-            .then(data => {
-                provincesData = data;
-            })
-            .catch(error => {
-                console.error('Error loading provinces:', error);
-            });
-
-        // Fetch the JSON data for municipalities
-        fetch('json/municipalities.json')
-            .then(response => response.json())
-            .then(data => {
-                municipalitiesData = data;
-            })
-            .catch(error => {
-                console.error('Error loading municipalities:', error);
-            });
-
-        // Fetch the JSON data for barangays
-        fetch('json/barangays.json')
-            .then(response => response.json())
-            .then(data => {
-                barangaysData = data;
-            })
-            .catch(error => {
-                console.error('Error loading barangays:', error);
-            });
-
-        function populateRegions() {
-            regionSelect.innerHTML = '<option value="">Select a region</option>';
-            regionsData.forEach(region => {
-                const option = document.createElement('option');
-                option.value = region.designation;
-                option.textContent = `${region.designation} - ${region.name}`;
-                regionSelect.appendChild(option);
-            });
+    // Fetch the JSON data for regions
+    fetch('json/regions.json')
+        .then(response => response.json())
+        .then(data => {
+            regionsData = data;
+            populateRegions();
+        })
+        .catch(error => {
+            console.error('Error loading regions:', error);
+            regionSelect.innerHTML = '<option value="">Error loading regions</option>';
             $(regionSelect).selectpicker('refresh');
+        });
+
+    // Fetch the JSON data for provinces
+    fetch('json/provinces.json')
+        .then(response => response.json())
+        .then(data => {
+            provincesData = data;
+        })
+        .catch(error => {
+            console.error('Error loading provinces:', error);
+        });
+
+    // Fetch the JSON data for municipalities
+    fetch('json/municipalities.json')
+        .then(response => response.json())
+        .then(data => {
+            municipalitiesData = data;
+        })
+        .catch(error => {
+            console.error('Error loading municipalities:', error);
+        });
+
+    // Fetch the JSON data for barangays
+    fetch('json/barangays.json')
+        .then(response => response.json())
+        .then(data => {
+            barangaysData = data;
+        })
+        .catch(error => {
+            console.error('Error loading barangays:', error);
+        });
+
+    function populateRegions() {
+        regionSelect.innerHTML = '<option value="">Select a region</option>';
+        regionsData.forEach(region => {
+            const option = document.createElement('option');
+            option.value = region.designation;
+            option.textContent = `${region.designation} - ${region.name}`;
+            regionSelect.appendChild(option);
+        });
+        $(regionSelect).selectpicker('refresh');
+    }
+
+    function populateProvinces(regionDesignation) {
+        provinceSelect.innerHTML = '<option value="">Select a province</option>';
+        const filteredProvinces = provincesData.filter(province => province.region === regionDesignation);
+
+        let currentStateSelected = false;
+
+        filteredProvinces.forEach(province => {
+            const option = document.createElement('option');
+            option.value = province.name;
+            option.textContent = province.name;
+
+            if (province.name === '<?php echo $current_state; ?>') {
+                option.selected = true;
+                currentStateSelected = true;
+            }
+
+            provinceSelect.appendChild(option);
+        });
+
+        if (!currentStateSelected && '<?php echo $current_state; ?>' !== '') {
+            const option = document.createElement('option');
+            option.value = '<?php echo $current_state; ?>';
+            option.textContent = '<?php echo $current_state; ?>';
+            option.selected = true;
+            provinceSelect.appendChild(option);
         }
 
-        function populateProvinces(regionDesignation) {
-            provinceSelect.innerHTML = '<option value="">Select a province</option>';
-            const filteredProvinces = provincesData.filter(province => province.region === regionDesignation);
-            filteredProvinces.forEach(province => {
-                const option = document.createElement('option');
-                option.value = province.name;
-                option.textContent = province.name;
-                provinceSelect.appendChild(option);
-            });
-            $(provinceSelect).selectpicker('refresh');
+        $(provinceSelect).selectpicker('refresh');
+
+    }
+
+    function populateMunicipalities(provinceName) {
+        citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
+        const filteredMunicipalities = municipalitiesData.filter(municipality => municipality.province === provinceName);
+
+        let currentCitySelected = false;
+
+        filteredMunicipalities.forEach(municipality => {
+            const option = document.createElement('option');
+            option.value = municipality.name;
+            option.textContent = municipality.name;
+
+            if (municipality.name === '<?php echo $current_city; ?>') {
+                option.selected = true;
+                currentCitySelected = true;
+            }
+
+            citySelect.appendChild(option);
+        });
+
+        // If the current city is not in the list of municipalities for the selected province,
+        // add it as an option
+        if (!currentCitySelected && '<?php echo $current_city; ?>' !== '') {
+            const option = document.createElement('option');
+            option.value = '<?php echo $current_city; ?>';
+            option.textContent = '<?php echo $current_city; ?>';
+            option.selected = true;
+            citySelect.appendChild(option);
         }
 
-        function populateMunicipalities(provinceName) {
-            citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
-            const filteredMunicipalities = municipalitiesData.filter(municipality => municipality.province === provinceName);
-            filteredMunicipalities.forEach(municipality => {
-                const option = document.createElement('option');
-                option.value = municipality.name;
-                option.textContent = municipality.name;
-                citySelect.appendChild(option);
-            });
-            $(citySelect).selectpicker('refresh');
+        $(citySelect).selectpicker('refresh');
+    }
+
+    function populateBarangays(cityName) {
+        barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
+        const filteredBarangays = barangaysData.filter(barangay => barangay.citymun === cityName);
+
+        let currentBarangaySelected = false;
+
+        filteredBarangays.forEach(barangay => {
+            const option = document.createElement('option');
+            option.value = barangay.name;
+            option.textContent = barangay.name;
+
+            if (barangay.name === '<?php echo $current_barangay; ?>') {
+                option.selected = true;
+                currentBarangaySelected = true;
+            }
+
+            barangaySelect.appendChild(option);
+        });
+
+        // If the current barangay is not in the list of barangays for the selected city,
+        // add it as an option
+        if (!currentBarangaySelected && '<?php echo $current_barangay; ?>' !== '') {
+            const option = document.createElement('option');
+            option.value = '<?php echo $current_barangay; ?>';
+            option.textContent = '<?php echo $current_barangay; ?>';
+            option.selected = true;
+            barangaySelect.appendChild(option);
         }
 
-        function populateBarangays(cityName) {
-            barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
-            const filteredBarangays = barangaysData.filter(barangay => barangay.citymun === cityName);
-            filteredBarangays.forEach(barangay => {
-                const option = document.createElement('option');
-                option.value = barangay.code;
-                option.textContent = barangay.name;
-                barangaySelect.appendChild(option);
-            });
-            $(barangaySelect).selectpicker('refresh');
-        }
+        $(barangaySelect).selectpicker('refresh');
+    }
 
-        regionSelect.addEventListener('change', (event) => {
-            const selectedRegion = event.target.value;
-            provinceSelect.innerHTML = '<option value="">Select a province</option>';
+    regionSelect.addEventListener('change', (event) => {
+        const selectedRegion = event.target.value;
+        provinceSelect.innerHTML = '<option value="">Select a province</option>';
+        citySelect.innerHTML = '<option value="">Select a province first</option>';
+        barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+
+        if (selectedRegion) {
+            populateProvinces(selectedRegion);
+        } else {
+            provinceSelect.innerHTML = '<option value="">Select a region first</option>';
             citySelect.innerHTML = '<option value="">Select a province first</option>';
             barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+        }
 
-            if (selectedRegion) {
-                populateProvinces(selectedRegion);
-            } else {
-                provinceSelect.innerHTML = '<option value="">Select a region first</option>';
-                citySelect.innerHTML = '<option value="">Select a province first</option>';
-                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-            }
-
-            $(provinceSelect).selectpicker('refresh');
-            $(citySelect).selectpicker('refresh');
-            $(barangaySelect).selectpicker('refresh');
-        });
-
-        provinceSelect.addEventListener('change', (event) => {
-            const selectedProvince = event.target.value;
-            citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
-            barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-
-            if (selectedProvince) {
-                populateMunicipalities(selectedProvince);
-            } else {
-                citySelect.innerHTML = '<option value="">Select a province first</option>';
-                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-            }
-
-            $(citySelect).selectpicker('refresh');
-            $(barangaySelect).selectpicker('refresh');
-        });
-
-        citySelect.addEventListener('change', (event) => {
-            const selectedCity = event.target.value;
-            barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
-
-            if (selectedCity) {
-                populateBarangays(selectedCity);
-            } else {
-                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-            }
-
-            $(barangaySelect).selectpicker('refresh');
-        });
-
-        barangaySelect.addEventListener('change', (event) => {
-            console.log('Selected barangay:', event.target.value);
-        });
+        $(provinceSelect).selectpicker('refresh');
+        $(citySelect).selectpicker('refresh');
+        $(barangaySelect).selectpicker('refresh');
     });
+
+    provinceSelect.addEventListener('change', (event) => {
+        const selectedProvince = event.target.value;
+        citySelect.innerHTML = '<option value="">Select a city/municipality</option>';
+        barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+
+        if (selectedProvince) {
+            populateMunicipalities(selectedProvince);
+        } else {
+            citySelect.innerHTML = '<option value="">Select a province first</option>';
+            barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+        }
+
+        $(citySelect).selectpicker('refresh');
+        $(barangaySelect).selectpicker('refresh');
+    });
+
+    citySelect.addEventListener('change', (event) => {
+        const selectedCity = event.target.value;
+        barangaySelect.innerHTML = '<option value="">Select a barangay</option>';
+
+        if (selectedCity) {
+            populateBarangays(selectedCity);
+        } else {
+            barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
+        }
+
+        $(barangaySelect).selectpicker('refresh');
+    });
+
+    barangaySelect.addEventListener('change', (event) => {
+        console.log('Selected barangay:', event.target.value);
+    });
+});
 
 </script>
