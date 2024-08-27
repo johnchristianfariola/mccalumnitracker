@@ -25,11 +25,12 @@ $fields = [
     'state', 'city', 'barangay', 'contactnumber', 'reserve_email', 'addressline1', 
     'zipcode', 'work_status', 'first_employment_date', 'date_for_current_employment', 
     'name_company', 'employment_location', 'type_of_work', 'work_position', 
-    'current_monthly_income', 'job_satisfaction', 'work_related'
+    'current_monthly_income', 'job_satisfaction', 'work_related',
+    'course', 'major', 'batch', 'graduation_year', 'work_classification' // Added work_classification
 ];
 
 foreach ($fields as $field) {
-    if (!empty($_POST[$field])) {
+    if (isset($_POST[$field])) { // Changed from !empty() to isset() to handle empty values
         $update_data[$field] = sanitize_input($_POST[$field]);
     }
 }

@@ -27,6 +27,11 @@ try {
 
     $courseData = $firebase->retrieve("course");
     $courseData = json_decode($courseData, true);
+
+    $categoryData = $firebase->retrieve("category");
+    $categoryData = json_decode($categoryData, true);
+
+
 } catch (Exception $e) {
     // Handle errors when retrieving data
     error_log("Error retrieving data: " . $e->getMessage());
@@ -41,6 +46,7 @@ foreach ($alumniData as $id => $alumni) {
         // Map batch and course codes using unique IDs
         $batchYear = isset($batchData[$alumni['batch']]['batch_yrs']) ? $batchData[$alumni['batch']]['batch_yrs'] : 'Unknown Batch';
         $courseCode = isset($courseData[$alumni['course']]['courCode']) ? $courseData[$alumni['course']]['courCode'] : 'Unknown Course';
+        $categoryName = isset($categoryData[$alumni['work_classification']]['category_name']) ? $categoryData[$alumni['work_classification']]['category_name'] : 'Unknown Course';
 
         // Alumni user is authenticated, store user data in session
         $user = [
@@ -61,8 +67,10 @@ foreach ($alumniData as $id => $alumni) {
             'contactnumber' => $alumni['contactnumber'],
             'batch' => $batchYear,
             'course' => $courseCode,
+            'category' => $categoryName,
             'batch_id' => $alumni['batch'], // Add batch ID for reference
             'course_id' => $alumni['course'], // Add course ID for reference
+            'category_id' => $alumni['work_classification'], // Add course ID for reference
         ];
         $_SESSION['user'] = $user;
         $_SESSION['alumni_id'] = $id; // Store alumni ID in session

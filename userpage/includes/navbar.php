@@ -11,7 +11,7 @@ $alumni_data = json_decode($alumni_data, true);
 
 <nav>
     <div class="nav-left">
-        <img src="../images/logo/fb.png" class="logo">
+        <img src="../images/logo/alumni_logo.png" class="logo">
         <div class="search-box">
             <img src="../images/search.png">
             <input type="text" placeholder="Search">

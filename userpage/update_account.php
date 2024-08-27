@@ -17,6 +17,13 @@
     $categoriesData = $firebase->retrieve('category');
     $categories = json_decode($categoriesData, true);
 
+    $batchYears = $firebase->retrieve("batch_yr");
+    $batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
+    
+    $courseKey = "course"; // Replace with your actual Firebase path or key for courses
+    $data = $firebase->retrieve($courseKey);
+    $data = json_decode($data, true); // Decode JSON data into associative arrays
+    
     // Assuming you have the current user's ID stored in a session variable
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
@@ -357,7 +364,6 @@
 
                                 <label for="first_employment_date">First Employment Date</label>
                                 <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
-
                                     <div class="input-group date nk-int-st">
                                         <span class="input-group-addon"></span>
                                         <input type="text" class="form-control" name="first_employment_date"
@@ -366,10 +372,11 @@
                                 </div>
 
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <label for="current_employment_date">Current Employment Date</label>
-                                <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
 
+
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group nk-datapk-ctm " id="data_1">
+                                    <label for="company_name">Current Employment Date</label>
                                     <div class="input-group date nk-int-st">
                                         <span class="input-group-addon"></span>
                                         <input type="text" class="form-control" name="date_for_current_employment"
@@ -377,6 +384,9 @@
                                     </div>
                                 </div>
                             </div>
+
+
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
                                     <label for="company_name">Company Name</label>
@@ -461,6 +471,28 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="work_classification">Work Classification</label>
+                                    <div class="nk-int-st">
+                                        <select id="work_classification" name="work_classification"
+                                            class="form-control selectpicker">
+                                            <option
+                                                value="<?php echo htmlspecialchars($_SESSION['user']['category_id']); ?>">
+                                                <?php echo htmlspecialchars($_SESSION['user']['category']); ?>
+                                            </option>
+                                            <?php
+                                            if (!empty($categories) && is_array($categories)) {
+                                                foreach ($categories as $categoryId => $categoryDetails) {
+                                                    $categoryName = isset($categoryDetails['category_name']) ? htmlspecialchars($categoryDetails['category_name']) : 'Unknown';
+                                                    echo "<option value=\"" . htmlspecialchars($categoryId) . "\">" . $categoryName . "</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -473,11 +505,22 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="degree">Degree</label>
+                                    <label for="degree">Course</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="degree" class="form-control"
-                                            value="<?php echo getValue($current_user, 'degree'); ?>"
-                                            placeholder="Degree">
+                                        <select id="course" name="course" class="form-control selectpicker">
+                                            <option
+                                                value="<?php echo htmlspecialchars($_SESSION['user']['course_id']); ?>">
+                                                <?php echo htmlspecialchars($_SESSION['user']['course']); ?>
+                                            </option>
+                                            <?php
+                                            if (is_array($data)) {
+                                                foreach ($data as $courseId => $details) {
+                                                    $courseCode = isset($details['courCode']) ? htmlspecialchars($details['courCode']) : 'Unknown';
+                                                    echo "<option value=\"" . htmlspecialchars($courseId) . "\">" . $courseCode . "</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -485,28 +528,40 @@
                                 <div class="form-group">
                                     <label for="major">Major</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="major" class="form-control"
+                                        <input type="text" id="major" class="form-control" name="major"
                                             value="<?php echo getValue($current_user, 'major'); ?>" placeholder="Major">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="university">University</label>
+                                    <label for="batch">Batch</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="university" class="form-control"
-                                            value="<?php echo getValue($current_user, 'university'); ?>"
-                                            placeholder="University">
+                                        <select id="batch" name="batch" class="form-control selectpicker">
+                                            <option
+                                                value="<?php echo htmlspecialchars($_SESSION['user']['batch_id']); ?>">
+                                                <?php echo htmlspecialchars($_SESSION['user']['batch']); ?>
+                                            </option>
+                                            <?php
+                                            if (!empty($batchYears) && is_array($batchYears)) {
+                                                foreach ($batchYears as $batchId => $batchDetails) {
+                                                    $batchYear = isset($batchDetails['batch_yrs']) ? htmlspecialchars($batchDetails['batch_yrs']) : 'Unknown';
+                                                    echo "<option value=\"" . htmlspecialchars($batchId) . "\">" . $batchYear . "</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="form-group">
-                                    <label for="graduation_year">Year of Graduation</label>
-                                    <div class="nk-int-st">
-                                        <input type="text" id="graduation_year" class="form-control"
-                                            value="<?php echo getValue($current_user, 'graduation_year'); ?>"
-                                            placeholder="Year of Graduation">
+                                <label for="graduation_year">Year of Graduation</label>
+
+                                <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
+                                    <div class="input-group date nk-int-st">
+                                        <span class="input-group-addon"></span>
+                                        <input type="text" class="form-control" name="graduation_year"
+                                            value="<?php echo getValue($current_user, 'graduation_year'); ?>">
                                     </div>
                                 </div>
                             </div>
