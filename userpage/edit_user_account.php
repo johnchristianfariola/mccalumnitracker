@@ -20,7 +20,14 @@ function sanitize_input($data) {
 }
 
 // Update fields if provided
-$fields = ['firstname', 'middlename', 'lastname', 'birthdate', 'gender', 'civilstatus', 'state', 'city', 'barangay'];
+$fields = [
+    'firstname', 'middlename', 'lastname', 'birthdate', 'gender', 'civilstatus', 
+    'state', 'city', 'barangay', 'contactnumber', 'reserve_email', 'addressline1', 
+    'zipcode', 'work_status', 'first_employment_date', 'date_for_current_employment', 
+    'name_company', 'employment_location', 'type_of_work', 'work_position', 
+    'current_monthly_income', 'job_satisfaction', 'work_related'
+];
+
 foreach ($fields as $field) {
     if (!empty($_POST[$field])) {
         $update_data[$field] = sanitize_input($_POST[$field]);

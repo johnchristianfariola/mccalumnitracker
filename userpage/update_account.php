@@ -3,7 +3,7 @@
 <html>
 
 <head>
-
+    <link rel="stylesheet" href="css/datapicker/datepicker3.css">
     <?php include 'includes/header.php'; ?>
     <?php
     require_once '../includes/firebaseRDB.php';
@@ -201,7 +201,7 @@
                                 <div class="form-group">
                                     <label for="provinceSelect">Province</label>
                                     <div class="nk-int-st">
-                                        <select id="provinceSelect" name="province" class="form-control selectpicker"
+                                        <select id="provinceSelect" name="state" class="form-control selectpicker"
                                             data-live-search="true">
                                             <option value="">Select a region first</option>
                                             <?php
@@ -294,7 +294,7 @@
                                 <div class="form-group">
                                     <label for="contactnumber">Contact Number</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="contactnumber" class="form-control"
+                                        <input type="text" id="contactnumber" name="contactnumber" class="form-control"
                                             value="<?php echo getValue($current_user, 'contactnumber'); ?>"
                                             placeholder="Contact Number">
                                     </div>
@@ -304,7 +304,7 @@
                                 <div class="form-group">
                                     <label for="reserve_email">Email</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="reserve_email" class="form-control"
+                                        <input type="text" id="reserve_email" name="reserve_email" class="form-control"
                                             value="<?php echo getValue($current_user, 'reserve_email'); ?>"
                                             placeholder="Email">
                                     </div>
@@ -312,9 +312,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="addressline1">Address</label>
+                                    <label for="addressline1">Current Address</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="addressline1" class="form-control"
+                                        <input type="text" id=" " name="addressline1" class="form-control"
                                             value="<?php echo getValue($current_user, 'addressline1'); ?>"
                                             placeholder="Address">
                                     </div>
@@ -324,7 +324,7 @@
                                 <div class="form-group">
                                     <label for="zipcode">Zip Code</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="zipcode" class="form-control"
+                                        <input type="text" id="zipcode" name="zipcode" class="form-control"
                                             value="<?php echo getValue($current_user, 'zipcode'); ?>"
                                             placeholder="Zip Code">
                                     </div>
@@ -333,6 +333,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <h3>Employment Information</h3>
                 <div class="post-col" style="width:100% !important">
@@ -343,7 +344,7 @@
                                 <div class="form-group">
                                     <label for="work_status">Employment Status</label>
                                     <div class="nk-int-st">
-                                        <select id="work_status" class="form-control selectpicker">
+                                        <select id="work_status" name="work_status" class="form-control selectpicker">
                                             <option>Select Status</option>
                                             <option value="Employed" <?php echo (getValue($current_user, 'work_status') == 'Employed') ? 'selected' : ''; ?>>Employed</option>
                                             <option value="Unemployed" <?php echo (getValue($current_user, 'work_status') == 'Unemployed') ? 'selected' : ''; ?>>Unemployed</option>
@@ -351,23 +352,28 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="form-group">
-                                    <label for="first_employment_date">First Employment Date</label>
-                                    <div class="nk-int-st">
-                                        <input type="text" id="first_employment_date" class="form-control"
-                                            data-mask="99/99/9999" placeholder="dd/mm/yyyy"
-                                            value="<?php echo $firstEmploymentDateFormatted; ?>">
+
+                                <label for="first_employment_date">First Employment Date</label>
+                                <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
+
+                                    <div class="input-group date nk-int-st">
+                                        <span class="input-group-addon"></span>
+                                        <input type="text" class="form-control" name="first_employment_date"
+                                            value="<?php echo getValue($current_user, 'first_employment_date'); ?>">
                                     </div>
                                 </div>
+
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="form-group">
-                                    <label for="current_employment_date">Current Employment Date</label>
-                                    <div class="nk-int-st">
-                                        <input type="text" id="current_employment_date" class="form-control"
-                                            data-mask="99/99/9999" placeholder="dd/mm/yyyy"
-                                            value="<?php echo $currentEmploymentDateFormatted; ?>">
+                                <label for="current_employment_date">Current Employment Date</label>
+                                <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
+
+                                    <div class="input-group date nk-int-st">
+                                        <span class="input-group-addon"></span>
+                                        <input type="text" class="form-control" name="date_for_current_employment"
+                                            value="<?php echo getValue($current_user, 'date_for_current_employment'); ?>">
                                     </div>
                                 </div>
                             </div>
@@ -375,7 +381,7 @@
                                 <div class="form-group">
                                     <label for="company_name">Company Name</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="company_name" class="form-control"
+                                        <input type="text" id="company_name" name="name_company" class="form-control"
                                             value="<?php echo getValue($current_user, 'company_name'); ?>"
                                             placeholder="Company Name">
                                     </div>
@@ -385,7 +391,8 @@
                                 <div class="form-group">
                                     <label for="employment_location">Employment Location</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="employment_location" class="form-control"
+                                        <input type="text" id="employment_location" name="employment_location"
+                                            class="form-control"
                                             value="<?php echo getValue($current_user, 'employment_location'); ?>"
                                             placeholder="Employment Location">
                                     </div>
@@ -395,7 +402,7 @@
                                 <div class="form-group">
                                     <label for="type_of_work">Type of Work</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="type_of_work" class="form-control"
+                                        <input type="text" id="type_of_work" name="type_of_work" class="form-control"
                                             value="<?php echo getValue($current_user, 'type_of_work'); ?>"
                                             placeholder="Type of Work">
                                     </div>
@@ -405,29 +412,19 @@
                                 <div class="form-group">
                                     <label for="work_position">Position</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="work_position" class="form-control"
+                                        <input type="text" id="work_position" name="work_position" class="form-control"
                                             value="<?php echo getValue($current_user, 'work_position'); ?>"
                                             placeholder="Position">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="form-group">
-                                    <label for="employment_status">Employment Status</label>
-                                    <div class="nk-int-st">
-                                        <select id="employment_status" class="form-control selectpicker">
-                                            <option>Select Status</option>
-                                            <option value="Active" <?php echo (getValue($current_user, 'employment_status') == 'Active') ? 'selected' : ''; ?>>Active</option>
-                                            <option value="Archive" <?php echo (getValue($current_user, 'employment_status') == 'Archive') ? 'selected' : ''; ?>>Archive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
                                     <label for="monthly_income">Monthly Income</label>
                                     <div class="nk-int-st">
-                                        <input type="text" id="monthly_income" class="form-control"
+                                        <input type="text" id="monthly_income" name="current_monthly_income"
+                                            class="form-control"
                                             value="<?php echo getValue($current_user, 'monthly_income'); ?>"
                                             placeholder="Monthly Income">
                                     </div>
@@ -437,10 +434,10 @@
                                 <div class="form-group">
                                     <label for="job_satisfaction">Job Satisfaction</label>
                                     <div class="nk-int-st">
-                                        <select id="job_satisfaction" class="form-control selectpicker">
+                                        <select id="job_satisfaction" name="job_satisfaction"
+                                            class="form-control selectpicker">
                                             <option value="Very Satisfied" <?php echo (getValue($current_user, 'job_satisfaction') == 'Very Satisfied') ? 'selected' : ''; ?>>Very
-                                                Satisfied
-                                            </option>
+                                                Satisfied</option>
                                             <option value="Satisfied" <?php echo (getValue($current_user, 'job_satisfaction') == 'Satisfied') ? 'selected' : ''; ?>>Satisfied
                                             </option>
                                             <option value="Neutral" <?php echo (getValue($current_user, 'job_satisfaction') == 'Neutral') ? 'selected' : ''; ?>>Neutral</option>
@@ -456,7 +453,8 @@
                                 <div class="form-group">
                                     <label for="related_to_course">Related to Course of Study?</label>
                                     <div class="nk-int-st">
-                                        <select id="related_to_course" class="form-control selectpicker">
+                                        <select id="related_to_course" name="work_related"
+                                            class="form-control selectpicker">
                                             <option value="Yes" <?php echo (getValue($current_user, 'related_to_course') == 'Yes') ? 'selected' : ''; ?>>Yes</option>
                                             <option value="No" <?php echo (getValue($current_user, 'related_to_course') == 'No') ? 'selected' : ''; ?>>No</option>
                                         </select>
@@ -466,6 +464,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <h3>Education Information</h3>
                 <div class="post-col" style="width:100% !important">
@@ -534,6 +533,9 @@
 <script src="js/jquery/jquery-3.5.1.min.js"></script>
 <script src="js/bootstrap-select/bootstrap-select.js"></script>
 <script src="js/jasny-bootstrap.min.js"></script>
+<script src="js/datapicker/bootstrap-datepicker.js"></script>
+<script src="js/datapicker/datepicker-active.js"></script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
