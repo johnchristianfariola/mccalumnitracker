@@ -139,27 +139,6 @@
                             required>
                     </div>
                     <div class="input-field">
-                        <label>Sex</label>
-                        <select name="gender" required>
-                            <option disabled>Select gender</option>
-                            <option value="Male" <?php echo ($user['gender'] === 'Male') ? 'selected' : ''; ?>>Male
-                            </option>
-                            <option value="Female" <?php echo ($user['gender'] === 'Female') ? 'selected' : ''; ?>>Female
-                            </option>
-                            <option value="Others" <?php echo ($user['gender'] === 'Others') ? 'selected' : ''; ?>>Others
-                            </option>
-                        </select>
-                    </div>
-                    <div class="input-field">
-                        <label>Civil Status</label>
-                        <input type="text" name="civilstatus" placeholder="Enter your civil status"
-                            value="<?php echo htmlspecialchars($user['civilstatus']); ?>" required>
-                    </div>
-                </div>
-
-                <h3>Contact Details</h3>
-                <div class="fields">
-                    <div class="input-field">
                         <label>Region</label>
                         <select id="regionSelect" name="region" class="form-control selectpicker"
                             data-live-search="true">
@@ -188,13 +167,36 @@
                             <option value="">Select a city first</option>
                         </select>
                     </div>
-
-
-                    <div class="input-field">
+                     <div class="input-field">
                         <label>Zip Code</label>
                         <input type="text" name="zipcode" placeholder="Enter your zip code"
                             value="<?php echo htmlspecialchars($user['zipcode']); ?>" required>
                     </div>
+                    <div class="input-field">
+                        <label>Sex</label>
+                        <select name="gender" required>
+                            <option disabled>Select gender</option>
+                            <option value="Male" <?php echo ($user['gender'] === 'Male') ? 'selected' : ''; ?>>Male
+                            </option>
+                            <option value="Female" <?php echo ($user['gender'] === 'Female') ? 'selected' : ''; ?>>Female
+                            </option>
+                            <option value="Others" <?php echo ($user['gender'] === 'Others') ? 'selected' : ''; ?>>Others
+                            </option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Civil Status</label>
+                        <input type="text" name="civilstatus" placeholder="Enter your civil status"
+                            value="<?php echo htmlspecialchars($user['civilstatus']); ?>" required>
+                    </div>
+                </div>
+
+                <h3>Contact Details</h3>
+                <div class="fields">
+                  
+
+
+                   
                     <div class="input-field">
                         <label>Email</label>
                         <input type="email" name="email" placeholder="Enter your email"
