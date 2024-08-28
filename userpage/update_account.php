@@ -550,7 +550,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <label for="graduation_year">Year of Graduaton</label>
+                                <label for="graduation_year">Year of Graduation</label>
 
                                 <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
                                     <div class="input-group date nk-int-st">
@@ -801,16 +801,3 @@
     });
 
 </script>
-<script>
-        // Define the current version
-        const currentVersion = '1.0.1';
-
-        // Check if the stored version in localStorage matches the current version
-        if (localStorage.getItem('version') !== currentVersion) {
-            // Update the stored version to the current version
-            localStorage.setItem('version', currentVersion);
-            
-            // Force a hard reload of the page
-            location.reload(true);
-        }
-    </script>
