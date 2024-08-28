@@ -135,6 +135,16 @@
         .profile-section {
             margin-bottom: 30px;
         }
+
+        .form-label {
+            color: #6482AD;
+        }
+
+        .icon {
+            color: #6482AD;
+            margin-right: 5px;
+            /* Adjust spacing between icon and label */
+        }
     </style>
 </head>
 
@@ -158,8 +168,10 @@
                     <div class="post-container">
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <label for="firstname">First Name</label>
                                 <div class="form-group">
+                                    <label for="firstname" class="form-label">
+                                        <i class="fas fa-user icon"></i> First Name
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="firstname" name="firstname" class="form-control"
                                             placeholder="Firstname"
@@ -169,7 +181,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="middlename">Middle Name</label>
+                                    <label for="middlename" class="form-label">
+                                        <i class="fas fa-user-circle icon"></i> Middle Name
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="middlename" name="middlename" class="form-control"
                                             placeholder="Middlename"
@@ -179,7 +193,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="lastname">Last Name</label>
+                                    <label for="lastname" class="form-label">
+                                        <i class="fas fa-user-tag icon"></i> Last Name
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="lastname" name="lastname" class="form-control"
                                             placeholder="Lastname"
@@ -189,19 +205,22 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="regionSelect">Region</label>
+                                    <label for="regionSelect" class="form-label">
+                                        <i class="fas fa-globe icon"></i> Region
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="regionSelect" name="region" class="form-control selectpicker"
                                             data-live-search="true">
                                             <option value="">Loading regions...</option>
-
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="provinceSelect">Province</label>
+                                    <label for="provinceSelect" class="form-label">
+                                        <i class="fas fa-map-marker-alt icon"></i> Province
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="provinceSelect" name="state" class="form-control selectpicker"
                                             data-live-search="true">
@@ -218,7 +237,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="citySelect">City/Municipality</label>
+                                    <label for="citySelect" class="form-label">
+                                        <i class="fas fa-city icon"></i> City/Municipality
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="citySelect" name="city" class="form-control selectpicker"
                                             data-live-search="true">
@@ -235,7 +256,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="barangaySelect">Barangay</label>
+                                    <label for="barangaySelect" class="form-label">
+                                        <i class="fas fa-map icon"></i> Barangay
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="barangaySelect" name="barangay" class="form-control selectpicker"
                                             data-live-search="true">
@@ -252,7 +275,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="birthdate">Birth Date</label>
+                                    <label for="birthdate" class="form-label">
+                                        <i class="fas fa-calendar-alt icon"></i> Birth Date
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="birthdate" name="birthdate" class="form-control"
                                             data-mask="99/99/9999" placeholder="dd/mm/yyyy"
@@ -262,7 +287,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="gender">Gender</label>
+                                    <label for="gender" class="form-label">
+                                        <i class="fas fa-venus-mars icon"></i> Gender
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="gender" name="gender" class="form-control selectpicker">
                                             <option value="Male" <?php echo (getValue($current_user, 'gender') == 'Male') ? 'selected' : ''; ?>>Male</option>
@@ -273,7 +300,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="civilstatus">Civil Status</label>
+                                    <label for="civilstatus" class="form-label">
+                                        <i class="fas fa-heart icon"></i> Civil Status
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="civilstatus" name="civilstatus" class="form-control selectpicker">
                                             <option value="Single" <?php echo (getValue($current_user, 'civilstatus') == 'Single') ? 'selected' : ''; ?>>Single</option>
@@ -284,8 +313,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+
 
                 <h3>Contact</h3>
                 <div class="post-col" style="width:100% !important">
@@ -294,7 +324,9 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="contactnumber">Contact Number</label>
+                                    <label for="contactnumber" class="form-label">
+                                        <i class="fas fa-phone icon"></i> Contact Number
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="contactnumber" name="contactnumber" class="form-control"
                                             value="<?php echo getValue($current_user, 'contactnumber'); ?>"
@@ -304,7 +336,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="reserve_email">Email</label>
+                                    <label for="reserve_email" class="form-label">
+                                        <i class="fas fa-envelope icon"></i> Email
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="reserve_email" name="reserve_email" class="form-control"
                                             value="<?php echo getValue($current_user, 'reserve_email'); ?>"
@@ -314,9 +348,11 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="addressline1">Current Address</label>
+                                    <label for="addressline1" class="form-label">
+                                        <i class="fas fa-home icon"></i> Current Address
+                                    </label>
                                     <div class="nk-int-st">
-                                        <input type="text" id=" " name="addressline1" class="form-control"
+                                        <input type="text" id="addressline1" name="addressline1" class="form-control"
                                             value="<?php echo getValue($current_user, 'addressline1'); ?>"
                                             placeholder="Address">
                                     </div>
@@ -324,7 +360,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="zipcode">Zip Code</label>
+                                    <label for="zipcode" class="form-label">
+                                        <i class="fas fa-map-pin icon"></i> Zip Code
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="zipcode" name="zipcode" class="form-control"
                                             value="<?php echo getValue($current_user, 'zipcode'); ?>"
@@ -337,6 +375,7 @@
                 </div>
 
 
+
                 <h3>Employment Information</h3>
                 <div class="post-col" style="width:100% !important">
                     <!-- Post Section -->
@@ -344,7 +383,8 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="work_status">Employment Status</label>
+                                    <label for="work_status" class="form-label"><i class="fas fa-briefcase icon"></i>
+                                        Employment Status</label>
                                     <div class="nk-int-st">
                                         <select id="work_status" name="work_status" class="form-control selectpicker">
                                             <option>Select Status</option>
@@ -356,35 +396,37 @@
                             </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-
-                                <label for="first_employment_date">First Employment Date</label>
-                                <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
-                                    <div class="input-group date nk-int-st">
-                                        <span class="input-group-addon"></span>
-                                        <input type="text" class="form-control" name="first_employment_date"
-                                            value="<?php echo getValue($current_user, 'first_employment_date'); ?>">
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="form-group nk-datapk-ctm " id="data_1">
-                                    <label for="company_name">Current Employment Date</label>
-                                    <div class="input-group date nk-int-st">
-                                        <span class="input-group-addon"></span>
-                                        <input type="text" class="form-control" name="date_for_current_employment"
-                                            value="<?php echo getValue($current_user, 'date_for_current_employment'); ?>">
+                                <div class="form-group">
+                                    <label for="first_employment_date" class="form-label"><i
+                                            class="fas fa-calendar-alt icon"></i> First Employment Date</label>
+                                    <div class="nk-datapk-ctm form-elet-mg" id="data_1">
+                                        <div class="input-group date nk-int-st">
+                                            <span class="input-group-addon"></span>
+                                            <input type="text" class="form-control" name="first_employment_date"
+                                                value="<?php echo getValue($current_user, 'first_employment_date'); ?>">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="company_name">Company Name</label>
+                                    <label for="date_for_current_employment" class="form-label"><i
+                                            class="fas fa-calendar-day icon"></i> Current Employment Date</label>
+                                    <div class="nk-datapk-ctm" id="data_1">
+                                        <div class="input-group date nk-int-st">
+                                            <span class="input-group-addon"></span>
+                                            <input type="text" class="form-control" name="date_for_current_employment"
+                                                value="<?php echo getValue($current_user, 'date_for_current_employment'); ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label for="company_name" class="form-label"><i class="fas fa-building icon"></i>
+                                        Company Name</label>
                                     <div class="nk-int-st">
                                         <input type="text" id="company_name" name="name_company" class="form-control"
                                             value="<?php echo getValue($current_user, 'company_name'); ?>"
@@ -392,9 +434,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="employment_location">Employment Location</label>
+                                    <label for="employment_location" class="form-label"><i
+                                            class="fas fa-map-marker-alt icon"></i> Employment Location</label>
                                     <div class="nk-int-st">
                                         <input type="text" id="employment_location" name="employment_location"
                                             class="form-control"
@@ -403,9 +447,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="type_of_work">Type of Work</label>
+                                    <label for="type_of_work" class="form-label"><i class="fas fa-tools icon"></i> Type
+                                        of Work</label>
                                     <div class="nk-int-st">
                                         <input type="text" id="type_of_work" name="type_of_work" class="form-control"
                                             value="<?php echo getValue($current_user, 'type_of_work'); ?>"
@@ -413,9 +459,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="work_position">Position</label>
+                                    <label for="work_position" class="form-label"><i class="fas fa-user-tie icon"></i>
+                                        Position</label>
                                     <div class="nk-int-st">
                                         <input type="text" id="work_position" name="work_position" class="form-control"
                                             value="<?php echo getValue($current_user, 'work_position'); ?>"
@@ -426,7 +474,8 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="monthly_income">Monthly Income</label>
+                                    <label for="monthly_income" class="form-label"><i
+                                            class="fas fa-dollar-sign icon"></i> Monthly Income</label>
                                     <div class="nk-int-st">
                                         <input type="text" id="monthly_income" name="current_monthly_income"
                                             class="form-control"
@@ -435,9 +484,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="job_satisfaction">Job Satisfaction</label>
+                                    <label for="job_satisfaction" class="form-label"><i class="fas fa-smile icon"></i>
+                                        Job Satisfaction</label>
                                     <div class="nk-int-st">
                                         <select id="job_satisfaction" name="job_satisfaction"
                                             class="form-control selectpicker">
@@ -454,9 +505,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="related_to_course">Related to Course of Study?</label>
+                                    <label for="related_to_course" class="form-label"><i
+                                            class="fas fa-graduation-cap icon"></i> Related to Course of Study?</label>
                                     <div class="nk-int-st">
                                         <select id="related_to_course" name="work_related"
                                             class="form-control selectpicker">
@@ -466,9 +519,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="work_classification">Work Classification</label>
+                                    <label for="work_classification" class="form-label"><i class="fas fa-tags icon"></i>
+                                        Work Classification</label>
                                     <div class="nk-int-st">
                                         <select id="work_classification" name="work_classification"
                                             class="form-control selectpicker">
@@ -493,6 +548,8 @@
                 </div>
 
 
+
+
                 <h3>Education Information</h3>
                 <div class="post-col" style="width:100% !important">
                     <!-- Post Section -->
@@ -500,7 +557,9 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="degree">Course</label>
+                                    <label for="course" class="form-label">
+                                        <i class="fa fa-book icon"></i> Course
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="course" name="course" class="form-control selectpicker">
                                             <option
@@ -521,7 +580,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="major">Major</label>
+                                    <label for="major" class="form-label">
+                                        <i class="fa fa-graduation-cap icon"></i> Major
+                                    </label>
                                     <div class="nk-int-st">
                                         <input type="text" id="major" class="form-control" name="major"
                                             value="<?php echo getValue($current_user, 'major'); ?>" placeholder="Major">
@@ -530,7 +591,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
-                                    <label for="batch">Batch</label>
+                                    <label for="batch" class="form-label">
+                                        <i class="fa fa-calendar-alt icon"></i> Batch
+                                    </label>
                                     <div class="nk-int-st">
                                         <select id="batch" name="batch" class="form-control selectpicker">
                                             <option
@@ -550,19 +613,23 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <label for="graduation_year">Year of Graduation</label>
-
-                                <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
-                                    <div class="input-group date nk-int-st">
-                                        <span class="input-group-addon"></span>
-                                        <input type="text" class="form-control" name="graduation_year"
-                                            value="<?php echo getValue($current_user, 'graduation_year'); ?>">
+                                <div class="form-group">
+                                    <label for="graduation_year" class="form-label">
+                                        <i class="fa fa-calendar icon"></i> Year of Graduation
+                                    </label>
+                                    <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
+                                        <div class="input-group date nk-int-st">
+                                            <span class="input-group-addon"></span>
+                                            <input type="text" class="form-control" name="graduation_year"
+                                                value="<?php echo getValue($current_user, 'graduation_year'); ?>">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <button type="submit" class="btn btn-primary">Update Profile</button>
             </div>
         </form>
