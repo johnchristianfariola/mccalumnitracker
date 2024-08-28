@@ -479,7 +479,7 @@
                                     <div class="nk-int-st">
                                         <input type="text" id="monthly_income" name="current_monthly_income"
                                             class="form-control"
-                                            value="<?php echo number_format(getValue($current_user, 'current_monthly_income'), 2); ?>"
+                                            value="<?php echo getValue($current_user, 'current_monthly_income'); ?>"
                                             placeholder="Monthly Income">
                                     </div>
                                 </div>
