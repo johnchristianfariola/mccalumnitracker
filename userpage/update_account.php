@@ -159,6 +159,13 @@
     <?php include 'includes/sidebar.php'; ?>
 
     <div class="profile-content">
+        <?php
+        // At the top of main.php, after starting the session
+        if (isset($_SESSION['update_message'])) {
+            echo '<div class="alert alert-info">' . $_SESSION['update_message'] . '</div>';
+            unset($_SESSION['update_message']); // Clear the message after displaying it
+        }
+        ?>
         <form id="updateProfileForm" action="edit_user_account.php" method="POST">
             <input type="hidden" name="user_id" value="<?php echo $current_user_id; ?>">
             <div id="personal-info" class="profile-section">
@@ -630,7 +637,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Update Profile</button>
+                <button type="submit" style="float:right" class="btn btn-primary">Update Profile</button>
             </div>
         </form>
 

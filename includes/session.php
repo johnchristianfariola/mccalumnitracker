@@ -31,7 +31,6 @@ try {
     $categoryData = $firebase->retrieve("category");
     $categoryData = json_decode($categoryData, true);
 
-
 } catch (Exception $e) {
     // Handle errors when retrieving data
     error_log("Error retrieving data: " . $e->getMessage());
@@ -46,7 +45,7 @@ foreach ($alumniData as $id => $alumni) {
         // Map batch and course codes using unique IDs
         $batchYear = isset($batchData[$alumni['batch']]['batch_yrs']) ? $batchData[$alumni['batch']]['batch_yrs'] : 'Unknown Batch';
         $courseCode = isset($courseData[$alumni['course']]['courCode']) ? $courseData[$alumni['course']]['courCode'] : 'Unknown Course';
-        $categoryName = isset($categoryData[$alumni['work_classification']]['category_name']) ? $categoryData[$alumni['work_classification']]['category_name'] : 'Unknown Course';
+        $categoryName = isset($categoryData[$alumni['work_classification']]['category_name']) ? $categoryData[$alumni['work_classification']]['category_name'] : 'Unknown Category';
 
         // Alumni user is authenticated, store user data in session
         $user = [
@@ -57,10 +56,8 @@ foreach ($alumniData as $id => $alumni) {
             'auxiliaryname' => $alumni['auxiliaryname'],
             'birthdate' => $alumni['birthdate'],
             'addressline1' => $alumni['addressline1'],
-
             'civilstatus' => $alumni['civilstatus'],
             'gender' => $alumni['gender'],
-     
             'studentid' => $alumni['studentid'],
             'zipcode' => $alumni['zipcode'],
             'email' => $alumni['email'],
@@ -71,9 +68,9 @@ foreach ($alumniData as $id => $alumni) {
             'batch' => $batchYear,
             'course' => $courseCode,
             'category' => $categoryName,
-            'batch_id' => $alumni['batch'], // Add batch ID for reference
-            'course_id' => $alumni['course'], // Add course ID for reference
-            'category_id' => $alumni['work_classification'], // Add course ID for reference
+            'batch_id' => $alumni['batch'],
+            'course_id' => $alumni['course'],
+            'category_id' => $alumni['work_classification'],
         ];
         $_SESSION['user'] = $user;
         $_SESSION['alumni_id'] = $id; // Store alumni ID in session
@@ -83,7 +80,9 @@ foreach ($alumniData as $id => $alumni) {
 }
 
 if (!$authenticated) {
-    // Invalid session or alumni not found
+    // If the email in the session doesn't match any user, clear the session and redirect to login
+    session_unset();
+    session_destroy();
     header('location: index.php');
     exit();
 }
