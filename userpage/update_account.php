@@ -69,11 +69,6 @@
     // Replace hyphens with slashes
     $currentEmploymentDateFormatted = str_replace('-', '/', $currentEmploymentDate);
 
-    // Retrieve the current monthly income from the user data
-    $monthlyIncome = getValue($current_user, 'current_monthly_income');
-
-    // Format the income as a decimal with commas and two decimal places
-    $formattedIncome = formatValue($monthlyIncome);
     ?>
 
 
@@ -435,8 +430,8 @@
                                     <div class="nk-int-st">
                                         <input type="text" id="monthly_income" name="current_monthly_income"
                                             class="form-control"
-                                            value="<?php echo number_format(getValue($current_user, 'current_monthly_income')); ?>"
-                                            placeholder="Monthly Income" oninput="formatWithCommas(this)">
+                                            value="<?php echo number_format(getValue($current_user, 'current_monthly_income'), 2); ?>"
+                                            placeholder="Monthly Income">
                                     </div>
                                 </div>
                             </div>
@@ -805,19 +800,4 @@
         });
     });
 
-</script>
-<script>
-function formatWithCommas(input) {
-    // Remove any non-digit characters, except for the decimal point
-    let value = input.value.replace(/[^0-9.]/g, '');
-    
-    // Split the value into integer and decimal parts (if any)
-    let parts = value.split('.');
-    
-    // Add commas to the integer part
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    
-    // Rejoin the integer and decimal parts (if any)
-    input.value = parts.join('.');
-}
 </script>

@@ -13,6 +13,9 @@
     $alumni_data = $firebase->retrieve("alumni");
     $alumni_data = json_decode($alumni_data, true);
 
+    $category_data = $firebase->retrieve("category");
+    $category_data = json_decode($category_data, true);
+
     // Assuming you have the current user's ID stored in a session variable
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
@@ -27,6 +30,17 @@
     {
         return isset($array[$key]) && !empty($array[$key]) ? $array[$key] : "N/A";
     }
+
+    function getCategoryName($category_data, $category_id)
+    {
+        return isset($category_data[$category_id]) ? $category_data[$category_id]['category_name'] : "Unknown Category";
+    }
+
+    // Get the work classification ID from the current user's data
+    $work_classification_id = getValue($current_user, 'work_classification');
+
+    // Get the readable category name using the work classification ID
+    $category_name = getCategoryName($category_data, $work_classification_id);
     ?>
 
 </head>
@@ -84,7 +98,7 @@
                             </p>
                             <p><strong>Birthday:</strong> <?php echo getValue($current_user, 'birthdate'); ?></p>
                             <p><strong>Gender:</strong> <?php echo getValue($current_user, 'gender'); ?></p>
-                            <p><strong>Address:</strong> <?php echo getValue($current_user, 'addressline1'); ?></p>
+                            <p><strong>Address:</strong> <?php   echo getValue($current_user, 'barangay') . ', ' . getValue($current_user, 'city') . ',  ' . getValue($current_user, 'state'); ?></p>
                             <p><strong>Civil Status:</strong> <?php echo getValue($current_user, 'civilstatus'); ?></p>
                             <p><strong>Student ID:</strong> <?php echo getValue($current_user, 'studentid'); ?></p>
                         </div>
@@ -102,7 +116,7 @@
                             <p><strong>Work Status:</strong>
                                 <?php echo getValue($current_user, 'work_employment_status'); ?></p>
                             <p><strong>Work Classification:</strong>
-                                <?php echo getValue($current_user, 'work_classification'); ?></p>
+                            <?php echo $category_name; ?></p>
                             <p><strong>Monthly Income:</strong>
                                 <?php echo getValue($current_user, 'current_monthly_income'); ?></p>
                             <p><strong>Job Satisfaction:</strong>

@@ -148,26 +148,27 @@
                     <div class="input-field">
                         <label>Province</label>
                         <select id="provinceSelect" name="state" class="form-control selectpicker"
-                            data-live-search="true">
+                            data-live-search="true"
+                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['state']); ?>">
                             <option value="">Select a region first</option>
                         </select>
-
                     </div>
                     <div class="input-field">
                         <label>City</label>
-                        <select id="citySelect" name="city" class="form-control selectpicker" data-live-search="true">
-                            <option value="">Select a city first</option>
+                        <select id="citySelect" name="city" class="form-control selectpicker" data-live-search="true"
+                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['city']); ?>">
+                            <option value="">Select a province first</option>
                         </select>
                     </div>
                     <div class="input-field">
                         <label>Barangay</label>
-
                         <select id="barangaySelect" name="barangay" class="form-control selectpicker"
-                            data-live-search="true">
+                            data-live-search="true"
+                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['barangay']); ?>">
                             <option value="">Select a city first</option>
                         </select>
                     </div>
-                     <div class="input-field">
+                    <div class="input-field">
                         <label>Zip Code</label>
                         <input type="text" name="zipcode" placeholder="Enter your zip code"
                             value="<?php echo htmlspecialchars($user['zipcode']); ?>" required>
@@ -193,10 +194,10 @@
 
                 <h3>Contact Details</h3>
                 <div class="fields">
-                  
 
 
-                   
+
+
                     <div class="input-field">
                         <label>Email</label>
                         <input type="email" name="email" placeholder="Enter your email"
@@ -392,19 +393,30 @@
         let citiesData = [];
         let barangaysData = [];
 
+        function setSelectedValue(selectElement, value) {
+            if (value) {
+                const option = selectElement.querySelector(`option[value="${value}"]`);
+                if (option) {
+                    option.selected = true;
+                }
+            }
+        }
+
         // Fetch and populate regions
         fetch(regionUrl)
             .then(response => response.json())
             .then(data => {
                 const regionSelect = document.getElementById('regionSelect');
-                regionSelect.innerHTML = '';
+                regionSelect.innerHTML = '<option value="">Select a region</option>';
                 data.forEach(region => {
                     const option = document.createElement('option');
                     option.value = region.designation;
                     option.textContent = region.name;
                     regionSelect.appendChild(option);
                 });
+                setSelectedValue(regionSelect, regionSelect.dataset.currentValue);
                 $('.selectpicker').selectpicker('refresh');
+                regionSelect.dispatchEvent(new Event('change'));
             })
             .catch(error => console.error('Error fetching regions:', error));
 
@@ -456,6 +468,7 @@
                 provinceSelect.innerHTML = '<option value="">Select a region first</option>';
                 provinceSelect.disabled = true;
             }
+            setSelectedValue(provinceSelect, provinceSelect.dataset.currentValue);
             provinceSelect.dispatchEvent(new Event('change')); // Trigger province change event if needed
             $('.selectpicker').selectpicker('refresh');
         });
@@ -484,6 +497,7 @@
                 citySelect.innerHTML = '<option value="">Select a province first</option>';
                 citySelect.disabled = true;
             }
+            setSelectedValue(citySelect, citySelect.dataset.currentValue);
             citySelect.dispatchEvent(new Event('change')); // Trigger city change event if needed
             $('.selectpicker').selectpicker('refresh');
         });
@@ -512,6 +526,7 @@
                 barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
                 barangaySelect.disabled = true;
             }
+            setSelectedValue(barangaySelect, barangaySelect.dataset.currentValue);
             $('.selectpicker').selectpicker('refresh');
         });
     });
