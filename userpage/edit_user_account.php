@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
-session_start(); // Start the session
+session_start();
 
 $firebase = new firebaseRDB($databaseURL);
 
@@ -19,23 +19,72 @@ $update_data = [];
 $updated_fields = [];
 
 // Helper function to sanitize and validate input
-function sanitize_input($data) {
+function sanitize_input($data, $is_html = false) {
+    if ($is_html) {
+        return trim($data);  // Do not encode HTML content
+    }
     return htmlspecialchars(trim($data));
 }
 
-// Update fields if provided
+// Handle file uploads
+function handle_file_upload($file_input_name, $target_dir) {
+    if (!empty($_FILES[$file_input_name]['name'])) {
+        $target_file = $target_dir . basename($_FILES[$file_input_name]['name']);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        
+        // Check if the file is an image
+        $check = getimagesize($_FILES[$file_input_name]['tmp_name']);
+        if($check !== false) {
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($_FILES[$file_input_name]['tmp_name'], $target_file)) {
+                return $target_file;
+            }
+        }
+    }
+    return null;
+}
+
+// Define directories for profile and cover photos
+$profile_picture_dir = 'uploads/';
+$cover_photo_dir = 'uploads/cover_photos/';
+
+// Ensure directories exist
+if (!file_exists($profile_picture_dir)) {
+    mkdir($profile_picture_dir, 0777, true);
+}
+if (!file_exists($cover_photo_dir)) {
+    mkdir($cover_photo_dir, 0777, true);
+}
+
+// Handle profile picture upload
+$profile_image = handle_file_upload('profile_url', $profile_picture_dir);
+if ($profile_image) {
+    $update_data['profile_url'] = $profile_image;
+    $updated_fields[] = 'Profile Picture';
+}
+
+// Handle cover photo upload
+$cover_photo = handle_file_upload('cover_photo_url', $cover_photo_dir);
+if ($cover_photo) {
+    $update_data['cover_photo_url'] = $cover_photo;
+    $updated_fields[] = 'Cover Photo';
+}
+
+// Update other fields from the form
 $fields = [
-    'firstname', 'middlename', 'lastname', 'birthdate', 'gender', 'civilstatus', 
-    'state', 'city', 'barangay', 'contactnumber', 'reserve_email', 'addressline1', 
-    'zipcode', 'work_status', 'first_employment_date', 'date_for_current_employment', 
-    'name_company', 'employment_location', 'type_of_work', 'work_position', 
+    'firstname', 'middlename', 'lastname', 'birthdate', 'gender', 'civilstatus',
+    'state', 'city', 'barangay', 'contactnumber', 'reserve_email', 'addressline1',
+    'zipcode', 'work_status', 'first_employment_date', 'date_for_current_employment',
+    'name_company', 'employment_location', 'type_of_work', 'work_position',
     'current_monthly_income', 'job_satisfaction', 'work_related',
-    'course', 'major', 'batch', 'graduation_year', 'work_classification'
+    'course', 'major', 'batch', 'graduation_year', 'work_classification',
+    'bio'  // Add the bio field here
 ];
 
 foreach ($fields as $field) {
     if (isset($_POST[$field])) {
-        $new_value = sanitize_input($_POST[$field]);
+        // If the field is 'bio', allow HTML content without encoding it
+        $new_value = sanitize_input($_POST[$field], $field === 'bio');
         if (!isset($_SESSION['user'][$field]) || $_SESSION['user'][$field] !== $new_value) {
             $update_data[$field] = $new_value;
             $updated_fields[] = ucfirst(str_replace('_', ' ', $field));
@@ -61,10 +110,10 @@ try {
         }
         
         if (count($updated_fields) == 1) {
-            $_SESSION['update_message'] = 'Date updated successfully.';
+            $_SESSION['update_message'] = 'Data Updated Successfully';
         } else {
             $last_field = array_pop($updated_fields);
-            $_SESSION['update_message'] = 'Date updated successfully.';
+            $_SESSION['update_message'] = 'Data Updated Successfully';
         }
     } else {
         $_SESSION['update_message'] = 'Failed to update profile. Please try again.';
@@ -76,4 +125,3 @@ try {
 // Redirect back to the main page
 header('Location: update_account.php');
 exit();
-?>

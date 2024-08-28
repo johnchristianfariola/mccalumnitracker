@@ -47,6 +47,7 @@ foreach ($alumniData as $id => $alumni) {
         $courseCode = isset($courseData[$alumni['course']]['courCode']) ? $courseData[$alumni['course']]['courCode'] : 'Unknown Course';
         $categoryName = isset($categoryData[$alumni['work_classification']]['category_name']) ? $categoryData[$alumni['work_classification']]['category_name'] : 'Unknown Category';
 
+        
         // Alumni user is authenticated, store user data in session
         $user = [
             'id' => $id,

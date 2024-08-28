@@ -145,6 +145,91 @@
             margin-right: 5px;
             /* Adjust spacing between icon and label */
         }
+
+        .char-count {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .error {
+            color: red;
+        }
+
+
+        .profile-image-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-image-container:hover .overlay {
+            opacity: 1;
+        }
+
+        .cover-photo-container {
+            position: relative;
+            width: 100%;
+
+            /* Adjust height as needed */
+            overflow: hidden;
+            cursor: pointer;
+
+            /* Space for profile image */
+        }
+
+        .cover-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 18px;
+            transition: opacity 0.3s ease;
+        }
+
+        .cover-photo-container:hover .cover-overlay {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -166,7 +251,7 @@
             unset($_SESSION['update_message']); // Clear the message after displaying it
         }
         ?>
-        <form id="updateProfileForm" action="edit_user_account.php" method="POST">
+        <form id="updateProfileForm" action="edit_user_account.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="user_id" value="<?php echo $current_user_id; ?>">
             <div id="personal-info" class="profile-section">
                 <h3>Personal Information</h3>
@@ -637,7 +722,57 @@
                     </div>
                 </div>
 
-                <button type="submit" style="float:right" class="btn btn-primary">Update Profile</button>
+                <!-- Profile Picture Section -->
+                <h3>Profile Picture</h3>
+                <div class="post-col" style="width:100% !important">
+                    <div class="post-container">
+                        <center>
+                            <div class="profile-image-container">
+                                <input type="file" id="profileImageInput" name="profile_url" accept="image/*"
+                                    style="display: none;">
+                                <img src="<?php echo getValue($current_user, 'profile_url'); ?>" id="profileImage" alt="Profile Image"
+                                    class="profile-image">
+                                <div class="overlay">
+                                    <span>Change Image</span>
+                                </div>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+
+                <!-- Cover Photo Section -->
+                <h3>Cover Photo</h3>
+                <div class="post-col" style="width:100% !important">
+                    <div class="post-container">
+                        <div class="cover-photo-container">
+                            <input type="file" id="coverPhotoInput" name="cover_photo_url" accept="image/*"
+                                style="display: none;">
+                            <img src="<?php echo getValue($current_user, 'cover_photo_url'); ?>" id="coverPhoto" alt="Cover Photo"
+                                class="cover-photo">
+                            <div class="cover-overlay">
+                                <span>Change Cover</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                    <h3>Type your Bio</h3>
+                    <div class="post-col" style="width:100% !important">
+                        <!-- Post Section -->
+                        <div class="post-container">
+                            <textarea id="editor1" name="bio" rows="10" cols="80">     <?php echo htmlspecialchars(getValue($current_user, 'bio')); ?></textarea>
+                            <div class="char-count">
+                                <span id="charCount">0</span> / 101 characters
+                            </div>
+                            <div class="error" id="charError" style="display: none;">
+                                Bio cannot exceed 101 characters.
+                            </div>
+                        </div>
+                    </div>
+                <button type="submit" style="float:right" class="btn btn-primary" onclick="submitForm()">Update
+                    Profile</button>
+
             </div>
         </form>
 
@@ -660,6 +795,62 @@
 <script src="js/datapicker/bootstrap-datepicker.js"></script>
 <script src="js/datapicker/datepicker-active.js"></script>
 
+<script>
+  var maxLength = 101;
+
+// Initialize CKEditor
+CKEDITOR.replace('editor1', {
+    on: {
+        instanceReady: function(evt) {
+            updateCharCount();
+        }
+    }
+});
+
+// Function to update character count and limit input
+function updateCharCount() {
+    var editor = CKEDITOR.instances.editor1;
+    var content = editor.getData();
+    var text = content.replace(/<[^>]*>/g, ''); // Strip HTML tags
+    var currentLength = text.length;
+    
+    document.getElementById('charCount').textContent = currentLength;
+
+    if (currentLength > maxLength) {
+        var truncatedText = text.slice(0, maxLength);
+        editor.setData(truncatedText);
+        document.getElementById('charError').style.display = 'block';
+    } else {
+        document.getElementById('charError').style.display = 'none';
+    }
+}
+
+// Update character count on CKEditor instance change
+CKEDITOR.instances.editor1.on('change', function() {
+    updateCharCount();
+});
+
+// Prevent further input when limit is reached
+CKEDITOR.instances.editor1.on('key', function(evt) {
+    var editor = evt.editor;
+    var content = editor.getData();
+    var text = content.replace(/<[^>]*>/g, '');
+    
+    if (text.length >= maxLength && evt.data.keyCode != 8 && evt.data.keyCode != 46) {
+        evt.cancel();
+    }
+});
+
+// Sync CKEditor content with the underlying <textarea> elements before form submission
+function submitForm() {
+    for (var instanceName in CKEDITOR.instances) {
+        if (CKEDITOR.instances.hasOwnProperty(instanceName)) {
+            CKEDITOR.instances[instanceName].updateElement();
+        }
+    }
+    return true;
+}
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -872,6 +1063,40 @@
         barangaySelect.addEventListener('change', (event) => {
             console.log('Selected barangay:', event.target.value);
         });
+    });
+
+</script>
+<script>
+    // Profile Image Change
+    document.querySelector('.profile-image-container').addEventListener('click', function () {
+        document.getElementById('profileImageInput').click();
+    });
+
+    document.getElementById('profileImageInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profileImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Cover Photo Change
+    document.querySelector('.cover-photo-container').addEventListener('click', function () {
+        document.getElementById('coverPhotoInput').click();
+    });
+
+    document.getElementById('coverPhotoInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('coverPhoto').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     });
 
 </script>

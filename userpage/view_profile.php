@@ -35,7 +35,9 @@
 
     <!-----PROFILE PAGE---->
     <div class="profile-container">
-        <img src="../images/background_copy2.png" class="cover-img">
+    <div class="cover-img-container">
+        <img src="<?php echo htmlspecialchars($current_user['cover_photo_url'] ?? '../images/profile.png'); ?>" class="cover-img">
+    </div>  
         <div class="profile-details">
             <div class="pd-left">
                 <div class="pd-row">
@@ -63,8 +65,8 @@
             <div class="info-col">
                 <div class="profile-intro">
                     <h3>Intro</h3>
-                    <p class="intro-text">Finding solace in the pages of books and the whispers of thoughts✨📚
-                        <img src="../images/feeling.png" alt="Feeling">
+                    <p class="intro-text">
+                    <?php echo html_entity_decode(htmlspecialchars($current_user['bio'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                     <hr>
                     <ul>
@@ -87,7 +89,7 @@
                 </div>
 
                 <!------PHOTOS------->
-                <div class="profile-intro">
+              <!--  <div class="profile-intro">
                     <div class="title-box">
                         <h3>Photos</h3>
                         <a href="#">All Photos</a>
@@ -100,9 +102,9 @@
                         <div><img src="../images/profile.jpg" alt="Photo"></div>
                         <div><img src="../images/profile.jpg" alt="Photo"></div>
                     </div>
-                </div>
+                </div>-->
 
-                <!------FRIENDS------->
+                <!------FRIENDS-
                 <div class="profile-intro">
                     <div class="title-box">
                         <h3>Friends</h3>
@@ -129,7 +131,7 @@
                             <p>Alex Smith</p>
                         </div>
                     </div>
-                </div>
+                </div>------>
             </div>
 
             <div class="post-col">
