@@ -2984,7 +2984,7 @@ textarea.auto-size {
     border-right: 0px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-radius: 0px;
-	background:none !important;
+	/*background:none !important;*/
 	box-shadow: none !important;
 	outline:none !important;
 }
