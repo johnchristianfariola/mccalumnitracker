@@ -9,6 +9,36 @@
     require_once '../includes/firebaseRDB.php';
     require_once '../includes/config.php';
 
+    function time_elapsed_string($datetime, $full = false) {
+        $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
+        $ago = new DateTime($datetime, new DateTimeZone('Asia/Manila'));
+        $diff = $now->diff($ago);
+    
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+    
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+    
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+    
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+
     $firebase = new firebaseRDB($databaseURL);
 
     $alumni_data = $firebase->retrieve("alumni");
@@ -16,6 +46,9 @@
 
     $batchData = $firebase->retrieve("batch_yr");
     $batchData = json_decode($batchData, true);
+
+    $forum_data = $firebase->retrieve("forum");
+    $forum_data = json_decode($forum_data, true);
 
     // Assuming you have the current user's ID stored in a session variable
     $current_user_id = $_SESSION['alumni_id'];
@@ -33,7 +66,78 @@
         return $batchData[$batchId]['batch_yrs'] ?? 'Unknown';
     }
     ?>
+    <style>
+        .post-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
 
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-content h3 {
+            margin-bottom: 10px;
+        }
+
+        .activity-icons {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .activity-icons div {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .activity-icons i {
+            margin-right: 5px;
+        }
+
+        .comment-box {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .comment-box img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .comment-box input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            background-color: #f0f2f5;
+        }
+
+        .comment-btn {
+            border: none;
+            background: none;
+            color: #1877f2;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -127,9 +231,13 @@
                         <li>
                             <h5>Work Details </h5>
                         </li>
-                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button class="btn notika-btn-primary btn-sm" style="background:gold; "><b><?php echo htmlspecialchars($current_user['work_status']) ?></b></button>
-                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Type of Work:&nbsp; <?php echo htmlspecialchars($current_user['type_of_work']) ?></button>
-                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Postion:&nbsp; <?php echo htmlspecialchars($current_user['work_position']) ?></button>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button
+                                class="btn notika-btn-primary btn-sm"
+                                style="background:gold; "><b><?php echo htmlspecialchars($current_user['work_status']) ?></b></button>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Type of Work:&nbsp;
+                            <?php echo htmlspecialchars($current_user['type_of_work']) ?></button>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Postion:&nbsp;
+                            <?php echo htmlspecialchars($current_user['work_position']) ?></button>
 
                     </ul>
                 </div>
@@ -185,72 +293,110 @@
                     <div class="user-profile">
                         <img src="../images/profile.jpg" alt="Profile Picture">
                         <div>
-                            <p><?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['middlename'] . ' ' . $current_user['lastname']); ?></p>
-                            <small>Public <i class="fas fa-caret-down"></i></small>
+                            <p><?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['middlename'] . ' ' . $current_user['lastname']); ?>
+                            </p>
+                            <small><i class="fas fa-globe icon"></i> Public </small>
                         </div>
                     </div>
 
                     <div class="post-input-container">
                         <textarea rows="3" placeholder="What's on your mind, John?"></textarea>
                         <div class="add-post-links">
-                            <button class="btn notika-btn-lightblue" href="#"><i class="fa fa-send"></i>&nbsp;&nbsp;Post</button>
-                          
+                            <button class="btn notika-btn-lightblue" href="#"><i
+                                    class="fa fa-send"></i>&nbsp;&nbsp;Post</button>
+
                         </div>
                     </div>
                 </div>
 
                 <!-------POST SECTION----------->
-                <div class="post-container">
+                <!-------POST SECTION----------->
+                <?php
+                // Get current user's ID from session
+                $current_user_id = $_SESSION['alumni_id'];
+
+                if (!empty($forum_data)) {
+                    // Filter forums based on the current user's ID
+                    $user_forums = array_filter($forum_data, function ($forum, $forum_id) use ($current_user_id) {
+                        return isset($forum['alumniId']) && $forum['alumniId'] === $current_user_id;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    // Sort forums by creation date (newest first)
+                    uasort($user_forums, function ($a, $b) {
+                        return strtotime($b['createdAt']) - strtotime($a['createdAt']);
+                    });
+
+                    foreach ($user_forums as $forum_id => $forum) {
+                        $created_at = isset($forum['createdAt']) ? new DateTime($forum['createdAt']) : new DateTime();
+                        $formatted_date = $created_at->format('F j, Y, H:i A');
+                        $time_ago = time_elapsed_string($created_at->format('Y-m-d H:i:s'));
+                        ?>
+                <div class="post-container" data-forum-id="<?php echo $forum_id; ?>">
                     <div class="post-row">
                         <div class="user-profile">
-                            <img src="../images/profile.jpg" alt="Profile Picture">
+                            <img src="<?php echo htmlspecialchars($current_user['profile_url']); ?>"
+                                alt="Profile Picture" onerror="this.src='uploads/profile.jpg';">
                             <div>
-                                <p>John Doe</p>
-                                <span>July 1, 2024, 21:50 PM</span>
+                                <p>
+                                    <?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['lastname']); ?>
+                                </p>
+                                <span>
+                                    <?php echo $formatted_date; ?> &bull;
+                                    <?php echo $time_ago; ?>
+                                </span>
                             </div>
                         </div>
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                        <a href="#" class="post-options"><i class="fas fa-ellipsis-v"></i></a>
                     </div>
 
-                    <p class="post-text">Sample post content goes here. This is where the post text will be displayed.
-                    </p>
-                    <img src="../images/profile.jpg" class="post-img" alt="Post Image">
+                    <div class="post-content">
+                        <h3>
+                            <?php echo htmlspecialchars($forum['forumName']); ?>
+                        </h3>
+                        <?php echo $forum['forumDescription']; ?>
+                    </div>
 
                     <div class="post-row">
-                        <div class="activity-icons">
-                            <div><img src="../images/like.png"> 500</div>
-                            <div><img src="../images/comments.png"> 80</div>
-                            <div><img src="../images/share.png"> 30</div>
+                        <div class="reaction-buttons">
+                            <span class="reaction-btn" data-reaction="like">
+                                <i class="fa fa-thumbs-up"></i> Like <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="love">
+                                <i class="fa fa-heart"></i> Love <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="laugh">
+                                <i class="fa fa-smile-o"></i> Haha <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="wow">
+                                <i class="fa fa-surprise"></i> Wow <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="sad">
+                                <i class="fa fa-sad-tear"></i> Sad <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="angry">
+                                <i class="fa fa-angry"></i> Angry <span class="reaction-count">0</span>
+                            </span>
                         </div>
-
                     </div>
-                </div>
 
-                <div class="post-container">
-                    <div class="post-row">
-                        <div class="user-profile">
-                            <img src="../images/profile.jpg" alt="Profile Picture">
-                            <div>
-                                <p>John Doe</p>
-                                <span>July 2, 2024, 10:00 AM</span>
+                    <div class="comments-section">
+                        <div class="add-comment">
+                            <input type="text" class="comment-input" placeholder="Add a comment..."
+                                data-forum-id="<?php echo $forum_id; ?>">
+                            <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>">Post</button>
+                        </div>
+                        <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
+                            <!-- Comments will be loaded here -->
+                                </div>
                             </div>
                         </div>
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-                    </div>
+                        <?php
+                    }
+                } else {
+                    echo "<div class='post-container'><div class='post-content'><center><h4><i class='fa fa-wechat'></i> YOU DON'T HAVE DISCUSSION YET</h4></center></div></div>";
+                }
+                ?>
 
-                    <p class="post-text">Another sample post content goes here. This is where more post text will be
-                        displayed.</p>
-                    <img src="../images/profile.jpg" class="post-img" alt="Post Image">
-
-                    <div class="post-row">
-                        <div class="activity-icons">
-                            <div><img src="../images/like.png"> 500</div>
-                            <div><img src="../images/comments.png"> 80</div>
-                            <div><img src="../images/share.png"> 30</div>
-                        </div>
-
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -267,3 +413,99 @@
 <script src="js/main.js"></script>
 <script src="../bower_components/ckeditor/ckeditor.js"></script>
 <script src="js/jquery/jquery-3.5.1.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    // Load initial reactions
+    $('.post-container').each(function() {
+        var forumId = $(this).data('forum-id');
+        loadReactions(forumId);
+        loadComments(forumId);
+    });
+
+    // Handle reaction button clicks
+    $(document).on('click', '.reaction-btn', function() {
+        var $this = $(this);
+        var forumId = $this.closest('.post-container').data('forum-id');
+        var reactionType = $this.data('reaction');
+
+        $.ajax({
+            url: 'update_reaction_forum.php',
+            method: 'POST',
+            data: {
+                forum_id: forumId,
+                reaction_type: reactionType
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    loadReactions(forumId);
+                }
+            }
+        });
+    });
+
+    // Handle comment submission
+    $(document).on('click', '.add-comment-btn', function() {
+        var $this = $(this);
+        var forumId = $this.data('forum-id');
+        var $input = $this.siblings('.comment-input');
+        var commentContent = $input.val().trim();
+
+        if (commentContent === "") {
+            alert('Please enter a comment before posting.');
+            return;
+        }
+
+        $.ajax({
+            url: 'comment_forum.php',
+            method: 'POST',
+            data: {
+                comment: commentContent,
+                forum_id: forumId,
+                alumni_id: '<?php echo $_SESSION['alumni_id']; ?>'
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    $input.val('');
+                    loadComments(forumId);
+                }
+            }
+        });
+    });
+
+    function loadReactions(forumId) {
+        $.ajax({
+            url: 'get_forum_like_count.php',
+            method: 'GET',
+            data: { forum_id: forumId },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    var $reactionButtons = $('.post-container[data-forum-id="' + forumId + '"] .reaction-buttons');
+                    $.each(data.reaction_counts, function(reaction, count) {
+                        $reactionButtons.find('[data-reaction="' + reaction + '"] .reaction-count').text(count);
+                    });
+                    $reactionButtons.find('.reaction-btn').removeClass('active');
+                    if (data.user_reaction) {
+                        $reactionButtons.find('[data-reaction="' + data.user_reaction + '"]').addClass('active');
+                    }
+                }
+            }
+        });
+    }
+
+    function loadComments(forumId) {
+        $.ajax({
+            url: 'get_forum_comment.php',
+            method: 'GET',
+            data: { forum_id: forumId },
+            success: function(response) {
+                $('#comment-list-' + forumId).html(response);
+            }
+        });
+    }
+});
+</script>
