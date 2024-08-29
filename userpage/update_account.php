@@ -757,11 +757,11 @@
                         <div class="cover-photo-container">
                             <input type="file" id="coverPhotoInput" name="cover_photo_url" accept="image/*"
                                 style="display: none;">
-                         
 
-                                <img  id="coverPhoto" src="<?php echo getValue($current_user, 'cover_photo_url'); ?>"
-                                    alt="Profile Picture"  class="cover-photo"
-                                    onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
+
+                            <img id="coverPhoto" src="<?php echo getValue($current_user, 'cover_photo_url'); ?>"
+                                alt="Profile Picture" class="cover-photo"
+                                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
 
                             <div class="cover-overlay">
                                 <span>Change Cover</span>
