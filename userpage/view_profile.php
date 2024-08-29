@@ -129,7 +129,7 @@
                         </li>
                         <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button class="btn notika-btn-primary btn-sm" style="background:gold; "><b><?php echo htmlspecialchars($current_user['work_status']) ?></b></button>
                         <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Type of Work:&nbsp; <?php echo htmlspecialchars($current_user['type_of_work']) ?></button>
-                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Postion:&nbsp; <?php echo htmlspecialchars($current_user['work_postion']) ?></button>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Postion:&nbsp; <?php echo htmlspecialchars($current_user['work_position']) ?></button>
 
                     </ul>
                 </div>
