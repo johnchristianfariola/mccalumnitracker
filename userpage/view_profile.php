@@ -46,16 +46,20 @@
     <!-----PROFILE PAGE---->
     <div class="profile-container">
         <div class="cover-img-container">
-                <img id="coverPhoto" src="<?php echo htmlspecialchars($current_user['cover_photo_url']); ?>" alt="Profile Picture"  class="cover-img" onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
-       
-       
-            </div>
+            <img id="coverPhoto" src="<?php echo htmlspecialchars($current_user['cover_photo_url']); ?>"
+                alt="Profile Picture" class="cover-img"
+                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
+
+
+        </div>
         <div class="profile-details">
             <div class="pd-left">
                 <div class="pd-row">
                     <!---PROFILE PICTURE-->
 
-                        <img id="profileImage" class="pd-image" src="<?php echo htmlspecialchars($current_user['profile_url']); ?>" alt="Profile Picture" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                    <img id="profileImage" class="pd-image"
+                        src="<?php echo htmlspecialchars($current_user['profile_url']); ?>" alt="Profile Picture"
+                        onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
 
 
                     <div>
@@ -113,19 +117,20 @@
                             <?php echo htmlspecialchars($current_user['barangay']) . ', ' . htmlspecialchars($current_user['city']) . ', ' . htmlspecialchars($current_user['state']) ?>
                         </li>
                         <li><img src="../images/confetti.png" alt="Birthday"> Birthday:
-                            <?php
-                            $birthdate = htmlspecialchars($current_user['birthdate']);
+                            <?php $birthdate = htmlspecialchars($current_user['birthdate']);
                             $formatted_date = date("F j, Y", strtotime($birthdate));
-                            echo $formatted_date;
-                            ?>
-
+                            echo $formatted_date; ?>
                         </li>
                         <li><img src="../images/gender.png" alt="Gender"> Gender:
                             <?php echo htmlspecialchars($current_user['gender']) ?>
                         </li>
                         <li>
-                            <h5>Work Details    </h5>
+                            <h5>Work Details </h5>
                         </li>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button class="btn notika-btn-primary btn-sm" style="background:gold; "><b><?php echo htmlspecialchars($current_user['work_status']) ?></b></button>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Type of Work:&nbsp; <?php echo htmlspecialchars($current_user['type_of_work']) ?></button>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Postion:&nbsp; <?php echo htmlspecialchars($current_user['work_postion']) ?></button>
+
                     </ul>
                 </div>
 
