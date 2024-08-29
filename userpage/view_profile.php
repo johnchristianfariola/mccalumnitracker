@@ -328,62 +328,62 @@
                         $formatted_date = $created_at->format('F j, Y, H:i A');
                         $time_ago = time_elapsed_string($created_at->format('Y-m-d H:i:s'));
                         ?>
-                        <div class="post-container" data-forum-id="<?php echo $forum_id; ?>">
-                            <div class="post-row">
-                                <div class="user-profile">
-                                    <img src="<?php echo htmlspecialchars($current_user['profile_url']); ?>"
-                                        alt="Profile Picture" onerror="this.src='uploads/profile.jpg';">
-                                    <div>
-                                        <p>
-                                            <?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['lastname']); ?>
-                                        </p>
-                                        <span>
-                                            <?php echo $formatted_date; ?> &bull;
-                                            <?php echo $time_ago; ?>
-                                        </span>
-                                    </div>
-                                </div>
-                                <a href="#" class="post-options"><i class="fas fa-ellipsis-v"></i></a>
+                <div class="post-container" data-forum-id="<?php echo $forum_id; ?>">
+                    <div class="post-row">
+                        <div class="user-profile">
+                            <img src="<?php echo htmlspecialchars($current_user['profile_url']); ?>"
+                                alt="Profile Picture" onerror="this.src='uploads/profile.jpg';">
+                            <div>
+                                <p>
+                                    <?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['lastname']); ?>
+                                </p>
+                                <span>
+                                    <?php echo $formatted_date; ?> &bull;
+                                    <?php echo $time_ago; ?>
+                                </span>
                             </div>
+                        </div>
+                        <a href="#" class="post-options"><i class="fas fa-ellipsis-v"></i></a>
+                    </div>
 
-                            <div class="post-content">
-                                <h3>
-                                    <?php echo htmlspecialchars($forum['forumName']); ?>
-                                </h3>
-                                <?php echo $forum['forumDescription']; ?>
-                            </div>
+                    <div class="post-content">
+                        <h3>
+                            <?php echo htmlspecialchars($forum['forumName']); ?>
+                        </h3>
+                        <?php echo $forum['forumDescription']; ?>
+                    </div>
 
-                            <div class="post-row">
-                                <div class="reaction-buttons">
-                                    <span class="reaction-btn" data-reaction="like">
-                                        <i class="fa fa-thumbs-up"></i> Like <span class="reaction-count">0</span>
-                                    </span>
-                                    <span class="reaction-btn" data-reaction="love">
-                                        <i class="fa fa-heart"></i> Love <span class="reaction-count">0</span>
-                                    </span>
-                                    <span class="reaction-btn" data-reaction="laugh">
-                                        <i class="fa fa-smile-o"></i> Haha <span class="reaction-count">0</span>
-                                    </span>
-                                    <span class="reaction-btn" data-reaction="wow">
-                                        <i class="fa fa-surprise"></i> Wow <span class="reaction-count">0</span>
-                                    </span>
-                                    <span class="reaction-btn" data-reaction="sad">
-                                        <i class="fa fa-sad-tear"></i> Sad <span class="reaction-count">0</span>
-                                    </span>
-                                    <span class="reaction-btn" data-reaction="angry">
-                                        <i class="fa fa-angry"></i> Angry <span class="reaction-count">0</span>
-                                    </span>
-                                </div>
-                            </div>
+                    <div class="post-row">
+                        <div class="reaction-buttons">
+                            <span class="reaction-btn" data-reaction="like">
+                                <i class="fa fa-thumbs-up"></i> Like <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="love">
+                                <i class="fa fa-heart"></i> Love <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="laugh">
+                                <i class="fa fa-smile-o"></i> Haha <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="wow">
+                                <i class="fa fa-surprise"></i> Wow <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="sad">
+                                <i class="fa fa-sad-tear"></i> Sad <span class="reaction-count">0</span>
+                            </span>
+                            <span class="reaction-btn" data-reaction="angry">
+                                <i class="fa fa-angry"></i> Angry <span class="reaction-count">0</span>
+                            </span>
+                        </div>
+                    </div>
 
-                            <div class="comments-section">
-                                <div class="add-comment">
-                                    <input type="text" class="comment-input" placeholder="Add a comment..."
-                                        data-forum-id="<?php echo $forum_id; ?>">
-                                    <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>">Post</button>
-                                </div>
-                                <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
-                                    <!-- Comments will be loaded here -->
+                    <div class="comments-section">
+                        <div class="add-comment">
+                            <input type="text" class="comment-input" placeholder="Add a comment..."
+                                data-forum-id="<?php echo $forum_id; ?>">
+                            <button class="add-comment-btn" data-forum-id="<?php echo $forum_id; ?>">Post</button>
+                        </div>
+                        <div class="comment-list" id="comment-list-<?php echo $forum_id; ?>">
+                            <!-- Comments will be loaded here -->
                                 </div>
                             </div>
                         </div>
@@ -393,11 +393,11 @@
                     echo "<div class='post-container'><div class='post-content'><center><h4><i class='fa fa-wechat'></i> YOU DON'T HAVE DISCUSSION YET</h4></center></div></div>";
                 }
                 ?>
-               
 
 
+
+            </div>
         </div>
-    </div>
     </div>
     <?php include 'includes/profile_modal.php'; ?>
 </body>
@@ -414,155 +414,190 @@
 
 
 <script>
-$(document).ready(function () {
-    // Load initial reactions and comments
-    $('.post-container').each(function () {
-        var forumId = $(this).data('forum-id');
-        loadReactions(forumId);
-        loadComments(forumId);
-    });
-
-    // Handle reaction button clicks
-    $(document).on('click', '.reaction-btn', function () {
-        var $this = $(this);
-        var forumId = $this.closest('.post-container').data('forum-id');
-        var reactionType = $this.data('reaction');
-
-        $.ajax({
-            url: 'update_reaction_forum.php',
-            method: 'POST',
-            data: {
-                forum_id: forumId,
-                reaction_type: reactionType
-            },
-            success: function (response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    loadReactions(forumId);
-                }
-            }
+    $(document).ready(function () {
+        // Load initial reactions and comments
+        $('.post-container').each(function () {
+            var forumId = $(this).data('forum-id');
+            loadReactions(forumId);
+            loadComments(forumId);
         });
-    });
 
-    // Handle comment submission
-    $(document).on('click', '.add-comment-btn', function () {
-        var $this = $(this);
-        var forumId = $this.data('forum-id');
-        var $input = $this.siblings('.comment-input');
-        var commentContent = $input.val().trim();
+        // Handle reaction button clicks
+        $(document).on('click', '.reaction-btn', function () {
+            var $this = $(this);
+            var forumId = $this.closest('.post-container').data('forum-id');
+            var reactionType = $this.data('reaction');
 
-        if (commentContent === "") {
-            alert('Please enter a comment before posting.');
-            return;
-        }
-
-        $.ajax({
-            url: 'comment_forum.php',
-            method: 'POST',
-            data: {
-                comment: commentContent,
-                forum_id: forumId,
-                alumni_id: '<?php echo $_SESSION['alumni_id']; ?>'
-            },
-            success: function (response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    $input.val('');
-                    loadComments(forumId);
-                }
-            }
-        });
-    });
-
-    // Handle reply button clicks
-    $(document).on('click', '.reply-btn', function () {
-        $(this).siblings('.reply-input-area').toggle();
-    });
-
-    // Handle reply submission
-    $(document).on('click', '.submit-reply-btn', function () {
-        var $this = $(this);
-        var commentId = $this.data('comment-id');
-        var $replyInput = $this.siblings('.reply-input');
-        var replyContent = $replyInput.val().trim();
-        var forumId = $this.closest('.post-container').data('forum-id');
-
-        if (replyContent === "") {
-            alert('Please enter a reply before submitting.');
-            return;
-        }
-
-        $.ajax({
-            url: 'reply_forum.php',
-            method: 'POST',
-            data: {
-                forum_id: forumId,
-                comment_id: commentId,
-                reply: replyContent
-            },
-            success: function (response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    $replyInput.val('');
-                    loadComments(forumId);
-                }
-            }
-        });
-    });
-
-    // Handle heart and dislike button clicks
-    $(document).on('click', '.heart-btn, .dislike-btn', function () {
-        var $this = $(this);
-        var commentId = $this.data('comment-id');
-        var action = $this.hasClass('heart-btn') ? 'like' : 'dislike';
-        var forumId = $this.closest('.post-container').data('forum-id');
-
-        $.ajax({
-            url: 'update_heart_forum.php',
-            method: 'POST',
-            data: {
-                comment_id: commentId,
-                action: action
-            },
-            success: function (response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    loadComments(forumId);
-                }
-            }
-        });
-    });
-
-    function loadReactions(forumId) {
-        $.ajax({
-            url: 'get_forum_like_count.php',
-            method: 'GET',
-            data: { forum_id: forumId },
-            success: function (response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    var $reactionButtons = $('.post-container[data-forum-id="' + forumId + '"] .reaction-buttons');
-                    $.each(data.reaction_counts, function (reaction, count) {
-                        $reactionButtons.find('[data-reaction="' + reaction + '"] .reaction-count').text(count);
-                    });
-                    $reactionButtons.find('.reaction-btn').removeClass('active');
-                    if (data.user_reaction) {
-                        $reactionButtons.find('[data-reaction="' + data.user_reaction + '"]').addClass('active');
+            $.ajax({
+                url: 'update_reaction_forum.php',
+                method: 'POST',
+                data: {
+                    forum_id: forumId,
+                    reaction_type: reactionType
+                },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        loadReactions(forumId);
                     }
                 }
-            }
+            });
         });
-    }
 
-    function loadComments(forumId) {
-        $.ajax({
-            url: 'get_forum_comment.php',
-            method: 'GET',
-            data: { forum_id: forumId },
-            success: function (response) {
-                $('#comment-list-' + forumId).html(response);
+        // Handle comment submission
+        $(document).on('click', '.add-comment-btn', function () {
+            var $this = $(this);
+            var forumId = $this.data('forum-id');
+            var $input = $this.siblings('.comment-input');
+            var commentContent = $input.val().trim();
+
+            if (commentContent === "") {
+                alert('Please enter a comment before posting.');
+                return;
             }
+
+            $.ajax({
+                url: 'comment_forum.php',
+                method: 'POST',
+                data: {
+                    comment: commentContent,
+                    forum_id: forumId,
+                    alumni_id: '<?php echo $_SESSION['alumni_id']; ?>'
+                },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        $input.val('');
+                        loadComments(forumId);
+                    }
+                }
+            });
         });
-    }
-});
+
+        // Handle reply button clicks
+        $(document).on('click', '.reply-btn', function () {
+            $(this).siblings('.reply-input-area').toggle();
+        });
+
+        // Handle reply submission
+        $(document).on('click', '.submit-reply-btn', function () {
+            var $this = $(this);
+            var commentId = $this.data('comment-id');
+            var $replyInput = $this.siblings('.reply-input');
+            var replyContent = $replyInput.val().trim();
+            var forumId = $this.closest('.post-container').data('forum-id');
+
+            if (replyContent === "") {
+                alert('Please enter a reply before submitting.');
+                return;
+            }
+
+            $.ajax({
+                url: 'reply_forum.php',
+                method: 'POST',
+                data: {
+                    forum_id: forumId,
+                    comment_id: commentId,
+                    reply: replyContent
+                },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        $replyInput.val('');
+                        loadComments(forumId);
+                    }
+                }
+            });
+        });
+
+        // Handle heart and dislike button clicks
+        $(document).on('click', '.heart-btn, .dislike-btn', function () {
+            var $this = $(this);
+            var commentId = $this.data('comment-id');
+            var action = $this.hasClass('heart-btn') ? 'like' : 'dislike';
+            var forumId = $this.closest('.post-container').data('forum-id');
+
+            $.ajax({
+                url: 'update_heart_forum.php',
+                method: 'POST',
+                data: {
+                    comment_id: commentId,
+                    action: action
+                },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        loadComments(forumId);
+                    }
+                }
+            });
+        });
+
+        function loadReactions(forumId) {
+            $.ajax({
+                url: 'get_forum_like_count.php',
+                method: 'GET',
+                data: { forum_id: forumId },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        var $reactionButtons = $('.post-container[data-forum-id="' + forumId + '"] .reaction-buttons');
+                        $.each(data.reaction_counts, function (reaction, count) {
+                            $reactionButtons.find('[data-reaction="' + reaction + '"] .reaction-count').text(count);
+                        });
+                        $reactionButtons.find('.reaction-btn').removeClass('active');
+                        if (data.user_reaction) {
+                            $reactionButtons.find('[data-reaction="' + data.user_reaction + '"]').addClass('active');
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadComments(forumId) {
+            $.ajax({
+                url: 'get_forum_comment.php',
+                method: 'GET',
+                data: { forum_id: forumId },
+                success: function (response) {
+                    var $commentList = $('#comment-list-' + forumId);
+
+                    // Store the state of reply inputs
+                    var replyStates = {};
+                    $commentList.find('.reply-input-area').each(function () {
+                        var commentId = $(this).data('comment-id');
+                        replyStates[commentId] = {
+                            isVisible: $(this).is(':visible'),
+                            content: $(this).find('.reply-input').val()
+                        };
+                    });
+
+                    // Update the comment list
+                    $commentList.html(response);
+
+                    // Restore the state of reply inputs
+                    $commentList.find('.reply-input-area').each(function () {
+                        var commentId = $(this).data('comment-id');
+                        if (replyStates[commentId]) {
+                            if (replyStates[commentId].isVisible) {
+                                $(this).show();
+                            }
+                            $(this).find('.reply-input').val(replyStates[commentId].content);
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function refreshAllComments() {
+            $('.post-container').each(function () {
+                var forumId = $(this).data('forum-id');
+                loadComments(forumId);
+            });
+        }
+        setInterval(refreshAllComments, 10000);
+
+
+    });
 </script>
