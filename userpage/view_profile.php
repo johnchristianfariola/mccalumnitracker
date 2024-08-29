@@ -73,7 +73,7 @@
                         <li><img src="../images/profile-study.png" alt="Study"> Alumni ID:
                             <?php echo htmlspecialchars($current_user['studentid']) ?>
                         </li>
-                        <li><img src="../images/profile-home.png" alt="Home"> Lives in
+                        <li><img src="../images/profile-home.png" alt="Home">currently Lives in
                             <?php echo htmlspecialchars($current_user['addressline1']) ?>
                         </li>
                         <li><img src="../images/profile-location.png" alt="Location"> From
