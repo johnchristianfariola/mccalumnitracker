@@ -185,7 +185,7 @@
                     <div class="user-profile">
                         <img src="../images/profile.jpg" alt="Profile Picture">
                         <div>
-                            <p>John Doe</p>
+                            <p><?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['middlename'] . ' ' . $current_user['lastname']); ?></p>
                             <small>Public <i class="fas fa-caret-down"></i></small>
                         </div>
                     </div>
@@ -193,9 +193,8 @@
                     <div class="post-input-container">
                         <textarea rows="3" placeholder="What's on your mind, John?"></textarea>
                         <div class="add-post-links">
-                            <a href="#"><img src="../images/live-video.png">Live Video</a>
-                            <a href="#"><img src="../images/photo.png">Photo/Video</a>
-                            <a href="#"><img src="../images/feeling.png">Feeling</a>
+                            <button class="btn notika-btn-lightblue" href="#"><i class="fa fa-send"></i>&nbsp;&nbsp;Post</button>
+                          
                         </div>
                     </div>
                 </div>
