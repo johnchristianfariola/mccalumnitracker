@@ -26,6 +26,25 @@ function sanitize_input($data, $is_html = false) {
     return htmlspecialchars(trim($data));
 }
 
+// Helper function to format date
+function format_date($date) {
+    // Try to parse the date
+    $parsed_date = date_parse_from_format("d/m/Y", $date);
+    
+    // If parsing fails, try another common format
+    if ($parsed_date['error_count'] > 0) {
+        $parsed_date = date_parse($date);
+    }
+    
+    // If we successfully parsed the date, format it as YYYY-MM-DD
+    if ($parsed_date['error_count'] == 0) {
+        return sprintf("%04d-%02d-%02d", $parsed_date['year'], $parsed_date['month'], $parsed_date['day']);
+    }
+    
+    // If all parsing attempts fail, return null
+    return null;
+}
+
 // Handle file uploads
 function handle_file_upload($file_input_name, $target_dir) {
     if (!empty($_FILES[$file_input_name]['name'])) {
@@ -72,13 +91,13 @@ if ($cover_photo) {
 
 // Update other fields from the form
 $fields = [
-    'firstname', 'middlename', 'lastname', 'birthdate', 'gender', 'civilstatus',
+    'firstname', 'middlename', 'lastname', 'gender', 'civilstatus',
     'state', 'city', 'barangay', 'contactnumber', 'reserve_email', 'addressline1',
     'zipcode', 'work_status', 'first_employment_date', 'date_for_current_employment',
     'name_company', 'employment_location', 'type_of_work', 'work_position',
     'current_monthly_income', 'job_satisfaction', 'work_related',
     'course', 'major', 'batch', 'graduation_year', 'work_classification',
-    'bio'  // Add the bio field here
+    'bio'
 ];
 
 foreach ($fields as $field) {
@@ -89,6 +108,19 @@ foreach ($fields as $field) {
             $update_data[$field] = $new_value;
             $updated_fields[] = ucfirst(str_replace('_', ' ', $field));
         }
+    }
+}
+
+// Handle birthdate separately
+if (isset($_POST['birthdate'])) {
+    $formatted_birthdate = format_date($_POST['birthdate']);
+    if ($formatted_birthdate) {
+        $update_data['birthdate'] = $formatted_birthdate;
+        $updated_fields[] = 'Birthdate';
+    } else {
+        $_SESSION['update_message'] = 'Invalid birthdate format. Please use DD/MM/YYYY.';
+        header('Location: update_account.php');
+        exit();
     }
 }
 
@@ -124,4 +156,4 @@ try {
 
 // Redirect back to the main page
 header('Location: update_account.php');
-exit();
+exit(); 

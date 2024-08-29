@@ -366,16 +366,22 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                       
+
                                 <div class="form-group">
-                                    <label for="birthdate" class="form-label">
+                                <label for="birthdate" class="form-label">
                                         <i class="fas fa-calendar-alt icon"></i> Birth Date
                                     </label>
-                                    <div class="nk-int-st">
-                                        <input type="text" id="birthdate" name="birthdate" class="form-control"
-                                            data-mask="99/99/9999" placeholder="dd/mm/yyyy"
+                                    <div class="nk-datapk-ctm form-elet-mg" id="data_1">
+                                        <div class="input-group date nk-int-st">
+                                            <span class="input-group-addon"></span>
+                                            <input type="text" class="form-control"id="birthdate" name="birthdate"
                                             value="<?php echo $birthdateFormatted; ?>">
+                                        </div>
                                     </div>
                                 </div>
+
+
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
