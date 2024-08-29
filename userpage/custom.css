@@ -1107,12 +1107,12 @@ ul {
 
 .reply-list li:before {
   content: "";
-  width: 60px;
+  width: 30px;
   height: 2px;
   background: #c7cacb;
   position: absolute;
   top: 25px;
-  left: -55px;
+  left: -32px;
 }
 
 .comments-list li {
