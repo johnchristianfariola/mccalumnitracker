@@ -8,6 +8,9 @@ $firebase = new firebaseRDB($databaseURL);
 $event_id = $_GET['event_id'];
 $current_user_id = $_GET['alumni_id']; // Make sure to pass this from your JavaScript
 
+// Default profile image URL
+$defaultProfileUrl = 'uploads/profile.jpg';
+
 // Fetch comments for the event
 $commentData = $firebase->retrieve("event_comments");
 $commentData = json_decode($commentData, true);
@@ -22,17 +25,16 @@ if (empty($commentData) || !is_array($commentData)) {
         if (isset($comment['event_id']) && $comment['event_id'] === $event_id) {
             $commenterData = $firebase->retrieve("alumni/{$comment['alumni_id']}");
             $commenterData = json_decode($commenterData, true);
-            $commenterProfileUrl = $commenterData['profile_url'] ?? 'default_profile_url.jpg';
+            $commenterProfileUrl = $commenterData['profile_url'] ?? $defaultProfileUrl;
             $commenterFirstName = $commenterData['firstname'] ?? 'Unknown';
             $commenterLastName = $commenterData['lastname'] ?? 'User';
 
             // Get the heart count, default to 0 if not set
-            
+            $heartCount = isset($comment['heart_count']) ? $comment['heart_count'] : 0;
+
             // Check if the current user has liked this comment
             $isLiked = in_array($current_user_id, $comment['liked_by'] ?? []);
             $likedClass = $isLiked ? 'liked' : '';
-            $heartCount = isset($comment['heart_count']) ? $comment['heart_count'] : 0;
-
 
             $html .= '<li data-comment-id="' . $commentId . '">
                 <div class="comment-main-level">
@@ -59,7 +61,7 @@ if (empty($commentData) || !is_array($commentData)) {
                 foreach ($comment['replies'] as $replyId => $reply) {
                     $replyAuthorData = $firebase->retrieve("alumni/{$reply['alumni_id']}");
                     $replyAuthorData = json_decode($replyAuthorData, true);
-                    $replyAuthorProfileUrl = $replyAuthorData['profile_url'] ?? 'default_profile_url.jpg';
+                    $replyAuthorProfileUrl = $replyAuthorData['profile_url'] ?? $defaultProfileUrl;
                     $replyAuthorFirstName = $replyAuthorData['firstname'] ?? 'Unknown';
                     $replyAuthorLastName = $replyAuthorData['lastname'] ?? 'User';
 
