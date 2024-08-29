@@ -46,17 +46,15 @@
     <!-----PROFILE PAGE---->
     <div class="profile-container">
         <div class="cover-img-container">
-            <img src="<?php echo htmlspecialchars($current_user['cover_photo_url'] ?? '../images/profile.png'); ?>"
-                class="cover-img">
-
+                <img id="coverPhoto" src="<?php htmlspecialchars($current_user['cover_photo_url']); ?>" alt="Profile Picture"  class="cover-img" onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
         </div>
         <div class="profile-details">
             <div class="pd-left">
                 <div class="pd-row">
                     <!---PROFILE PICTURE-->
 
-                    <img src="<?php echo htmlspecialchars($current_user['profile_url'] ?? '../images/profile.png'); ?>"
-                        alt="Profile Picture" class="pd-image">
+                        <img id="profileImage" class="pd-image" src="<?php echo htmlspecialchars($current_user['profile_url']); ?>" alt="Profile Picture" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+
 
                     <div>
 
@@ -122,6 +120,9 @@
                         </li>
                         <li><img src="../images/gender.png" alt="Gender"> Gender:
                             <?php echo htmlspecialchars($current_user['gender']) ?>
+                        </li>
+                        <li>
+                            <h5>Work Details    </h5>
                         </li>
                     </ul>
                 </div>

@@ -737,9 +737,7 @@
                                 <input type="file" id="profileImageInput" name="profile_url" accept="image/*"
                                     style="display: none;">
 
-                                <img id="profileImage" src="<?php echo getValue($current_user, 'profile_url'); ?>"
-                                    alt="Profile Picture"
-                                    onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                                <img id="profileImage" src="<?php echo getValue($current_user, 'profile_url'); ?>" alt="Profile Picture" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
 
 
                                 <div class="overlay">
