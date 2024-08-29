@@ -46,8 +46,10 @@
     <!-----PROFILE PAGE---->
     <div class="profile-container">
         <div class="cover-img-container">
-                <img id="coverPhoto" src="<?php htmlspecialchars($current_user['cover_photo_url']); ?>" alt="Profile Picture"  class="cover-img" onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
-        </div>
+                <img id="coverPhoto" src="<?php echo htmlspecialchars($current_user['cover_photo_url']); ?>" alt="Profile Picture"  class="cover-img" onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
+       
+       
+            </div>
         <div class="profile-details">
             <div class="pd-left">
                 <div class="pd-row">
