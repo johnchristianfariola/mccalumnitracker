@@ -128,26 +128,26 @@ if (is_array($jobData)) {
                         </div>
                         <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
 
-                        <div class="job-section" style="margin-top:60px">
-                            <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
-                            <?php foreach ($jobData as $id => $job) { ?>
-                                <?php if (isset($job['status']) && $job['status'] == 'Active') { ?>
-                                    <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
-                                        <div class="card">
-                                            <div class="card-content">
-                                                <div class="job-container">
-                                                    <div class="job-title"><?php echo $job['job_title']; ?></div>
-                                                    <div class="job-timesced" style="background-color: <?php echo ($job['work_time'] == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold'; ?>; color: <?php echo ($job['work_time'] == 'Full-Time') ? 'white' : 'black'; ?>;"><?php echo $job['work_time']; ?></div>
+                            <div class="job-section" style="margin-top:60px">
+                                <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
+                                <?php foreach ($jobData as $id => $job) { ?>
+                                    <?php if (isset($job['status']) && $job['status'] == 'Active') { ?>
+                                        <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
+                                            <div class="card">
+                                                <div class="card-content">
+                                                    <div class="job-container">
+                                                        <div class="job-title"><?php echo $job['job_title']; ?></div>
+                                                        <div class="job-timesced" style="background-color: <?php echo ($job['work_time'] == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold'; ?>; color: <?php echo ($job['work_time'] == 'Full-Time') ? 'white' : 'black'; ?>;"><?php echo $job['work_time']; ?></div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="card-date"><?php echo $job['company_name']; ?></div>
+                                                    <div class="card-date">Posted on <?php echo $job['job_created']; ?></div>
                                                 </div>
-                                                <hr>
-                                                <div class="card-date"><?php echo $job['company_name']; ?></div>
-                                                <div class="card-date">Posted on <?php echo $job['job_created']; ?></div>
                                             </div>
                                         </div>
-                                    </div>
+                                    <?php } ?>
                                 <?php } ?>
-                            <?php } ?>
-                        </div>
+                            </div>
 
                         <div class="forum-section" style="margin-top:60px">
                             <h3><i class="fa fa-wechat"></i> Forum</h3>

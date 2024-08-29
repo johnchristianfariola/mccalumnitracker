@@ -6,6 +6,49 @@
   box-sizing: border-box;
 }
 
+
+:root {
+  --body-color: #efefef;
+  --nav-color: white;
+  --bg-color: #fff;
+
+}
+
+.dark-theme {
+  --body-color: #0a0a0a;
+  --nav-color: #000;
+  --bg-color: #000;
+}
+
+body {
+  background: var(--body-color);
+  transition: background 0.3s;
+  font-family: "Roboto", Arial, Helvetica, Sans-serif, Verdana;
+  background: #f7f7f9;
+}
+body.dark-theme {
+    background-color: black; /* or any color you prefer */
+    color: white; /* or any color you prefer for text */
+}
+/* Define the dark theme styles */
+.dark-theme .main-content {
+    background-color: black; /* Background color for main content */
+    color: white; /* Text color for main content */
+}
+
+.dark-theme .sale-statistic-inner {
+    background-color: #333; /* Darker background for specific inner elements */
+    color: white; /* Text color for specific inner elements */
+}
+
+/* Ensure other elements have default or overridden styles */
+.sale-statistic-inner {
+    background-color: white; /* Default background for the specific inner elements */
+    color: black; /* Default text color */
+}
+
+
+
 .profile-container {
   padding: 20px 15%;
   color: #626262;
@@ -336,23 +379,6 @@
   position: absolute;
   bottom: 0;
   left: 0;
-}
-
-:root {
-  --body-color: #efefef;
-  --nav-color: white;
-  --bg-color: #fff;
-}
-
-.dark-theme {
-  --body-color: #0a0a0a;
-  --nav-color: #000;
-  --bg-color: #000;
-}
-
-body {
-  background: var(--body-color);
-  transition: background 0.3s;
 }
 
 nav {
@@ -1019,13 +1045,6 @@ nav {
 
 /*==============Comment Start Here==========*/
 
-* {
-  margin: 0;
-  padding: 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
 
 a {
   color: #03658c;
@@ -1036,10 +1055,6 @@ ul {
   list-style-type: none;
 }
 
-body {
-  font-family: "Roboto", Arial, Helvetica, Sans-serif, Verdana;
-  background: #f7f7f9;
-}
 
 .comments-container {
   width: 768px;
@@ -1339,102 +1354,6 @@ ul {
 .mgs-time {
   font-size: 0.9em;
   color: gray;
-}
-
-/* Curved Container */
-.curved-ctn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0;
-  border-radius: 10px;
-}
-
-.image-section img {
-  max-width: 80%;
-  height: auto;
-  border-radius: 10px;
-}
-
-.info-section {
-  margin-left: 10px;
-}
-
-.info-section h2,
-.info-section i {
-  margin: 0;
-  font-size: 14px;
-}
-
-/* News Post */
-.news_post {
-  width: 100%;
-  height: 50vh;
-}
-
-.news-description {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 4.5em;
-}
-
-.toggle-button {
-  background-color: transparent;
-  color: black;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.expanded {
-  -webkit-line-clamp: initial;
-  max-height: none;
-}
-
-/* Card Styles */
-.card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  width: 350px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
-  margin: 20px auto;
-}
-
-.card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.event_image {
-  width: 100%;
-  height: 190px;
-  display: block;
-  object-fit: cover;
-}
-
-.card-content {
-  background: white;
-  padding: 16px;
-}
-
-.card-title {
-  font-size: 18px;
-  margin: 0 0 8px;
-}
-
-.card-date {
-  color: #888;
-  font-size: 14px;
-  margin: 0 0 16px;
-}
-
-.card-description {
-  font-size: 16px;
-  margin: 0 0 8px;
 }
 
 /* Job Container */
