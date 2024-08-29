@@ -64,7 +64,7 @@
         <div class="profile-info">
             <div class="info-col">
                 <div class="profile-intro">
-                    <h3>Intro</h3>
+                    <h3>Bio</h3>
                     <p class="intro-text">
                     <?php echo html_entity_decode(htmlspecialchars($current_user['bio'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
                     </p>
