@@ -53,7 +53,7 @@
                 <div class="pd-row">
                     <!---PROFILE PICTURE-->
 
-                        <img id="profileImage" class="pd-image" src="<?php echo htmlspecialchars($current_user['cover_photo_url']); ?>" alt="Profile Picture" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                        <img id="profileImage" class="pd-image" src="<?php echo htmlspecialchars($current_user['profile_url']); ?>" alt="Profile Picture" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
 
 
                     <div>
