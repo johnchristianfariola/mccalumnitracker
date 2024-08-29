@@ -366,17 +366,17 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                       
+
 
                                 <div class="form-group">
-                                <label for="birthdate" class="form-label">
+                                    <label for="birthdate" class="form-label">
                                         <i class="fas fa-calendar-alt icon"></i> Birth Date
                                     </label>
                                     <div class="nk-datapk-ctm form-elet-mg" id="data_1">
                                         <div class="input-group date nk-int-st">
                                             <span class="input-group-addon"></span>
-                                            <input type="text" class="form-control"id="birthdate" name="birthdate"
-                                            value="<?php echo $birthdateFormatted; ?>">
+                                            <input type="text" class="form-control" id="birthdate" name="birthdate"
+                                                value="<?php echo $birthdateFormatted; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -736,9 +736,10 @@
                             <div class="profile-image-container">
                                 <input type="file" id="profileImageInput" name="profile_url" accept="image/*"
                                     style="display: none;">
-                         
-                                    <img id="profileImage" src="<?php echo getValue($current_user, 'profile_url'); ?>" alt="Profile Picture"
-                            onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+
+                                <img id="profileImage" src="<?php echo getValue($current_user, 'profile_url'); ?>"
+                                    alt="Profile Picture"
+                                    onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
 
 
                                 <div class="overlay">
@@ -756,8 +757,12 @@
                         <div class="cover-photo-container">
                             <input type="file" id="coverPhotoInput" name="cover_photo_url" accept="image/*"
                                 style="display: none;">
-                            <img src="<?php echo getValue($current_user, 'cover_photo_url'); ?>" id="coverPhoto" alt="Cover Photo"
-                                class="cover-photo">
+                         
+
+                                <img  id="coverPhoto" src="<?php echo getValue($current_user, 'cover_photo_url'); ?>"
+                                    alt="Profile Picture"  class="cover-photo"
+                                    onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
+
                             <div class="cover-overlay">
                                 <span>Change Cover</span>
                             </div>
@@ -766,19 +771,20 @@
                 </div>
 
 
-                    <h3>Type your Bio</h3>
-                    <div class="post-col" style="width:100% !important">
-                        <!-- Post Section -->
-                        <div class="post-container">
-                            <textarea id="editor1" name="bio" rows="10" cols="80">     <?php echo htmlspecialchars(getValue($current_user, 'bio')); ?></textarea>
-                            <div class="char-count">
-                                <span id="charCount">0</span> / 101 characters
-                            </div>
-                            <div class="error" id="charError" style="display: none;">
-                                Bio cannot exceed 101 characters.
-                            </div>
+                <h3>Type your Bio</h3>
+                <div class="post-col" style="width:100% !important">
+                    <!-- Post Section -->
+                    <div class="post-container">
+                        <textarea id="editor1" name="bio" rows="10"
+                            cols="80">     <?php echo htmlspecialchars(getValue($current_user, 'bio')); ?></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span> / 101 characters
+                        </div>
+                        <div class="error" id="charError" style="display: none;">
+                            Bio cannot exceed 101 characters.
                         </div>
                     </div>
+                </div>
                 <button type="submit" style="float:right" class="btn btn-primary" onclick="submitForm()">Update
                     Profile</button>
 
@@ -805,60 +811,60 @@
 <script src="js/datapicker/datepicker-active.js"></script>
 
 <script>
-  var maxLength = 101;
+    var maxLength = 101;
 
-// Initialize CKEditor
-CKEDITOR.replace('editor1', {
-    on: {
-        instanceReady: function(evt) {
-            updateCharCount();
+    // Initialize CKEditor
+    CKEDITOR.replace('editor1', {
+        on: {
+            instanceReady: function (evt) {
+                updateCharCount();
+            }
+        }
+    });
+
+    // Function to update character count and limit input
+    function updateCharCount() {
+        var editor = CKEDITOR.instances.editor1;
+        var content = editor.getData();
+        var text = content.replace(/<[^>]*>/g, ''); // Strip HTML tags
+        var currentLength = text.length;
+
+        document.getElementById('charCount').textContent = currentLength;
+
+        if (currentLength > maxLength) {
+            var truncatedText = text.slice(0, maxLength);
+            editor.setData(truncatedText);
+            document.getElementById('charError').style.display = 'block';
+        } else {
+            document.getElementById('charError').style.display = 'none';
         }
     }
-});
 
-// Function to update character count and limit input
-function updateCharCount() {
-    var editor = CKEDITOR.instances.editor1;
-    var content = editor.getData();
-    var text = content.replace(/<[^>]*>/g, ''); // Strip HTML tags
-    var currentLength = text.length;
-    
-    document.getElementById('charCount').textContent = currentLength;
+    // Update character count on CKEditor instance change
+    CKEDITOR.instances.editor1.on('change', function () {
+        updateCharCount();
+    });
 
-    if (currentLength > maxLength) {
-        var truncatedText = text.slice(0, maxLength);
-        editor.setData(truncatedText);
-        document.getElementById('charError').style.display = 'block';
-    } else {
-        document.getElementById('charError').style.display = 'none';
-    }
-}
+    // Prevent further input when limit is reached
+    CKEDITOR.instances.editor1.on('key', function (evt) {
+        var editor = evt.editor;
+        var content = editor.getData();
+        var text = content.replace(/<[^>]*>/g, '');
 
-// Update character count on CKEditor instance change
-CKEDITOR.instances.editor1.on('change', function() {
-    updateCharCount();
-});
-
-// Prevent further input when limit is reached
-CKEDITOR.instances.editor1.on('key', function(evt) {
-    var editor = evt.editor;
-    var content = editor.getData();
-    var text = content.replace(/<[^>]*>/g, '');
-    
-    if (text.length >= maxLength && evt.data.keyCode != 8 && evt.data.keyCode != 46) {
-        evt.cancel();
-    }
-});
-
-// Sync CKEditor content with the underlying <textarea> elements before form submission
-function submitForm() {
-    for (var instanceName in CKEDITOR.instances) {
-        if (CKEDITOR.instances.hasOwnProperty(instanceName)) {
-            CKEDITOR.instances[instanceName].updateElement();
+        if (text.length >= maxLength && evt.data.keyCode != 8 && evt.data.keyCode != 46) {
+            evt.cancel();
         }
+    });
+
+    // Sync CKEditor content with the underlying <textarea> elements before form submission
+    function submitForm() {
+        for (var instanceName in CKEDITOR.instances) {
+            if (CKEDITOR.instances.hasOwnProperty(instanceName)) {
+                CKEDITOR.instances[instanceName].updateElement();
+            }
+        }
+        return true;
     }
-    return true;
-}
 </script>
 
 <script>
