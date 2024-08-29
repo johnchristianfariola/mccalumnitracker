@@ -736,8 +736,11 @@
                             <div class="profile-image-container">
                                 <input type="file" id="profileImageInput" name="profile_url" accept="image/*"
                                     style="display: none;">
-                                <img src="<?php echo getValue($current_user, 'profile_url'); ?>" id="profileImage" alt="Profile Image"
-                                    class="profile-image">
+                         
+                                    <img id="profileImage" src="<?php echo getValue($current_user, 'profile_url'); ?>" alt="Profile Picture"
+                            onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+
+
                                 <div class="overlay">
                                     <span>Change Image</span>
                                 </div>

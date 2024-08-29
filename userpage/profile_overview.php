@@ -96,9 +96,12 @@
                             <p><strong>Name:</strong>
                                 <?php echo getValue($current_user, 'auxiliaryname') . ' ' . getValue($current_user, 'firstname') . ' ' . getValue($current_user, 'middlename') . ' ' . getValue($current_user, 'lastname'); ?>
                             </p>
-                            <p><strong>Birthday:</strong> <?php echo getValue($current_user, 'birthdate'); ?></p>
+                            <p><strong>Birthday:</strong><?php $birthdate = getValue($current_user, 'birthdate'); $formatted_date = date("F j, Y", strtotime($birthdate)); echo $formatted_date; ?></p>
+
                             <p><strong>Gender:</strong> <?php echo getValue($current_user, 'gender'); ?></p>
-                            <p><strong>Address:</strong> <?php   echo getValue($current_user, 'barangay') . ', ' . getValue($current_user, 'city') . ',  ' . getValue($current_user, 'state'); ?></p>
+                            <p><strong>Address:</strong>
+                                <?php echo getValue($current_user, 'barangay') . ', ' . getValue($current_user, 'city') . ',  ' . getValue($current_user, 'state'); ?>
+                            </p>
                             <p><strong>Civil Status:</strong> <?php echo getValue($current_user, 'civilstatus'); ?></p>
                             <p><strong>Student ID:</strong> <?php echo getValue($current_user, 'studentid'); ?></p>
                         </div>
@@ -106,17 +109,16 @@
                         <!-- Employment Info Column -->
                         <div class="employment-info">
                             <h3>Employment Info</h3>
-                            <p><strong>Status:</strong> <span class=" btn-warning notika-btn-warning"
-                                    style="padding:5px 10px 5px 10px; border-radius:10px"><?php echo getValue($current_user, 'work_status'); ?></span>
+                            <p><strong>Status:</strong> <span class=" btn-warning notika-btn-warning" style="padding:5px 10px 5px 10px; border-radius:10px"><?php echo getValue($current_user, 'work_status'); ?></span>
                             </p>
                             <p><strong>Company:</strong> <?php echo getValue($current_user, 'name_company'); ?></p>
                             <p><strong>Position:</strong> <?php echo getValue($current_user, 'work_position'); ?></p>
-                            <p><strong>Start Date:</strong>
-                                <?php echo getValue($current_user, 'first_employment_date'); ?></p>
+                            <p><strong>Start Date:</strong> <?php  $start_date = getValue($current_user, 'date_for_current_employment');  $formatted_date = date("F j, Y", strtotime($start_date)); echo $formatted_date; ?></p>
+
                             <p><strong>Work Status:</strong>
                                 <?php echo getValue($current_user, 'work_employment_status'); ?></p>
                             <p><strong>Work Classification:</strong>
-                            <?php echo $category_name; ?></p>
+                                <?php echo $category_name; ?></p>
                             <p><strong>Monthly Income:</strong>
                                 <?php echo getValue($current_user, 'current_monthly_income'); ?></p>
                             <p><strong>Job Satisfaction:</strong>

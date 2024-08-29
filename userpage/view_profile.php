@@ -4,6 +4,7 @@
 
 <head>
     <?php include 'includes/header.php'; ?>
+
     <?php
     require_once '../includes/firebaseRDB.php';
     require_once '../includes/config.php';
@@ -12,6 +13,9 @@
 
     $alumni_data = $firebase->retrieve("alumni");
     $alumni_data = json_decode($alumni_data, true);
+
+    $batchData = $firebase->retrieve("batch_yr");
+    $batchData = json_decode($batchData, true);
 
     // Assuming you have the current user's ID stored in a session variable
     $current_user_id = $_SESSION['alumni_id'];
@@ -22,6 +26,12 @@
         echo "User not found";
         exit;
     }
+
+    // Function to get batch year
+    function getBatchYear($batchId, $batchData)
+    {
+        return $batchData[$batchId]['batch_yrs'] ?? 'Unknown';
+    }
     ?>
 
 </head>
@@ -30,33 +40,45 @@
 
     <?php include 'includes/navbar.php'; ?>
 
-    
+
 
 
     <!-----PROFILE PAGE---->
     <div class="profile-container">
-    <div class="cover-img-container">
-        <img src="<?php echo htmlspecialchars($current_user['cover_photo_url'] ?? '../images/profile.png'); ?>" class="cover-img">
-    </div>  
+        <div class="cover-img-container">
+            <img src="<?php echo htmlspecialchars($current_user['cover_photo_url'] ?? '../images/profile.png'); ?>"
+                class="cover-img">
+
+        </div>
         <div class="profile-details">
             <div class="pd-left">
                 <div class="pd-row">
                     <!---PROFILE PICTURE-->
+
                     <img src="<?php echo htmlspecialchars($current_user['profile_url'] ?? '../images/profile.png'); ?>"
                         alt="Profile Picture" class="pd-image">
+
                     <div>
+
                         <h3><?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['middlename'] . ' ' . $current_user['lastname']); ?>
                         </h3>
+
                         <p>1.8K Followers - 120 Following</p>
                         <img src="../images/profile.jpg" alt="Joann">
                         <img src="../images/profile.jpg" alt="Jagdon">
                         <img src="../images/profile.jpg" alt="Alvie">
                         <img src="../images/profile.jpg" alt="Fredrick">
+
                     </div>
+
+
                 </div>
+
+
             </div>
             <div class="pd-right">
-                
+                <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+
             </div>
 
         </div>
@@ -66,21 +88,37 @@
                 <div class="profile-intro">
                     <h3>Bio</h3>
                     <p class="intro-text">
-                    <?php echo html_entity_decode(htmlspecialchars($current_user['bio'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
+                        <?php echo html_entity_decode(htmlspecialchars($current_user['bio'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
                     </p>
+                    <button class="btn notika-btn-lightblue" style="width:100%">Edit Bio</button>
                     <hr>
                     <ul>
+                        <li>
+                            <h5>EDUCATION</h5>
+                        </li>
+                        <li><img src="../images/profile-study.png" alt="Study"> Studied At Madridejos Community College
                         <li><img src="../images/profile-study.png" alt="Study"> Alumni ID:
                             <?php echo htmlspecialchars($current_user['studentid']) ?>
+                        <li><img src="../images/profile-study.png" alt="Study"> Batch Year:
+                            <?php echo htmlspecialchars(getBatchYear($current_user['batch'], $batchData)) ?>
+                        </li>
+
+                        <li>
+                            <h5>ABOUT</h5>
                         </li>
                         <li><img src="../images/profile-home.png" alt="Home">Currently Lives in
                             <?php echo htmlspecialchars($current_user['addressline1']) ?>
                         </li>
                         <li><img src="../images/profile-location.png" alt="Location"> From
-                            <?php echo htmlspecialchars($current_user['addressline1']) ?>
+                            <?php echo htmlspecialchars($current_user['barangay']) . ', ' . htmlspecialchars($current_user['city']) . ', ' . htmlspecialchars($current_user['state']) ?>
                         </li>
                         <li><img src="../images/confetti.png" alt="Birthday"> Birthday:
-                            <?php echo htmlspecialchars($current_user['birthdate']) ?>
+                            <?php
+                            $birthdate = htmlspecialchars($current_user['birthdate']);
+                            $formatted_date = date("F j, Y", strtotime($birthdate));
+                            echo $formatted_date;
+                            ?>
+
                         </li>
                         <li><img src="../images/gender.png" alt="Gender"> Gender:
                             <?php echo htmlspecialchars($current_user['gender']) ?>
@@ -89,7 +127,7 @@
                 </div>
 
                 <!------PHOTOS------->
-              <!--  <div class="profile-intro">
+                <!--  <div class="profile-intro">
                     <div class="title-box">
                         <h3>Photos</h3>
                         <a href="#">All Photos</a>
