@@ -231,6 +231,7 @@ $alumni_info_json = json_encode($alumni_info);
     }
 </script>
 
+
 <script>
 // Use PHP to inject alumni info into JavaScript
 const alumniInfo = <?php echo $alumni_info_json; ?>;
@@ -261,8 +262,8 @@ input.addEventListener("input", function() {
         div.addEventListener("click", function() {
             input.value = alumni.name;
             autocompleteList.innerHTML = "";
-            // You can add functionality here to navigate to the alumni's profile
-            // window.location.href = `profile.php?id=${alumni.id}`;
+            // Redirect to the alumni's profile
+            window.location.href = `profile.php?id=${alumni.id}`;
         });
         autocompleteList.appendChild(div);
     });
@@ -271,6 +272,17 @@ input.addEventListener("input", function() {
 document.addEventListener("click", function(e) {
     if (e.target !== input) {
         autocompleteList.innerHTML = "";
+    }
+});
+
+// Add event listener for Enter key press
+input.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        const searchQuery = input.value.trim();
+        if (searchQuery) {
+            window.location.href = `search_results.php?query=${encodeURIComponent(searchQuery)}`;
+        }
     }
 });
 </script>
