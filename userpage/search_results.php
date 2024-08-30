@@ -74,7 +74,8 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                             alt="<?php echo $alumni['firstname'] . ' ' . $alumni['lastname']; ?>">
                                         <div class="search-result-item-info">
                                             <div class="search-result-item-name">
-                                                <?php echo $alumni['firstname'] . ' ' . $alumni['lastname']; ?></div>
+                                                <?php echo $alumni['firstname'] . ' ' . $alumni['lastname']; ?>
+                                            </div>
                                             <div class="search-result-item-details">Alumni</div>
                                         </div>
                                         <a href="profile.php?id=<?php echo $id; ?>" class="btn btn-primary">View Profile</a>
@@ -84,7 +85,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                         </div>
                     </div>
 
-                    
+
                 </div>
             </div>
         </div>

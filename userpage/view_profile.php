@@ -176,9 +176,6 @@
 
     <?php include 'includes/navbar.php'; ?>
 
-
-
-
     <!-----PROFILE PAGE---->
     <div class="profile-container">
         <div class="cover-img-container">

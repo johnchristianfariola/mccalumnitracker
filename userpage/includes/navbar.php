@@ -263,7 +263,7 @@ input.addEventListener("input", function() {
             input.value = alumni.name;
             autocompleteList.innerHTML = "";
             // Redirect to the alumni's profile
-            window.location.href = `profile.php?id=${alumni.id}`;
+            window.location.href = `profile_alumni_details.php?id=${alumni.id}`;
         });
         autocompleteList.appendChild(div);
     });
