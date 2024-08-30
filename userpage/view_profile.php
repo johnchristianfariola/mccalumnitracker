@@ -227,10 +227,18 @@
             <div class="info-col">
                 <div class="profile-intro">
                     <h3>Bio</h3>
-                    <p class="intro-text">
-                        <?php echo html_entity_decode(htmlspecialchars($current_user['bio'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
-                    </p>
-                    <button class="btn notika-btn-lightblue" style="width:100%">Edit Bio</button>
+                    <div id="bio-content">
+                        <p class="intro-text">
+                            <?php echo html_entity_decode(htmlspecialchars($current_user['bio'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
+                        </p>
+                    </div>
+                    <textarea id="bio-edit" style="display: none; width: 100%; min-height: 100px;"></textarea>
+                    <button id="edit-bio-btn" class="btn notika-btn-lightblue" style="width:100%">Edit Bio</button>
+                    <button id="save-bio-btn" class="btn notika-btn-success" style="width:100%; display: none;">Save
+                        Bio</button>
+                        <br><br>
+                    <button id="cancel-bio-btn" class="btn notika-btn-danger"
+                        style="width:100%; display: none;">Cancel</button>
                     <hr>
                     <ul>
                         <li>
@@ -506,6 +514,77 @@
         });
     });
 
+</script>
+<script>
+    $(document).ready(function() {
+    var $bioContent = $('#bio-content');
+    var $bioEdit = $('#bio-edit');
+    var $editBioBtn = $('#edit-bio-btn');
+    var $saveBioBtn = $('#save-bio-btn');
+    var $cancelBioBtn = $('#cancel-bio-btn');
+    var originalBio = $bioContent.text().trim();
+
+    function enterEditMode() {
+        $bioContent.hide();
+        $bioEdit.val(originalBio).show().focus();
+        $editBioBtn.hide();
+        $saveBioBtn.show();
+        $cancelBioBtn.show();
+    }
+
+    function exitEditMode() {
+        $bioEdit.hide();
+        $bioContent.show();
+        $saveBioBtn.hide();
+        $cancelBioBtn.hide();
+        $editBioBtn.show();
+    }
+
+    $editBioBtn.click(enterEditMode);
+
+    $cancelBioBtn.click(function() {
+        exitEditMode();
+        $bioEdit.val(originalBio);
+    });
+
+    $saveBioBtn.click(function() {
+        var newBio = $bioEdit.val().trim();
+        
+        // Immediately update the displayed bio and exit edit mode
+        $bioContent.html('<p class="intro-text">' + newBio + '</p>');
+        exitEditMode();
+        
+        // Show a subtle loading indicator
+        var $loadingIndicator = $('<span>').text(' Save...').css('opacity', '0.5').insertAfter($editBioBtn);
+        
+        $.ajax({
+            url: 'update_bio.php',
+            method: 'POST',
+            data: {
+                bio: newBio,
+                alumni_id: '<?php echo $_SESSION['alumni_id']; ?>'
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    originalBio = newBio;
+                    $loadingIndicator.text(' Updated').fadeOut(1000, function() {
+                        $(this).remove();
+                    });
+                } else {
+                    alert('Failed to update bio on the server. Please try again.');
+                    $bioContent.html('<p class="intro-text">' + originalBio + '</p>');
+                    $loadingIndicator.remove();
+                }
+            },
+            error: function() {
+                alert('An error occurred while saving. Please try again.');
+                $bioContent.html('<p class="intro-text">' + originalBio + '</p>');
+                $loadingIndicator.remove();
+            }
+        });
+    });
+});
 </script>
 <script>
     $(document).ready(function () {
