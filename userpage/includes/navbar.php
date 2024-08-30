@@ -145,10 +145,9 @@ $alumni_info_json = json_encode($alumni_info);
                 $user_id = $_SESSION['user']['id'];
                 $user_data = $alumni_data[$user_id];
                 $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : '../images/profile.jpg';
-                echo '<img src="' . $profile_url . '" alt="Profile Picture">';
-            } else {
-                echo '<img src="../images/profile.jpg" alt="Default Profile Picture">';
-            }
+                echo '<img src="' . $profile_url . '" alt="Profile Picture" onerror="if (this.src != \'uploads/profile.jpg\') this.src = \'uploads/profile.jpg\';">';
+
+            } 
             ?>
         </div>
     </div>
@@ -167,7 +166,8 @@ $alumni_info_json = json_encode($alumni_info);
                     $user_data = $alumni_data[$user_id];
                     $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : 'upload/profile.jpg';
                     $full_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
-                    echo '<img src="' . $profile_url . '" alt="Profile Picture">';
+                    echo '<img src="' . $profile_url . '" alt="Profile Picture" onerror="if (this.src != \'uploads/profile.jpg\') this.src = \'uploads/profile.jpg\';">';
+
                     echo '<div class="">';
                     echo '<p>' . $full_name . '</p>';
                     echo '<a href="view_profile.php">See your profile</a>';
@@ -253,7 +253,7 @@ input.addEventListener("input", function() {
         const div = document.createElement("div");
         div.className = "autocomplete-item";
         div.innerHTML = `
-            <img src="${alumni.profile_url}" alt="${alumni.name}">
+            <img src="${alumni.profile_url}" alt="${alumni.name}" >
             <div class="autocomplete-item-info">
                 <span class="autocomplete-item-name">${alumni.name}</span>
                 <span class="autocomplete-item-details">Alumni</span>

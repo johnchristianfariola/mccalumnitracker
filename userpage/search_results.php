@@ -70,15 +70,15 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                             <?php else: ?>
                                 <?php foreach ($filtered_alumni as $id => $alumni): ?>
                                     <div class="search-result-item">
-                                        <img src="<?php echo isset($alumni['profile_url']) ? $alumni['profile_url'] : '../images/profile.png'; ?>"
-                                            alt="<?php echo $alumni['firstname'] . ' ' . $alumni['lastname']; ?>">
+                                        <img src="<?php echo isset($alumni['profile_url']) ? $alumni['profile_url'] : 'uploads/profile.jpg'; ?>"
+                                            alt="<?php echo $alumni['firstname'] . ' ' . $alumni['lastname']; ?>" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
                                         <div class="search-result-item-info">
                                             <div class="search-result-item-name">
                                                 <?php echo $alumni['firstname'] . ' ' . $alumni['lastname']; ?>
                                             </div>
                                             <div class="search-result-item-details">Alumni</div>
                                         </div>
-                                        <a href="profile.php?id=<?php echo $id; ?>" class="btn btn-primary">View Profile</a>
+                                        <a href="view_alumni_details.php?id=<?php echo $id; ?>" class="btn btn-primary">View Profile</a>
                                     </div>
                                 <?php endforeach; ?>
                             <?php endif; ?>

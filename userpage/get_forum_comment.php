@@ -65,7 +65,7 @@ if (isset($_GET['forum_id'])) {
                     ?>
                     <div class="comment">
                         <div class="comment-author">
-                            <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author">
+                            <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
                             <span><?php echo htmlspecialchars($commenter_name); ?></span>
                             &nbsp;&nbsp;&nbsp;
                             <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
@@ -101,7 +101,7 @@ if (isset($_GET['forum_id'])) {
                                         ?>
                                         <div class="reply">
                                             <div class="reply-author">
-                                                <img class="comment-avatar" src="<?php echo htmlspecialchars($replier_profile); ?>" alt="author">
+                                                <img class="comment-avatar" src="<?php echo htmlspecialchars($replier_profile); ?>" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
                                                 <span><?php echo htmlspecialchars($replier_name); ?></span>
                                                 &nbsp;&nbsp;&nbsp;
                                                 <span class="reply-time"><?php echo time_elapsed_string($reply['date_replied']); ?></span>

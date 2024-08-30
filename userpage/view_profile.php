@@ -189,7 +189,7 @@ function getValue($array, $key)
                  src="<?php echo htmlspecialchars(getValue($current_user, 'cover_photo_url')); ?>"
                  alt="Cover Photo" 
                  class="cover-img"
-                 onerror="this.src='img/default_cover.jpg';">
+                 onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
         </div>
         <div class="profile-details">
             <div class="pd-left">
@@ -778,7 +778,7 @@ function getValue($array, $key)
 
         // Function to start the refresh interval
         function startRefreshInterval() {
-            refreshInterval = setInterval(refreshAllComments, 10000);
+            refreshInterval = setInterval(refreshAllComments, 5000);
         }
 
         // Function to stop the refresh interval

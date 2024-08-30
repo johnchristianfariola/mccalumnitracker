@@ -92,7 +92,7 @@ if (is_array($jobData)) {
                             <div class="curved-inner-pro">
                                 <div class="curved-ctn">
                                     <div class="image-section">
-                                        <img class="profile" src="../admin/<?php echo $admin_image_url; ?>" alt="news image">
+                                        <img class="profile" src="../admin/<?php echo $admin_image_url; ?>" alt="news image" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
                                     </div>
                                     <div class="info-section">
                                         <h2><?php echo $admin_firstname . ' ' . $admin_lastmame; ?></h2>
