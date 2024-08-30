@@ -33,7 +33,7 @@ function sortByDate($a, $b) {
 }
 
 // Retrieve admin data
-$adminData = $firebase->retrieve("admin/admin");
+$adminData = $firebase->retrieve("admin");
 $adminData = json_decode($adminData, true);
 
 // Extract admin profile image URL
