@@ -138,6 +138,37 @@
             font-size: 18px;
             cursor: pointer;
         }
+
+        .subject-input,
+        .message-input {
+            border: none;
+            outline: none;
+            width: 100%;
+            background: none;
+            font-size: 16px;
+            padding: 8px 0;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ccc;
+            /* Adds a subtle underline */
+        }
+
+        .subject-input:focus,
+        .message-input:focus {
+            border-bottom: 1px solid #007bff;
+            /* Change underline color on focus */
+        }
+
+        .subject-input::placeholder,
+        .message-input::placeholder {
+            color: #999;
+            /* Placeholder color */
+        }
+
+        .subject-input:hover,
+        .message-input:hover {
+            border-bottom: 1px solid #007bff;
+            /* Hover state to match focus */
+        }
     </style>
 </head>
 
@@ -301,18 +332,18 @@
                     </div>
 
                     <div class="post-input-container">
-                        <form method="POST" action="forum_add.php" onsubmit="return submitForm();">
-
-                            <textarea rows="3" placeholder="What's on your mind, John?"></textarea>
+                        <form id="addForumForm" method="POST" action="forum_add.php">
+                            <input type="text" class="subject-input" id="forumName" name="forumName" required
+                                autocomplete="off" placeholder="Title">
+                            <textarea rows="3" placeholder="What's on your mind, John?" class="message-input"
+                                name="editor1"></textarea>
                             <div class="add-post-links">
-
-                                <button class="btn notika-btn-lightblue" href="#"><i
+                                <button class="btn notika-btn-lightblue" href="#" type="submit" form="addForumForm"><i
                                         class="fa fa-send"></i>&nbsp;&nbsp;Post</button>
-
-
                             </div>
                         </form>
                     </div>
+
                 </div>
 
                 <!-------POST SECTION----------->
@@ -417,7 +448,65 @@
 <script src="../bower_components/ckeditor/ckeditor.js"></script>
 <script src="js/jquery/jquery-3.5.1.min.js"></script>
 
+<script>
+    $(document).ready(function () {
+        $('#addForumForm').on('submit', function (e) {
+            e.preventDefault();
 
+            $.ajax({
+                url: 'forum_add.php',
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            type: "success",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        // Refresh the page after the timer
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        swal({
+                            title: "Oops...",
+                            text: response.message,
+                            type: "error",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+
+                        // Optional: Refresh the page after the error alert (comment out if not needed)
+                        // setTimeout(function() {
+                        //     window.location.reload();
+                        // }, 3000);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX error:', textStatus, errorThrown);
+                    swal({
+                        title: "Oops...",
+                        text: "Something went wrong! Error: " + textStatus,
+                        type: "error",
+                        timer: 3000,
+                        showConfirmButton: true
+                    });
+
+                    // Optional: Refresh the page after the error alert (comment out if not needed)
+                    // setTimeout(function() {
+                    //     window.location.reload();
+                    // }, 3000);
+                }
+            });
+        });
+    });
+
+</script>
 <script>
     $(document).ready(function () {
         // Load initial reactions and comments
