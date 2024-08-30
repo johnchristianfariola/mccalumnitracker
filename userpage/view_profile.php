@@ -33,6 +33,12 @@
         return $batchData[$batchId]['batch_yrs'] ?? 'Unknown';
     }
 
+    
+function getValue($array, $key)
+{
+    return isset($array[$key]) && !empty($array[$key]) ? $array[$key] : "N/A";
+}
+
     function time_elapsed_string($datetime, $full = false)
     {
         $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
@@ -179,11 +185,11 @@
     <!-----PROFILE PAGE---->
     <div class="profile-container">
         <div class="cover-img-container">
-            <img id="coverPhoto" src="<?php echo htmlspecialchars($current_user['cover_photo_url']); ?>"
-                alt="Profile Picture" class="cover-img"
-                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
-
-
+        <img id="coverPhoto" 
+                 src="<?php echo htmlspecialchars(getValue($current_user, 'cover_photo_url')); ?>"
+                 alt="Cover Photo" 
+                 class="cover-img"
+                 onerror="this.src='img/default_cover.jpg';">
         </div>
         <div class="profile-details">
             <div class="pd-left">
@@ -197,8 +203,8 @@
 
                     <div>
 
-                        <h3><?php echo htmlspecialchars($current_user['firstname'] . ' ' . $current_user['middlename'] . ' ' . $current_user['lastname']); ?>
-                        </h3>
+                    <h3><?php echo htmlspecialchars(getValue($current_user, 'firstname') . ' ' .  getValue($current_user, 'middlename') . ' ' .  getValue($current_user, 'lastname')); ?></h3>
+
 
                         <p>1.8K Followers - 120 Following</p>
                         <img src="../images/profile.jpg" alt="Joann">
@@ -225,8 +231,8 @@
                 <div class="profile-intro">
                     <h3>Bio</h3>
                     <div id="bio-content">
-                        <p class="intro-text">
-                            <?php echo html_entity_decode(htmlspecialchars($current_user['bio'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
+                    <p class="intro-text">
+                            <?php echo html_entity_decode(htmlspecialchars(getValue($current_user, 'bio'), ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
                         </p>
                     </div>
                     <textarea id="bio-edit" style="display: none; width: 100%; min-height: 100px;"></textarea>
@@ -241,41 +247,40 @@
                         <li>
                             <h5>EDUCATION</h5>
                         </li>
-                        <li><img src="../images/profile-study.png" alt="Study"> Studied At Madridejos Community College
-                        <li><img src="../images/profile-study.png" alt="Study"> Alumni ID:
-                            <?php echo htmlspecialchars($current_user['studentid']) ?>
-                        <li><img src="../images/profile-study.png" alt="Study"> Batch Year:
-                            <?php echo htmlspecialchars(getBatchYear($current_user['batch'], $batchData)) ?>
+                        <li><img src="../images/profile-study.png" alt="Study"> Studied At Madridejos Community College</li>
+                        <li><img src="../images/profile-study.png" alt="Study"> Alumni ID: 
+                            <?php echo htmlspecialchars(getValue($current_user, 'studentid')) ?>
+                        </li>
+                        <li><img src="../images/profile-study.png" alt="Study"> Batch Year: 
+                            <?php echo htmlspecialchars(getBatchYear(getValue($current_user, 'batch'), $batchData)) ?>
                         </li>
 
                         <li>
                             <h5>ABOUT</h5>
                         </li>
-                        <li><img src="../images/profile-home.png" alt="Home">Currently Lives in
-                            <?php echo htmlspecialchars($current_user['addressline1']) ?>
+                        <li><img src="../images/profile-home.png" alt="Home">Currently Lives in 
+                            <?php echo htmlspecialchars(getValue($current_user, 'addressline1')) ?>
                         </li>
-                        <li><img src="../images/profile-location.png" alt="Location"> From
-                            <?php echo htmlspecialchars($current_user['barangay']) . ', ' . htmlspecialchars($current_user['city']) . ', ' . htmlspecialchars($current_user['state']) ?>
+                        <li><img src="../images/profile-location.png" alt="Location"> From 
+                            <?php echo htmlspecialchars(getValue($current_user, 'barangay') . ', ' .  getValue($current_user, 'city') . ', ' . getValue($current_user, 'state')); ?>
                         </li>
-                        <li><img src="../images/confetti.png" alt="Birthday"> Birthday:
-                            <?php $birthdate = htmlspecialchars($current_user['birthdate']);
-                            $formatted_date = date("F j, Y", strtotime($birthdate));
-                            echo $formatted_date; ?>
+                        <li><img src="../images/confetti.png" alt="Birthday"> Birthday: 
+                            <?php 
+                            $birthdate = getValue($current_user, 'birthdate');
+                            echo $birthdate !== 'N/A' ? date("F j, Y", strtotime($birthdate)) : 'N/A'; 
+                            ?>
                         </li>
-                        <li><img src="../images/gender.png" alt="Gender"> Gender:
-                            <?php echo htmlspecialchars($current_user['gender']) ?>
+                        <li><img src="../images/gender.png" alt="Gender"> Gender: 
+                            <?php echo htmlspecialchars(getValue($current_user, 'gender')) ?>
                         </li>
                         <li>
                             <h5>Work Details </h5>
                         </li>
-                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button
-                                class="btn notika-btn-primary btn-sm"
-                                style="background:gold; "><b><?php echo htmlspecialchars($current_user['work_status']) ?></b></button>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button class="btn notika-btn-primary btn-sm" style="background:gold; "><b><?php echo htmlspecialchars(getValue($current_user, 'work_status')) ?></b></button></li>
                         <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Type of Work:&nbsp;
-                            <?php echo htmlspecialchars($current_user['type_of_work']) ?></button>
-                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Postion:&nbsp;
-                            <?php echo htmlspecialchars($current_user['work_position']) ?></button>
-
+                            <?php echo htmlspecialchars(getValue($current_user, 'type_of_work')) ?></li>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Position:&nbsp;
+                            <?php echo htmlspecialchars(getValue($current_user, 'work_position')) ?></li>
                     </ul>
                 </div>
 
