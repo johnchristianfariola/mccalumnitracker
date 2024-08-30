@@ -1,5 +1,4 @@
 <?php
-
 require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
 
@@ -7,17 +6,72 @@ $firebase = new firebaseRDB($databaseURL);
 
 $alumni_data = $firebase->retrieve("alumni");
 $alumni_data = json_decode($alumni_data, true);
-?>
 
+// Extract alumni names and IDs
+$alumni_info = [];
+foreach ($alumni_data as $id => $alumni) {
+    $alumni_info[] = [
+        'id' => $id,
+        'name' => $alumni['firstname'] . ' ' . $alumni['lastname'],
+        'profile_url' => isset($alumni['profile_url']) ? $alumni['profile_url'] : '../images/profile.jpg'
+    ];
+}
+
+// Convert alumni info to JSON for JavaScript use
+$alumni_info_json = json_encode($alumni_info);
+?>
+<style>
+   
+    .autocomplete-items {
+        position: absolute;
+       
+        border-top: none;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        border-radius: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .autocomplete-item {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+    }
+    .autocomplete-item:hover {
+        background-color: #f0f2f5;
+    }
+    .autocomplete-item img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .autocomplete-item-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .autocomplete-item-name {
+        font-weight: bold;
+    }
+    .autocomplete-item-details {
+        font-size: 0.8em;
+        color: #65676B;
+    }
+</style>
 <nav>
-    <div class="nav-left">
+<div class="nav-left">
         <img src="../images/logo/alumni_logo.png" class="logo">
         <div class="search-box">
             <img src="../images/search.png">
-            <input type="text" placeholder="Search">
+            <input type="text" id="myInput" placeholder="Search">
+            <div id="autocomplete-list" class="autocomplete-items"></div>
         </div>
     </div>
-
     <?php
     $current_page = $_SERVER['PHP_SELF'];
 
@@ -175,4 +229,48 @@ $alumni_data = json_decode($alumni_data, true);
     } else {
         localStorage.setItem("theme", "dark");
     }
+</script>
+
+<script>
+// Use PHP to inject alumni info into JavaScript
+const alumniInfo = <?php echo $alumni_info_json; ?>;
+
+const input = document.getElementById("myInput");
+const autocompleteList = document.getElementById("autocomplete-list");
+
+input.addEventListener("input", function() {
+    const value = this.value.toLowerCase();
+    autocompleteList.innerHTML = "";
+
+    if (!value) return;
+
+    const matchingAlumni = alumniInfo.filter(alumni => 
+        alumni.name.toLowerCase().includes(value)
+    ).slice(0, 5); // Limit to 5 results
+
+    matchingAlumni.forEach(alumni => {
+        const div = document.createElement("div");
+        div.className = "autocomplete-item";
+        div.innerHTML = `
+            <img src="${alumni.profile_url}" alt="${alumni.name}">
+            <div class="autocomplete-item-info">
+                <span class="autocomplete-item-name">${alumni.name}</span>
+                <span class="autocomplete-item-details">Alumni</span>
+            </div>
+        `;
+        div.addEventListener("click", function() {
+            input.value = alumni.name;
+            autocompleteList.innerHTML = "";
+            // You can add functionality here to navigate to the alumni's profile
+            // window.location.href = `profile.php?id=${alumni.id}`;
+        });
+        autocompleteList.appendChild(div);
+    });
+});
+
+document.addEventListener("click", function(e) {
+    if (e.target !== input) {
+        autocompleteList.innerHTML = "";
+    }
+});
 </script>

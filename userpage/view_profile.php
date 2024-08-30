@@ -555,7 +555,7 @@
         exitEditMode();
         
         // Show a subtle loading indicator
-        var $loadingIndicator = $('<span>').text(' Save...').css('opacity', '0.5').insertAfter($editBioBtn);
+        var $loadingIndicator = $('<span>').text(' Saved').css('opacity', '0.5').insertAfter($editBioBtn);
         
         $.ajax({
             url: 'update_bio.php',
