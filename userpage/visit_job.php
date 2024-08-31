@@ -94,7 +94,7 @@
         }
     }
     ?>
-    
+
 </head>
 
 <body>
@@ -107,7 +107,7 @@
     <!-- End Header Top Area -->
 
     <!-- Mobile Menu start -->
- 
+
     <!-- Mobile Menu end -->
 
     <!-- Main Menu area start -->
@@ -236,26 +236,26 @@
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </ul>
-                            </div>
-
-                            <div class="container pb-cmnt-container" style="width:100%">
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-0">
-                                        <div id="uniquePanelInfo" class="panel panel-info">
-                                            <div id="uniquePanelBody" class="panel-body">
-                                                <form id="commentForm" method="POST" action="comment_job.php">
-                                                    <textarea name="comment" placeholder="Write your comment here!"
-                                                        class="pb-cmnt-textarea" id="uniqueCommentTextarea"></textarea>
-                                                    <button class="btn btn-primary pull-right" type="button"
-                                                        id="submitComment">Share</button>
-                                                    <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
-                                                    <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
-                                                </form>
+                                <br><br><br>   <br>
+                             
+                                    <div id="uniquePanelBody" class="card-body">
+                                        <form id="commentForm" method="POST" action="comment_job.php">
+                                            <div class="form-group">
+                                                <textarea name="comment" placeholder="Write your comment here!"
+                                                    class="form-control pb-cmnt-textarea" id="uniqueCommentTextarea"
+                                                    rows="3"></textarea>
                                             </div>
-                                        </div>
-                                    </div>
+                                            <div class="text-right">
+                                                <button class="btn btn-primary" type="button"
+                                                    id="submitComment">Share</button>
+                                            </div>
+                                            <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
+                                            <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
+                                        </form>
                                 </div>
                             </div>
+
+
 
                         <?php else: ?>
                             <p>Job not found.</p>
@@ -358,7 +358,7 @@
 
     <!-- Custom JS -->
     <script>
-          $('#logoutBtn').on('click', function () {
+        $('#logoutBtn').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",
@@ -376,7 +376,7 @@
                 }
             });
         });
-        
+
         document.addEventListener("DOMContentLoaded", function () {
             const toggleButtons = document.querySelectorAll(".toggle-button");
 
@@ -402,262 +402,262 @@
             });
         });
     </script>
-  <script>
-    $(document).ready(function () {
-    var openReplyFormId = null;
-    var refreshInterval = 5000;
-    var lastUpdate = Date.now();
-    var currentOpenReplyContent = '';
-    var caretPosition = 0;
-    var isReplyFormOpen = false;
-    var heartedComments = new Set();
+    <script>
+        $(document).ready(function () {
+            var openReplyFormId = null;
+            var refreshInterval = 5000;
+            var lastUpdate = Date.now();
+            var currentOpenReplyContent = '';
+            var caretPosition = 0;
+            var isReplyFormOpen = false;
+            var heartedComments = new Set();
 
-    $('#submitComment').click(function () {
-        var $submitButton = $(this);
-        var $form = $('#commentForm');
-        var $textarea = $('.pb-cmnt-textarea');
-        var commentContent = $textarea.val().trim();
+            $('#submitComment').click(function () {
+                var $submitButton = $(this);
+                var $form = $('#commentForm');
+                var $textarea = $('.pb-cmnt-textarea');
+                var commentContent = $textarea.val().trim();
 
-        if (commentContent === "") {
-            swal({
-                title: 'Oops...',
-                text: 'Please enter a comment before sharing.',
-                type: 'warning',
-                timer: 5000,
-                onOpen: function () {
-                    swal.showLoading()
-                }
-            }).then(
-                function () { },
-                function (dismiss) {
-                    if (dismiss === 'timer') {
-                        console.log('I was closed by the timer')
-                    }
-                }
-            )
-            return;
-        }
-
-        $submitButton.prop('disabled', true);
-        var formData = $form.serialize();
-        $textarea.val('');
-        $submitButton.prop('disabled', false);
-
-        var $tempMessage = $('<div class="temp-message">Submitting your comment...</div>');
-        $form.after($tempMessage);
-
-        $.ajax({
-            type: 'POST',
-            url: 'comment_job.php',
-            data: formData,
-            dataType: 'json',
-            success: function (response) {
-                $tempMessage.remove();
-                if (response.status === 'success') {
-                    refreshComments();
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Your comment has been added.',
-                        icon: 'success',
-                        timer: 2000,
-                        timerProgressBar: true
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: response.message,
-                        icon: 'error'
-                    });
-                }
-            },
-            error: function () {
-                $tempMessage.remove();
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while submitting your comment.',
-                    icon: 'error'
-                });
-            }
-        });
-    });
-
-    function refreshComments() {
-        if (isReplyFormOpen) {
-            return;
-        }
-
-        $.ajax({
-            url: 'refresh_job.php',
-            type: 'GET',
-            data: { job_id: '<?php echo $jobId; ?>', last_update: lastUpdate, alumni_id: '<?php echo $alumni_id; ?>' },
-            success: function (response) {
-                var $commentsList = $('#comment-list');
-
-                if (response.trim() !== '') {
-                    var $newCommentsList = $(response);
-
-                    // Preserve hearted comments
-                    heartedComments.forEach(function (commentId) {
-                        var $oldComment = $commentsList.find('li[data-comment-id="' + commentId + '"]');
-                        var $newComment = $newCommentsList.find('li[data-comment-id="' + commentId + '"]');
-
-                        if ($oldComment.length && $newComment.length) {
-                            var $oldHeart = $oldComment.find('.fa-heart');
-                            var $oldHeartCount = $oldComment.find('.heart-count');
-                            $newComment.find('.fa-heart').replaceWith($oldHeart.clone());
-                            $newComment.find('.heart-count').text($oldHeartCount.text());
+                if (commentContent === "") {
+                    swal({
+                        title: 'Oops...',
+                        text: 'Please enter a comment before sharing.',
+                        type: 'warning',
+                        timer: 5000,
+                        onOpen: function () {
+                            swal.showLoading()
                         }
-                    });
-
-                    // Preserve open reply forms
-                    $commentsList.find('.reply-container:visible').each(function() {
-                        var commentId = $(this).closest('li').data('comment-id');
-                        var $newReplyContainer = $newCommentsList.find('li[data-comment-id="' + commentId + '"] + .reply-container');
-                        if ($newReplyContainer.length) {
-                            $newReplyContainer.replaceWith($(this).clone());
+                    }).then(
+                        function () { },
+                        function (dismiss) {
+                            if (dismiss === 'timer') {
+                                console.log('I was closed by the timer')
+                            }
                         }
-                    });
-
-                    $commentsList.html($newCommentsList.html());
-                    lastUpdate = Date.now();
+                    )
+                    return;
                 }
 
-                attachEventListeners();
-            },
-            error: function () {
-                console.log('Error refreshing comments');
-            }
-        });
-    }
+                $submitButton.prop('disabled', true);
+                var formData = $form.serialize();
+                $textarea.val('');
+                $submitButton.prop('disabled', false);
 
-    function attachEventListeners() {
-        // Reply button click event
-        $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
-            var $commentItem = $(this).closest('li');
-            var commentId = $commentItem.data('comment-id');
-            var $replyContainer = $commentItem.next('.reply-container');
+                var $tempMessage = $('<div class="temp-message">Submitting your comment...</div>');
+                $form.after($tempMessage);
 
-            if ($replyContainer.is(':hidden')) {
-                $replyContainer.show();
-                openReplyFormId = commentId;
-                isReplyFormOpen = true;
-            } else {
-                $replyContainer.hide();
-                isReplyFormOpen = false;
-                openReplyFormId = null;
-            }
-        });
-
-        // Reply form submission
-        $(document).off('submit', '.reply-form').on('submit', '.reply-form', function (e) {
-            e.preventDefault();
-            var $form = $(this);
-            var $replyTextarea = $form.find('.reply-textarea');
-            var replyContent = $replyTextarea.val().trim();
-            var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
-
-            if (replyContent === "") {
-                Swal.fire({
-                    title: 'Oops...',
-                    text: 'Please enter a reply before submitting.',
-                    icon: 'warning',
-                    timer: 5000,
-                    timerProgressBar: true
-                });
-                return;
-            }
-
-            $replyTextarea.val('');
-
-            var $tempMessage = $('<div class="temp-message">Submitting your reply...</div>');
-            $form.after($tempMessage);
-
-            $.ajax({
-                type: 'POST',
-                url: 'reply_job.php',
-                data: {
-                    comment: replyContent,
-                    parent_comment_id: parentCommentId,
-                    job_id: '<?php echo $jobId; ?>',
-                    alumni_id: '<?php echo $alumni_id; ?>'
-                },
-                dataType: 'json',
-                success: function (response) {
-                    $tempMessage.remove();
-                    if (response.status === 'success') {
-                        isReplyFormOpen = false;
-                        refreshComments();
-                        openReplyFormId = null;
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Your reply has been added.',
-                            icon: 'success',
-                            timer: 2000,
-                            timerProgressBar: true
-                        });
-                    } else {
+                $.ajax({
+                    type: 'POST',
+                    url: 'comment_job.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        $tempMessage.remove();
+                        if (response.status === 'success') {
+                            refreshComments();
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Your comment has been added.',
+                                icon: 'success',
+                                timer: 2000,
+                                timerProgressBar: true
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function () {
+                        $tempMessage.remove();
                         Swal.fire({
                             title: 'Error',
-                            text: response.message,
+                            text: 'An error occurred while submitting your comment.',
                             icon: 'error'
                         });
                     }
-                },
-                error: function () {
-                    $tempMessage.remove();
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'An error occurred while submitting your reply.',
-                        icon: 'error'
-                    });
-                }
+                });
             });
-        });
 
-        // Heart icon click event
-        $(document).off('click', '.heart-icon').on('click', '.heart-icon', function () {
-            var $heartIcon = $(this);
-            var commentId = $heartIcon.data('comment-id');
-            var $heartCount = $heartIcon.next('.heart-count');
-            var currentCount = parseInt($heartCount.text());
+            function refreshComments() {
+                if (isReplyFormOpen) {
+                    return;
+                }
 
-            $.ajax({
-                type: 'POST',
-                url: 'like_job_comment.php',
-                data: {
-                    comment_id: commentId,
-                    alumni_id: '<?php echo $alumni_id; ?>'
-                },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.status === 'success') {
-                        if (response.action === 'liked') {
-                            $heartIcon.addClass('liked');
-                            $heartCount.text(currentCount + 1);
-                            heartedComments.add(commentId);
-                        } else {
-                            $heartIcon.removeClass('liked');
-                            $heartCount.text(currentCount - 1);
-                            heartedComments.delete(commentId);
+                $.ajax({
+                    url: 'refresh_job.php',
+                    type: 'GET',
+                    data: { job_id: '<?php echo $jobId; ?>', last_update: lastUpdate, alumni_id: '<?php echo $alumni_id; ?>' },
+                    success: function (response) {
+                        var $commentsList = $('#comment-list');
+
+                        if (response.trim() !== '') {
+                            var $newCommentsList = $(response);
+
+                            // Preserve hearted comments
+                            heartedComments.forEach(function (commentId) {
+                                var $oldComment = $commentsList.find('li[data-comment-id="' + commentId + '"]');
+                                var $newComment = $newCommentsList.find('li[data-comment-id="' + commentId + '"]');
+
+                                if ($oldComment.length && $newComment.length) {
+                                    var $oldHeart = $oldComment.find('.fa-heart');
+                                    var $oldHeartCount = $oldComment.find('.heart-count');
+                                    $newComment.find('.fa-heart').replaceWith($oldHeart.clone());
+                                    $newComment.find('.heart-count').text($oldHeartCount.text());
+                                }
+                            });
+
+                            // Preserve open reply forms
+                            $commentsList.find('.reply-container:visible').each(function () {
+                                var commentId = $(this).closest('li').data('comment-id');
+                                var $newReplyContainer = $newCommentsList.find('li[data-comment-id="' + commentId + '"] + .reply-container');
+                                if ($newReplyContainer.length) {
+                                    $newReplyContainer.replaceWith($(this).clone());
+                                }
+                            });
+
+                            $commentsList.html($newCommentsList.html());
+                            lastUpdate = Date.now();
                         }
+
+                        attachEventListeners();
+                    },
+                    error: function () {
+                        console.log('Error refreshing comments');
                     }
-                },
-                error: function () {
-                    console.log('Error updating like');
+                });
+            }
+
+            function attachEventListeners() {
+                // Reply button click event
+                $(document).off('click', '.reply-button').on('click', '.reply-button', function () {
+                    var $commentItem = $(this).closest('li');
+                    var commentId = $commentItem.data('comment-id');
+                    var $replyContainer = $commentItem.next('.reply-container');
+
+                    if ($replyContainer.is(':hidden')) {
+                        $replyContainer.show();
+                        openReplyFormId = commentId;
+                        isReplyFormOpen = true;
+                    } else {
+                        $replyContainer.hide();
+                        isReplyFormOpen = false;
+                        openReplyFormId = null;
+                    }
+                });
+
+                // Reply form submission
+                $(document).off('submit', '.reply-form').on('submit', '.reply-form', function (e) {
+                    e.preventDefault();
+                    var $form = $(this);
+                    var $replyTextarea = $form.find('.reply-textarea');
+                    var replyContent = $replyTextarea.val().trim();
+                    var parentCommentId = $form.find('input[name="parent_comment_id"]').val();
+
+                    if (replyContent === "") {
+                        Swal.fire({
+                            title: 'Oops...',
+                            text: 'Please enter a reply before submitting.',
+                            icon: 'warning',
+                            timer: 5000,
+                            timerProgressBar: true
+                        });
+                        return;
+                    }
+
+                    $replyTextarea.val('');
+
+                    var $tempMessage = $('<div class="temp-message">Submitting your reply...</div>');
+                    $form.after($tempMessage);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'reply_job.php',
+                        data: {
+                            comment: replyContent,
+                            parent_comment_id: parentCommentId,
+                            job_id: '<?php echo $jobId; ?>',
+                            alumni_id: '<?php echo $alumni_id; ?>'
+                        },
+                        dataType: 'json',
+                        success: function (response) {
+                            $tempMessage.remove();
+                            if (response.status === 'success') {
+                                isReplyFormOpen = false;
+                                refreshComments();
+                                openReplyFormId = null;
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Your reply has been added.',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    timerProgressBar: true
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: response.message,
+                                    icon: 'error'
+                                });
+                            }
+                        },
+                        error: function () {
+                            $tempMessage.remove();
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'An error occurred while submitting your reply.',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                });
+
+                // Heart icon click event
+                $(document).off('click', '.heart-icon').on('click', '.heart-icon', function () {
+                    var $heartIcon = $(this);
+                    var commentId = $heartIcon.data('comment-id');
+                    var $heartCount = $heartIcon.next('.heart-count');
+                    var currentCount = parseInt($heartCount.text());
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'like_job_comment.php',
+                        data: {
+                            comment_id: commentId,
+                            alumni_id: '<?php echo $alumni_id; ?>'
+                        },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.status === 'success') {
+                                if (response.action === 'liked') {
+                                    $heartIcon.addClass('liked');
+                                    $heartCount.text(currentCount + 1);
+                                    heartedComments.add(commentId);
+                                } else {
+                                    $heartIcon.removeClass('liked');
+                                    $heartCount.text(currentCount - 1);
+                                    heartedComments.delete(commentId);
+                                }
+                            }
+                        },
+                        error: function () {
+                            console.log('Error updating like');
+                        }
+                    });
+                });
+            }
+
+            attachEventListeners();
+
+            setInterval(function () {
+                if (!isReplyFormOpen) {
+                    refreshComments();
                 }
-            });
+            }, refreshInterval);
         });
-    }
-
-    attachEventListeners();
-
-    setInterval(function () {
-        if (!isReplyFormOpen) {
-            refreshComments();
-        }
-    }, refreshInterval);
-});
-  </script>
+    </script>
 </body>
 
 </html>
