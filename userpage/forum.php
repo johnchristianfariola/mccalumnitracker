@@ -247,7 +247,8 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                                                     <div class="comment-author">
                                                                         <img src="<?php echo htmlspecialchars($commenter_profile); ?>"
                                                                             class="comment-avatar" alt="author">
-                                                                        <span><?php echo htmlspecialchars($commenter_name); ?></span>
+                                                                            <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo htmlspecialchars($commenter_name); ?></a></span>
+
                                                                         &nbsp;&nbsp;&nbsp;
                                                                         <span
                                                                             class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
