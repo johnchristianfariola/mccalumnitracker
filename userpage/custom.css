@@ -585,7 +585,7 @@ nav {
 
 .nav-right img {
   width: 25px;
-  margin-right: 10px;
+  
 }
 
 .nav-right {
@@ -660,7 +660,7 @@ nav {
 }
 
 .nav-user-icon img {
-  width: 40px;         /* Set the width */
+  width: 60px;         /* Set the width */
   height: 40px;        /* Set the height to match the width */
   border-radius: 50%; /* Make the image circular */
   object-fit: cover;   /* Ensure the image covers the container while maintaining aspect ratio */
