@@ -49,10 +49,10 @@ if (isset($_GET['forum_id'])) {
     $alumni_data = json_decode($alumni_data, true);
 
     if ($all_comments === null) {
-        echo '<div class="no-comments">Unable to retrieve comments at this time.</div>';
+        echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
     } else {
         if (!is_array($all_comments)) {
-            echo '<div class="no-comments">Error processing comments data.</div>';
+            echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
         } else {
             $forum_comments = array_filter($all_comments, function ($comment) use ($forum_id) {
                 return isset($comment['forum_id']) && $comment['forum_id'] === $forum_id;
