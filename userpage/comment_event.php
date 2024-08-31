@@ -5,17 +5,22 @@ require_once '../includes/firebaseRDB.php';
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 date_default_timezone_set('Asia/Manila');
+
 if (isset($_POST['event_id']) && isset($_POST['alumni_id']) && isset($_POST['comment'])) {
     $event_id = $_POST['event_id'];
     $alumni_id = $_POST['alumni_id'];
     $comment = $_POST['comment'];
+
+    // Create the current date and time in ISO 8601 format with time zone offset
+    $dateTime = new DateTime();
+    $date_commented = $dateTime->format('Y-m-d\TH:i:sP');
 
     // Create the data to be inserted
     $commentData = [
         'event_id' => $event_id,
         'alumni_id' => $alumni_id,
         'comment' => $comment,
-        'date_commented' => date('F j, Y H:i:s'),  // Include current date and time
+        'date_commented' => $date_commented,  // Use ISO 8601 format with timezone offset
         'heart_count' => 0
     ];
 

@@ -29,12 +29,41 @@ $notifications = getNotifications($firebase, $current_user_id);
 $notification_count = count($notifications);
 
 
+
 function getNotifications($firebase, $current_user_id) {
     $notifications = [];
+    
+    // Fetch news comments
     $news_comments = $firebase->retrieve("news_comments");
     $news_comments = json_decode($news_comments, true);
 
-    foreach ($news_comments as $comment_id => $comment) {
+    // Fetch event comments
+    $event_comments = $firebase->retrieve("event_comments");
+    $event_comments = json_decode($event_comments, true);
+
+    // Fetch job comments
+    $job_comments = $firebase->retrieve("job_comments");
+    $job_comments = json_decode($job_comments, true);
+
+    // Process news comments
+    processComments($firebase, $current_user_id, $news_comments, $notifications, 'news');
+
+    // Process event comments
+    processComments($firebase, $current_user_id, $event_comments, $notifications, 'event');
+
+    // Process job comments
+    processComments($firebase, $current_user_id, $job_comments, $notifications, 'job');
+
+    // Sort notifications by date, most recent first
+    usort($notifications, function($a, $b) {
+        return strtotime($b['date']) - strtotime($a['date']);
+    });
+
+    return $notifications;
+}
+
+function processComments($firebase, $current_user_id, $comments, &$notifications, $type) {
+    foreach ($comments as $comment_id => $comment) {
         // Notifications for replies
         if ($comment['alumni_id'] == $current_user_id && isset($comment['replies'])) {
             foreach ($comment['replies'] as $reply_id => $reply) {
@@ -46,11 +75,12 @@ function getNotifications($firebase, $current_user_id) {
 
                     $notifications[] = [
                         'type' => 'reply',
+                        'content_type' => $type,
                         'replier_name' => $replier_name,
                         'replier_profile' => $replier_profile,
                         'date' => $reply['date_replied'],
                         'comment_id' => $comment_id,
-                        'news_id' => $comment['news_id']
+                        $type . '_id' => $comment[$type . '_id']
                     ];
                 }
             }
@@ -67,23 +97,17 @@ function getNotifications($firebase, $current_user_id) {
 
                     $notifications[] = [
                         'type' => 'reaction',
+                        'content_type' => $type,
                         'reactor_name' => $reactor_name,
                         'reactor_profile' => $reactor_profile,
                         'date' => date('Y-m-d H:i:s'), // You might want to store reaction dates in your database
                         'comment_id' => $comment_id,
-                        'news_id' => $comment['news_id']
+                        $type . '_id' => $comment[$type . '_id']
                     ];
                 }
             }
         }
     }
-
-    // Sort notifications by date, most recent first
-    usort($notifications, function($a, $b) {
-        return strtotime($b['date']) - strtotime($a['date']);
-    });
-
-    return $notifications;
 }
 
 function getTimeAgo($date) {
@@ -379,13 +403,13 @@ function isActive($page)
                     <?php if ($notification['type'] === 'reply'): ?>
                         <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
                         <div class="notification-info">
-                            <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment</p>
+                            <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment on a <?php echo $notification['content_type']; ?></p>
                             <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
                         </div>
                     <?php elseif ($notification['type'] === 'reaction'): ?>
                         <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
                         <div class="notification-info">
-                            <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment</p>
+                            <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment on a <?php echo $notification['content_type']; ?></p>
                             <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
                         </div>
                     <?php endif; ?>
@@ -396,6 +420,7 @@ function isActive($page)
         <?php endif; ?>
         <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
     </div>
+</div>
 </div>
 </nav>
 
