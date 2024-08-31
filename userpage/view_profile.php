@@ -331,7 +331,8 @@ function getValue($array, $key)
             </div>
 
             <div class="post-col">
-                <div class="write-post-container">
+                
+            <div class="write-post-container">
                     <div class="user-profile">
                         <img src="../images/profile.jpg" alt="Profile Picture">
                         <div>
@@ -355,7 +356,7 @@ function getValue($array, $key)
                     </div>
 
                 </div>
-
+    
                 <!-------POST SECTION----------->
                 <?php
                 $current_user_id = $_SESSION['alumni_id'];
@@ -433,6 +434,7 @@ function getValue($array, $key)
                                 </div>
                             </div>
                         </div>
+                        <br>
                         <?php
                     }
                 } else {

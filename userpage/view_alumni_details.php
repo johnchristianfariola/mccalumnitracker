@@ -198,7 +198,7 @@ date_default_timezone_set('Asia/Manila');
         <div class="cover-img-container">
             <img id="coverPhoto" src="<?php echo htmlspecialchars(getValue($alumni_profile, 'cover_photo_url')); ?>"
                 alt="Cover Photo" class="cover-img"
-                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
+                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';"  >
         </div>
         <div class="profile-details">
             <div class="pd-left">
@@ -382,6 +382,7 @@ date_default_timezone_set('Asia/Manila');
                                 </div>
                             </div>
                         </div>
+                        <br>
                         <?php
                     }
                 } else {

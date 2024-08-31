@@ -154,6 +154,7 @@ body.dark-theme {
   background: var(--bg-color);
   border-radius: 6px;
   padding: 20px;
+  margin-bottom: 20px;
   color: #626262;
 }
 
@@ -219,7 +220,7 @@ body.dark-theme {
   border-radius: 6px;
   padding: 20px;
   color-scheme: #626262;
-  margin: 20px 0;
+
 }
 
 .user-profile span {
