@@ -567,58 +567,67 @@ nav {
 }
 
 /*--Nav-Right--*/
-
 .nav-right ul {
   list-style: none;
   display: flex;
-  /* Change display to flex */
   justify-content: space-between;
-  /* Distribute items evenly */
   width: 100%;
-  /* Take up full width of parent */
+  padding: 0;
+  margin: 0;
 }
 
 .nav-right ul li {
-  display: inline-block;
-}
-
-.nav-right li {
-  width: 93%;
+  display: flex;
+  align-items: center;
+  flex: 1;
   position: relative;
-  right: -30px;
 }
 
 .nav-right img {
   width: 25px;
-  position: relative;
-  left: 40px;
   margin-right: 10px;
 }
 
 .nav-right {
-  margin-right: -30px;
+  margin-right: 0;
 }
 
 .background-circle {
   position: relative;
   margin: 0 10px;
-  /* Adjust margin as needed */
 }
 
 .background-circle:before {
   content: "";
   position: absolute;
-  top: 45%;
-  left: 235%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   width: 40px;
-  /* Adjust the width and height as needed */
   height: 40px;
   background-color: var(--web-wash);
-  /* Replace with your desired background color */
   border-radius: 50%;
   z-index: -1;
 }
+
+.online {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.online::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #41db51;
+  position: absolute;
+  top: 0; /* Adjust if needed */
+  right: -2px; /* Align it to the right edge of the user icon */
+}
+
 
 /*--Nav-Left--*/
 
@@ -660,24 +669,10 @@ nav {
 
 
 .nav-user-icon {
-  margin-left: 25px;
+ 
 }
 
-.online {
-  position: relative;
-}
 
-.online::after {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: #41db51;
-  position: absolute;
-  top: 0;
-  left: 70px;
-}
 
 .curved-ctn {
   display: flex;

@@ -236,6 +236,7 @@ $alumni_info_json = json_encode($alumni_info);
 
 
 <script>
+// Use PHP to inject alumni info into JavaScript
 const alumniInfo = <?php echo $alumni_info_json; ?>;
 
 const input = document.getElementById("myInput");
@@ -248,7 +249,7 @@ input.addEventListener("input", function() {
     if (!value) return;
 
     const matchingAlumni = alumniInfo.filter(alumni => 
-        alumni.name.toLowerCase().includes(value) && alumni.status === 'verified'
+        alumni.name.toLowerCase().includes(value)
     ).slice(0, 5); // Limit to 5 results
 
     matchingAlumni.forEach(alumni => {
@@ -258,7 +259,7 @@ input.addEventListener("input", function() {
             <img src="${alumni.profile_url}" alt="${alumni.name}" >
             <div class="autocomplete-item-info">
                 <span class="autocomplete-item-name">${alumni.name}</span>
-                <span class="autocomplete-item-details">Verified Alumni</span>
+                <span class="autocomplete-item-details">Alumni</span>
             </div>
         `;
         div.addEventListener("click", function() {
