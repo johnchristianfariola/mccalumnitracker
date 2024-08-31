@@ -125,11 +125,7 @@ $alumni_info_json = json_encode($alumni_info);
     </div>
     <div class="nav-right">
         <ul>
-            <div class="background-circle">
-                <a href="home.php">
-                    <li class=""><img src="../images/logo/menu_black.png" alt=""></li>
-                </a>
-            </div>
+           
             <div class="background-circle">
                 <a href="home.php">
                     <li class=""><img src="../images/logo/messenger_black.png" alt=""></li>
@@ -140,6 +136,10 @@ $alumni_info_json = json_encode($alumni_info);
                     <li class=""><img src="../images/logo/bell_black.png" alt=""></li>
                 </a>
             </div>
+            <div class="background-circle">
+               
+            </div>
+            
         </ul>
 
         <div class="nav-user-icon online" onclick="settingsMenuToggle()">
