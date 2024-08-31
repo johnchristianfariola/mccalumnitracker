@@ -1088,7 +1088,7 @@ ul {
 }
 
 .comments-list:after {
-  content: "";
+ 
   position: absolute;
   background: #c7cacb;
   bottom: 0;
