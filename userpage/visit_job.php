@@ -183,8 +183,9 @@
                                                 <div class="comment-box">
                                                     <div class="comment-header">
                                                         <h6 class="comment-author">
-                                                            <a
-                                                                href="#"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
+
+                                                            <a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
+
                                                         </h6>
                                                         <span><?php echo $comment["date_ago"]; ?></span>
                                                         <i class="fa fa-reply reply-button"></i>
