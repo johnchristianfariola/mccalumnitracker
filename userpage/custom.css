@@ -1206,7 +1206,7 @@ ul {
 }
 
 .comment-box {
-/*  background: #f9f9f9;*/  
+  background: #f9f9f9;
   border-radius: 5px;
   padding: 15px;
   flex: 1;
@@ -1795,14 +1795,14 @@ ul {
 }
 /* Unique CSS for the comment chatbox */
 #uniquePanelInfo {
- /* border-radius: 10px;*/
+  border-radius: 10px;
   overflow: hidden;
-/*  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #uniquePanelBody {
   padding: 20px;
-  background-color: #f9f9f9;
+ /* background-color: #f9f9f9;*/
 }
 
 #uniqueCommentTextarea {
