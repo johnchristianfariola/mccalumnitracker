@@ -334,7 +334,8 @@
                                                         <div class="comment-box">
                                                             <div class="comment-head">
                                                                 <h6 class="comment-name by-author">
-                                                                    <a href="#"><?php echo $replyAuthorFirstName . " " . $replyAuthorLastName; ?></a>
+                                                                    <a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo $replyAuthorFirstName . " " . $replyAuthorLastName; ?></a>
+
                                                                 </h6>
                                                                 <span><?php echo timeAgo($reply["date_replied"]); ?></span>
                                                             </div>
