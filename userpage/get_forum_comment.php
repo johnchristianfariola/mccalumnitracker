@@ -1,4 +1,4 @@
-<!--====get_forum_comment.php======-->
+
 <?php
 include '../includes/session.php';
 require_once '../includes/firebaseRDB.php';
@@ -38,6 +38,7 @@ function time_elapsed_string($datetime, $full = false)
     return $string ? implode(', ', $string) . ' ago' : 'just now';
 }
 
+
 if (isset($_GET['forum_id'])) {
     $forum_id = $_GET['forum_id'];
 
@@ -66,7 +67,7 @@ if (isset($_GET['forum_id'])) {
                     <div class="comment">
                         <div class="comment-author">
                             <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
-                            <span><?php echo htmlspecialchars($commenter_name); ?></span>
+                            <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo htmlspecialchars($commenter_name); ?></a></span>
                             &nbsp;&nbsp;&nbsp;
                             <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
                         </div>
@@ -75,14 +76,12 @@ if (isset($_GET['forum_id'])) {
                         </div>
                         <div class="reply-section">
                             <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
-                                <i
-                                    class="fa <?php echo in_array($_SESSION['user']['id'], $comment['liked_by'] ?? []) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
+                                <i class="fa <?php echo in_array($_SESSION['user']['id'], $comment['liked_by'] ?? []) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
                             </span>
                             <span class="heart-count"><?php echo $comment['heart_count'] ?? 0; ?></span>
                             &nbsp;&nbsp;
                             <span class="dislike-btn" data-comment-id="<?php echo $comment_id; ?>">
-                                <i
-                                    class="fa <?php echo in_array($_SESSION['user']['id'], $comment['disliked_by'] ?? []) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
+                                <i class="fa <?php echo in_array($_SESSION['user']['id'], $comment['disliked_by'] ?? []) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
                             </span>
                             <span class="dislike-count"><?php echo $comment['dislike_count'] ?? 0; ?></span>
                             <button class="reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
@@ -102,7 +101,7 @@ if (isset($_GET['forum_id'])) {
                                         <div class="reply">
                                             <div class="reply-author">
                                                 <img class="comment-avatar" src="<?php echo htmlspecialchars($replier_profile); ?>" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
-                                                <span><?php echo htmlspecialchars($replier_name); ?></span>
+                                                <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($reply['alumni_id']); ?>"><?php echo htmlspecialchars($replier_name); ?></a></span>
                                                 &nbsp;&nbsp;&nbsp;
                                                 <span class="reply-time"><?php echo time_elapsed_string($reply['date_replied']); ?></span>
                                             </div>
