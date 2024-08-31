@@ -42,7 +42,7 @@ if (empty($commentData) || !is_array($commentData)) {
                     <div class="comment-box">
                         <div class="comment-head">
                             <h6 class="comment-name by-author">
-                                <a href="#">' . $commenterFirstName . ' ' . $commenterLastName . '</a>
+                                <a href="view_alumni_details.php?id=' . htmlspecialchars($reply['alumni_id']) . '">' . $commenterFirstName . ' ' . $commenterLastName . '</a>
                             </h6>
                             <span>' . timeAgo($comment['date_commented']) . '</span>
                             <i class="fa fa-reply reply-button"></i>
@@ -70,7 +70,7 @@ if (empty($commentData) || !is_array($commentData)) {
                         <div class="comment-box">
                             <div class="comment-head">
                                 <h6 class="comment-name by-author">
-                                    <a href="#">' . $replyAuthorFirstName . ' ' . $replyAuthorLastName . '</a>
+                                <a href="view_alumni_details.php?id=' . htmlspecialchars($reply['alumni_id']) . '">' . $replyAuthorFirstName . ' ' . $replyAuthorLastName . '</a>
                                 </h6>
                                 <span>' . timeAgo($reply['date_replied']) . '</span>
                             </div>
