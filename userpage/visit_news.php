@@ -281,7 +281,7 @@
 
                         <div class="container pb-cmnt-container">
                             <div class="row">
-                                <div class="col-md-10 col-md-offset-0">
+                                <div class="col-md-11 col-md-offset-0">
                                     <div id="uniquePanelInfo" class="panel panel-info">
                                         <div id="uniquePanelBody" class="panel-body">
                                             <form id="commentForm" method="POST" action="comment_news.php">
