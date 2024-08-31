@@ -1,7 +1,12 @@
 <?php include '../includes/session.php'; ?>
 <!doctype html>
 <html class="no-js" lang="">
-<?php
+
+
+<head>
+    <?php include 'includes/header.php' ?>
+    <!-- Bootstrap CSS -->
+    <?php
 require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
 
@@ -49,10 +54,6 @@ function time_elapsed_string($datetime, $full = false)
 date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 
 ?>
-
-<head>
-    <?php include 'includes/header.php' ?>
-    <!-- Bootstrap CSS -->
 <style>
     
 .dropdown {
