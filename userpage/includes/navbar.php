@@ -377,7 +377,7 @@ function isActive($page)
             <?php foreach ($notifications as $notification): ?>
                 <div class="notification-item">
                     <?php if ($notification['type'] === 'reply'): ?>
-                        <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
+                        <img src="../<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
                         <div class="notification-info">
                             <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment</p>
                             <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
