@@ -1206,7 +1206,7 @@ ul {
 }
 
 .comment-box {
-  background: #f9f9f9;
+/*  background: #f9f9f9;*/  
   border-radius: 5px;
   padding: 15px;
   flex: 1;
