@@ -232,7 +232,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                                     $all_comments = json_decode($all_comments, true);
 
                                                     if (!is_array($all_comments)) {
-                                                        echo '<div class="no-comments">Error processing comments data.</div>';
+                                                        echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
                                                     } else {
                                                         $forum_comments = array_filter($all_comments, function ($comment) use ($forum_id) {
                                                             return isset($comment['forum_id']) && $comment['forum_id'] === $forum_id;
