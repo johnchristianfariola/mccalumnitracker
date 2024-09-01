@@ -1,29 +1,22 @@
 <?php
-// Start by checking if we need to set a custom session name
-if (isset($_GET['alumni_id'])) {
-    session_name('user_session_' . $_GET['alumni_id']);
-}
-
+// Start the session at the very beginning
 session_start();
 include 'firebaseRDB.php';
-
-// Firebase Realtime Database URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-
-// Instantiate FirebaseRDB object
-$firebase = new firebaseRDB($databaseURL);
+require_once 'config.php';
 
 // Check if the alumni session is set
-if (!isset($_SESSION['alumni']) || trim($_SESSION['alumni']) == '') {
+if (!isset($_SESSION['alumni']) || !isset($_SESSION['alumni_id']) || trim($_SESSION['alumni']) == '') {
     header('location: index.php');
     exit();
 }
 
+$firebase = new firebaseRDB($databaseURL);
 $alumniEmail = $_SESSION['alumni'];
+$alumniId = $_SESSION['alumni_id'];
 
 // Retrieve alumni data from Firebase
 try {
-    $alumniData = $firebase->retrieve("alumni");
+    $alumniData = $firebase->retrieve("alumni/$alumniId");
     $alumniData = json_decode($alumniData, true);
     $batchData = $firebase->retrieve("batch_yr");
     $batchData = json_decode($batchData, true);
@@ -37,52 +30,45 @@ try {
     exit();
 }
 
-// Find the alumni record based on email
-$authenticated = false;
-foreach ($alumniData as $id => $alumni) {
-    if (isset($alumni['email']) && $alumni['email'] === $alumniEmail) {
-        $batchYear = isset($batchData[$alumni['batch']]['batch_yrs']) ? $batchData[$alumni['batch']]['batch_yrs'] : 'Unknown Batch';
-        $courseCode = isset($courseData[$alumni['course']]['courCode']) ? $courseData[$alumni['course']]['courCode'] : 'Unknown Course';
-        $categoryName = isset($categoryData[$alumni['work_classification']]['category_name']) ? $categoryData[$alumni['work_classification']]['category_name'] : 'Unknown Category';
-        
-        // Alumni user is authenticated, store user data in session
-        $user = [
-            'id' => $id,
-            'firstname' => $alumni['firstname'],
-            'middlename' => $alumni['middlename'],
-            'lastname' => $alumni['lastname'],
-            'auxiliaryname' => $alumni['auxiliaryname'],
-            'birthdate' => $alumni['birthdate'],
-            'addressline1' => $alumni['addressline1'],
-            'civilstatus' => $alumni['civilstatus'],
-            'gender' => $alumni['gender'],
-            'studentid' => $alumni['studentid'],
-            'zipcode' => $alumni['zipcode'],
-            'email' => $alumni['email'],
-            'contactnumber' => $alumni['contactnumber'],
-            'state' => $alumni['state'] ?? '',
-            'city' => $alumni['city'] ?? '',
-            'barangay' => $alumni['barangay'] ?? '',
-            'batch' => $batchYear,
-            'course' => $courseCode,
-            'category' => $categoryName,
-            'batch_id' => $alumni['batch'],
-            'course_id' => $alumni['course'],
-            'category_id' => $alumni['work_classification'],
-        ];
-        $_SESSION['user'] = $user;
-        $_SESSION['alumni_id'] = $id;
-        $authenticated = true;
-        break;
-    }
-}
-
-if (!$authenticated) {
+// Verify the alumni data
+if (!$alumniData || $alumniData['email'] !== $alumniEmail) {
     session_unset();
     session_destroy();
     header('location: index.php');
     exit();
 }
+
+// Set up user data
+$batchYear = isset($batchData[$alumniData['batch']]['batch_yrs']) ? $batchData[$alumniData['batch']]['batch_yrs'] : 'Unknown Batch';
+$courseCode = isset($courseData[$alumniData['course']]['courCode']) ? $courseData[$alumniData['course']]['courCode'] : 'Unknown Course';
+$categoryName = isset($categoryData[$alumniData['work_classification']]['category_name']) ? $categoryData[$alumniData['work_classification']]['category_name'] : 'Unknown Category';
+
+$user = [
+    'id' => $alumniId,
+    'firstname' => $alumniData['firstname'],
+    'middlename' => $alumniData['middlename'],
+    'lastname' => $alumniData['lastname'],
+    'auxiliaryname' => $alumniData['auxiliaryname'],
+    'birthdate' => $alumniData['birthdate'],
+    'addressline1' => $alumniData['addressline1'],
+    'civilstatus' => $alumniData['civilstatus'],
+    'gender' => $alumniData['gender'],
+    'studentid' => $alumniData['studentid'],
+    'zipcode' => $alumniData['zipcode'],
+    'email' => $alumniData['email'],
+    'contactnumber' => $alumniData['contactnumber'],
+    'state' => $alumniData['state'] ?? '',
+    'city' => $alumniData['city'] ?? '',
+    'barangay' => $alumniData['barangay'] ?? '',
+    'batch' => $batchYear,
+    'course' => $courseCode,
+    'category' => $categoryName,
+    'batch_id' => $alumniData['batch'],
+    'course_id' => $alumniData['course'],
+    'category_id' => $alumniData['work_classification'],
+];
+
+$_SESSION['user'] = $user;
 
 // Generate CSRF token if not already set
 if (!isset($_SESSION['token'])) {
@@ -90,10 +76,9 @@ if (!isset($_SESSION['token'])) {
 }
 $token = $_SESSION['token'];
 
-// Regenerate session ID for security
-session_regenerate_id(true);
-
-// Set secure session settings
-ini_set('session.use_only_cookies', 1);
-ini_set('session.use_strict_mode', 1);
+// Regenerate session ID periodically for security (e.g., every 30 minutes)
+if (!isset($_SESSION['last_regeneration']) || time() - $_SESSION['last_regeneration'] > 1800) {
+    session_regenerate_id(true);
+    $_SESSION['last_regeneration'] = time();
+}
 ?>
