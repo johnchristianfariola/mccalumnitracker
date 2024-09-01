@@ -174,8 +174,13 @@
                             break;
                         case 'forum_post_reaction':
                             $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
+                            break;
                         case 'forum_comment':
+                            $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
+                            break;
                         case 'forum_reply':
+                            $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
+                            break;
                         case 'forum_comment_reaction':
                             $imageSrc = !empty($notification['commenter_profile']) ? $notification['commenter_profile'] : '../images/logo/notification.png';
                             break;
