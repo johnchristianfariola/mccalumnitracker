@@ -173,6 +173,8 @@
                             $imageSrc = $notification['reactor_profile'] ?? '../images/logo/notification.png';
                             break;
                         case 'forum_comment':
+                            $imageSrc = $notification['commenter_profile'] ?? '../images/logo/notification.png';
+                            break;
                         case 'forum_reply':
                             $imageSrc = $notification['replier_profile'] ?? '../images/logo/notification.png';
                             break;
@@ -194,6 +196,7 @@
                     endswitch;
                     ?>
                     <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="Notification Icon">
+
                     <div class="notification-info">
                         <p>
                             <?php
