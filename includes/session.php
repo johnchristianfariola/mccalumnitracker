@@ -21,7 +21,6 @@ try {
     $alumniData = $firebase->retrieve("alumni");
     $alumniData = json_decode($alumniData, true);
 
-    // Retrieve batch and course data from Firebase
     $batchData = $firebase->retrieve("batch_yr");
     $batchData = json_decode($batchData, true);
 
@@ -32,7 +31,6 @@ try {
     $categoryData = json_decode($categoryData, true);
 
 } catch (Exception $e) {
-    // Handle errors when retrieving data
     error_log("Error retrieving data: " . $e->getMessage());
     header('location: index.php');
     exit();
@@ -42,11 +40,9 @@ try {
 $authenticated = false;
 foreach ($alumniData as $id => $alumni) {
     if (isset($alumni['email']) && $alumni['email'] === $alumniEmail) {
-        // Map batch and course codes using unique IDs
         $batchYear = isset($batchData[$alumni['batch']]['batch_yrs']) ? $batchData[$alumni['batch']]['batch_yrs'] : 'Unknown Batch';
         $courseCode = isset($courseData[$alumni['course']]['courCode']) ? $courseData[$alumni['course']]['courCode'] : 'Unknown Course';
         $categoryName = isset($categoryData[$alumni['work_classification']]['category_name']) ? $categoryData[$alumni['work_classification']]['category_name'] : 'Unknown Category';
-
         
         // Alumni user is authenticated, store user data in session
         $user = [
@@ -74,14 +70,13 @@ foreach ($alumniData as $id => $alumni) {
             'category_id' => $alumni['work_classification'],
         ];
         $_SESSION['user'] = $user;
-        $_SESSION['alumni_id'] = $id; // Store alumni ID in session
+        $_SESSION['alumni_id'] = $id;
         $authenticated = true;
         break;
     }
 }
 
 if (!$authenticated) {
-    // If the email in the session doesn't match any user, clear the session and redirect to login
     session_unset();
     session_destroy();
     header('location: index.php');
@@ -90,8 +85,38 @@ if (!$authenticated) {
 
 // Generate CSRF token if not already set
 if (!isset($_SESSION['token'])) {
-    $_SESSION['token'] = bin2hex(random_bytes(32)); // Generate a random token
+    $_SESSION['token'] = bin2hex(random_bytes(32));
 }
 
 $token = $_SESSION['token'];
+
+// Set a unique session name based on the user's email
+session_name('alumni_session_' . md5($alumniEmail));
+
+// Regenerate session ID to prevent session fixation
+session_regenerate_id(true);
+
+// Set session cookie parameters
+$secure = true; // Set to true if using HTTPS
+$httponly = true;
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '', // Set your domain here
+    'secure' => $secure,
+    'httponly' => $httponly,
+    'samesite' => 'Lax'
+]);
+
+// Optionally, you can store the last activity time
+$_SESSION['last_activity'] = time();
+
+// You may want to add a check for session timeout
+$timeout = 1800; // 30 minutes
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
+    session_unset();
+    session_destroy();
+    header('location: index.php');
+    exit();
+}
 ?>
