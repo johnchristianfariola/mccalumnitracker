@@ -264,7 +264,7 @@
     </div>
 
 
-    <!----------MESSAGE------------
+    <!----------MESSAGE-------------->
     <div class="message-menu" id="messageMenu">
         <div class="message-menu-inner">
             <div class="message-header">
@@ -297,7 +297,7 @@
                 <a href="view_all_messages.php" class="view-all-messages">View All Messages</a>
             </div>
         </div>
-    </div>-->
+    </div>
 
 
 </nav>
