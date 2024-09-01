@@ -174,7 +174,7 @@
                             break;
                         case 'forum_comment':
                         case 'forum_reply':
-                            $imageSrc = $notification['commenter_profile'] ?? '../images/logo/notification.png';
+                            $imageSrc = $notification['replier_profile'] ?? '../images/logo/notification.png';
                             break;
                         case 'admin_job':
                             $imageSrc = '../images/logo/suitcase.png';
