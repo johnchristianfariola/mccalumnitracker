@@ -319,45 +319,45 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 
 
 
-    <!-- Start Footer area-->
-    <!-- End Footer area-->
-    <!-- Scripts -->
-    <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/wow.min.js"></script>
-    <script src="js/jquery-price-slider.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.scrollUp.min.js"></script>
-    <script src="js/meanmenu/jquery.meanmenu.js"></script>
-    <script src="js/counterup/jquery.counterup.min.js"></script>
-    <script src="js/counterup/waypoints.min.js"></script>
-    <script src="js/counterup/counterup-active.js"></script>
-    <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="js/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
-    <script src="js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="js/jvectormap/jvectormap-active.js"></script>
-    <script src="js/sparkline/jquery.sparkline.min.js"></script>
-    <script src="js/sparkline/sparkline-active.js"></script>
-    <script src="js/flot/jquery.flot.js"></script>
-    <script src="js/flot/jquery.flot.resize.js"></script>
-    <script src="js/flot/curvedLines.js"></script>
-    <script src="js/flot/flot-active.js"></script>
-    <script src="js/knob/jquery.knob.js"></script>
-    <script src="js/knob/jquery.appear.js"></script>
-    <script src="js/knob/knob-active.js"></script>
-    <script src="js/wave/waves.min.js"></script>
-    <script src="js/wave/wave-active.js"></script>
-    <script src="js/todo/jquery.todo.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/chat/moment.min.js"></script>
-    <script src="js/chat/jquery.chat.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/tawk-chat.js"></script>
-    <script src="js/dialog/sweetalert2.min.js"></script>
-    <script src="js/dialog/dialog-active.js"></script>
-    <script src="bootsrap/js/bootstrap.min.js"></script>
-    <script src="../bower_components/ckeditor/ckeditor.js"></script>
-    <script src="js/jquery/jquery-3.5.1.min.js"></script>
+        <!-- Start Footer area-->
+        <!-- End Footer area-->
+        <!-- Scripts -->
+        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/wow.min.js"></script>
+        <script src="js/jquery-price-slider.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/jquery.scrollUp.min.js"></script>
+        <script src="js/meanmenu/jquery.meanmenu.js"></script>
+        <script src="js/counterup/jquery.counterup.min.js"></script>
+        <script src="js/counterup/waypoints.min.js"></script>
+        <script src="js/counterup/counterup-active.js"></script>
+        <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="js/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+        <script src="js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+        <script src="js/jvectormap/jvectormap-active.js"></script>
+        <script src="js/sparkline/jquery.sparkline.min.js"></script>
+        <script src="js/sparkline/sparkline-active.js"></script>
+        <script src="js/flot/jquery.flot.js"></script>
+        <script src="js/flot/jquery.flot.resize.js"></script>
+        <script src="js/flot/curvedLines.js"></script>
+        <script src="js/flot/flot-active.js"></script>
+        <script src="js/knob/jquery.knob.js"></script>
+        <script src="js/knob/jquery.appear.js"></script>
+        <script src="js/knob/knob-active.js"></script>
+        <script src="js/wave/waves.min.js"></script>
+        <script src="js/wave/wave-active.js"></script>
+        <script src="js/todo/jquery.todo.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/chat/moment.min.js"></script>
+        <script src="js/chat/jquery.chat.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/tawk-chat.js"></script>
+        <script src="js/dialog/sweetalert2.min.js"></script>
+        <script src="js/dialog/dialog-active.js"></script>
+        <script src="bootsrap/js/bootstrap.min.js"></script>
+        <script src="../bower_components/ckeditor/ckeditor.js"></script>
+        <script src="js/jquery/jquery-3.5.1.min.js"></script>
 
 
     <script>

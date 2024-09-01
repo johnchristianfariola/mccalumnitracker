@@ -668,10 +668,125 @@ nav {
 }
 
 
-.nav-user-icon {
- 
+/*================Navbar Search Auto Complete===============*/
+.autocomplete-items {
+  position: absolute;
+  border-top: none;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.autocomplete-item {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.autocomplete-item:hover {
+  background-color: #f0f2f5;
+}
+
+.autocomplete-item img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.autocomplete-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.autocomplete-item-name {
+  font-weight: bold;
+}
+
+.autocomplete-item-details {
+  font-size: 0.8em;
+  color: #65676B;
+}
+
+/*================Navbar Search Auto Notification===============*/
+
+
+.notification-count {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 10px;
+}
+
+.notification-menu {
+  position: absolute;
+  width: 90%;
+  max-width: 350px;
+  background: var(--bg-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  top: 108%;
+  right: 1%;
+  max-height: 0;
+  transition: max-height 0.3s;
+}
+
+.notification-menu-height {
+  max-height: 400px;
+}
+
+.notification-menu-inner {
+  padding: 20px;
+  color: #626262;
+}
+
+.notification-menu-inner h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.notification-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.notification-info p {
+  margin-bottom: 5px;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #939393;
+}
+
+.view-all-notifications {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: #1876f2;
+  text-decoration: none;
+}
 
 
 .curved-ctn {

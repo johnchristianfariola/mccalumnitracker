@@ -28,11 +28,10 @@ $current_user_id = $_SESSION['user']['id']; // Assuming you have the user's ID i
 $notifications = getNotifications($firebase, $current_user_id);
 $notification_count = count($notifications);
 
-
-
-function getNotifications($firebase, $current_user_id) {
+function getNotifications($firebase, $current_user_id)
+{
     $notifications = [];
-    
+
     // Fetch news comments
     $news_comments = $firebase->retrieve("news_comments");
     $news_comments = json_decode($news_comments, true);
@@ -45,6 +44,14 @@ function getNotifications($firebase, $current_user_id) {
     $job_comments = $firebase->retrieve("job_comments");
     $job_comments = json_decode($job_comments, true);
 
+    // Fetch forum posts
+    $forum_posts = $firebase->retrieve("forum");
+    $forum_posts = json_decode($forum_posts, true);
+
+    // Fetch forum comments
+    $forum_comments = $firebase->retrieve("forum_comments");
+    $forum_comments = json_decode($forum_comments, true);
+
     // Process news comments
     processComments($firebase, $current_user_id, $news_comments, $notifications, 'news');
 
@@ -54,75 +61,201 @@ function getNotifications($firebase, $current_user_id) {
     // Process job comments
     processComments($firebase, $current_user_id, $job_comments, $notifications, 'job');
 
+    // Process forum posts and comments
+    processForumNotifications($firebase, $current_user_id, $forum_posts, $forum_comments, $notifications);
+
     // Sort notifications by date, most recent first
-    usort($notifications, function($a, $b) {
+    usort($notifications, function ($a, $b) {
         return strtotime($b['date']) - strtotime($a['date']);
     });
 
     return $notifications;
 }
 
-function processComments($firebase, $current_user_id, $comments, &$notifications, $type) {
+function processComments($firebase, $current_user_id, $comments, &$notifications, $type)
+{
+    if (!is_array($comments)) {
+        return; // Exit the function if $comments is not an array
+    }
+
     foreach ($comments as $comment_id => $comment) {
         // Notifications for replies
-        if ($comment['alumni_id'] == $current_user_id && isset($comment['replies'])) {
+        if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id && isset($comment['replies']) && is_array($comment['replies'])) {
             foreach ($comment['replies'] as $reply_id => $reply) {
-                if ($reply['alumni_id'] != $current_user_id) {
+                if (isset($reply['alumni_id']) && $reply['alumni_id'] != $current_user_id) {
                     $replier_data = $firebase->retrieve("alumni/" . $reply['alumni_id']);
                     $replier_data = json_decode($replier_data, true);
-                    $replier_name = $replier_data['firstname'] . ' ' . $replier_data['lastname'];
-                    $replier_profile = isset($replier_data['profile_url']) ? $replier_data['profile_url'] : '../images/profile.jpg';
+                    if ($replier_data) {
+                        $replier_name = $replier_data['firstname'] . ' ' . $replier_data['lastname'];
+                        $replier_profile = isset($replier_data['profile_url']) ? $replier_data['profile_url'] : '../images/profile.jpg';
 
-                    $notifications[] = [
-                        'type' => 'reply',
-                        'content_type' => $type,
-                        'replier_name' => $replier_name,
-                        'replier_profile' => $replier_profile,
-                        'date' => $reply['date_replied'],
-                        'comment_id' => $comment_id,
-                        $type . '_id' => $comment[$type . '_id']
-                    ];
+                        $notifications[] = [
+                            'type' => 'reply',
+                            'content_type' => $type,
+                            'replier_name' => $replier_name,
+                            'replier_profile' => $replier_profile,
+                            'date' => $reply['date_replied'],
+                            'comment_id' => $comment_id,
+                            $type . '_id' => $comment[$type . '_id']
+                        ];
+                    }
                 }
             }
         }
 
         // Notifications for reactions
-        if ($comment['alumni_id'] == $current_user_id && isset($comment['liked_by'])) {
+        if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id && isset($comment['liked_by']) && is_array($comment['liked_by'])) {
             foreach ($comment['liked_by'] as $reactor_id) {
                 if ($reactor_id != $current_user_id) {
                     $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
                     $reactor_data = json_decode($reactor_data, true);
-                    $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
-                    $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+                    if ($reactor_data) {
+                        $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                        $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
 
-                    $notifications[] = [
-                        'type' => 'reaction',
-                        'content_type' => $type,
-                        'reactor_name' => $reactor_name,
-                        'reactor_profile' => $reactor_profile,
-                        'date' => date('Y-m-d H:i:s'), // You might want to store reaction dates in your database
-                        'comment_id' => $comment_id,
-                        $type . '_id' => $comment[$type . '_id']
-                    ];
+                        $notifications[] = [
+                            'type' => 'reaction',
+                            'content_type' => $type,
+                            'reactor_name' => $reactor_name,
+                            'reactor_profile' => $reactor_profile,
+                            'date' => date('Y-m-d H:i:s'),
+                            'comment_id' => $comment_id,
+                            $type . '_id' => $comment[$type . '_id']
+                        ];
+                    }
                 }
             }
         }
     }
 }
 
-function getTimeAgo($date) {
+function processForumNotifications($firebase, $current_user_id, $forum_posts, $forum_comments, &$notifications)
+{
+    // Process forum post reactions
+    if (is_array($forum_posts)) {
+        foreach ($forum_posts as $post_id => $post) {
+            if (isset($post['alumniId']) && $post['alumniId'] == $current_user_id && isset($post['reactions']) && is_array($post['reactions'])) {
+                foreach ($post['reactions'] as $reaction_type => $reactors) {
+                    if (is_array($reactors)) {
+                        foreach ($reactors as $reactor_id => $reaction_date) {
+                            if ($reactor_id != $current_user_id) {
+                                $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                                $reactor_data = json_decode($reactor_data, true);
+                                if ($reactor_data) {
+                                    $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                                    $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+
+                                    $notifications[] = [
+                                        'type' => 'forum_post_reaction',
+                                        'content_type' => 'forum',
+                                        'reactor_name' => $reactor_name,
+                                        'reactor_profile' => $reactor_profile,
+                                        'date' => $reaction_date,
+                                        'post_id' => $post_id,
+                                        'reaction_type' => $reaction_type
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Process forum comments and replies
+    if (is_array($forum_comments)) {
+        foreach ($forum_comments as $comment_id => $comment) {
+            // Notifications for comments on user's posts
+            if (isset($forum_posts[$comment['forum_id']]) && 
+                isset($forum_posts[$comment['forum_id']]['alumniId']) && 
+                $forum_posts[$comment['forum_id']]['alumniId'] == $current_user_id && 
+                isset($comment['alumni_id']) && 
+                $comment['alumni_id'] != $current_user_id) {
+                $commenter_data = $firebase->retrieve("alumni/" . $comment['alumni_id']);
+                $commenter_data = json_decode($commenter_data, true);
+                if ($commenter_data) {
+                    $commenter_name = $commenter_data['firstname'] . ' ' . $commenter_data['lastname'];
+                    $commenter_profile = isset($commenter_data['profile_url']) ? $commenter_data['profile_url'] : '../images/profile.jpg';
+
+                    $notifications[] = [
+                        'type' => 'forum_comment',
+                        'content_type' => 'forum',
+                        'commenter_name' => $commenter_name,
+                        'commenter_profile' => $commenter_profile,
+                        'date' => $comment['date_commented'],
+                        'post_id' => $comment['forum_id'],
+                        'comment_id' => $comment_id
+                    ];
+                }
+            }
+
+            // Notifications for replies to user's comments
+            if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id && isset($comment['replies']) && is_array($comment['replies'])) {
+                foreach ($comment['replies'] as $reply_id => $reply) {
+                    if (isset($reply['alumni_id']) && $reply['alumni_id'] != $current_user_id) {
+                        $replier_data = $firebase->retrieve("alumni/" . $reply['alumni_id']);
+                        $replier_data = json_decode($replier_data, true);
+                        if ($replier_data) {
+                            $replier_name = $replier_data['firstname'] . ' ' . $replier_data['lastname'];
+                            $replier_profile = isset($replier_data['profile_url']) ? $replier_data['profile_url'] : '../images/profile.jpg';
+
+                            $notifications[] = [
+                                'type' => 'forum_reply',
+                                'content_type' => 'forum',
+                                'replier_name' => $replier_name,
+                                'replier_profile' => $replier_profile,
+                                'date' => $reply['date_replied'],
+                                'post_id' => $reply['forum_id'],
+                                'comment_id' => $comment_id,
+                                'reply_id' => $reply_id
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Notifications for reactions to user's comments
+            if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id && isset($comment['liked_by']) && is_array($comment['liked_by'])) {
+                foreach ($comment['liked_by'] as $reactor_id) {
+                    if ($reactor_id != $current_user_id) {
+                        $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                        $reactor_data = json_decode($reactor_data, true);
+                        if ($reactor_data) {
+                            $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                            $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+
+                            $notifications[] = [
+                                'type' => 'forum_comment_reaction',
+                                'content_type' => 'forum',
+                                'reactor_name' => $reactor_name,
+                                'reactor_profile' => $reactor_profile,
+                                'date' => date('Y-m-d H:i:s'),
+                                'post_id' => $comment['forum_id'],
+                                'comment_id' => $comment_id
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function getTimeAgo($date)
+{
     $time_ago = strtotime($date);
     $current_time = time();
     $time_difference = $current_time - $time_ago;
     $seconds = $time_difference;
-    
+
     $minutes = round($seconds / 60);
     $hours = round($seconds / 3600);
     $days = round($seconds / 86400);
     $weeks = round($seconds / 604800);
     $months = round($seconds / 2629440);
     $years = round($seconds / 31553280);
-    
+
     if ($seconds <= 60) {
         return "Just now";
     } else if ($minutes <= 60) {
@@ -153,123 +286,6 @@ function isActive($page)
 }
 ?>
 
-<style>
-    .autocomplete-items {
-        position: absolute;
-        border-top: none;
-        z-index: 99;
-        top: 100%;
-        left: 0;
-        right: 0;
-        max-height: 300px;
-        overflow-y: auto;
-        border-radius: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .autocomplete-item {
-        padding: 10px;
-        cursor: pointer;
-        background-color: #fff;
-        display: flex;
-        align-items: center;
-    }
-
-    .autocomplete-item:hover {
-        background-color: #f0f2f5;
-    }
-
-    .autocomplete-item img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
-
-    .autocomplete-item-info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .autocomplete-item-name {
-        font-weight: bold;
-    }
-
-    .autocomplete-item-details {
-        font-size: 0.8em;
-        color: #65676B;
-    }
-
-    .notification-count {
-        position: absolute;
-        top: -3px;
-        right: -5px;
-        background-color: red;
-        color: white;
-        border-radius: 50%;
-        padding: 2px 6px;
-        font-size: 10px;
-    }
-
-    .notification-menu {
-        position: absolute;
-        width: 90%;
-        max-width: 350px;
-        background: var(--bg-color);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-        border-radius: 4px;
-        overflow: hidden;
-        top: 108%;
-        right: 1%;
-        max-height: 0;
-        transition: max-height 0.3s;
-    }
-
-    .notification-menu-height {
-        max-height: 400px;
-    }
-
-    .notification-menu-inner {
-        padding: 20px;
-        color: #626262;
-    }
-
-    .notification-menu-inner h3 {
-        font-size: 18px;
-        margin-bottom: 15px;
-    }
-
-    .notification-item {
-        display: flex;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #e6e6e6;
-    }
-
-    .notification-item img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 15px;
-    }
-
-    .notification-info p {
-        margin-bottom: 5px;
-    }
-
-    .notification-time {
-        font-size: 12px;
-        color: #939393;
-    }
-
-    .view-all-notifications {
-        display: block;
-        text-align: center;
-        margin-top: 15px;
-        color: #1876f2;
-        text-decoration: none;
-    }
-</style>
 
 <nav>
     <div class="nav-left">
@@ -395,33 +411,69 @@ function isActive($page)
 
     <!------------NOTIFICATION-------------------->
     <div class="notification-menu">
-    <div class="notification-menu-inner">
-        <h3>Notifications</h3>
-        <?php if (!empty($notifications)): ?>
-            <?php foreach ($notifications as $notification): ?>
-                <div class="notification-item">
-                    <?php if ($notification['type'] === 'reply'): ?>
-                        <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
-                        <div class="notification-info">
-                            <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment on a <?php echo $notification['content_type']; ?></p>
-                            <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                        </div>
-                    <?php elseif ($notification['type'] === 'reaction'): ?>
-                        <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
-                        <div class="notification-info">
-                            <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment on a <?php echo $notification['content_type']; ?></p>
-                            <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No new notifications</p>
-        <?php endif; ?>
-        <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
+        <div class="notification-menu-inner">
+            <h3>Notifications</h3>
+            <?php if (!empty($notifications)): ?>
+                <?php foreach ($notifications as $notification): ?>
+                    <div class="notification-item">
+                        <?php switch ($notification['type']):
+                            case 'reply': ?>
+                                <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
+                                <div class="notification-info">
+                                    <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment on a
+                                        <?php echo $notification['content_type']; ?></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'reaction': ?>
+                                <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
+                                <div class="notification-info">
+                                    <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment on a
+                                        <?php echo $notification['content_type']; ?></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'forum_post_reaction': ?>
+                                <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
+                                <div class="notification-info">
+                                    <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted with
+                                        <?php echo $notification['reaction_type']; ?> to your forum post</p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'forum_comment': ?>
+                                <img src="<?php echo $notification['commenter_profile']; ?>" alt="User Avatar">
+                                <div class="notification-info">
+                                    <p><strong><?php echo $notification['commenter_name']; ?></strong> commented on your forum post</p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'forum_reply': ?>
+                                <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
+                                <div class="notification-info">
+                                    <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment in a forum
+                                    </p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'forum_comment_reaction': ?>
+                                <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
+                                <div class="notification-info">
+                                    <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment in a forum
+                                    </p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                        endswitch; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No new notifications</p>
+            <?php endif; ?>
+            <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
+        </div>
     </div>
-</div>
-</div>
+
 </nav>
 
 <script>
@@ -523,13 +575,13 @@ function isActive($page)
     });
 
     function updateNotificationCount() {
-    const count = document.querySelectorAll('.notification-item').length;
-    const countElement = document.querySelector('.notification-count');
-    countElement.textContent = count;
-    countElement.style.display = count > 0 ? 'block' : 'none';
-}
+        const count = document.querySelectorAll('.notification-item').length;
+        const countElement = document.querySelector('.notification-count');
+        countElement.textContent = count;
+        countElement.style.display = count > 0 ? 'block' : 'none';
+    }
 
-// Call this function after loading notifications
-updateNotificationCount();
+    // Call this function after loading notifications
+    updateNotificationCount();
 
 </script>
