@@ -125,129 +125,133 @@
     </div>
 
     <!------------NOTIFICATION-------------------->
-        <div class="notification-menu">
-        <div class="notification-menu-inner">
-            <h3>Notifications</h3>
-            <?php if (!empty($notifications)): ?>
-                <?php foreach ($notifications as $notification): ?>
-                    <div class="notification-item">
-                        <?php switch ($notification['type']):
-                            case 'reply': ?>
-                                <a href="<?php echo $notification['content_type']; ?>.php?id=<?php echo $notification[$notification['content_type'] . '_id']; ?>#comment-<?php echo $notification['comment_id']; ?>">
-                                    <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
-                                    <div class="notification-info">
-                                        <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment on a <?php echo $notification['content_type']; ?></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'reaction': ?>
-                                <a href="<?php echo $notification['content_type']; ?>.php?id=<?php echo $notification[$notification['content_type'] . '_id']; ?>#comment-<?php echo $notification['comment_id']; ?>">
-                                    <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
-                                    <div class="notification-info">
-                                        <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment on a <?php echo $notification['content_type']; ?></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'forum_post_reaction': ?>
-                                <a href="forum_post.php?id=<?php echo $notification['post_id']; ?>">
-                                    <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
-                                    <div class="notification-info">
-                                        <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted with <?php echo $notification['reaction_type']; ?> to your forum post</p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'forum_comment': ?>
-                                <a href="forum_post.php?id=<?php echo $notification['post_id']; ?>#comment-<?php echo $notification['comment_id']; ?>">
-                                    <img src="<?php echo $notification['commenter_profile']; ?>" alt="User Avatar">
-                                    <div class="notification-info">
-                                        <p><strong><?php echo $notification['commenter_name']; ?></strong> commented on your forum post</p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'forum_reply': ?>
-                                <a href="forum_post.php?id=<?php echo $notification['post_id']; ?>#comment-<?php echo $notification['comment_id']; ?>">
-                                    <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
-                                    <div class="notification-info">
-                                        <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment in a forum</p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'forum_comment_reaction': ?>
-                                <a href="forum_post.php?id=<?php echo $notification['post_id']; ?>#comment-<?php echo $notification['comment_id']; ?>">
-                                    <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
-                                    <div class="notification-info">
-                                        <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment in a forum</p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'admin_job': ?>
-                                <a href="job.php?id=<?php echo $notification['id']; ?>">
-                                    <img src="../images/logo/suitcase.png" alt="Job Icon">
-                                    <div class="notification-info">
-                                        <p>New job posting: <strong><?php echo $notification['title']; ?></strong></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'admin_event': ?>
-                                <a href="event.php?id=<?php echo $notification['id']; ?>">
-                                    <img src="../images/logo/calendar.png" alt="Event Icon">
-                                    <div class="notification-info">
-                                        <p>New event: <strong><?php echo $notification['title']; ?></strong></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'admin_news': ?>
-                                <a href="news.php?id=<?php echo $notification['id']; ?>">
-                                    <img src="../images/logo/newspaper.png" alt="News Icon">
-                                    <div class="notification-info">
-                                        <p>New news article: <strong><?php echo $notification['title']; ?></strong></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'admin_gallery': ?>
-                                <a href="gallery.php?id=<?php echo $notification['id']; ?>">
-                                    <img src="../images/logo/photo-gallery.png" alt="Gallery Icon">
-                                    <div class="notification-info">
-                                        <p>New gallery album: <strong><?php echo $notification['title']; ?></strong></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            case 'event_invitation': ?>
-                                <a href="event.php?id=<?php echo $notification['id']; ?>">
-                                    <img src="../images/logo/calendar.png" alt="Event Icon">
-                                    <div class="notification-info">
-                                        <p>You're invited to the event: <strong><?php echo $notification['title']; ?></strong></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                                <?php break;
-                            default: ?>
-                                <a href="#">
-                                    <img src="../images/logo/notification.png" alt="Notification Icon">
-                                    <div class="notification-info">
-                                        <p>New notification: <strong><?php echo $notification['title']; ?></strong></p>
-                                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
-                                    </div>
-                                </a>
-                        <?php endswitch; ?>
+    <div class="notification-menu">
+    <div class="notification-menu-inner">
+        <h3>Notifications</h3>
+        <?php if (!empty($notifications)): ?>
+            <?php foreach ($notifications as $notification): ?>
+                <div class="notification-item" data-href="<?php
+                    switch ($notification['type']):
+                        case 'reply':
+                        case 'reaction':
+                            echo $notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id'];
+                            break;
+                        case 'forum_post_reaction':
+                            echo 'forum_post.php?id=' . $notification['post_id'];
+                            break;
+                        case 'forum_comment':
+                        case 'forum_reply':
+                        case 'forum_comment_reaction':
+                            echo 'forum_post.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id'];
+                            break;
+                        case 'admin_job':
+                            echo 'job.php?id=' . $notification['id'];
+                            break;
+                        case 'admin_event':
+                            echo 'event.php?id=' . $notification['id'];
+                            break;
+                        case 'admin_news':
+                            echo 'news.php?id=' . $notification['id'];
+                            break;
+                        case 'admin_gallery':
+                            echo 'gallery.php?id=' . $notification['id'];
+                            break;
+                        case 'event_invitation':
+                            echo 'event.php?id=' . $notification['id'];
+                            break;
+                        default:
+                            echo '#';
+                    endswitch;
+                ?>">
+                    <img src="<?php
+                        switch ($notification['type']):
+                            case 'reply':
+                                echo $notification['replier_profile'];
+                                break;
+                            case 'reaction':
+                                echo $notification['reactor_profile'];
+                                break;
+                            case 'forum_post_reaction':
+                            case 'forum_comment':
+                            case 'forum_reply':
+                            case 'forum_comment_reaction':
+                                echo $notification['commenter_profile'] ?? '../images/logo/notification.png';
+                                break;
+                            case 'admin_job':
+                            case 'admin_event':
+                            case 'admin_news':
+                            case 'admin_gallery':
+                            case 'event_invitation':
+                                echo '../images/logo/notification.png';
+                                break;
+                            default:
+                                echo '../images/logo/notification.png';
+                        endswitch;
+                    ?>" alt="User Avatar">
+                    <div class="notification-info">
+                        <p>
+                            <?php
+                            switch ($notification['type']):
+                                case 'reply':
+                                    echo '<strong>' . $notification['replier_name'] . '</strong> replied to your comment on a ' . $notification['content_type'];
+                                    break;
+                                case 'reaction':
+                                    echo '<strong>' . $notification['reactor_name'] . '</strong> reacted to your comment on a ' . $notification['content_type'];
+                                    break;
+                                case 'forum_post_reaction':
+                                    echo '<strong>' . $notification['reactor_name'] . '</strong> reacted with ' . $notification['reaction_type'] . ' to your forum post';
+                                    break;
+                                case 'forum_comment':
+                                    echo '<strong>' . $notification['commenter_name'] . '</strong> commented on your forum post';
+                                    break;
+                                case 'forum_reply':
+                                    echo '<strong>' . $notification['replier_name'] . '</strong> replied to your comment in a forum';
+                                    break;
+                                case 'forum_comment_reaction':
+                                    echo '<strong>' . $notification['reactor_name'] . '</strong> reacted to your comment in a forum';
+                                    break;
+                                case 'admin_job':
+                                    echo 'New job posting: <strong>' . $notification['title'] . '</strong>';
+                                    break;
+                                case 'admin_event':
+                                    echo 'New event: <strong>' . $notification['title'] . '</strong>';
+                                    break;
+                                case 'admin_news':
+                                    echo 'New news article: <strong>' . $notification['title'] . '</strong>';
+                                    break;
+                                case 'admin_gallery':
+                                    echo 'New gallery album: <strong>' . $notification['title'] . '</strong>';
+                                    break;
+                                case 'event_invitation':
+                                    echo 'You\'re invited to the event: <strong>' . $notification['title'] . '</strong>';
+                                    break;
+                                default:
+                                    echo 'New notification: <strong>' . $notification['title'] . '</strong>';
+                            endswitch;
+                            ?>
+                        </p>
+                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="no-notifications">No new notifications</p>
-            <?php endif; ?>
-            <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
-        </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="no-notifications">No new notifications</p>
+        <?php endif; ?>
+        <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
     </div>
+</div>
+
+<script>
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const url = item.getAttribute('data-href');
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
+</script>
+
     <!----------MESSAGE------------
     <div class="message-menu" id="messageMenu">
         <div class="message-menu-inner">
