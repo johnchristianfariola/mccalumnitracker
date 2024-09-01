@@ -20,16 +20,12 @@ $alumniEmail = $_SESSION['alumni'];
 try {
     $alumniData = $firebase->retrieve("alumni");
     $alumniData = json_decode($alumniData, true);
-
     $batchData = $firebase->retrieve("batch_yr");
     $batchData = json_decode($batchData, true);
-
     $courseData = $firebase->retrieve("course");
     $courseData = json_decode($courseData, true);
-
     $categoryData = $firebase->retrieve("category");
     $categoryData = json_decode($categoryData, true);
-
 } catch (Exception $e) {
     error_log("Error retrieving data: " . $e->getMessage());
     header('location: index.php');
@@ -87,36 +83,9 @@ if (!$authenticated) {
 if (!isset($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
 }
-
 $token = $_SESSION['token'];
 
-// Set a unique session name based on the user's email
-session_name('alumni_session_' . md5($alumniEmail));
-
-// Regenerate session ID to prevent session fixation
+// Set a unique session name for each user
+session_name('user_session_' . $id);
 session_regenerate_id(true);
-
-// Set session cookie parameters
-$secure = true; // Set to true if using HTTPS
-$httponly = true;
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'domain' => '', // Set your domain here
-    'secure' => $secure,
-    'httponly' => $httponly,
-    'samesite' => 'Lax'
-]);
-
-// Optionally, you can store the last activity time
-$_SESSION['last_activity'] = time();
-
-// You may want to add a check for session timeout
-$timeout = 1800; // 30 minutes
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
-    session_unset();
-    session_destroy();
-    header('location: index.php');
-    exit();
-}
 ?>
