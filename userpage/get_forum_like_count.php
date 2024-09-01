@@ -4,7 +4,6 @@ require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
 
 $firebase = new firebaseRDB($databaseURL);
-date_default_timezone_set('Asia/Manila');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $forum_id = $_GET['forum_id'];
@@ -26,16 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     }
 
-    // Get current timestamp
-    $current_timestamp = date('Y-m-d H:i:s');
-    $formatted_date = date('F j, Y, g:i a');
-
     echo json_encode([
         'status' => 'success',
         'reaction_counts' => $reaction_counts,
-        'user_reaction' => $user_reaction,
-        'timestamp' => $current_timestamp,
-        'formatted_date' => $formatted_date
+        'user_reaction' => $user_reaction
     ]);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
