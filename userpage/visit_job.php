@@ -113,13 +113,6 @@
     <!-- Main Menu area start -->
 
 
-    <style>
-        li {
-            list-style: circle;
-            margin-left: 20px;
-        }
-    </style>
-
     <!-- End Sale Statistic area -->
     <div class="main-content"></div>
     <div class="sale-statistic-area">

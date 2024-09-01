@@ -52,6 +52,22 @@ function getNotifications($firebase, $current_user_id)
     $forum_comments = $firebase->retrieve("forum_comments");
     $forum_comments = json_decode($forum_comments, true);
 
+    // Fetch jobs
+    $jobs = $firebase->retrieve("job");
+    $jobs = json_decode($jobs, true);
+
+    // Fetch events
+    $events = $firebase->retrieve("event");
+    $events = json_decode($events, true);
+
+    // Fetch news
+    $news = $firebase->retrieve("news");
+    $news = json_decode($news, true);
+
+    // Fetch gallery
+    $gallery = $firebase->retrieve("gallery");
+    $gallery = json_decode($gallery, true);
+
     // Process news comments
     processComments($firebase, $current_user_id, $news_comments, $notifications, 'news');
 
@@ -63,6 +79,18 @@ function getNotifications($firebase, $current_user_id)
 
     // Process forum posts and comments
     processForumNotifications($firebase, $current_user_id, $forum_posts, $forum_comments, $notifications);
+
+    processAdminContent($jobs, $notifications, 'job');
+
+    // Process event notifications
+    processAdminContent($events, $notifications, 'event', $firebase, $current_user_id);
+
+    // Process news notifications
+    processAdminContent($news, $notifications, 'news');
+
+    // Process gallery notifications
+    processAdminContent($gallery, $notifications, 'gallery');
+
 
     // Sort notifications by date, most recent first
     usort($notifications, function ($a, $b) {
@@ -167,11 +195,13 @@ function processForumNotifications($firebase, $current_user_id, $forum_posts, $f
     if (is_array($forum_comments)) {
         foreach ($forum_comments as $comment_id => $comment) {
             // Notifications for comments on user's posts
-            if (isset($forum_posts[$comment['forum_id']]) && 
-                isset($forum_posts[$comment['forum_id']]['alumniId']) && 
-                $forum_posts[$comment['forum_id']]['alumniId'] == $current_user_id && 
-                isset($comment['alumni_id']) && 
-                $comment['alumni_id'] != $current_user_id) {
+            if (
+                isset($forum_posts[$comment['forum_id']]) &&
+                isset($forum_posts[$comment['forum_id']]['alumniId']) &&
+                $forum_posts[$comment['forum_id']]['alumniId'] == $current_user_id &&
+                isset($comment['alumni_id']) &&
+                $comment['alumni_id'] != $current_user_id
+            ) {
                 $commenter_data = $firebase->retrieve("alumni/" . $comment['alumni_id']);
                 $commenter_data = json_decode($commenter_data, true);
                 if ($commenter_data) {
@@ -241,6 +271,57 @@ function processForumNotifications($firebase, $current_user_id, $forum_posts, $f
         }
     }
 }
+
+function processAdminContent($content, &$notifications, $type, $firebase = null, $current_user_id = null)
+{
+    if (!is_array($content)) {
+        return;
+    }
+
+    foreach ($content as $id => $item) {
+        $date = isset($item[$type . '_created']) ? $item[$type . '_created'] : (isset($item['created_on']) ? $item['created_on'] : date('Y-m-d H:i:s'));
+        $title = isset($item[$type . '_title']) ? $item[$type . '_title'] : (isset($item['gallery_name']) ? $item['gallery_name'] : 'New ' . ucfirst($type));
+
+        $notifications[] = [
+            'type' => 'admin_' . $type,
+            'content_type' => $type,
+            'title' => $title,
+            'date' => $date,
+            'id' => $id
+        ];
+
+        // Process event invitations only if it's an event and we have the necessary parameters
+        if ($type === 'event' && $firebase !== null && $current_user_id !== null) {
+            processEventInvitations($item, $id, $firebase, $current_user_id, $notifications);
+        }
+    }
+}
+function processEventInvitations($event, $event_id, $firebase, $current_user_id, &$notifications)
+{
+    $user_data = $firebase->retrieve("alumni/" . $current_user_id);
+    $user_data = json_decode($user_data, true);
+
+    if (!$user_data) {
+        return;
+    }
+
+    $user_batch = $user_data['batch'] ?? '';
+    $user_course = $user_data['course'] ?? '';
+
+    $course_invited = json_decode($event['course_invited'] ?? '[]', true);
+    $batch_invited = json_decode($event['event_invited'] ?? '[]', true);
+
+    if (in_array($user_course, $course_invited) || in_array($user_batch, $batch_invited)) {
+        $notifications[] = [
+            'type' => 'event_invitation',
+            'content_type' => 'event',
+            'title' => $event['event_title'],
+            'date' => $event['event_created'] ?? date('Y-m-d H:i:s'),
+            'id' => $event_id
+        ];
+    }
+}
+
 
 function getTimeAgo($date)
 {
@@ -464,7 +545,48 @@ function isActive($page)
                                     <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
                                 </div>
                                 <?php break;
-                        endswitch; ?>
+                            case 'admin_job': ?>
+                                <img src="../images/logo/suitcase.png" alt="Job Icon">
+                                <div class="notification-info">
+                                    <p>New job posting: <strong><?php echo $notification['title']; ?></strong></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'admin_event': ?>
+                                <img src="../images/logo/calendar.png" alt="Event Icon">
+                                <div class="notification-info">
+                                    <p>New event: <strong><?php echo $notification['title']; ?></strong></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'admin_news': ?>
+                                <img src="../images/logo/newspaper.png" alt="News Icon">
+                                <div class="notification-info">
+                                    <p>New news article: <strong><?php echo $notification['title']; ?></strong></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'admin_gallery': ?>
+                                <img src="../images/logo/photo-gallery.png" alt="Gallery Icon">
+                                <div class="notification-info">
+                                    <p>New gallery album: <strong><?php echo $notification['title']; ?></strong></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            case 'event_invitation': ?>
+                                <img src="../images/logo/calendar.png" alt="Event Icon">
+                                <div class="notification-info">
+                                    <p>You're invited to the event: <strong><?php echo $notification['title']; ?></strong></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                                <?php break;
+                            default: ?>
+                                <img src="../images/logo/notification.png" alt="Notification Icon">
+                                <div class="notification-info">
+                                    <p>New notification: <strong><?php echo $notification['title']; ?></strong></p>
+                                    <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                                </div>
+                        <?php endswitch; ?>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -561,18 +683,18 @@ function isActive($page)
     });
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var notificationIcon = document.querySelector(".notification-icon");
         var notificationMenu = document.querySelector(".notification-menu");
 
         if (notificationIcon && notificationMenu) {
-            notificationIcon.addEventListener("click", function(event) {
+            notificationIcon.addEventListener("click", function (event) {
                 event.stopPropagation();
                 notificationMenu.classList.toggle("notification-menu-height");
             });
 
             // Close the notification menu when clicking outside
-            document.addEventListener("click", function(event) {
+            document.addEventListener("click", function (event) {
                 if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) {
                     notificationMenu.classList.remove("notification-menu-height");
                 }

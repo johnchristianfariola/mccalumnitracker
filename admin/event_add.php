@@ -2,9 +2,11 @@
 session_start(); // Start the session
 
 header('Content-Type: application/json'); // Set the content type to JSON
+date_default_timezone_set('Asia/Manila');
 
 // Function to send a JSON response
-function sendResponse($status, $message) {
+function sendResponse($status, $message)
+{
     echo json_encode(['status' => $status, 'message' => $message]);
     exit;
 }
@@ -53,7 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $firebase = new firebaseRDB($databaseURL);
 
         // Function to upload image and add event
-        function addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url, $event_invited_json, $course_invited_json) {
+        // Function to upload image and add event
+        function addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url, $event_invited_json, $course_invited_json)
+        {
             $table = 'event'; // Assuming 'event' is your Firebase database node for event
             $data = array(
                 'event_title' => $event_title,
@@ -64,10 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'image_url' => $image_url,
                 'event_invited' => $event_invited_json,
                 'course_invited' => $course_invited_json,
-                'event_created' => date('F j, Y')
+                'event_created' => date('F j, Y g:i A') // Add current date and time
             );
             return $firebase->insert($table, $data);
         }
+
 
         // Upload image to server
         $upload_dir = 'uploads/';
