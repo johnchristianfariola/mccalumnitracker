@@ -125,151 +125,135 @@
     </div>
 
     <!------------NOTIFICATION-------------------->
-    <?php
-    // Function to ensure correct image path
-    function ensureCorrectImagePath($imagePath)
-    {
-        // Remove any leading '../' or '/' from the image path
-        $imagePath = ltrim($imagePath, '');
-
-        // Prepend the correct directory path
-        return '' . $imagePath;
-    }
-
-    ?>
     <div class="notification-menu">
-        <div class="notification-menu-inner">
-            <h3>Notifications</h3>
-            <?php if (!empty($notifications)): ?>
-                <?php foreach ($notifications as $notification): ?>
-                    <div class="notification-item" data-href="<?php
+    <div class="notification-menu-inner">
+        <h3>Notifications</h3>
+        <?php if (!empty($notifications)): ?>
+            <?php foreach ($notifications as $notification): ?>
+                <div class="notification-item" data-href="<?php
                     switch ($notification['type']):
                         case 'reply':
                         case 'reaction':
-                            echo htmlspecialchars($notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id']);
+                            echo $notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id'];
                             break;
                         case 'forum_post_reaction':
-                            echo htmlspecialchars('forum_post.php?id=' . $notification['post_id']);
+                            echo 'forum_post.php?id=' . $notification['post_id'];
                             break;
                         case 'forum_comment':
                         case 'forum_reply':
                         case 'forum_comment_reaction':
-                            echo htmlspecialchars('forum_post.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id']);
+                            echo 'forum_post.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id'];
                             break;
                         case 'admin_job':
-                            echo htmlspecialchars('job.php?id=' . $notification['id']);
+                            echo 'job.php?id=' . $notification['id'];
                             break;
                         case 'admin_event':
-                        case 'event_invitation':
-                            echo htmlspecialchars('event.php?id=' . $notification['id']);
+                            echo 'event.php?id=' . $notification['id'];
                             break;
                         case 'admin_news':
-                            echo htmlspecialchars('news.php?id=' . $notification['id']);
+                            echo 'news.php?id=' . $notification['id'];
                             break;
                         case 'admin_gallery':
-                            echo htmlspecialchars('gallery.php?id=' . $notification['id']);
+                            echo 'gallery.php?id=' . $notification['id'];
+                            break;
+                        case 'event_invitation':
+                            echo 'event.php?id=' . $notification['id'];
                             break;
                         default:
                             echo '#';
                     endswitch;
-                    ?>">
-                        <?php
-                        // Determine image source based on notification type
-                        switch ($notification['type']):
-                            case 'reply':
-                                $imageSrc = $notification['replier_profile'] ? ensureCorrectImagePath($notification['replier_profile']) : '../images/logo/notification.png';
-                                break;
-                            case 'reaction':
-                            case 'forum_post_reaction':
-                            case 'forum_comment_reaction':
-                                $imageSrc = $notification['reactor_profile'] ? ensureCorrectImagePath($notification['reactor_profile']) : '../images/logo/notification.png';
-                                break;
-                            case 'forum_comment':
-                            case 'forum_reply':
-                                $imageSrc = $notification['commenter_profile'] ? ensureCorrectImagePath($notification['commenter_profile']) : '../images/logo/notification.png';
-                                break;
-                            case 'admin_job':
-                                $imageSrc = '../images/logo/suitcase.png';
-                                break;
-                            case 'admin_event':
-                            case 'event_invitation':
-                                $imageSrc = '../images/logo/calendar.png';
-                                break;
-                            case 'admin_news':
-                                $imageSrc = '../images/logo/newspaper.png';
-                                break;
-                            case 'admin_gallery':
-                                $imageSrc = '../images/logo/photo-gallery.png';
-                                break;
-                            default:
-                                $imageSrc = '../images/logo/notification.png';
-                        endswitch;
-                        ?>
-                        <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="Notification Icon">
-                        <div class="notification-info">
-                            <p>
-                                <?php
-                                switch ($notification['type']):
-                                    case 'reply':
-                                        echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment on a ' . htmlspecialchars($notification['content_type']);
-                                        break;
-                                    case 'reaction':
-                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment on a ' . htmlspecialchars($notification['content_type']);
-                                        break;
-                                    case 'forum_post_reaction':
-                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted with ' . htmlspecialchars($notification['reaction_type']) . ' to your forum post';
-                                        break;
-                                    case 'forum_comment':
-                                        echo '<strong>' . htmlspecialchars($notification['commenter_name']) . '</strong> commented on your forum post';
-                                        break;
-                                    case 'forum_reply':
-                                        echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment in a forum';
-                                        break;
-                                    case 'forum_comment_reaction':
-                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment in a forum';
-                                        break;
-                                    case 'admin_job':
-                                        echo 'New job posting: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
-                                        break;
-                                    case 'admin_event':
-                                        echo 'New event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
-                                        break;
-                                    case 'admin_news':
-                                        echo 'New news article: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
-                                        break;
-                                    case 'admin_gallery':
-                                        echo 'New gallery album: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
-                                        break;
-                                    case 'event_invitation':
-                                        echo 'You\'re invited to the event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
-                                        break;
-                                    default:
-                                        echo 'New notification: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
-                                endswitch;
-                                ?>
-                            </p>
-                            <span
-                                class="notification-time"><?php echo htmlspecialchars(getTimeAgo($notification['date'])); ?></span>
-                        </div>
+                ?>">
+                    <?php
+                    // Determine image source based on notification type
+                    switch ($notification['type']):
+                        case 'reply':
+                            $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
+                            break;
+                        case 'reaction':
+                            $imageSrc = !empty($notification['reactor_profile']) ? $notification['reactor_profile'] : '../images/logo/notification.png';
+                            break;
+                        case 'forum_post_reaction':
+                            $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
+                        case 'forum_comment':
+                        case 'forum_reply':
+                        case 'forum_comment_reaction':
+                            $imageSrc = !empty($notification['commenter_profile']) ? $notification['commenter_profile'] : '../images/logo/notification.png';
+                            break;
+                        case 'admin_job':
+                        case 'admin_event':
+                        case 'admin_news':
+                        case 'admin_gallery':
+                        case 'event_invitation':
+                            $imageSrc = '../images/logo/notification.png';
+                            break;
+                        default:
+                            $imageSrc = '../images/logo/notification.png';
+                    endswitch;
+                    ?>
+                    <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="User Avatar">
+                    <div class="notification-info">
+                        <p>
+                            <?php
+                            switch ($notification['type']):
+                                case 'reply':
+                                    echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment on a ' . htmlspecialchars($notification['content_type']);
+                                    break;
+                                case 'reaction':
+                                    echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment on a ' . htmlspecialchars($notification['content_type']);
+                                    break;
+                                case 'forum_post_reaction':
+                                    echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted with ' . htmlspecialchars($notification['reaction_type']) . ' to your forum post';
+                                    break;
+                                case 'forum_comment':
+                                    echo '<strong>' . htmlspecialchars($notification['commenter_name']) . '</strong> commented on your forum post';
+                                    break;
+                                case 'forum_reply':
+                                    echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment in a forum';
+                                    break;
+                                case 'forum_comment_reaction':
+                                    echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment in a forum';
+                                    break;
+                                case 'admin_job':
+                                    echo 'New job posting: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
+                                    break;
+                                case 'admin_event':
+                                    echo 'New event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
+                                    break;
+                                case 'admin_news':
+                                    echo 'New news article: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
+                                    break;
+                                case 'admin_gallery':
+                                    echo 'New gallery album: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
+                                    break;
+                                case 'event_invitation':
+                                    echo 'You\'re invited to the event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
+                                    break;
+                                default:
+                                    echo 'New notification: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
+                            endswitch;
+                            ?>
+                        </p>
+                        <span class="notification-time"><?php echo htmlspecialchars(getTimeAgo($notification['date'])); ?></span>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="no-notifications">No new notifications</p>
-            <?php endif; ?>
-            <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
-        </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="no-notifications">No new notifications</p>
+        <?php endif; ?>
+        <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
     </div>
+</div>
 
-    <script>
-        document.querySelectorAll('.notification-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const url = item.getAttribute('data-href');
-                if (url) {
-                    window.location.href = url;
-                }
-            });
+<script>
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const url = item.getAttribute('data-href');
+            if (url) {
+                window.location.href = url;
+            }
         });
-    </script>
+    });
+</script>   
 
     <!----------MESSAGE------------
     <div class="message-menu" id="messageMenu">
