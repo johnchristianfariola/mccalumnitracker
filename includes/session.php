@@ -1,4 +1,9 @@
 <?php
+// Start by checking if we need to set a custom session name
+if (isset($_GET['alumni_id'])) {
+    session_name('user_session_' . $_GET['alumni_id']);
+}
+
 session_start();
 include 'firebaseRDB.php';
 
@@ -85,7 +90,10 @@ if (!isset($_SESSION['token'])) {
 }
 $token = $_SESSION['token'];
 
-// Set a unique session name for each user
-session_name('user_session_' . $id);
+// Regenerate session ID for security
 session_regenerate_id(true);
+
+// Set secure session settings
+ini_set('session.use_only_cookies', 1);
+ini_set('session.use_strict_mode', 1);
 ?>
