@@ -1,7 +1,7 @@
 <?php
-require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
-session_start(); // Make sure to start the session
+require_once '../includes/session.php';
+
 
 $firebase = new firebaseRDB($databaseURL);
 

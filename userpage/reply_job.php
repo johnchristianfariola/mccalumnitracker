@@ -1,6 +1,5 @@
 <?php
 require_once '../includes/firebaseRDB.php';
-session_start();
 
 // Initialize Firebase URL
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
