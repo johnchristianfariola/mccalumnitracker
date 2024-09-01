@@ -468,7 +468,7 @@ function isActive($page)
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>No new notifications</p>
+                <p class="no-notifications">No new notifications</p>
             <?php endif; ?>
             <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
         </div>
@@ -561,27 +561,34 @@ function isActive($page)
     });
 </script>
 <script>
-    var notificationMenu = document.querySelector(".notification-menu");
+    document.addEventListener("DOMContentLoaded", function() {
+        var notificationIcon = document.querySelector(".notification-icon");
+        var notificationMenu = document.querySelector(".notification-menu");
 
-    function notificationMenuToggle() {
-        notificationMenu.classList.toggle("notification-menu-height");
-    }
+        if (notificationIcon && notificationMenu) {
+            notificationIcon.addEventListener("click", function(event) {
+                event.stopPropagation();
+                notificationMenu.classList.toggle("notification-menu-height");
+            });
 
-    // Close the notification menu when clicking outside
-    document.addEventListener("click", function (event) {
-        if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) {
-            notificationMenu.classList.remove("notification-menu-height");
+            // Close the notification menu when clicking outside
+            document.addEventListener("click", function(event) {
+                if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) {
+                    notificationMenu.classList.remove("notification-menu-height");
+                }
+            });
         }
+
+        function updateNotificationCount() {
+            const count = document.querySelectorAll('.notification-item').length;
+            const countElement = document.querySelector('.notification-count');
+            if (countElement) {
+                countElement.textContent = count;
+                countElement.style.display = count > 0 ? 'block' : 'none';
+            }
+        }
+
+        // Call this function after loading notifications
+        updateNotificationCount();
     });
-
-    function updateNotificationCount() {
-        const count = document.querySelectorAll('.notification-item').length;
-        const countElement = document.querySelector('.notification-count');
-        countElement.textContent = count;
-        countElement.style.display = count > 0 ? 'block' : 'none';
-    }
-
-    // Call this function after loading notifications
-    updateNotificationCount();
-
 </script>
