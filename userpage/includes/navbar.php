@@ -163,74 +163,76 @@
                             echo '#';
                     endswitch;
                 ?>">
-                    <img src="<?php
-                        switch ($notification['type']):
-                            case 'reply':
-                                echo $notification['replier_profile'];
-                                break;
-                            case 'reaction':
-                                echo $notification['reactor_profile'];
-                                break;
-                            case 'forum_post_reaction':
-                            case 'forum_comment':
-                            case 'forum_reply':
-                            case 'forum_comment_reaction':
-                                echo $notification['commenter_profile'] ?? '../images/logo/notification.png';
-                                break;
-                            case 'admin_job':
-                            case 'admin_event':
-                            case 'admin_news':
-                            case 'admin_gallery':
-                            case 'event_invitation':
-                                echo '../images/logo/notification.png';
-                                break;
-                            default:
-                                echo '../images/logo/notification.png';
-                        endswitch;
-                    ?>" alt="User Avatar">
+                    <?php
+                    // Determine image source based on notification type
+                    switch ($notification['type']):
+                        case 'reply':
+                            $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
+                            break;
+                        case 'reaction':
+                            $imageSrc = !empty($notification['reactor_profile']) ? $notification['reactor_profile'] : '../images/logo/notification.png';
+                            break;
+                        case 'forum_post_reaction':
+                        case 'forum_comment':
+                        case 'forum_reply':
+                        case 'forum_comment_reaction':
+                            $imageSrc = !empty($notification['commenter_profile']) ? $notification['commenter_profile'] : '../images/logo/notification.png';
+                            break;
+                        case 'admin_job':
+                        case 'admin_event':
+                        case 'admin_news':
+                        case 'admin_gallery':
+                        case 'event_invitation':
+                            $imageSrc = '../images/logo/notification.png';
+                            break;
+                        default:
+                            $imageSrc = '../images/logo/notification.png';
+                    endswitch;
+                    ?>
+                    <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="User Avatar">
                     <div class="notification-info">
                         <p>
                             <?php
                             switch ($notification['type']):
                                 case 'reply':
-                                    echo '<strong>' . $notification['replier_name'] . '</strong> replied to your comment on a ' . $notification['content_type'];
+                                    echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment on a ' . htmlspecialchars($notification['content_type']);
                                     break;
                                 case 'reaction':
-                                    echo '<strong>' . $notification['reactor_name'] . '</strong> reacted to your comment on a ' . $notification['content_type'];
+                                    echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment on a ' . htmlspecialchars($notification['content_type']);
                                     break;
                                 case 'forum_post_reaction':
-                                    echo '<strong>' . $notification['reactor_name'] . '</strong> reacted with ' . $notification['reaction_type'] . ' to your forum post';
+                                    echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted with ' . htmlspecialchars($notification['reaction_type']) . ' to your forum post';
                                     break;
                                 case 'forum_comment':
-                                    echo '<strong>' . $notification['commenter_name'] . '</strong> commented on your forum post';
+                                    echo '<strong>' . htmlspecialchars($notification['commenter_name']) . '</strong> commented on your forum post';
                                     break;
                                 case 'forum_reply':
-                                    echo '<strong>' . $notification['replier_name'] . '</strong> replied to your comment in a forum';
+                                    echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment in a forum';
                                     break;
                                 case 'forum_comment_reaction':
-                                    echo '<strong>' . $notification['reactor_name'] . '</strong> reacted to your comment in a forum';
+                                    echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment in a forum';
                                     break;
                                 case 'admin_job':
-                                    echo 'New job posting: <strong>' . $notification['title'] . '</strong>';
+                                    echo 'New job posting: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
                                     break;
                                 case 'admin_event':
-                                    echo 'New event: <strong>' . $notification['title'] . '</strong>';
+                                    echo 'New event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
                                     break;
                                 case 'admin_news':
-                                    echo 'New news article: <strong>' . $notification['title'] . '</strong>';
+                                    echo 'New news article: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
                                     break;
                                 case 'admin_gallery':
-                                    echo 'New gallery album: <strong>' . $notification['title'] . '</strong>';
+                                    echo 'New gallery album: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
                                     break;
                                 case 'event_invitation':
-                                    echo 'You\'re invited to the event: <strong>' . $notification['title'] . '</strong>';
+                                    echo 'You\'re invited to the event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
                                     break;
                                 default:
-                                    echo 'New notification: <strong>' . $notification['title'] . '</strong>';
+                                    echo 'New notification: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
                             endswitch;
                             ?>
                         </p>
-                        <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
+                        <span class="notification-time"><?php echo htmlspecialchars(getTimeAgo($notification['date'])); ?></span>
                     </div>
                 </div>
             <?php endforeach; ?>
