@@ -175,8 +175,6 @@
                         case 'forum_post_reaction':
                         case 'forum_comment':
                         case 'forum_reply':
-                            $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
-                            break;
                         case 'forum_comment_reaction':
                             $imageSrc = !empty($notification['commenter_profile']) ? $notification['commenter_profile'] : '../images/logo/notification.png';
                             break;
@@ -254,7 +252,7 @@
             }
         });
     });
-</script>   
+</script>
 
     <!----------MESSAGE------------
     <div class="message-menu" id="messageMenu">
