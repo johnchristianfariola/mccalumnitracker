@@ -715,7 +715,7 @@ nav {
   color: #65676B;
 }
 
-/*=============== Notification START HERE===============*/
+/*================Navbar Search Auto Notification===============*/
 
 
 .notification-count {
@@ -736,59 +736,26 @@ nav {
   background: var(--bg-color);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   border-radius: 4px;
+  overflow: hidden;
   top: 108%;
   right: 1%;
   max-height: 0;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-20px);
-  transition: all 0.3s ease;
-  z-index: 100;
+  transition: max-height 0.3s;
 }
-
 
 .notification-menu-height {
-  max-height: 80vh; /* Adjust this value as needed */
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  overflow-y: auto;
+  max-height: 400px;
 }
-
 
 .notification-menu-inner {
-  padding: 15px;
-  color: #333;
+  padding: 20px;
+  color: #626262;
 }
 
-
-/* New Styles for Notification Items Container */
-.notification-items-container {
-  max-height: 300px; /* Adjust as needed */
-  overflow-y: auto;
-  margin-top: 10px;
-  padding-right: 5px; /* To prevent content from hiding behind scrollbar */
+.notification-menu-inner h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
 }
-
-/* Scrollbar Styling (optional) */
-.notification-menu-height::-webkit-scrollbar {
-  width: 6px;
-}
-
-.notification-menu-height::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.notification-menu-height::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
-}
-
-.notification-menu-height::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
-
 
 .notification-item {
   display: flex;
@@ -797,40 +764,24 @@ nav {
   border-bottom: 1px solid #e6e6e6;
 }
 
-.notification-item:last-child {
-  border-bottom: none;
+.notification-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
 }
 
-.notification-item img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 10px;
+.notification-info {
+  flex: 1;
 }
 
 .notification-info p {
-  margin: 0;
-  font-size: 14px;
-  color: #555;
-}
-
-.notification-info p strong {
-  color: #333;
+  margin: 0 0 5px 0;
 }
 
 .notification-time {
-  display: block;
   font-size: 12px;
-  color: #999;
-  margin-top: 5px;
-}
-
-.no-notifications {
-  text-align: center;
-  color: #999;
-  padding: 20px 0;
-  font-size: 14px;
+  color: #939393;
 }
 
 .view-all-notifications {
@@ -839,141 +790,10 @@ nav {
   margin-top: 15px;
   color: #1876f2;
   text-decoration: none;
-  font-weight: bold;
 }
-
-.view-all-notifications:hover {
-  text-decoration: underline;
-}
-
 
 
 /*===========NOTIFICATION END HERE==================*/
-
-
-/*==============MESSAGE START HERE==================*/
-.message-count {
-  position: absolute;
-  top: -3px;
-  right: -5px;
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 10px;
-}
-
-.message-menu {
-  position: absolute;
-  width: 90%;
-  max-width: 350px;
-  background: var(--bg-color);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
-  top: 108%;
-  right: 1%;
-  max-height: 0;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-20px);
-  transition: all 0.3s ease;
-  z-index: 100;
-}
-
-.message-menu-height {
-  max-height: 80vh; /* Adjust this value as needed */
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  overflow-y: auto;
-}
-
-.message-menu-inner {
-  padding: 15px;
-  color: #333;
-}
-
-.message-items-container {
-  max-height: 300px; /* Adjust as needed */
-  overflow-y: auto;
-  margin-top: 10px;
-  padding-right: 5px; /* To prevent content from hiding behind scrollbar */
-}
-
-.message-menu-height::-webkit-scrollbar {
-  width: 6px;
-}
-
-.message-menu-height::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.message-menu-height::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
-}
-
-.message-menu-height::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
-
-.message-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #e6e6e6;
-}
-
-.message-item:last-child {
-  border-bottom: none;
-}
-
-.message-item img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 10px;
-}
-
-.message-info p {
-  margin: 0;
-  font-size: 14px;
-  color: #555;
-}
-
-.message-info p strong {
-  color: #333;
-}
-
-.message-time {
-  display: block;
-  font-size: 12px;
-  color: #999;
-  margin-top: 5px;
-}
-
-.no-messages {
-  text-align: center;
-  color: #999;
-  padding: 20px 0;
-  font-size: 14px;
-}
-
-.view-all-messages {
-  display: block;
-  text-align: center;
-  margin-top: 15px;
-  color: #1876f2;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.view-all-messages:hover {
-  text-decoration: underline;
-}
-
 
 .curved-ctn {
   display: flex;
