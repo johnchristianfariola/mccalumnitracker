@@ -716,8 +716,6 @@ nav {
 }
 
 /*================Navbar Search Auto Notification===============*/
-
-
 .notification-count {
   position: absolute;
   top: -3px;
@@ -745,6 +743,7 @@ nav {
 
 .notification-menu-height {
   max-height: 400px;
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .notification-menu-inner {
@@ -762,7 +761,6 @@ nav {
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #e6e6e6;
-
 }
 
 .notification-item img {
@@ -775,9 +773,11 @@ nav {
 .notification-info p {
   margin-bottom: 5px;
 }
+
 .notification-info {
   cursor: pointer;
 }
+
 .notification-time {
   font-size: 12px;
   color: #939393;
@@ -791,7 +791,23 @@ nav {
   text-decoration: none;
 }
 
+/* Custom scrollbar styles */
+.notification-menu-height::-webkit-scrollbar {
+  width: 8px;
+}
 
+.notification-menu-height::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.notification-menu-height::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.notification-menu-height::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 /*===========NOTIFICATION START HERE==================*/
 
 .curved-ctn {
