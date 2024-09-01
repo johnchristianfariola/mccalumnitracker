@@ -134,30 +134,28 @@
                     switch ($notification['type']):
                         case 'reply':
                         case 'reaction':
-                            echo $notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id'];
+                            echo htmlspecialchars($notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id']);
                             break;
                         case 'forum_post_reaction':
-                            echo 'forum_post.php?id=' . $notification['post_id'];
+                            echo htmlspecialchars('forum_post.php?id=' . $notification['post_id']);
                             break;
                         case 'forum_comment':
                         case 'forum_reply':
                         case 'forum_comment_reaction':
-                            echo 'forum_post.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id'];
+                            echo htmlspecialchars('forum_post.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id']);
                             break;
                         case 'admin_job':
-                            echo 'job.php?id=' . $notification['id'];
+                            echo htmlspecialchars('job.php?id=' . $notification['id']);
                             break;
                         case 'admin_event':
-                            echo 'event.php?id=' . $notification['id'];
+                        case 'event_invitation':
+                            echo htmlspecialchars('event.php?id=' . $notification['id']);
                             break;
                         case 'admin_news':
-                            echo 'news.php?id=' . $notification['id'];
+                            echo htmlspecialchars('news.php?id=' . $notification['id']);
                             break;
                         case 'admin_gallery':
-                            echo 'gallery.php?id=' . $notification['id'];
-                            break;
-                        case 'event_invitation':
-                            echo 'event.php?id=' . $notification['id'];
+                            echo htmlspecialchars('gallery.php?id=' . $notification['id']);
                             break;
                         default:
                             echo '#';
@@ -167,29 +165,35 @@
                     // Determine image source based on notification type
                     switch ($notification['type']):
                         case 'reply':
-                            $imageSrc = !empty($notification['replier_profile']) ? $notification['replier_profile'] : '../images/logo/notification.png';
+                            $imageSrc = $notification['replier_profile'] ?? '../images/logo/notification.png';
                             break;
                         case 'reaction':
-                            $imageSrc = !empty($notification['reactor_profile']) ? $notification['reactor_profile'] : '../images/logo/notification.png';
-                            break;
                         case 'forum_post_reaction':
+                        case 'forum_comment_reaction':
+                            $imageSrc = $notification['reactor_profile'] ?? '../images/logo/notification.png';
+                            break;
                         case 'forum_comment':
                         case 'forum_reply':
-                        case 'forum_comment_reaction':
-                            $imageSrc = !empty($notification['commenter_profile']) ? $notification['commenter_profile'] : '../images/logo/notification.png';
+                            $imageSrc = $notification['commenter_profile'] ?? '../images/logo/notification.png';
                             break;
                         case 'admin_job':
+                            $imageSrc = '../images/logo/suitcase.png';
+                            break;
                         case 'admin_event':
-                        case 'admin_news':
-                        case 'admin_gallery':
                         case 'event_invitation':
-                            $imageSrc = '../images/logo/notification.png';
+                            $imageSrc = '../images/logo/calendar.png';
+                            break;
+                        case 'admin_news':
+                            $imageSrc = '../images/logo/newspaper.png';
+                            break;
+                        case 'admin_gallery':
+                            $imageSrc = '../images/logo/photo-gallery.png';
                             break;
                         default:
                             $imageSrc = '../images/logo/notification.png';
                     endswitch;
                     ?>
-                    <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="User Avatar">
+                    <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="Notification Icon">
                     <div class="notification-info">
                         <p>
                             <?php
