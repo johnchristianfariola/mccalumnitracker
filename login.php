@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'includes/session.php';
 include 'includes/firebaseRDB.php';
 
 // Firebase Realtime Database URL
