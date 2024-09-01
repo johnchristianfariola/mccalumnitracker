@@ -1,3 +1,5 @@
+<!----navbar_php_script.php------------>
+
 <?php
 require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';

@@ -1,4 +1,4 @@
-<?php include 'navbar_php_script.php';?>
+<?php include 'navbar_php_script.php'; ?>
 
 
 <nav>
@@ -48,9 +48,10 @@
     <div class="nav-right">
         <ul>
             <div class="background-circle">
-                <a href="home.php">
-                    <li class=""><img src="../images/logo/messenger_black.png" alt=""></li>
-                </a>
+                <div class="message-icon" onclick="messageMenuToggle()">
+                    <img src="../images/logo/messenger_black.png" alt="">
+                    <span class="message-count">26</span>
+                </div>
             </div>
             <div class="background-circle">
                 <div class="notification-icon" onclick="notificationMenuToggle()">
@@ -135,7 +136,8 @@
                                 <img src="<?php echo $notification['replier_profile']; ?>" alt="User Avatar">
                                 <div class="notification-info">
                                     <p><strong><?php echo $notification['replier_name']; ?></strong> replied to your comment on a
-                                        <?php echo $notification['content_type']; ?></p>
+                                        <?php echo $notification['content_type']; ?>
+                                    </p>
                                     <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
                                 </div>
                                 <?php break;
@@ -143,7 +145,8 @@
                                 <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
                                 <div class="notification-info">
                                     <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted to your comment on a
-                                        <?php echo $notification['content_type']; ?></p>
+                                        <?php echo $notification['content_type']; ?>
+                                    </p>
                                     <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
                                 </div>
                                 <?php break;
@@ -151,7 +154,8 @@
                                 <img src="<?php echo $notification['reactor_profile']; ?>" alt="User Avatar">
                                 <div class="notification-info">
                                     <p><strong><?php echo $notification['reactor_name']; ?></strong> reacted with
-                                        <?php echo $notification['reaction_type']; ?> to your forum post</p>
+                                        <?php echo $notification['reaction_type']; ?> to your forum post
+                                    </p>
                                     <span class="notification-time"><?php echo getTimeAgo($notification['date']); ?></span>
                                 </div>
                                 <?php break;
@@ -229,6 +233,43 @@
         </div>
     </div>
 
+    <!----------MESSAGE------------->
+    <div class="message-menu" id="messageMenu">
+        <div class="message-menu-inner">
+            <div class="message-header">
+                <h3>Messages</h3>
+            </div>
+            <hr>
+            <div class="message-items-container">
+                <div class="message-item">
+                    <img src="../images/logo/user1.png" alt="User 1">
+                    <div class="message-info">
+                        <p><strong>John Doe:</strong> Hi there! How are you?</p>
+                        <span class="message-time">2024-09-01 10:30 AM</span>
+                    </div>
+                </div>
+                <div class="message-item">
+                    <img src="../images/logo/user2.png" alt="User 2">
+                    <div class="message-info">
+                        <p><strong>Jane Smith:</strong> Don't forget about the meeting tomorrow.</p>
+                        <span class="message-time">2024-09-01 09:15 AM</span>
+                    </div>
+                </div>
+                <div class="message-item">
+                    <img src="../images/logo/user3.png" alt="User 3">
+                    <div class="message-info">
+                        <p><strong>Admin:</strong> Your account settings have been updated.</p>
+                        <span class="message-time">2024-08-31 05:45 PM</span>
+                    </div>
+                </div>
+                <!-- Add more messages here as needed -->
+                <div class="no-messages">No new messages.</div>
+                <a href="view_all_messages.php" class="view-all-messages">View All Messages</a>
+            </div>
+        </div>
+    </div>
+
+
 </nav>
 
 <script>
@@ -247,6 +288,8 @@
         } else {
             localStorage.setItem("theme", "light");
         }
+
+
     }
 
     if (localStorage.getItem("theme") == "light") {
@@ -258,6 +301,7 @@
     } else {
         localStorage.setItem("theme", "dark");
     }
+
 </script>
 
 
@@ -320,10 +364,19 @@
         var notificationIcon = document.querySelector(".notification-icon");
         var notificationMenu = document.querySelector(".notification-menu");
 
+        function resetNotificationCount() {
+            const countElement = document.querySelector('.notification-count');
+            if (countElement) {
+                countElement.textContent = ''; // Clear the notification count
+                countElement.style.display = 'none'; // Hide the notification count
+            }
+        }
+
         if (notificationIcon && notificationMenu) {
             notificationIcon.addEventListener("click", function (event) {
                 event.stopPropagation();
                 notificationMenu.classList.toggle("notification-menu-height");
+                resetNotificationCount(); // Reset and hide the notification count when opening the menu
             });
 
             // Close the notification menu when clicking outside
@@ -346,5 +399,28 @@
         // Call this function after loading notifications
         updateNotificationCount();
     });
+
 </script>
 
+<script>
+    function messageMenuToggle() {
+        var menu = document.getElementById('messageMenu');
+        menu.classList.toggle('message-menu-height');
+    }
+
+    function closeMessageMenu() {
+        var menu = document.getElementById('messageMenu');
+        menu.classList.remove('message-menu-height');
+    }
+
+    // Close the menu if clicking outside
+    document.addEventListener('click', function (event) {
+        var menu = document.getElementById('messageMenu');
+        var icon = document.querySelector('.message-icon');
+
+        if (!icon.contains(event.target) && !menu.contains(event.target)) {
+            menu.classList.remove('message-menu-height');
+        }
+    });
+
+</script>
