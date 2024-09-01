@@ -137,25 +137,25 @@
                             echo htmlspecialchars($notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id']);
                             break;
                         case 'forum_post_reaction':
-                            echo htmlspecialchars('forum_post.php?id=' . $notification['post_id']);
+                            echo htmlspecialchars('forum.php?id=' . $notification['post_id']);
                             break;
                         case 'forum_comment':
                         case 'forum_reply':
                         case 'forum_comment_reaction':
-                            echo htmlspecialchars('forum_post.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id']);
+                            echo htmlspecialchars('forum.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id']);
                             break;
                         case 'admin_job':
-                            echo htmlspecialchars('job.php?id=' . $notification['id']);
+                            echo htmlspecialchars('visit_job.php?id=' . $notification['id']);
                             break;
                         case 'admin_event':
                         case 'event_invitation':
-                            echo htmlspecialchars('event.php?id=' . $notification['id']);
+                            echo htmlspecialchars('visit_event.php?id=' . $notification['id']);
                             break;
                         case 'admin_news':
-                            echo htmlspecialchars('news.php?id=' . $notification['id']);
+                            echo htmlspecialchars('visit_news.php?id=' . $notification['id']);
                             break;
                         case 'admin_gallery':
-                            echo htmlspecialchars('gallery.php?id=' . $notification['id']);
+                            echo htmlspecialchars('visit_gallery.php?id=' . $notification['id']);
                             break;
                         default:
                             echo '#';
