@@ -1,70 +1,58 @@
 <?php
-// Start the session at the very beginning
 session_start();
 include 'includes/firebaseRDB.php';
-require_once 'includes/config.php';
 
+// Firebase Realtime Database URL
+require_once 'includes/config.php'; // Include your config file
 $firebase = new firebaseRDB($databaseURL);
 
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
+    // Retrieve alumni data from Firebase
     $alumniData = $firebase->retrieve("alumni");
     $alumniData = json_decode($alumniData, true);
 
+    // Debug: Check if data retrieval was successful
     if ($alumniData === null) {
         $_SESSION['error'] = 'Error retrieving data from Firebase';
         header('location: index.php');
         exit();
     }
 
+    // Search for the email in the retrieved data
     $foundUser = null;
     foreach ($alumniData as $id => $alumni) {
         if (isset($alumni['email']) && $alumni['email'] === $email) {
             $foundUser = $alumni;
-            $foundUser['id'] = $id; // Store the ID
             break;
         }
     }
 
     if ($foundUser) {
+        // Verify the password using password_verify
         if (password_verify($password, $foundUser['password'])) {
+            // Check if the user's status is 'notverified'
             if ($foundUser['status'] === 'notverified') {
                 $_SESSION['error'] = 'Please verify your account';
                 header('location: index.php');
                 exit();
             }
 
-            // Generate a unique session ID
-            $session_id = 'user_session_' . $foundUser['id'];
-            session_id($session_id);
-            session_regenerate_id(true);
-
             // Set session variables
-            $_SESSION['alumni'] = $email;
-            $_SESSION['alumni_id'] = $foundUser['id'];
-            $_SESSION['forms_completed'] = $foundUser['forms_completed'];
+            $_SESSION['alumni'] = $email; // Set session alumni email
+            $_SESSION['forms_completed'] = $foundUser['forms_completed']; // Set session forms_completed flag
 
             // Generate token and store in session
-            $token = bin2hex(random_bytes(32));
+            $token = generateToken();
             $_SESSION['token'] = $token;
 
-            // Set secure session cookie parameters
-            $params = session_get_cookie_params();
-            setcookie(session_name(), session_id(), [
-                'expires' => time() + $params['lifetime'],
-                'path' => $params['path'],
-                'domain' => $params['domain'],
-                'secure' => true,
-                'httponly' => true,
-                'samesite' => 'Lax'
-            ]);
-
+            // Check if forms_completed flag is false
             if (!$foundUser['forms_completed']) {
-                header('location: userpage/alumni_profile.php?token=' . $token);
+                header('location: userpage/alumni_profile.php?token=' . $token); // Redirect to profile page with token
             } else {
-                header('location: userpage/index.php');
+                header('location: userpage/index.php'); // Redirect to alumni home
             }
             exit();
         } else {
@@ -79,4 +67,8 @@ if (isset($_POST['login'])) {
 
 header('location: index.php');
 exit();
+
+function generateToken($length = 32) {
+    return bin2hex(random_bytes($length));
+}
 ?>
