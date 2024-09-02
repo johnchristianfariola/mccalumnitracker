@@ -450,37 +450,6 @@
 
 
 
-    <div id="chatbox" class="chatbox">
-        <div class="chatbox-header">
-            <div class="chatbox-profile">
-                <span class="chatbox-name">John Doe</span>
-            </div>
-            <div class="chatbox-icons">
-                <i class="icon video-call">📹</i>
-                <i class="icon settings">⚙️</i>
-                <i class="icon close-chat">✖️</i>
-            </div>
-        </div>
-        <div class="chatbox-body">
-            <div class="message incoming">
-                <p>Hello! How are you?</p>
-                <span class="timestamp">10:00 AM</span>
-            </div>
-            <div class="message outgoing">
-                <p>I'm good, thanks! How about you?</p>
-                <span class="timestamp">10:02 AM</span>
-            </div>
-            <div class="message incoming">
-                <p>I'm doing well, just working on some projects.</p>
-                <span class="timestamp">10:05 AM</span>
-            </div>
-        </div>
-        <div class="chatbox-footer">
-            <i class="icon attachment">📎</i>
-            <input type="text" placeholder="Type a message..." class="chatbox-input">
-            <i class="icon send">✉️</i>
-        </div>
-    </div>
     <?php include 'includes/profile_modal.php'; ?>
 </body>
 
@@ -836,4 +805,3 @@
         });
     });
 </script>
-

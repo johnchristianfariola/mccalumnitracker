@@ -41,7 +41,7 @@ function getNotifications($firebase, $current_user_id)
 {
     $notifications = [];
 
-    
+
 
     // Fetch news comments
     $news_comments = $firebase->retrieve("news_comments");
@@ -332,34 +332,36 @@ function processEventInvitations($event, $event_id, $firebase, $current_user_id,
         ];
     }
 }
-function updateLastNotificationCheck($firebase, $user_id) {
+function updateLastNotificationCheck($firebase, $user_id)
+{
     $timestamp = date('Y-m-d H:i:s');
     $firebase->update("alumni/" . $user_id, ["last_notification_check" => $timestamp]);
 }
 
 
-
-
 // Process messages
 $processed_messages = [];
-foreach ($messages as $message_id => $message) {
-    $sender_id = $message['senderId'];
-    $receiver_id = $message['receiverId'];
-    
-    // Only process messages where the current user is either the sender or receiver
-    if ($sender_id == $current_user_id || $receiver_id == $current_user_id) {
-        $other_user_id = ($sender_id == $current_user_id) ? $receiver_id : $sender_id;
-        
-        if (!isset($processed_messages[$other_user_id]) || strtotime($message['timestamp']) > strtotime($processed_messages[$other_user_id]['timestamp'])) {
-            $processed_messages[$other_user_id] = $message;
+if (is_array($messages) && !empty($messages)) {
+    foreach ($messages as $message_id => $message) {
+        $sender_id = $message['senderId'];
+        $receiver_id = $message['receiverId'];
+
+        // Only process messages where the current user is either the sender or receiver
+        if ($sender_id == $current_user_id || $receiver_id == $current_user_id) {
+            $other_user_id = ($sender_id == $current_user_id) ? $receiver_id : $sender_id;
+
+            if (!isset($processed_messages[$other_user_id]) || strtotime($message['timestamp']) > strtotime($processed_messages[$other_user_id]['timestamp'])) {
+                $processed_messages[$other_user_id] = $message;
+            }
         }
     }
 }
 
-// Sort messages by timestamp, newest first
-uasort($processed_messages, function($a, $b) {
-    return strtotime($b['timestamp']) - strtotime($a['timestamp']);
-});
+$message_count = countMessages($processed_messages);
+function countMessages($processed_messages) {
+    return count($processed_messages);
+}
+
 
 function getTimeAgo($date)
 {
@@ -404,4 +406,3 @@ function isActive($page)
     }
 }
 ?>
-

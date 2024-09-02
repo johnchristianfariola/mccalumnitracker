@@ -21,52 +21,60 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
 <head>
     <?php include 'includes/header.php' ?>
     <?php
-require_once '../includes/firebaseRDB.php';
-require_once '../includes/config.php';
+    require_once '../includes/firebaseRDB.php';
+    require_once '../includes/config.php';
 
-$firebase = new firebaseRDB($databaseURL);
+    $firebase = new firebaseRDB($databaseURL);
 
-function sortByDate($a, $b) {
-    $dateA = strtotime($a['news_created']);
-    $dateB = strtotime($b['news_created']);
-    return $dateB - $dateA;
-}
+    function sortByDate($a, $b)
+    {
+        $dateA = strtotime($a['news_created']);
+        $dateB = strtotime($b['news_created']);
+        return $dateB - $dateA;
+    }
 
-// Retrieve admin data
-$adminData = $firebase->retrieve("admin");
-$adminData = json_decode($adminData, true);
+    // Retrieve admin data
+    $adminData = $firebase->retrieve("admin");
+    $adminData = json_decode($adminData, true);
 
-// Extract admin profile image URL
-$admin_image_url = $adminData['image_url'];
-$admin_firstname = $adminData['firstname'];
-$admin_lastmame = $adminData['lastname'];
+    // Fetch all messages once from Firebase
+    $messages = json_decode($firebase->retrieve("messages"), true);
 
-// Retrieve news data
-$data = $firebase->retrieve("news");
-$data = json_decode($data, true);
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
 
-if (is_array($data)) {
-    usort($data, 'sortByDate');
-}
+    // Extract admin profile image URL
+    $admin_image_url = $adminData['image_url'];
+    $admin_firstname = $adminData['firstname'];
+    $admin_lastmame = $adminData['lastname'];
 
-// Retrieve event data
-$eventData = $firebase->retrieve("event");
-$eventData = json_decode($eventData, true);
+    // Retrieve news data
+    $data = $firebase->retrieve("news");
+    $data = json_decode($data, true);
 
-// Retrieve job data
-$jobData = $firebase->retrieve("job");
-$jobData = json_decode($jobData, true);
+    if (is_array($data)) {
+        usort($data, 'sortByDate');
+    }
 
-function sortByDateJob($a, $b) {
-    $dateA = strtotime($a['job_created']);
-    $dateB = strtotime($b['job_created']);
-    return $dateB - $dateA;
-}
+    // Retrieve event data
+    $eventData = $firebase->retrieve("event");
+    $eventData = json_decode($eventData, true);
 
-if (is_array($jobData)) {
-    usort($jobData, 'sortByDateJob');
-}
-?>
+    // Retrieve job data
+    $jobData = $firebase->retrieve("job");
+    $jobData = json_decode($jobData, true);
+
+    function sortByDateJob($a, $b)
+    {
+        $dateA = strtotime($a['job_created']);
+        $dateB = strtotime($b['job_created']);
+        return $dateB - $dateA;
+    }
+
+    if (is_array($jobData)) {
+        usort($jobData, 'sortByDateJob');
+    }
+    ?>
 
 </head>
 
@@ -80,65 +88,78 @@ if (is_array($jobData)) {
     <!-- Mobile Menu start -->
     <?php include 'includes/mobile_view.php' ?>
     <!-- Mobile Menu end -->
- 
+
 
     <!-- End Sale Statistic area-->
     <div class="main-content">
-    <div class="sale-statistic-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
-                    <?php foreach ($data as $id => $news) { ?>
-                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
-                            <div class="curved-inner-pro">
-                                <div class="curved-ctn">
-                                    <div class="image-section">
-                                        <img class="profile" src="../admin/<?php echo $admin_image_url; ?>" alt="news image" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
-                                    </div>
-                                    <div class="info-section">
-                                        <h2><?php echo $admin_firstname . ' ' . $admin_lastmame; ?></h2>
-                                        <span><?php echo $news['news_created']; ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="content">
-                                <h1><?php echo $news['news_title']; ?></h1>
-                                <p class="news-description"><?php echo nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news['news_description']))); ?></p>
-                                <button class="toggle-button">Show More...</button>
-                            </div>
-                            <img style="border-radius: 1rem" src="../admin/<?php echo $news['image_url']; ?>" class="news_post" alt="news image">
-                        </div>
-                    <?php } ?>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
-                    <div class="right-section">
-                    <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.2s">
-
-                        <?php foreach ($eventData as $id => $event) { ?>
-                                <div class="card">
-                                    <img src="../admin/<?php echo $event['image_url']; ?>" alt="Event Image" class="event_image">
-                                    <div class="card-content">
-                                        <hr>
-                                        <div class="card-title"><?php echo $event['event_title']; ?></div>
-                                        <div class="card-date">Posted on <?php echo $event['event_created']; ?></div>
-                                        <a href="visit_event.php?id=<?php echo $id; ?>" class="btn btn-default btn-icon-notika waves-effect"><i class="notika-icon notika-menu"> More</i></a>
+        <div class="sale-statistic-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
+                        <?php foreach ($data as $id => $news) { ?>
+                            <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
+                                <div class="curved-inner-pro">
+                                    <div class="curved-ctn">
+                                        <div class="image-section">
+                                            <img class="profile" src="../admin/<?php echo $admin_image_url; ?>"
+                                                alt="news image"
+                                                onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                                        </div>
+                                        <div class="info-section">
+                                            <h2><?php echo $admin_firstname . ' ' . $admin_lastmame; ?></h2>
+                                            <span><?php echo $news['news_created']; ?></span>
+                                        </div>
                                     </div>
                                 </div>
-                         
+                                <div class="content">
+                                    <h1><?php echo $news['news_title']; ?></h1>
+                                    <p class="news-description">
+                                        <?php echo nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news['news_description']))); ?>
+                                    </p>
+                                    <button class="toggle-button">Show More...</button>
+                                </div>
+                                <img style="border-radius: 1rem" src="../admin/<?php echo $news['image_url']; ?>"
+                                    class="news_post" alt="news image">
+                            </div>
                         <?php } ?>
-                        </div>
-                        <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
+                        <div class="right-section">
+                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
+                                data-wow-delay="0.2s">
+
+                                <?php foreach ($eventData as $id => $event) { ?>
+                                    <div class="card">
+                                        <img src="../admin/<?php echo $event['image_url']; ?>" alt="Event Image"
+                                            class="event_image">
+                                        <div class="card-content">
+                                            <hr>
+                                            <div class="card-title"><?php echo $event['event_title']; ?></div>
+                                            <div class="card-date">Posted on <?php echo $event['event_created']; ?></div>
+                                            <a href="visit_event.php?id=<?php echo $id; ?>"
+                                                class="btn btn-default btn-icon-notika waves-effect"><i
+                                                    class="notika-icon notika-menu"> More</i></a>
+                                        </div>
+                                    </div>
+
+                                <?php } ?>
+                            </div>
+                            <a href="event_view.php" class="btn btn-primary btn-icon-notika waves-effect">Show More</a>
 
                             <div class="job-section" style="margin-top:60px">
                                 <h3><i class="fa fa-briefcase"></i> Active Job Post</h3>
                                 <?php foreach ($jobData as $id => $job) { ?>
                                     <?php if (isset($job['status']) && $job['status'] == 'Active') { ?>
-                                        <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
+                                        <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
+                                            data-wow-delay="0.3">
                                             <div class="card">
                                                 <div class="card-content">
                                                     <div class="job-container">
                                                         <div class="job-title"><?php echo $job['job_title']; ?></div>
-                                                        <div class="job-timesced" style="background-color: <?php echo ($job['work_time'] == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold'; ?>; color: <?php echo ($job['work_time'] == 'Full-Time') ? 'white' : 'black'; ?>;"><?php echo $job['work_time']; ?></div>
+                                                        <div class="job-timesced"
+                                                            style="background-color: <?php echo ($job['work_time'] == 'Full-Time') ? 'rgb(255, 105, 105)' : 'gold'; ?>; color: <?php echo ($job['work_time'] == 'Full-Time') ? 'white' : 'black'; ?>;">
+                                                            <?php echo $job['work_time']; ?>
+                                                        </div>
                                                     </div>
                                                     <hr>
                                                     <div class="card-date"><?php echo $job['company_name']; ?></div>
@@ -150,12 +171,14 @@ if (is_array($jobData)) {
                                 <?php } ?>
                             </div>
 
-                        <div class="forum-section" style="margin-top:60px">
-                            <h3><i class="fa fa-wechat"></i> Forum</h3>
-                            <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight" data-wow-delay="0.3">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
+                            <div class="forum-section" style="margin-top:60px">
+                                <h3><i class="fa fa-wechat"></i> Forum</h3>
+                                <div class="notika-shadow mg-tb-30 sm-res-mg-t-0 full-height wow fadeInRight"
+                                    data-wow-delay="0.3">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -165,8 +188,29 @@ if (is_array($jobData)) {
             </div>
         </div>
     </div>
-</div>
 
+    <div id="globalchatbox" class="globalchatbox">
+        <div class="globalchatbox-header">
+            <div class="chatbox-profile">
+
+                <span class="chatbox-name">John Doe</span> <!-- Placeholder name -->
+            </div>
+            <div class="chatbox-icons">
+                <i class="icon video-call">📹</i>
+                <i class="icon settings">⚙️</i>
+                <i class="icon close-chat">✖️</i>
+            </div>
+        </div>
+        <div class="chatbox-body">
+            <!-- Messages will be dynamically loaded here -->
+        </div>
+        <div class="chatbox-footer">
+            <i class="icon attachment">📎</i>
+            <input type="text" placeholder="Type a message..." class="chatbox-input" id="chatbox-input">
+            <i class="icon send" id="send-message">✉️</i>
+        </div>
+
+    </div>
 
 
     <!-- Start Footer area-->
@@ -239,15 +283,15 @@ if (is_array($jobData)) {
         ============================================ -->
     <script src="js/main.js"></script>
     <!-- tawk chat JS
-        ============================================ -->
-    <script src="js/tawk-chat.js"></script>
+        ============================================ 
+    <script src="js/tawk-chat.js"></script>-->
     <!--Dialog JS ============================================ -->
     <script src="js/dialog/sweetalert2.min.js"></script>
     <script src="js/dialog/dialog-active.js"></script>
-    
+
     <!--  Custom JS-->
     <script>
-      $('#logoutBtn').on('click', function () {
+        $('#logoutBtn').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",
@@ -293,6 +337,147 @@ if (is_array($jobData)) {
 
 
     </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var globalChatbox = document.getElementById('globalchatbox');
+    var closeChatIcon = document.querySelector('.close-chat');
+    var chatboxName = document.querySelector('.chatbox-name');
+    var chatboxBody = document.querySelector('.chatbox-body');
+    var chatboxInput = document.getElementById('chatbox-input');
+    var sendMessageIcon = document.getElementById('send-message');
+
+    let currentReceiverId = null;
+    let lastMessageTimestamp = 0;
+
+    function updateChatMessages() {
+        if (!currentReceiverId) return; // If no active chat, don't update
+
+        console.log('Fetching new messages...'); // Debug log
+        fetch(`get_messages.php?receiverId=${currentReceiverId}&lastSeen=${lastMessageTimestamp}`)
+            .then(response => response.json())
+            .then(newMessages => {
+                console.log('Received messages:', newMessages); // Debug log
+                if (newMessages.length > 0) {
+                    newMessages.forEach(function (message) {
+                        appendMessage(message);
+                    });
+                    chatboxBody.scrollTop = chatboxBody.scrollHeight;
+                    lastMessageTimestamp = new Date(newMessages[newMessages.length - 1].timestamp).getTime();
+                    console.log('Updated lastMessageTimestamp:', lastMessageTimestamp); // Debug log
+                } else {
+                    console.log('No new messages'); // Debug log
+                }
+            })
+            .catch(error => console.error('Error fetching new messages:', error));
+    }
+
+    function appendMessage(message) {
+        console.log('Appending message:', message); // Debug log
+        var messageDiv = document.createElement('div');
+        messageDiv.className = message.senderId === "<?php echo $_SESSION['user']['id']; ?>" ? 'message outgoing' : 'message incoming';
+        messageDiv.setAttribute('data-message-id', message.id);
+        messageDiv.innerHTML = `
+            <p>${message.content}</p>
+            <span class="timestamp" data-timestamp="${new Date(message.timestamp).getTime()}">${formatTimestamp(new Date(message.timestamp))}</span>
+        `;
+        chatboxBody.appendChild(messageDiv);
+    }
+
+    // Set interval to update chat messages every 5 seconds
+    setInterval(updateChatMessages, 5000);
+
+    // Event listener for message items
+    document.querySelectorAll('.message-item').forEach(function (item) {
+        item.addEventListener('click', function () {
+            var userId = this.getAttribute('data-user-id');
+            var userName = this.querySelector('.message-info strong').innerText;
+
+            chatboxName.textContent = userName;
+            chatboxBody.innerHTML = '';
+            currentReceiverId = userId;
+            lastMessageTimestamp = 0;
+
+            console.log('Opening chat with:', userId); // Debug log
+
+            globalChatbox.style.bottom = '0px';
+            globalChatbox.setAttribute('data-receiver-id', userId);
+
+            // Fetch initial messages
+            updateChatMessages();
+        });
+    });
+
+    // Close chatbox functionality
+    closeChatIcon.addEventListener('click', function () {
+        globalChatbox.style.bottom = '-500px';
+        currentReceiverId = null;
+        console.log('Closing chat'); // Debug log
+    });
+
+    // Send message functionality
+    sendMessageIcon.addEventListener('click', sendMessage);
+    chatboxInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        var messageContent = chatboxInput.value.trim();
+        if (messageContent === '' || !currentReceiverId) return;
+
+        console.log('Sending message to:', currentReceiverId); // Debug log
+
+        var messageData = {
+            senderId: "<?php echo $_SESSION['user']['id']; ?>",
+            receiverId: currentReceiverId,
+            content: messageContent,
+            timestamp: new Date().toISOString()
+        };
+
+        fetch('send_message.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messageData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Message sent successfully:', data); // Debug log
+                appendMessage({
+                    id: data.messageId,
+                    senderId: messageData.senderId,
+                    content: messageData.content,
+                    timestamp: messageData.timestamp
+                });
+                chatboxInput.value = '';
+                chatboxBody.scrollTop = chatboxBody.scrollHeight;
+                lastMessageTimestamp = new Date(messageData.timestamp).getTime();
+            } else {
+                console.error('Failed to send message:', data.error); // Debug log
+                alert('Failed to send message: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error sending message:', error);
+            alert('An error occurred while sending the message.');
+        });
+    }
+
+    function formatTimestamp(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return hours + ':' + minutes + ' ' + ampm;
+    }
+});
+</script>
 
 
 

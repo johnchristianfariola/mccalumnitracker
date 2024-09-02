@@ -791,6 +791,8 @@
 
     </div>
 
+    
+
     <?php include 'includes/profile_modal.php'; ?>
 </body>
 
