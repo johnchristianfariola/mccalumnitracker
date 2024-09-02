@@ -116,7 +116,7 @@ body.dark-theme {
   margin-top: 12px;
 }
 .pd-right button {
-  background: var(--nav-color);
+  background: #4653dd;
   border: 0;
   outline: 0;
   padding: 6px 10px;
@@ -133,8 +133,8 @@ body.dark-theme {
 }
 .pd-right button:first-child {
   background: #e4e6eb;
-  color: #000;
-}
+  color: #ffffff;
+} 
 .pd-right {
   text-align: right;
 }
@@ -715,7 +715,7 @@ nav {
   color: #65676B;
 }
 
-/*================Navbar Search Auto Notification===============*/
+/*================Notification STart===============*/
 .notification-count {
   position: absolute;
   top: -3px;
@@ -895,6 +895,135 @@ nav {
 
 
 /*============MESSAGE END HERE===============*/
+
+/*============Custom Chatbox start==========*/
+
+.chatbox {
+  width: 350px;
+  height: 500px;
+  position: fixed;
+  bottom: -500px;
+  /* Start off-screen */
+  right: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: bottom 0.3s ease-in-out;
+  /* Smooth slide effect */
+}
+
+.chatbox.show {
+  bottom: 0;
+  /* Slide up into view */
+}
+
+
+
+.chatbox-header {
+  background-color: #0078ff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  height: 30px;
+  /* Adjusted height to fit in the 100px chatbox */
+}
+
+.chatbox-profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 50px;
+  /* Adjusted for a larger profile picture */
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.chatbox-name {
+  font-weight: bold;
+}
+
+.chatbox-icons .icon {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.chatbox-body {
+  padding: 10px;
+  background-color: #f9f9f9;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Space between messages */
+}
+
+.message {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 15px;
+  position: relative;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.incoming {
+  background-color: #ececec;
+  align-self: flex-end;
+  /* Align incoming messages to the right */
+}
+
+.outgoing {
+  background-color: #0078ff;
+  color: #fff;
+  align-self: flex-start;
+  /* Align outgoing messages to the left */
+}
+
+.timestamp {
+  font-size: 10px;
+  color: #888;
+  margin-top: 5px;
+  display: block;
+  text-align: right;
+}
+
+.chatbox-footer {
+  background-color: #f0f2f5;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.chatbox-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  margin: 0 10px;
+  outline: none;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+.icon {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.icon.send {
+  color: #0078ff;
+}
+
+/*=====================Custom Chat Box End==========*/
 
 .curved-ctn {
   display: flex;

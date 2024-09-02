@@ -9,6 +9,13 @@ $firebase = new firebaseRDB($databaseURL);
 $alumni_data = $firebase->retrieve("alumni");
 $alumni_data = json_decode($alumni_data, true);
 
+$messages = $firebase->retrieve("messages");
+$messages = json_decode($messages, true);
+
+$all_alumni = $firebase->retrieve("alumni");
+$all_alumni = json_decode($all_alumni, true);
+
+
 // Extract alumni names and IDs
 $alumni_info = [];
 foreach ($alumni_data as $id => $alumni) {
@@ -331,6 +338,29 @@ function updateLastNotificationCheck($firebase, $user_id) {
 }
 
 
+
+
+// Process messages
+$processed_messages = [];
+foreach ($messages as $message_id => $message) {
+    $sender_id = $message['senderId'];
+    $receiver_id = $message['receiverId'];
+    
+    // Only process messages where the current user is either the sender or receiver
+    if ($sender_id == $current_user_id || $receiver_id == $current_user_id) {
+        $other_user_id = ($sender_id == $current_user_id) ? $receiver_id : $sender_id;
+        
+        if (!isset($processed_messages[$other_user_id]) || strtotime($message['timestamp']) > strtotime($processed_messages[$other_user_id]['timestamp'])) {
+            $processed_messages[$other_user_id] = $message;
+        }
+    }
+}
+
+// Sort messages by timestamp, newest first
+uasort($processed_messages, function($a, $b) {
+    return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+});
+
 function getTimeAgo($date)
 {
     $time_ago = strtotime($date);
@@ -374,3 +404,4 @@ function isActive($page)
     }
 }
 ?>
+

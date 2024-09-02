@@ -12,6 +12,7 @@ $is_logged_in = isset($_SESSION['alumni_id']);
 // Get alumni ID from URL parameter
 $alumni_id = isset($_GET['id']) ? $_GET['id'] : null;
 
+
 if (!$alumni_id) {
     die("No alumni ID provided.");
 }
@@ -19,6 +20,11 @@ if (!$alumni_id) {
 // Retrieve alumni data
 $alumni_profile = $firebase->retrieve("alumni/$alumni_id");
 $alumni_profile = json_decode($alumni_profile, true);
+
+$current_user_id = $_SESSION['alumni_id'];
+
+$messages = $firebase->retrieve("messages");
+$messages = json_decode($messages, true);
 
 if (!$alumni_profile) {
     die("Alumni not found.");
@@ -43,6 +49,29 @@ function getValue($array, $key, $default = "N/A")
 function getBatchYear($batchId, $batchData)
 {
     return getValue($batchData[$batchId], 'batch_yrs', 'Unknown');
+}
+
+$conversation = [];
+if ($messages) {
+    foreach ($messages as $message_id => $message) {
+        if (
+            ($message['senderId'] == $current_user_id && $message['receiverId'] == $alumni_id) ||
+            ($message['senderId'] == $alumni_id && $message['receiverId'] == $current_user_id)
+        ) {
+            $conversation[$message_id] = $message;
+        }
+    }
+}
+
+// Sort messages by timestamp
+uasort($conversation, function ($a, $b) {
+    return strtotime($a['timestamp']) - strtotime($b['timestamp']);
+});
+
+// Function to format timestamp
+function formatTimestamp($timestamp)
+{
+    return date('h:i A', strtotime($timestamp));
 }
 
 function time_elapsed_string($datetime, $full = false)
@@ -86,108 +115,110 @@ date_default_timezone_set('Asia/Manila');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?> - Profile  
-    <?php include 'includes/header.php'; ?>
-    <style>
-        /* Your CSS code here */
-        .post-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
+    <title>
+        <?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?>
+        - Profile
+        <?php include 'includes/header.php'; ?>
+        <style>
+            /* Your CSS code here */
+            .post-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-        }
+            .user-profile {
+                display: flex;
+                align-items: center;
+            }
 
-        .user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
+            .user-profile img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
 
-        .post-content h3 {
-            margin-bottom: 10px;
-        }
+            .post-content h3 {
+                margin-bottom: 10px;
+            }
 
-        .activity-icons {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
+            .activity-icons {
+                display: flex;
+                justify-content: space-around;
+                padding: 10px 0;
+                border-top: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+            }
 
-        .activity-icons div {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            margin-right: 10px;
-        }
+            .activity-icons div {
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+                margin-right: 10px;
+            }
 
-        .activity-icons i {
-            margin-right: 5px;
-        }
+            .activity-icons i {
+                margin-right: 5px;
+            }
 
-        .comment-box {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
+            .comment-box {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+            }
 
-        .comment-box img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
+            .comment-box img {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
 
-        .comment-box input {
-            flex-grow: 1;
-            border: none;
-            padding: 10px;
-            border-radius: 30px;
-            background-color: #f0f2f5;
-        }
+            .comment-box input {
+                flex-grow: 1;
+                border: none;
+                padding: 10px;
+                border-radius: 30px;
+                background-color: #f0f2f5;
+            }
 
-        .comment-btn {
-            border: none;
-            background: none;
-            color: #1877f2;
-            font-size: 18px;
-            cursor: pointer;
-        }
+            .comment-btn {
+                border: none;
+                background: none;
+                color: #1877f2;
+                font-size: 18px;
+                cursor: pointer;
+            }
 
-        .subject-input,
-        .message-input {
-            border: none;
-            outline: none;
-            width: 100%;
-            background: none;
-            font-size: 16px;
-            padding: 8px 0;
-            box-sizing: border-box;
-            border-bottom: 1px solid #ccc;
-        }
+            .subject-input,
+            .message-input {
+                border: none;
+                outline: none;
+                width: 100%;
+                background: none;
+                font-size: 16px;
+                padding: 8px 0;
+                box-sizing: border-box;
+                border-bottom: 1px solid #ccc;
+            }
 
-        .subject-input:focus,
-        .message-input:focus {
-            border-bottom: 1px solid #007bff;
-        }
+            .subject-input:focus,
+            .message-input:focus {
+                border-bottom: 1px solid #007bff;
+            }
 
-        .subject-input::placeholder,
-        .message-input::placeholder {
-            color: #999;
-        }
+            .subject-input::placeholder,
+            .message-input::placeholder {
+                color: #999;
+            }
 
-        .subject-input:hover,
-        .message-input:hover {
-            border-bottom: 1px solid #007bff;
-        }
-    </style>
+            .subject-input:hover,
+            .message-input:hover {
+                border-bottom: 1px solid #007bff;
+            }
+        </style>
 </head>
 
 <body>
@@ -198,7 +229,7 @@ date_default_timezone_set('Asia/Manila');
         <div class="cover-img-container">
             <img id="coverPhoto" src="<?php echo htmlspecialchars(getValue($alumni_profile, 'cover_photo_url')); ?>"
                 alt="Cover Photo" class="cover-img"
-                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';"  >
+                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
         </div>
         <div class="profile-details">
             <div class="pd-left">
@@ -217,6 +248,9 @@ date_default_timezone_set('Asia/Manila');
             </div>
             <div class="pd-right">
                 <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                <button id="toggleChatbox" class="btn notika-btn-primary"><i
+                        class="fa fa-group"></i>&nbsp;&nbsp;Message</button>
+
             </div>
         </div>
 
@@ -393,6 +427,29 @@ date_default_timezone_set('Asia/Manila');
         </div>
     </div>
 
+    <div id="chatbox" class="chatbox">
+        <div class="chatbox-header">
+            <div class="chatbox-profile">
+                <span
+                    class="chatbox-name"><?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?></span>
+            </div>
+            <div class="chatbox-icons">
+                <i class="icon close-chat" id="closeChatbox">✖️</i>
+            </div>
+        </div>
+        <div class="chatbox-body" id="chatboxBody">
+            <?php foreach ($conversation as $message): ?>
+                <div class="message <?php echo ($message['senderId'] == $current_user_id) ? 'outgoing' : 'incoming'; ?>">
+                    <p><?php echo htmlspecialchars($message['content']); ?></p>
+                    <span class="timestamp"><?php echo formatTimestamp($message['timestamp']); ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="chatbox-footer">
+            <input type="text" id="messageInput" placeholder="Type a message..." class="chatbox-input">
+            <button id="sendMessage" class="icon send">Send</button>
+        </div>
+    </div>
 
 </body>
 
@@ -747,4 +804,183 @@ date_default_timezone_set('Asia/Manila');
             startRefreshInterval();
         });
     });
+</script>
+<script>
+
+    document.getElementById('toggleChatbox').addEventListener('click', function () {
+
+        document.getElementById('chatbox').classList.toggle('show');
+
+    });
+
+    document.getElementById('closeChatbox').addEventListener('click', function () {
+
+        document.getElementById('chatbox').classList.remove('show');
+
+    });
+
+    document.getElementById('sendMessage').addEventListener('click', sendMessage);
+
+    document.getElementById('messageInput').addEventListener('keypress', function (e) {
+
+        if (e.key === 'Enter') {
+
+            sendMessage();
+
+        }
+
+    });
+
+    function sendMessage() {
+
+        var messageInput = document.getElementById('messageInput');
+
+        var message = messageInput.value.trim();
+
+        if (message) {
+
+            var timestamp = new Date().toISOString();
+
+            var newMessage = {
+
+                senderId: '<?php echo $current_user_id; ?>',
+
+                receiverId: '<?php echo $alumni_id; ?>',
+
+                content: message,
+
+                timestamp: timestamp,
+
+                status: 'sent'
+
+            };
+
+            // Send message to Firebase
+
+            fetch('send_message.php', {
+
+                method: 'POST',
+
+                headers: {
+
+                    'Content-Type': 'application/json',
+
+                },
+
+                body: JSON.stringify(newMessage)
+
+            })
+
+                .then(response => response.json())
+
+                .then(data => {
+
+                    if (data.success) {
+
+                        appendMessage(newMessage, 'outgoing');
+
+                        messageInput.value = '';
+
+                    } else {
+
+                        console.error('Failed to send message:', data.error);
+
+                    }
+
+                })
+
+                .catch(error => {
+
+                    console.error('Error:', error);
+
+                });
+
+        }
+
+    }
+
+    function appendMessage(message, type) {
+
+        var chatboxBody = document.getElementById('chatboxBody');
+
+        var messageDiv = document.createElement('div');
+
+        messageDiv.className = 'message ' + type;
+
+        messageDiv.innerHTML = `
+
+        <p>${escapeHtml(message.content)}</p>
+
+        <span class="timestamp">${formatTimestamp(message.timestamp)}</span>
+
+    `;
+
+        chatboxBody.appendChild(messageDiv);
+
+        chatboxBody.scrollTop = chatboxBody.scrollHeight;
+
+    }
+
+    function escapeHtml(unsafe) {
+
+        return unsafe
+
+            .replace(/&/g, "&amp;")
+
+            .replace(/</g, "&lt;")
+
+            .replace(/>/g, "&gt;")
+
+            .replace(/"/g, "&quot;")
+
+            .replace(/'/g, "&#039;");
+
+    }
+
+    function formatTimestamp(timestamp) {
+
+        return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    }
+
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const openChat = urlParams.get('openChat');
+    const userId = urlParams.get('id');
+    
+    if (openChat === 'true' && userId) {
+        // Fetch the user's name (you might need to adjust this based on your data structure)
+        const userName = '<?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?>';
+        openChatbox(userId, userName);
+    }
+});
+
+function openChatbox(userId, userName) {
+    const chatbox = document.getElementById('chatbox');
+    const chatboxName = document.querySelector('.chatbox-name');
+    
+    // Set the chatbox name
+    chatboxName.textContent = userName;
+    
+    // Show the chatbox
+    chatbox.classList.add('show');
+    
+    // Load the conversation (you'll need to implement this function)
+    loadConversation(userId);
+}
+
+function loadConversation(userId) {
+    // Implement this function to load the conversation with the specified user
+    // You might want to use AJAX to fetch the conversation from your server
+    // and then update the chatbox-body with the messages
+}
+
+// Add event listener for the close button
+document.getElementById('closeChatbox').addEventListener('click', function() {
+    document.getElementById('chatbox').classList.remove('show');
+});
+
+// ... (rest of your existing view_alumni_details.php JavaScript)
 </script>

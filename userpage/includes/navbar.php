@@ -1,4 +1,4 @@
-<?php include 'navbar_php_script.php'; ?>
+<?php require_once 'navbar_php_script.php'; ?>
 
 
 <nav>
@@ -265,6 +265,8 @@
 
 
     <!----------MESSAGE-------------->
+
+
     <div class="message-menu" id="messageMenu">
         <div class="message-menu-inner">
             <div class="message-header">
@@ -272,33 +274,36 @@
             </div>
             <hr>
             <div class="message-items-container">
-                <div class="message-item">
-                    <img src="../images/logo/user1.png" alt="User 1">
-                    <div class="message-info">
-                        <p><strong>John Doe:</strong> Hi there! How are you?</p>
-                        <span class="message-time">2024-09-01 10:30 AM</span>
-                    </div>
-                </div>
-                <div class="message-item">
-                    <img src="../images/logo/user2.png" alt="User 2">
-                    <div class="message-info">
-                        <p><strong>Jane Smith:</strong> Don't forget about the meeting tomorrow.</p>
-                        <span class="message-time">2024-09-01 09:15 AM</span>
-                    </div>
-                </div>
-                <div class="message-item">
-                    <img src="../images/logo/user3.png" alt="User 3">
-                    <div class="message-info">
-                        <p><strong>Admin:</strong> Your account settings have been updated.</p>
-                        <span class="message-time">2024-08-31 05:45 PM</span>
-                    </div>
-                </div>
-                <div class="no-messages">No new messages.</div>
+                <?php if (empty($processed_messages)): ?>
+                    <div class="no-messages">No new messages.</div>
+                <?php else: ?>
+                    <?php foreach ($processed_messages as $other_user_id => $message): ?>
+                        <?php
+                        $other_user = $all_alumni[$other_user_id] ?? null;
+                        if (!$other_user)
+                            continue;
+
+                        $profile_pic = isset($other_user['profile_url']) ? $other_user['profile_url'] : '../images/profile.jpg';
+                        $name = $other_user['firstname'] . ' ' . $other_user['lastname'];
+                        $content = strlen($message['content']) > 30 ? substr($message['content'], 0, 27) . '...' : $message['content'];
+                        $time_ago = getTimeAgo($message['timestamp']);
+                        ?>
+                        <div class="message-item" data-user-id="<?php echo htmlspecialchars($other_user_id); ?>"
+                            onclick="openChatbox('<?php echo htmlspecialchars($other_user_id); ?>', '<?php echo htmlspecialchars($name); ?>')">
+                            <img src="<?php echo htmlspecialchars($profile_pic); ?>"
+                                alt="<?php echo htmlspecialchars($name); ?>">
+                            <div class="message-info">
+                                <p><strong><?php echo htmlspecialchars($name); ?>:</strong>
+                                    <?php echo htmlspecialchars($content); ?></p>
+                                <span class="message-time"><?php echo htmlspecialchars($time_ago); ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
                 <a href="view_all_messages.php" class="view-all-messages">View All Messages</a>
             </div>
         </div>
     </div>
-
 
 </nav>
 
@@ -463,4 +468,21 @@
             }
         });
     });
+</script>
+<script>
+    function openChatbox(userId, userName) {
+        // Close the message menu
+        closeMessageMenu();
+
+        // Check if we're on the view_alumni_details.php page
+        if (window.location.pathname.includes('view_alumni_details.php')) {
+            // If we're already on the correct page, just open the chatbox
+            document.getElementById('chatbox').classList.add('show');
+        } else {
+            // If we're on a different page, redirect to view_alumni_details.php with parameters
+            window.location.href = `view_alumni_details.php?id=${userId}&openChat=true`;
+        }
+    }
+
+    // ... (rest of your existing navbar.php JavaScript)
 </script>

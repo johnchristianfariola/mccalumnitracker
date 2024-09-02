@@ -33,11 +33,11 @@
         return $batchData[$batchId]['batch_yrs'] ?? 'Unknown';
     }
 
-    
-function getValue($array, $key)
-{
-    return isset($array[$key]) && !empty($array[$key]) ? $array[$key] : "N/A";
-}
+
+    function getValue($array, $key)
+    {
+        return isset($array[$key]) && !empty($array[$key]) ? $array[$key] : "N/A";
+    }
 
     function time_elapsed_string($datetime, $full = false)
     {
@@ -175,6 +175,8 @@ function getValue($array, $key)
             border-bottom: 1px solid #007bff;
             /* Hover state to match focus */
         }
+
+
     </style>
 </head>
 
@@ -185,11 +187,9 @@ function getValue($array, $key)
     <!-----PROFILE PAGE---->
     <div class="profile-container">
         <div class="cover-img-container">
-        <img id="coverPhoto" 
-                 src="<?php echo htmlspecialchars(getValue($current_user, 'cover_photo_url')); ?>"
-                 alt="Cover Photo" 
-                 class="cover-img"
-                 onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
+            <img id="coverPhoto" src="<?php echo htmlspecialchars(getValue($current_user, 'cover_photo_url')); ?>"
+                alt="Cover Photo" class="cover-img"
+                onerror="if (this.src != 'img/dafault_cover.jpg') this.src = 'img/dafault_cover.jpg';">
         </div>
         <div class="profile-details">
             <div class="pd-left">
@@ -203,15 +203,13 @@ function getValue($array, $key)
 
                     <div>
 
-                    <h3><?php echo htmlspecialchars(getValue($current_user, 'firstname') . ' ' .  getValue($current_user, 'middlename') . ' ' .  getValue($current_user, 'lastname')); ?></h3>
-
-
+                        <h3><?php echo htmlspecialchars(getValue($current_user, 'firstname') . ' ' . getValue($current_user, 'middlename') . ' ' . getValue($current_user, 'lastname')); ?>
+                        </h3>
                         <p>1.8K Followers - 120 Following</p>
                         <img src="../images/profile.jpg" alt="Joann">
                         <img src="../images/profile.jpg" alt="Jagdon">
                         <img src="../images/profile.jpg" alt="Alvie">
                         <img src="../images/profile.jpg" alt="Fredrick">
-
                     </div>
 
 
@@ -221,7 +219,6 @@ function getValue($array, $key)
             </div>
             <div class="pd-right">
                 <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-
             </div>
 
         </div>
@@ -231,7 +228,7 @@ function getValue($array, $key)
                 <div class="profile-intro">
                     <h3>Bio</h3>
                     <div id="bio-content">
-                    <p class="intro-text">
+                        <p class="intro-text">
                             <?php echo html_entity_decode(htmlspecialchars(getValue($current_user, 'bio'), ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
                         </p>
                     </div>
@@ -239,7 +236,7 @@ function getValue($array, $key)
                     <button id="edit-bio-btn" class="btn notika-btn-lightblue" style="width:100%">Edit Bio</button>
                     <button id="save-bio-btn" class="btn notika-btn-success" style="width:100%; display: none;">Save
                         Bio</button>
-                        <br><br>
+                    <br><br>
                     <button id="cancel-bio-btn" class="btn notika-btn-danger"
                         style="width:100%; display: none;">Cancel</button>
                     <hr>
@@ -247,40 +244,46 @@ function getValue($array, $key)
                         <li>
                             <h5>EDUCATION</h5>
                         </li>
-                        <li><img src="../images/profile-study.png" alt="Study"> Studied At Madridejos Community College</li>
-                        <li><img src="../images/profile-study.png" alt="Study"> Alumni ID: 
+                        <li><img src="../images/profile-study.png" alt="Study"> Studied At Madridejos Community College
+                        </li>
+                        <li><img src="../images/profile-study.png" alt="Study"> Alumni ID:
                             <?php echo htmlspecialchars(getValue($current_user, 'studentid')) ?>
                         </li>
-                        <li><img src="../images/profile-study.png" alt="Study"> Batch Year: 
+                        <li><img src="../images/profile-study.png" alt="Study"> Batch Year:
                             <?php echo htmlspecialchars(getBatchYear(getValue($current_user, 'batch'), $batchData)) ?>
                         </li>
 
                         <li>
                             <h5>ABOUT</h5>
                         </li>
-                        <li><img src="../images/profile-home.png" alt="Home">Currently Lives in 
+                        <li><img src="../images/profile-home.png" alt="Home">Currently Lives in
                             <?php echo htmlspecialchars(getValue($current_user, 'addressline1')) ?>
                         </li>
-                        <li><img src="../images/profile-location.png" alt="Location"> From 
-                            <?php echo htmlspecialchars(getValue($current_user, 'barangay') . ', ' .  getValue($current_user, 'city') . ', ' . getValue($current_user, 'state')); ?>
+                        <li><img src="../images/profile-location.png" alt="Location"> From
+                            <?php echo htmlspecialchars(getValue($current_user, 'barangay') . ', ' . getValue($current_user, 'city') . ', ' . getValue($current_user, 'state')); ?>
                         </li>
-                        <li><img src="../images/confetti.png" alt="Birthday"> Birthday: 
-                            <?php 
+                        <li><img src="../images/confetti.png" alt="Birthday"> Birthday:
+                            <?php
                             $birthdate = getValue($current_user, 'birthdate');
-                            echo $birthdate !== 'N/A' ? date("F j, Y", strtotime($birthdate)) : 'N/A'; 
+                            echo $birthdate !== 'N/A' ? date("F j, Y", strtotime($birthdate)) : 'N/A';
                             ?>
                         </li>
-                        <li><img src="../images/gender.png" alt="Gender"> Gender: 
+                        <li><img src="../images/gender.png" alt="Gender"> Gender:
                             <?php echo htmlspecialchars(getValue($current_user, 'gender')) ?>
                         </li>
                         <li>
                             <h5>Work Details </h5>
                         </li>
-                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button class="btn notika-btn-primary btn-sm" style="background:gold; "><b><?php echo htmlspecialchars(getValue($current_user, 'work_status')) ?></b></button></li>
+                        <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Employment Status:&nbsp;<button
+                                class="btn notika-btn-primary btn-sm"
+                                style="background:gold; "><b><?php echo htmlspecialchars(getValue($current_user, 'work_status')) ?></b></button>
+                        </li>
                         <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Type of Work:&nbsp;
-                            <?php echo htmlspecialchars(getValue($current_user, 'type_of_work')) ?></li>
+                            <?php echo htmlspecialchars(getValue($current_user, 'type_of_work')) ?>
+                        </li>
                         <li><i class="fas fa-briefcase icon"></i>&nbsp;&nbsp;&nbsp; Work Position:&nbsp;
-                            <?php echo htmlspecialchars(getValue($current_user, 'work_position')) ?></li>
+                            <?php echo htmlspecialchars(getValue($current_user, 'work_position')) ?>
+                        </li>
                     </ul>
                 </div>
 
@@ -331,8 +334,8 @@ function getValue($array, $key)
             </div>
 
             <div class="post-col">
-                
-            <div class="write-post-container">
+
+                <div class="write-post-container">
                     <div class="user-profile">
                         <img src="../images/profile.jpg" alt="Profile Picture">
                         <div>
@@ -356,7 +359,7 @@ function getValue($array, $key)
                     </div>
 
                 </div>
-    
+
                 <!-------POST SECTION----------->
                 <?php
                 $current_user_id = $_SESSION['alumni_id'];
@@ -441,10 +444,41 @@ function getValue($array, $key)
                     echo "<div class='post-container'><div class='post-content'><center><h4><i class='fa fa-wechat'></i> YOU DON'T HAVE DISCUSSION YET</h4></center></div></div>";
                 }
                 ?>
-
-
-
             </div>
+        </div>
+    </div>
+
+
+
+    <div id="chatbox" class="chatbox">
+        <div class="chatbox-header">
+            <div class="chatbox-profile">
+                <span class="chatbox-name">John Doe</span>
+            </div>
+            <div class="chatbox-icons">
+                <i class="icon video-call">📹</i>
+                <i class="icon settings">⚙️</i>
+                <i class="icon close-chat">✖️</i>
+            </div>
+        </div>
+        <div class="chatbox-body">
+            <div class="message incoming">
+                <p>Hello! How are you?</p>
+                <span class="timestamp">10:00 AM</span>
+            </div>
+            <div class="message outgoing">
+                <p>I'm good, thanks! How about you?</p>
+                <span class="timestamp">10:02 AM</span>
+            </div>
+            <div class="message incoming">
+                <p>I'm doing well, just working on some projects.</p>
+                <span class="timestamp">10:05 AM</span>
+            </div>
+        </div>
+        <div class="chatbox-footer">
+            <i class="icon attachment">📎</i>
+            <input type="text" placeholder="Type a message..." class="chatbox-input">
+            <i class="icon send">✉️</i>
         </div>
     </div>
     <?php include 'includes/profile_modal.php'; ?>
@@ -520,75 +554,75 @@ function getValue($array, $key)
 
 </script>
 <script>
-    $(document).ready(function() {
-    var $bioContent = $('#bio-content');
-    var $bioEdit = $('#bio-edit');
-    var $editBioBtn = $('#edit-bio-btn');
-    var $saveBioBtn = $('#save-bio-btn');
-    var $cancelBioBtn = $('#cancel-bio-btn');
-    var originalBio = $bioContent.text().trim();
+    $(document).ready(function () {
+        var $bioContent = $('#bio-content');
+        var $bioEdit = $('#bio-edit');
+        var $editBioBtn = $('#edit-bio-btn');
+        var $saveBioBtn = $('#save-bio-btn');
+        var $cancelBioBtn = $('#cancel-bio-btn');
+        var originalBio = $bioContent.text().trim();
 
-    function enterEditMode() {
-        $bioContent.hide();
-        $bioEdit.val(originalBio).show().focus();
-        $editBioBtn.hide();
-        $saveBioBtn.show();
-        $cancelBioBtn.show();
-    }
+        function enterEditMode() {
+            $bioContent.hide();
+            $bioEdit.val(originalBio).show().focus();
+            $editBioBtn.hide();
+            $saveBioBtn.show();
+            $cancelBioBtn.show();
+        }
 
-    function exitEditMode() {
-        $bioEdit.hide();
-        $bioContent.show();
-        $saveBioBtn.hide();
-        $cancelBioBtn.hide();
-        $editBioBtn.show();
-    }
+        function exitEditMode() {
+            $bioEdit.hide();
+            $bioContent.show();
+            $saveBioBtn.hide();
+            $cancelBioBtn.hide();
+            $editBioBtn.show();
+        }
 
-    $editBioBtn.click(enterEditMode);
+        $editBioBtn.click(enterEditMode);
 
-    $cancelBioBtn.click(function() {
-        exitEditMode();
-        $bioEdit.val(originalBio);
-    });
+        $cancelBioBtn.click(function () {
+            exitEditMode();
+            $bioEdit.val(originalBio);
+        });
 
-    $saveBioBtn.click(function() {
-        var newBio = $bioEdit.val().trim();
-        
-        // Immediately update the displayed bio and exit edit mode
-        $bioContent.html('<p class="intro-text">' + newBio + '</p>');
-        exitEditMode();
-        
-        // Show a subtle loading indicator
-        var $loadingIndicator = $('<span>').text(' Saved').css('opacity', '0.5').insertAfter($editBioBtn);
-        
-        $.ajax({
-            url: 'update_bio.php',
-            method: 'POST',
-            data: {
-                bio: newBio,
-                alumni_id: '<?php echo $_SESSION['alumni_id']; ?>'
-            },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    originalBio = newBio;
-                    $loadingIndicator.text(' Updated').fadeOut(1000, function() {
-                        $(this).remove();
-                    });
-                } else {
-                    alert('Failed to update bio on the server. Please try again.');
+        $saveBioBtn.click(function () {
+            var newBio = $bioEdit.val().trim();
+
+            // Immediately update the displayed bio and exit edit mode
+            $bioContent.html('<p class="intro-text">' + newBio + '</p>');
+            exitEditMode();
+
+            // Show a subtle loading indicator
+            var $loadingIndicator = $('<span>').text(' Saved').css('opacity', '0.5').insertAfter($editBioBtn);
+
+            $.ajax({
+                url: 'update_bio.php',
+                method: 'POST',
+                data: {
+                    bio: newBio,
+                    alumni_id: '<?php echo $_SESSION['alumni_id']; ?>'
+                },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        originalBio = newBio;
+                        $loadingIndicator.text(' Updated').fadeOut(1000, function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        alert('Failed to update bio on the server. Please try again.');
+                        $bioContent.html('<p class="intro-text">' + originalBio + '</p>');
+                        $loadingIndicator.remove();
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while saving. Please try again.');
                     $bioContent.html('<p class="intro-text">' + originalBio + '</p>');
                     $loadingIndicator.remove();
                 }
-            },
-            error: function() {
-                alert('An error occurred while saving. Please try again.');
-                $bioContent.html('<p class="intro-text">' + originalBio + '</p>');
-                $loadingIndicator.remove();
-            }
+            });
         });
     });
-});
 </script>
 <script>
     $(document).ready(function () {
@@ -802,3 +836,4 @@ function getValue($array, $key)
         });
     });
 </script>
+
