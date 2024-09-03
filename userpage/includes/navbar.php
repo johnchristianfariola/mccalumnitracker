@@ -1,5 +1,3 @@
-
-
 <?php require_once 'navbar_php_script.php'; ?>
 
 
@@ -52,7 +50,7 @@
             <div class="background-circle">
                 <div class="message-icon" onclick="messageMenuToggle()">
                     <img src="../images/logo/messenger_black.png" alt="">
-                    <span class="message-count"><?php echo $message_count; ?></span>
+                    <span class="message-count">26</span>
                 </div>
             </div>
             <div class="background-circle">
@@ -268,6 +266,7 @@
 
     <!----------MESSAGE-------------->
 
+
     <div class="message-menu" id="messageMenu">
         <div class="message-menu-inner">
             <div class="message-header">
@@ -280,7 +279,6 @@
             <a href="view_all_messages.php" class="view-all-messages">View All Messages</a>
         </div>
     </div>
-
 
 </nav>
 
@@ -338,12 +336,12 @@
             const div = document.createElement("div");
             div.className = "autocomplete-item";
             div.innerHTML = `
-                <img src="${alumni.profile_url}" alt="${alumni.name}" >
-                <div class="autocomplete-item-info">
-                    <span class="autocomplete-item-name">${alumni.name}</span>
-                    <span class="autocomplete-item-details">Alumni</span>
-                </div>
-            `;
+            <img src="${alumni.profile_url}" alt="${alumni.name}" >
+            <div class="autocomplete-item-info">
+                <span class="autocomplete-item-name">${alumni.name}</span>
+                <span class="autocomplete-item-details">Alumni</span>
+            </div>
+        `;
             div.addEventListener("click", function () {
                 input.value = alumni.name;
                 autocompleteList.innerHTML = "";
@@ -435,9 +433,16 @@
         }
     });
 
-
-
-   
+</script>
+<script>
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const url = item.getAttribute('data-href');
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
