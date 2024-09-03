@@ -197,7 +197,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
             </div>
             <div class="chatbox-icons">
 
-                <i class="icon close-chat fa fa-wrong"></i>
+                <i class="icon close-chat fa fa-window-close"></i>
             </div>
         </div>
         <div class="chatbox-body">
