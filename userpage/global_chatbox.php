@@ -1,4 +1,4 @@
-<div id="globalchatbox" class="globalchatbox" style="z-index:2000;">
+<div id="globalchatbox" class="globalchatbox" style="z-index:2;">
         <div class="globalchatbox-header">
             <div class="chatbox-profile">
                     <span class="chatbox-name">John Doe</span> <!-- Placeholder name -->
