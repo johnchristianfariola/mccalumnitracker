@@ -45,6 +45,9 @@
         $adminData = $firebase->retrieve("admin/admin");
         $adminData = json_decode($adminData, true);
 
+        $messages = json_decode($firebase->retrieve("messages"), true);
+        $messages_json = json_encode($messages);
+
         // Extract admin profile image URL
         $admin_image_url = $adminData["image_url"];
         $adminFirstName = $adminData["firstname"];
@@ -386,6 +389,10 @@
         echo "No Event ID provided.";
     }
     ?>
+
+
+<?php include 'global_chatbox.php'?>
+
 </body>
 
 </html>

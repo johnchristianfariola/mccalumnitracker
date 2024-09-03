@@ -13,6 +13,11 @@
     $data = $firebase->retrieve("job");
     $data = json_decode($data, true);
 
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
     // Array to store active jobs
     $activeJobs = [];
 
@@ -131,8 +136,8 @@
 
 
     <!-- News items would be dynamically inserted here -->
-    <div class="breadcomb-area " >
-        <div class="text-center " >
+    <div class="breadcomb-area ">
+        <div class="text-center ">
             <h6 class="section-title bg-white text-center  px-3">ACTIVE JOB</h6>
             <h1 class="mb-5">ACTIVE JOB</h1>
         </div>
@@ -157,13 +162,14 @@
                     ?>
                     <a href="visit_job.php?id=<?php echo $id; ?>">
                         <div class="card">
-                            
+
                             <div class="card-content">
                                 <div class="job-container">
                                     <div class="job-title"><?php echo $jobTitle; ?></div>
                                     <div class="job-timesced"
                                         style="background-color: <?php echo $backgroundColor; ?>; color: <?php echo $color; ?>;">
-                                        <?php echo $workTime; ?></div>
+                                        <?php echo $workTime; ?>
+                                    </div>
                                 </div>
                                 <hr>
                                 <div class="card-date"><?php echo $company; ?></div>
@@ -177,7 +183,7 @@
     </div>
 
 
-    <div class="breadcomb-area " >
+    <div class="breadcomb-area ">
         <div class="text-center ">
             <h6 class="section-title bg-white text-center  px-3">ARCHIVE JOB</h6>
             <h1 class="mb-5">ARCHIVE JOB</h1>
@@ -227,9 +233,9 @@
         </div>
     </div>
 
-    <!-- Start Footer area-->
-    <!-- Include your footer HTML here -->
-    <!-- End Footer area-->
+
+    <?php include 'global_chatbox.php'?>
+
 
     <!-- Include your JS files here -->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>
@@ -266,7 +272,7 @@
     <script src="js/dialog/sweetalert2.min.js"></script>
     <script src="js/dialog/dialog-active.js"></script>
     <script>
-         $('#logoutBtn').on('click', function () {
+        $('#logoutBtn').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",

@@ -14,6 +14,11 @@
     $firebase = new firebaseRDB($databaseURL);
     $jobId = $_GET['id'] ?? '';
 
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
     if ($jobId) {
         $job = json_decode($firebase->retrieve("job/" . $jobId), true);
         if ($job) {
@@ -177,7 +182,8 @@
                                                     <div class="comment-header">
                                                         <h6 class="comment-author">
 
-                                                            <a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
+                                                            <a
+                                                                href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
 
                                                         </h6>
                                                         <span><?php echo $comment["date_ago"]; ?></span>
@@ -230,22 +236,21 @@
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </ul>
-                                <br><br><br>   <br>
-                             
-                                    <div id="uniquePanelBody" class="card-body">
-                                        <form id="commentForm" method="POST" action="comment_job.php">
-                                            <div class="form-group">
-                                                <textarea name="comment" placeholder="Write your comment here!"
-                                                    class="form-control pb-cmnt-textarea" id="uniqueCommentTextarea"
-                                                    rows="3"></textarea>
-                                            </div>
-                                            <div class="text-right">
-                                                <button class="btn btn-primary" type="button"
-                                                    id="submitComment">Share</button>
-                                            </div>
-                                            <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
-                                            <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
-                                        </form>
+                                <br><br><br> <br>
+
+                                <div id="uniquePanelBody" class="card-body">
+                                    <form id="commentForm" method="POST" action="comment_job.php">
+                                        <div class="form-group">
+                                            <textarea name="comment" placeholder="Write your comment here!"
+                                                class="form-control pb-cmnt-textarea" id="uniqueCommentTextarea"
+                                                rows="3"></textarea>
+                                        </div>
+                                        <div class="text-right">
+                                            <button class="btn btn-primary" type="button" id="submitComment">Share</button>
+                                        </div>
+                                        <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
+                                        <input type="hidden" name="alumni_id" value="<?php echo $alumni_id; ?>">
+                                    </form>
                                 </div>
                             </div>
 
@@ -311,9 +316,8 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
-
+ 
+    <?php include 'global_chatbox.php'?>
 
     <!-- JavaScript -->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>

@@ -20,6 +20,12 @@
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
 
+    
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
     if (!$current_user) {
         // Handle the case where the user is not found
         echo "User not found";
@@ -43,14 +49,143 @@
     $category_name = getCategoryName($category_data, $work_classification_id);
     ?>
 
+
+    <style>
+        /* Modern and GUI-friendly styles for post-container */
+
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            /* 3 equal columns */
+            grid-template-rows: auto 1fr;
+            /* Auto row for image, remaining space for columns */
+            gap: 20px;
+            /* Space between columns and rows */
+        }
+
+        /* Profile Image Container */
+        .profile-image-container {
+            grid-column: span 3;
+            /* Span across all 3 columns */
+            display: flex;
+            justify-content: center;
+            /* Center the image horizontally */
+            margin-bottom: 20px;
+        }
+
+        .profile-image-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            /* Make the image circular */
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Section Styles */
+        .profile-info div {
+            background-color: #f9f9f9;
+            /* Light background for sections */
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-info h3 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            /* Underline for section headers */
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .profile-info p strong {
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .profile-info {
+                grid-template-columns: 1fr;
+                /* Stack all content vertically on small screens */
+            }
+
+            .profile-image-container {
+                grid-column: 1;
+                /* Adjust for single column layout */
+            }
+        }
+
+
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #f4f4f4;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Profile Content Styles */
+        .profile-content {
+            margin-left: 250px;
+            /* Adjust according to sidebar width */
+            padding: 20px;
+            width: calc(100% - 250px);
+            /* Ensure it takes the full width minus the sidebar width */
+        }
+
+        .post-col {
+            width: 100%;
+            /* Ensure it uses the full width of .profile-content */
+            box-sizing: border-box;
+            /* Include padding and border in the element's total width */
+        }
+
+
+        .profile-section {
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
 
 <body>
 
     <?php include 'includes/navbar.php'; ?>
-
-
-
 
     <!-----PROFILE PAGE---->
     <?php include 'includes/sidebar.php'; ?>
@@ -96,7 +231,10 @@
                             <p><strong>Name:</strong>
                                 <?php echo getValue($current_user, 'auxiliaryname') . ' ' . getValue($current_user, 'firstname') . ' ' . getValue($current_user, 'middlename') . ' ' . getValue($current_user, 'lastname'); ?>
                             </p>
-                            <p><strong>Birthday:</strong><?php $birthdate = getValue($current_user, 'birthdate'); $formatted_date = date("F j, Y", strtotime($birthdate)); echo $formatted_date; ?></p>
+                            <p><strong>Birthday:</strong><?php $birthdate = getValue($current_user, 'birthdate');
+                            $formatted_date = date("F j, Y", strtotime($birthdate));
+                            echo $formatted_date; ?>
+                            </p>
 
                             <p><strong>Gender:</strong> <?php echo getValue($current_user, 'gender'); ?></p>
                             <p><strong>Address:</strong>
@@ -109,11 +247,16 @@
                         <!-- Employment Info Column -->
                         <div class="employment-info">
                             <h3>Employment Info</h3>
-                            <p><strong>Status:</strong> <span class=" btn-warning notika-btn-warning" style="padding:5px 10px 5px 10px; border-radius:10px"><?php echo getValue($current_user, 'work_status'); ?></span>
+                            <p><strong>Status:</strong> <span class=" btn-warning notika-btn-warning"
+                                    style="padding:5px 10px 5px 10px; border-radius:10px"><?php echo getValue($current_user, 'work_status'); ?></span>
                             </p>
                             <p><strong>Company:</strong> <?php echo getValue($current_user, 'name_company'); ?></p>
                             <p><strong>Position:</strong> <?php echo getValue($current_user, 'work_position'); ?></p>
-                            <p><strong>Start Date:</strong> <?php  $start_date = getValue($current_user, 'date_for_current_employment');  $formatted_date = date("F j, Y", strtotime($start_date)); echo $formatted_date; ?></p>
+                            <p><strong>Start Date:</strong>
+                                <?php $start_date = getValue($current_user, 'date_for_current_employment');
+                                $formatted_date = date("F j, Y", strtotime($start_date));
+                                echo $formatted_date; ?>
+                            </p>
 
                             <p><strong>Work Status:</strong>
                                 <?php echo getValue($current_user, 'work_employment_status'); ?></p>
@@ -141,138 +284,11 @@
             </div>
 
         </div>
-        <style>
-            /* Modern and GUI-friendly styles for post-container */
+    </div>
+
+    <?php include 'global_chatbox.php'?>
 
 
-            .profile-info {
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                /* 3 equal columns */
-                grid-template-rows: auto 1fr;
-                /* Auto row for image, remaining space for columns */
-                gap: 20px;
-                /* Space between columns and rows */
-            }
-
-            /* Profile Image Container */
-            .profile-image-container {
-                grid-column: span 3;
-                /* Span across all 3 columns */
-                display: flex;
-                justify-content: center;
-                /* Center the image horizontally */
-                margin-bottom: 20px;
-            }
-
-            .profile-image-container img {
-                width: 150px;
-                height: 150px;
-                border-radius: 50%;
-                /* Make the image circular */
-                object-fit: cover;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            }
-
-            /* Section Styles */
-            .profile-info div {
-                background-color: #f9f9f9;
-                /* Light background for sections */
-                padding: 15px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-
-            .profile-info h3 {
-                margin-top: 0;
-                font-size: 18px;
-                color: #333;
-                border-bottom: 2px solid #ddd;
-                /* Underline for section headers */
-                padding-bottom: 10px;
-                margin-bottom: 10px;
-            }
-
-            .profile-info p {
-                margin: 10px 0;
-                font-size: 16px;
-                color: #333;
-            }
-
-            .profile-info p strong {
-                font-weight: 600;
-                color: #555;
-            }
-
-            /* Responsive design for smaller screens */
-            @media (max-width: 768px) {
-                .profile-info {
-                    grid-template-columns: 1fr;
-                    /* Stack all content vertically on small screens */
-                }
-
-                .profile-image-container {
-                    grid-column: 1;
-                    /* Adjust for single column layout */
-                }
-            }
-
-
-
-            /* Sidebar Styles */
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 250px;
-                height: 100%;
-                background-color: #f4f4f4;
-                padding: 15px;
-                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-                overflow-y: auto;
-            }
-
-            .sidebar h2 {
-                margin-top: 0;
-            }
-
-            .sidebar ul {
-                list-style-type: none;
-                padding: 0;
-            }
-
-            .sidebar ul li {
-                margin: 10px 0;
-            }
-
-            .sidebar ul li a {
-                text-decoration: none;
-                color: #333;
-                font-weight: bold;
-            }
-
-            /* Profile Content Styles */
-            .profile-content {
-                margin-left: 250px;
-                /* Adjust according to sidebar width */
-                padding: 20px;
-                width: calc(100% - 250px);
-                /* Ensure it takes the full width minus the sidebar width */
-            }
-
-            .post-col {
-                width: 100%;
-                /* Ensure it uses the full width of .profile-content */
-                box-sizing: border-box;
-                /* Include padding and border in the element's total width */
-            }
-
-
-            .profile-section {
-                margin-bottom: 30px;
-            }
-        </style>
-        <?php include 'includes/profile_modal.php'; ?>
 </body>
 
 </html>

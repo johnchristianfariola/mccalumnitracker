@@ -189,27 +189,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
         </div>
     </div>
 
-    <div id="globalchatbox" class="globalchatbox">
-        <div class="globalchatbox-header">
-            <div class="chatbox-profile">
-
-                <span class="chatbox-name">John Doe</span> <!-- Placeholder name -->
-            </div>
-            <div class="chatbox-icons">
-
-                <i class="icon close-chat fa fa-window-close"></i>
-            </div>
-        </div>
-        <div class="chatbox-body">
-            <!-- Messages will be dynamically loaded here -->
-        </div>
-        <div class="chatbox-footer">
-            <i class="icon attachment">📎</i>
-            <input type="text" placeholder="Type a message..." class="chatbox-input" id="chatbox-input">
-            <i class="icon send" id="send-message">✉️</i>
-        </div>
-
-    </div>
+    <?php include 'global_chatbox.php'?>
 
 
     <!-- Start Footer area-->
@@ -333,11 +313,9 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                 }
             });
         });
-
-
     </script>
-    
-    
+
+
 
 
 </body>

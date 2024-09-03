@@ -23,6 +23,11 @@
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
 
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
     if (!$current_user) {
         echo "User not found";
         exit;
@@ -175,8 +180,6 @@
             border-bottom: 1px solid #007bff;
             /* Hover state to match focus */
         }
-
-
     </style>
 </head>
 
@@ -447,10 +450,8 @@
             </div>
         </div>
     </div>
+    <?php include 'global_chatbox.php' ?>
 
-
-
-    <?php include 'includes/profile_modal.php'; ?>
 </body>
 
 </html>

@@ -118,107 +118,108 @@ date_default_timezone_set('Asia/Manila');
     <title>
         <?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?>
         - Profile
-        <?php include 'includes/header.php'; ?>
-        <style>
-            /* Your CSS code here */
-            .post-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 15px;
-            }
+    </title>
+    <?php include 'includes/header.php'; ?>
+    <style>
+        /* Your CSS code here */
+        .post-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
 
-            .user-profile {
-                display: flex;
-                align-items: center;
-            }
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
 
-            .user-profile img {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                margin-right: 10px;
-            }
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
 
-            .post-content h3 {
-                margin-bottom: 10px;
-            }
+        .post-content h3 {
+            margin-bottom: 10px;
+        }
 
-            .activity-icons {
-                display: flex;
-                justify-content: space-around;
-                padding: 10px 0;
-                border-top: 1px solid #eee;
-                border-bottom: 1px solid #eee;
-            }
+        .activity-icons {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
 
-            .activity-icons div {
-                display: flex;
-                align-items: center;
-                font-size: 14px;
-                margin-right: 10px;
-            }
+        .activity-icons div {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-right: 10px;
+        }
 
-            .activity-icons i {
-                margin-right: 5px;
-            }
+        .activity-icons i {
+            margin-right: 5px;
+        }
 
-            .comment-box {
-                display: flex;
-                align-items: center;
-                margin-top: 10px;
-            }
+        .comment-box {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
 
-            .comment-box img {
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                margin-right: 10px;
-            }
+        .comment-box img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
 
-            .comment-box input {
-                flex-grow: 1;
-                border: none;
-                padding: 10px;
-                border-radius: 30px;
-                background-color: #f0f2f5;
-            }
+        .comment-box input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            background-color: #f0f2f5;
+        }
 
-            .comment-btn {
-                border: none;
-                background: none;
-                color: #1877f2;
-                font-size: 18px;
-                cursor: pointer;
-            }
+        .comment-btn {
+            border: none;
+            background: none;
+            color: #1877f2;
+            font-size: 18px;
+            cursor: pointer;
+        }
 
-            .subject-input,
-            .message-input {
-                border: none;
-                outline: none;
-                width: 100%;
-                background: none;
-                font-size: 16px;
-                padding: 8px 0;
-                box-sizing: border-box;
-                border-bottom: 1px solid #ccc;
-            }
+        .subject-input,
+        .message-input {
+            border: none;
+            outline: none;
+            width: 100%;
+            background: none;
+            font-size: 16px;
+            padding: 8px 0;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ccc;
+        }
 
-            .subject-input:focus,
-            .message-input:focus {
-                border-bottom: 1px solid #007bff;
-            }
+        .subject-input:focus,
+        .message-input:focus {
+            border-bottom: 1px solid #007bff;
+        }
 
-            .subject-input::placeholder,
-            .message-input::placeholder {
-                color: #999;
-            }
+        .subject-input::placeholder,
+        .message-input::placeholder {
+            color: #999;
+        }
 
-            .subject-input:hover,
-            .message-input:hover {
-                border-bottom: 1px solid #007bff;
-            }
-        </style>
+        .subject-input:hover,
+        .message-input:hover {
+            border-bottom: 1px solid #007bff;
+        }
+    </style>
 </head>
 
 <body>
@@ -248,9 +249,11 @@ date_default_timezone_set('Asia/Manila');
             </div>
             <div class="pd-right">
                 <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-                <button id="toggleChatbox" class="btn notika-btn-primary"><i
-                        class="fa fa-group"></i>&nbsp;&nbsp;Message</button>
-
+                <?php if ($is_logged_in && $_SESSION['alumni_id'] !== $alumni_id): ?>
+                    <button id="toggleChatbox" class="btn notika-btn-primary">
+                        <i class="fa fa-group"></i>&nbsp;&nbsp;Message
+                    </button>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -450,6 +453,8 @@ date_default_timezone_set('Asia/Manila');
             <button id="sendMessage" class="icon send">Send</button>
         </div>
     </div>
+
+
 
 </body>
 

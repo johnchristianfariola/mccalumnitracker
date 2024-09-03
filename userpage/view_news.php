@@ -33,7 +33,7 @@
     $adminData = $firebase->retrieve("admin/admin");
     $adminData = json_decode($adminData, true);
 
-     $messages = json_decode($firebase->retrieve("messages"), true);
+    $messages = json_decode($firebase->retrieve("messages"), true);
 
     // Convert messages array to JSON for JavaScript
     $messages_json = json_encode($messages);
@@ -110,28 +110,8 @@
 
 
 
-    <div id="globalchatbox" class="globalchatbox">
-        <div class="globalchatbox-header">
-            <div class="chatbox-profile">
+    <?php include 'global_chatbox.php' ?>
 
-                <span class="chatbox-name">John Doe</span> <!-- Placeholder name -->
-            </div>
-            <div class="chatbox-icons">
-                <i class="icon video-call">📹</i>
-                <i class="icon settings">⚙️</i>
-                <i class="icon close-chat">✖️</i>
-            </div>
-        </div>
-        <div class="chatbox-body">
-            <!-- Messages will be dynamically loaded here -->
-        </div>
-        <div class="chatbox-footer">
-            <i class="icon attachment">📎</i>
-            <input type="text" placeholder="Type a message..." class="chatbox-input" id="chatbox-input">
-            <i class="icon send" id="send-message">✉️</i>
-        </div>
-
-    </div>
 
     <!-- Start Footer area-->
 

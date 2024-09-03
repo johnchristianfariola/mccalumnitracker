@@ -23,6 +23,12 @@
     $courseKey = "course"; // Replace with your actual Firebase path or key for courses
     $data = $firebase->retrieve($courseKey);
     $data = json_decode($data, true); // Decode JSON data into associative arrays
+
+    
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
     
     // Assuming you have the current user's ID stored in a session variable
     $current_user_id = $_SESSION['alumni_id'];
@@ -215,8 +221,8 @@
         </div>
     </form>
 </div>
+<?php include 'global_chatbox.php'?>
 
-    <?php include 'includes/profile_modal.php'; ?>
 </body>
 
 </html>

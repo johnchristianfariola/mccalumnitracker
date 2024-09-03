@@ -18,6 +18,11 @@
     $album_data = $firebase->retrieve("gallery");
     $album_data = json_decode($album_data, true);
 
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
 
     ?>
 
@@ -95,7 +100,9 @@
             </div>
         </div>
     </div>
-    </div>
+    
+    <?php include 'global_chatbox.php'?>
+
 
     <!-- Scripts -->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>

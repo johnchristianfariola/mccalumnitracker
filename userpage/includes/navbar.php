@@ -50,7 +50,7 @@
             <div class="background-circle">
                 <div class="message-icon" onclick="messageMenuToggle()">
                     <img src="../images/logo/messenger_black.png" alt="">
-                    <span class="message-count">26</span>
+                    <span class="message-count"></span>
                 </div>
             </div>
             <div class="background-circle">

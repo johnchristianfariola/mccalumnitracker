@@ -32,6 +32,11 @@
             $data = $firebase->retrieve("event");
             $data = json_decode($data, true);
 
+            $messages = json_decode($firebase->retrieve("messages"), true);
+
+            // Convert messages array to JSON for JavaScript
+            $messages_json = json_encode($messages);
+
             foreach ($data as $eventID => $event) {
                 $eventTitle = $event['event_title'];
                 $eventDate = $event['event_date'];
@@ -69,7 +74,7 @@
         </div>
     </div>
 
-
+   <?php include 'global_chatbox.php'?>
 
     <!-- Start Footer area-->
 
@@ -142,13 +147,13 @@
     <script src="js/main.js"></script>
     <!-- tawk chat JS
         ============================================ -->
-  
+
     <!--Dialog JS ============================================ -->
     <script src="js/dialog/sweetalert2.min.js"></script>
     <script src="js/dialog/dialog-active.js"></script>
     <!--  Custom JS-->
     <script>
-       $('#logoutBtn').on('click', function () {
+        $('#logoutBtn').on('click', function () {
             swal({
                 title: "Are you sure?",
                 text: "You will be directed to the main page!",

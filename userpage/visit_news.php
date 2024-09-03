@@ -17,6 +17,11 @@
     require_once "../includes/config.php";
     $firebase = new firebaseRDB($databaseURL);
 
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
     function timeAgo($timestamp)
     {
         $currentTime = time();
@@ -308,9 +313,9 @@
     ?>
         </div>
     </div>
-    <!-- Start Footer area-->
 
-    <!-- End Footer area-->
+    <?php include 'global_chatbox.php'?>
+
     <!-- jquery
         ============================================ -->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>

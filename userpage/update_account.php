@@ -28,6 +28,12 @@
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
 
+    
+    $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
     if (!$current_user) {
         // Handle the case where the user is not found
         echo "User not found";
@@ -737,7 +743,9 @@
                                 <input type="file" id="profileImageInput" name="profile_url" accept="image/*"
                                     style="display: none;">
 
-                                <img id="profileImage" src="<?php echo getValue($current_user, 'profile_url'); ?>" alt="Profile Picture" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                                <img id="profileImage" src="<?php echo getValue($current_user, 'profile_url'); ?>"
+                                    alt="Profile Picture"
+                                    onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
 
 
                                 <div class="overlay">
@@ -791,9 +799,9 @@
 
     </div>
 
-    
+    <?php include 'global_chatbox.php'?>
 
-    <?php include 'includes/profile_modal.php'; ?>
+
 </body>
 
 </html>

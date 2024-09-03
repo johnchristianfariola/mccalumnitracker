@@ -7,93 +7,97 @@
     <?php include 'includes/header.php' ?>
     <!-- Bootstrap CSS -->
     <?php
-require_once '../includes/firebaseRDB.php';
-require_once '../includes/config.php';
+    require_once '../includes/firebaseRDB.php';
+    require_once '../includes/config.php';
 
-$firebase = new firebaseRDB($databaseURL);
+    $firebase = new firebaseRDB($databaseURL);
 
-$forum_data = $firebase->retrieve("forum");
-$forum_data = json_decode($forum_data, true);
+    $forum_data = $firebase->retrieve("forum");
+    $forum_data = json_decode($forum_data, true);
 
-$alumni_data = $firebase->retrieve("alumni");
-$alumni_data = json_decode($alumni_data, true);
+    $alumni_data = $firebase->retrieve("alumni");
+    $alumni_data = json_decode($alumni_data, true);
 
-function time_elapsed_string($datetime, $full = false)
-{
-    $now = new DateTime('now', new DateTimeZone('Asia/Manila')); // Adjust to your local timezone
-    $ago = new DateTime($datetime, new DateTimeZone('Asia/Manila')); // Adjust to your local timezone
-    $diff = $now->diff($ago);
+    $messages = json_decode($firebase->retrieve("messages"), true);
 
-    $diff->w = floor($diff->d / 7);
-    $diff->d -= $diff->w * 7;
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
 
-    $string = array(
-        'y' => 'year',
-        'm' => 'month',
-        'w' => 'week',
-        'd' => 'day',
-        'h' => 'hour',
-        'i' => 'minute',
-        's' => 'second',
-    );
+    function time_elapsed_string($datetime, $full = false)
+    {
+        $now = new DateTime('now', new DateTimeZone('Asia/Manila')); // Adjust to your local timezone
+        $ago = new DateTime($datetime, new DateTimeZone('Asia/Manila')); // Adjust to your local timezone
+        $diff = $now->diff($ago);
 
-    foreach ($string as $k => &$v) {
-        if ($diff->$k) {
-            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-        } else {
-            unset($string[$k]);
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
         }
+
+        if (!$full)
+            $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'just now';
     }
 
-    if (!$full)
-        $string = array_slice($string, 0, 1);
-    return $string ? implode(', ', $string) . ' ago' : 'just now';
-}
-
-// Set the default timezone to your local timezone
-date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
-
-?>
-<style>
+    // Set the default timezone to your local timezone
+    date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     
-.dropdown {
-  position: relative;
-  /* Position relative for dropdown positioning */
-}
+    ?>
+    <style>
+        .dropdown {
+            position: relative;
+            /* Position relative for dropdown positioning */
+        }
 
-.dropdown-menu {
-  display: none;
-  /* Initially hide the dropdown menu */
-  position: absolute;
-  /* Position absolute to appear below the button */
-  top: 100%;
-  /* Align the dropdown menu below the button */
-  right: 0;
-  /* Align the dropdown menu to the right of the button */
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 0.25rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  /* Ensure it appears above other content */
-  transform: translate(-115px);
-}
+        .dropdown-menu {
+            display: none;
+            /* Initially hide the dropdown menu */
+            position: absolute;
+            /* Position absolute to appear below the button */
+            top: 100%;
+            /* Align the dropdown menu below the button */
+            right: 0;
+            /* Align the dropdown menu to the right of the button */
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            /* Ensure it appears above other content */
+            transform: translate(-115px);
+        }
 
-.dropdown-item {
-  display: block;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  color: #333;
-}
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #333;
+        }
 
-.dropdown-item i {
-  margin-right: 0.5rem;
-}
+        .dropdown-item i {
+            margin-right: 0.5rem;
+        }
 
-.dropdown-item:hover {
-  background-color: #f8f9fa;
-}
-</style>
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
 
 </head>
 
@@ -103,7 +107,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
     <![endif]-->
     <!-- Start Header Top Area -->
     <?php include 'includes/navbar.php' ?>
-   
+
 
     <?php include 'includes/forum_modal.php' ?>
 
@@ -248,7 +252,8 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
                                                                     <div class="comment-author">
                                                                         <img src="<?php echo htmlspecialchars($commenter_profile); ?>"
                                                                             class="comment-avatar" alt="author">
-                                                                            <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo htmlspecialchars($commenter_name); ?></a></span>
+                                                                        <span><a
+                                                                                href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo htmlspecialchars($commenter_name); ?></a></span>
 
                                                                         &nbsp;&nbsp;&nbsp;
                                                                         <span
@@ -260,7 +265,7 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 
                                                                     <div class="reply-section">
                                                                         <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
-                                                                            <i  
+                                                                            <i
                                                                                 class="fa <?php echo in_array($_SESSION['user']['id'], $comment['liked_by'] ?? []) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
                                                                         </span>
                                                                         <span
@@ -317,47 +322,49 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 
 
 
+    <?php include 'global_chatbox.php'?>
 
 
-        <!-- Start Footer area-->
-        <!-- End Footer area-->
-        <!-- Scripts -->
-        <script src="js/vendor/jquery-1.12.4.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/wow.min.js"></script>
-        <script src="js/jquery-price-slider.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/jquery.scrollUp.min.js"></script>
-        <script src="js/meanmenu/jquery.meanmenu.js"></script>
-        <script src="js/counterup/jquery.counterup.min.js"></script>
-        <script src="js/counterup/waypoints.min.js"></script>
-        <script src="js/counterup/counterup-active.js"></script>
-        <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-        <script src="js/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
-        <script src="js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-        <script src="js/jvectormap/jvectormap-active.js"></script>
-        <script src="js/sparkline/jquery.sparkline.min.js"></script>
-        <script src="js/sparkline/sparkline-active.js"></script>
-        <script src="js/flot/jquery.flot.js"></script>
-        <script src="js/flot/jquery.flot.resize.js"></script>
-        <script src="js/flot/curvedLines.js"></script>
-        <script src="js/flot/flot-active.js"></script>
-        <script src="js/knob/jquery.knob.js"></script>
-        <script src="js/knob/jquery.appear.js"></script>
-        <script src="js/knob/knob-active.js"></script>
-        <script src="js/wave/waves.min.js"></script>
-        <script src="js/wave/wave-active.js"></script>
-        <script src="js/todo/jquery.todo.js"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/chat/moment.min.js"></script>
-        <script src="js/chat/jquery.chat.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/tawk-chat.js"></script>
-        <script src="js/dialog/sweetalert2.min.js"></script>
-        <script src="js/dialog/dialog-active.js"></script>
-        <script src="bootsrap/js/bootstrap.min.js"></script>
-        <script src="../bower_components/ckeditor/ckeditor.js"></script>
-        <script src="js/jquery/jquery-3.5.1.min.js"></script>
+
+    <!-- Start Footer area-->
+    <!-- End Footer area-->
+    <!-- Scripts -->
+    <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/jquery-price-slider.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.scrollUp.min.js"></script>
+    <script src="js/meanmenu/jquery.meanmenu.js"></script>
+    <script src="js/counterup/jquery.counterup.min.js"></script>
+    <script src="js/counterup/waypoints.min.js"></script>
+    <script src="js/counterup/counterup-active.js"></script>
+    <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="js/jvectormap/jvectormap-active.js"></script>
+    <script src="js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="js/sparkline/sparkline-active.js"></script>
+    <script src="js/flot/jquery.flot.js"></script>
+    <script src="js/flot/jquery.flot.resize.js"></script>
+    <script src="js/flot/curvedLines.js"></script>
+    <script src="js/flot/flot-active.js"></script>
+    <script src="js/knob/jquery.knob.js"></script>
+    <script src="js/knob/jquery.appear.js"></script>
+    <script src="js/knob/knob-active.js"></script>
+    <script src="js/wave/waves.min.js"></script>
+    <script src="js/wave/wave-active.js"></script>
+    <script src="js/todo/jquery.todo.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/chat/moment.min.js"></script>
+    <script src="js/chat/jquery.chat.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/tawk-chat.js"></script>
+    <script src="js/dialog/sweetalert2.min.js"></script>
+    <script src="js/dialog/dialog-active.js"></script>
+    <script src="bootsrap/js/bootstrap.min.js"></script>
+    <script src="../bower_components/ckeditor/ckeditor.js"></script>
+    <script src="js/jquery/jquery-3.5.1.min.js"></script>
 
 
     <script>
