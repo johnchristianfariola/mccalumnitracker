@@ -1,38 +1,131 @@
-<?php
-require_once '../includes/firebaseRDB.php';
-require_once '../includes/config.php';
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var globalChatbox = document.getElementById('globalchatbox');
+            var closeChatIcon = document.querySelector('.close-chat');
+            var chatboxName = document.querySelector('.chatbox-name');
+            var chatboxBody = document.querySelector('.chatbox-body');
+            var chatboxInput = document.getElementById('chatbox-input');
+            var sendMessageIcon = document.getElementById('send-message');
 
-$firebase = new firebaseRDB($databaseURL);
+            // All messages retrieved from PHP
+            const allMessages = <?php echo $messages_json; ?>;
 
-// Retrieve the user ID from the form
-$user_id = $_POST['user_id'] ?? null;
+            // Event listener for message items
+            document.querySelectorAll('.message-item').forEach(function (item) {
+                item.addEventListener('click', function () {
+                    var userId = this.getAttribute('data-user-id');
+                    var userName = this.querySelector('.message-info strong').innerText; // Assuming user's name is in <strong>
+                    var currentUserId = "<?php echo $_SESSION['user']['id']; ?>"; // Current logged-in user ID
 
-if (!$user_id) {
-    die('User ID is missing');
-}
+                    // Update chatbox header with user's name
+                    chatboxName.textContent = userName;
 
-// Prepare the data to be updated
-$update_data = [];
+                    // Clear previous chat content
+                    chatboxBody.innerHTML = '';
 
-if (!empty($_POST['firstname'])) {
-    $update_data['firstname'] = $_POST['firstname'];
-}
+                    // Filter messages for the selected conversation
+                    const filteredMessages = Object.values(allMessages).filter(message =>
+                        (message.senderId === currentUserId && message.receiverId === userId) ||
+                        (message.senderId === userId && message.receiverId === currentUserId)
+                    );
 
-// Add other fields similarly...
-// if (!empty($_POST['lastname'])) {
-//     $update_data['lastname'] = $_POST['lastname'];
-// }
+                    // Populate chatbox with filtered messages
+                    filteredMessages.forEach(function (message) {
+                        var messageDiv = document.createElement('div');
+                        messageDiv.className = message.senderId === currentUserId ? 'message outgoing' : 'message incoming';
+                        messageDiv.innerHTML = `
+                    <p>${message.content}</p>
+                    <span class="timestamp">${formatTimestamp(new Date(message.timestamp))}</span>
+                `;
+                        chatboxBody.appendChild(messageDiv);
+                    });
 
-if (empty($update_data)) {
-    die('No data to update');
-}
+                    // Show the chatbox with a sliding effect
+                    globalChatbox.style.bottom = '0px';
 
-// Update the data in Firebase
-$result = $firebase->update("alumni", $user_id, $update_data);
+                    // Set a custom attribute for the active chat receiver ID
+                    globalChatbox.setAttribute('data-receiver-id', userId);
+                });
+            });
 
-if ($result) {
-    echo 'Profile updated successfully';
-} else {
-    echo 'Failed to update profile';
-}
-?>
+            // Close chatbox functionality
+            closeChatIcon.addEventListener('click', function () {
+                globalChatbox.style.bottom = '-500px'; // Hide the chatbox with a sliding effect
+            });
+
+            // Send message functionality
+            sendMessageIcon.addEventListener('click', function () {
+                sendMessage();
+            });
+
+            chatboxInput.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                var messageContent = chatboxInput.value.trim();
+                if (messageContent === '') {
+                    return; // Do not send empty messages
+                }
+
+                var receiverId = globalChatbox.getAttribute('data-receiver-id');
+                var currentUserId = "<?php echo $_SESSION['user']['id']; ?>"; // Current logged-in user ID
+                var timestamp = new Date().toISOString();
+
+                // Create message data
+                var messageData = {
+                    senderId: currentUserId,
+                    receiverId: receiverId,
+                    content: messageContent,
+                    timestamp: timestamp
+                };
+
+                // Send message using AJAX
+                fetch('send_message.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(messageData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Append the message to the chatbox
+                            var messageDiv = document.createElement('div');
+                            messageDiv.className = 'message outgoing';
+                            messageDiv.innerHTML = `
+                    <p>${messageContent}</p>
+                    <span class="timestamp">${formatTimestamp(new Date(timestamp))}</span>
+                `;
+                            chatboxBody.appendChild(messageDiv);
+
+                            // Clear the input field
+                            chatboxInput.value = '';
+                            chatboxBody.scrollTop = chatboxBody.scrollHeight; // Scroll to the bottom
+                        } else {
+                            alert('Failed to send message: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending message:', error);
+                        alert('An error occurred while sending the message.');
+                    });
+            }
+
+            // Format timestamp to more readable format
+            function formatTimestamp(date) {
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+                return strTime;
+            }
+        });
+
+    </script>

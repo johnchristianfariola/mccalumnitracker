@@ -33,6 +33,12 @@
     $adminData = $firebase->retrieve("admin/admin");
     $adminData = json_decode($adminData, true);
 
+     $messages = json_decode($firebase->retrieve("messages"), true);
+
+    // Convert messages array to JSON for JavaScript
+    $messages_json = json_encode($messages);
+
+
     // Extract admin profile image URL
     $adminFirstName = $adminData['firstname'];
     $adminLastName = $adminData['lastname'];
@@ -61,34 +67,32 @@
             $news_description = nl2br(preg_replace('/\n{2,}/', '<br><br>', strip_tags($news_item['news_description'])));
             $news_title = htmlspecialchars($news_item['news_title']);
             ?>
-          
 
-                    <div class="breadcomb-area wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    
-                                    <div class="main_card">
-                                        <div class="news_card">
-                                            <div class="news_image">
-                                                <img src="../admin/<?php echo $image_url; ?>" alt="News Image">
-                                            </div>
-                                            <div class="news_content">
-                                                <h3><?php echo $news_title; ?></h3>
-                                                <div class="post_info">
-                                                    <p>Author: <?php echo $news_author; ?></p>
-                                                    <p class="date_posted"><?php echo $news_created; ?></p>
-                                                </div>
-                                                <div class="news-description" style="margin-top:20px;">
-                                                    <p><?php echo $news_description; ?></p>
-                                                </div>
-                                                <div style="margin-top:20px">
-                                                    <a id="newsLink" href="visit_news.php?id=<?php echo urlencode($news_id); ?>"
-                                                        class="btn btn-default btn-icon-notika">
-                                                        <i class="notika-icon notika-next"></i> READ...
-                                                    </a>
-                                                </div>
-                                            </div>
+
+            <div class="breadcomb-area wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="main_card">
+                                <div class="news_card">
+                                    <div class="news_image">
+                                        <img src="../admin/<?php echo $image_url; ?>" alt="News Image">
+                                    </div>
+                                    <div class="news_content">
+                                        <h3><?php echo $news_title; ?></h3>
+                                        <div class="post_info">
+                                            <p>Author: <?php echo $news_author; ?></p>
+                                            <p class="date_posted"><?php echo $news_created; ?></p>
+                                        </div>
+                                        <div class="news-description" style="margin-top:20px;">
+                                            <p><?php echo $news_description; ?></p>
+                                        </div>
+                                        <div style="margin-top:20px">
+                                            <a id="newsLink" href="visit_news.php?id=<?php echo urlencode($news_id); ?>"
+                                                class="btn btn-default btn-icon-notika">
+                                                <i class="notika-icon notika-next"></i> READ...
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -97,6 +101,8 @@
                     </div>
                 </div>
             </div>
+            </div>
+            </div>
             <?php
         }
     }
@@ -104,7 +110,28 @@
 
 
 
+    <div id="globalchatbox" class="globalchatbox">
+        <div class="globalchatbox-header">
+            <div class="chatbox-profile">
 
+                <span class="chatbox-name">John Doe</span> <!-- Placeholder name -->
+            </div>
+            <div class="chatbox-icons">
+                <i class="icon video-call">📹</i>
+                <i class="icon settings">⚙️</i>
+                <i class="icon close-chat">✖️</i>
+            </div>
+        </div>
+        <div class="chatbox-body">
+            <!-- Messages will be dynamically loaded here -->
+        </div>
+        <div class="chatbox-footer">
+            <i class="icon attachment">📎</i>
+            <input type="text" placeholder="Type a message..." class="chatbox-input" id="chatbox-input">
+            <i class="icon send" id="send-message">✉️</i>
+        </div>
+
+    </div>
 
     <!-- Start Footer area-->
 
@@ -201,6 +228,138 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var globalChatbox = document.getElementById('globalchatbox');
+            var closeChatIcon = document.querySelector('.close-chat');
+            var chatboxName = document.querySelector('.chatbox-name');
+            var chatboxBody = document.querySelector('.chatbox-body');
+            var chatboxInput = document.getElementById('chatbox-input');
+            var sendMessageIcon = document.getElementById('send-message');
+
+            // All messages retrieved from PHP
+            const allMessages = <?php echo $messages_json; ?>;
+
+            // Event listener for message items
+            document.querySelectorAll('.message-item').forEach(function (item) {
+                item.addEventListener('click', function () {
+                    var userId = this.getAttribute('data-user-id');
+                    var userName = this.querySelector('.message-info strong').innerText; // Assuming user's name is in <strong>
+                    var currentUserId = "<?php echo $_SESSION['user']['id']; ?>"; // Current logged-in user ID
+
+                    // Update chatbox header with user's name
+                    chatboxName.textContent = userName;
+
+                    // Clear previous chat content
+                    chatboxBody.innerHTML = '';
+
+                    // Filter messages for the selected conversation
+                    const filteredMessages = Object.values(allMessages).filter(message =>
+                        (message.senderId === currentUserId && message.receiverId === userId) ||
+                        (message.senderId === userId && message.receiverId === currentUserId)
+                    );
+
+                    // Populate chatbox with filtered messages
+                    filteredMessages.forEach(function (message) {
+                        var messageDiv = document.createElement('div');
+                        messageDiv.className = message.senderId === currentUserId ? 'message outgoing' : 'message incoming';
+                        messageDiv.innerHTML = `
+                    <p>${message.content}</p>
+                    <span class="timestamp">${formatTimestamp(new Date(message.timestamp))}</span>
+                `;
+                        chatboxBody.appendChild(messageDiv);
+                    });
+
+                    // Show the chatbox with a sliding effect
+                    globalChatbox.style.bottom = '0px';
+
+                    // Set a custom attribute for the active chat receiver ID
+                    globalChatbox.setAttribute('data-receiver-id', userId);
+                });
+            });
+
+            // Close chatbox functionality
+            closeChatIcon.addEventListener('click', function () {
+                globalChatbox.style.bottom = '-500px'; // Hide the chatbox with a sliding effect
+            });
+
+            // Send message functionality
+            sendMessageIcon.addEventListener('click', function () {
+                sendMessage();
+            });
+
+            chatboxInput.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                var messageContent = chatboxInput.value.trim();
+                if (messageContent === '') {
+                    return; // Do not send empty messages
+                }
+
+                var receiverId = globalChatbox.getAttribute('data-receiver-id');
+                var currentUserId = "<?php echo $_SESSION['user']['id']; ?>"; // Current logged-in user ID
+                var timestamp = new Date().toISOString();
+
+                // Create message data
+                var messageData = {
+                    senderId: currentUserId,
+                    receiverId: receiverId,
+                    content: messageContent,
+                    timestamp: timestamp
+                };
+
+                // Send message using AJAX
+                fetch('send_message.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(messageData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Append the message to the chatbox
+                            var messageDiv = document.createElement('div');
+                            messageDiv.className = 'message outgoing';
+                            messageDiv.innerHTML = `
+                    <p>${messageContent}</p>
+                    <span class="timestamp">${formatTimestamp(new Date(timestamp))}</span>
+                `;
+                            chatboxBody.appendChild(messageDiv);
+
+                            // Clear the input field
+                            chatboxInput.value = '';
+                            chatboxBody.scrollTop = chatboxBody.scrollHeight; // Scroll to the bottom
+                        } else {
+                            alert('Failed to send message: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending message:', error);
+                        alert('An error occurred while sending the message.');
+                    });
+            }
+
+            // Format timestamp to more readable format
+            function formatTimestamp(date) {
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+                return strTime;
+            }
+        });
+
     </script>
 
 

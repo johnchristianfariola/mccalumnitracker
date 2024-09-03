@@ -196,9 +196,8 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                 <span class="chatbox-name">John Doe</span> <!-- Placeholder name -->
             </div>
             <div class="chatbox-icons">
-                <i class="icon video-call">📹</i>
-                <i class="icon settings">⚙️</i>
-                <i class="icon close-chat">✖️</i>
+
+                <i class="icon close-chat fa fa-wrong"></i>
             </div>
         </div>
         <div class="chatbox-body">
@@ -337,148 +336,8 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
 
 
     </script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    var globalChatbox = document.getElementById('globalchatbox');
-    var closeChatIcon = document.querySelector('.close-chat');
-    var chatboxName = document.querySelector('.chatbox-name');
-    var chatboxBody = document.querySelector('.chatbox-body');
-    var chatboxInput = document.getElementById('chatbox-input');
-    var sendMessageIcon = document.getElementById('send-message');
-
-    let currentReceiverId = null;
-    let lastMessageTimestamp = 0;
-
-    function updateChatMessages() {
-        if (!currentReceiverId) return; // If no active chat, don't update
-
-        console.log('Fetching new messages...'); // Debug log
-        fetch(`get_messages.php?receiverId=${currentReceiverId}&lastSeen=${lastMessageTimestamp}`)
-            .then(response => response.json())
-            .then(newMessages => {
-                console.log('Received messages:', newMessages); // Debug log
-                if (newMessages.length > 0) {
-                    newMessages.forEach(function (message) {
-                        appendMessage(message);
-                    });
-                    chatboxBody.scrollTop = chatboxBody.scrollHeight;
-                    lastMessageTimestamp = new Date(newMessages[newMessages.length - 1].timestamp).getTime();
-                    console.log('Updated lastMessageTimestamp:', lastMessageTimestamp); // Debug log
-                } else {
-                    console.log('No new messages'); // Debug log
-                }
-            })
-            .catch(error => console.error('Error fetching new messages:', error));
-    }
-
-    function appendMessage(message) {
-        console.log('Appending message:', message); // Debug log
-        var messageDiv = document.createElement('div');
-        messageDiv.className = message.senderId === "<?php echo $_SESSION['user']['id']; ?>" ? 'message outgoing' : 'message incoming';
-        messageDiv.setAttribute('data-message-id', message.id);
-        messageDiv.innerHTML = `
-            <p>${message.content}</p>
-            <span class="timestamp" data-timestamp="${new Date(message.timestamp).getTime()}">${formatTimestamp(new Date(message.timestamp))}</span>
-        `;
-        chatboxBody.appendChild(messageDiv);
-    }
-
-    // Set interval to update chat messages every 5 seconds
-    setInterval(updateChatMessages, 5000);
-
-    // Event listener for message items
-    document.querySelectorAll('.message-item').forEach(function (item) {
-        item.addEventListener('click', function () {
-            var userId = this.getAttribute('data-user-id');
-            var userName = this.querySelector('.message-info strong').innerText;
-
-            chatboxName.textContent = userName;
-            chatboxBody.innerHTML = '';
-            currentReceiverId = userId;
-            lastMessageTimestamp = 0;
-
-            console.log('Opening chat with:', userId); // Debug log
-
-            globalChatbox.style.bottom = '0px';
-            globalChatbox.setAttribute('data-receiver-id', userId);
-
-            // Fetch initial messages
-            updateChatMessages();
-        });
-    });
-
-    // Close chatbox functionality
-    closeChatIcon.addEventListener('click', function () {
-        globalChatbox.style.bottom = '-500px';
-        currentReceiverId = null;
-        console.log('Closing chat'); // Debug log
-    });
-
-    // Send message functionality
-    sendMessageIcon.addEventListener('click', sendMessage);
-    chatboxInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            sendMessage();
-        }
-    });
-
-    function sendMessage() {
-        var messageContent = chatboxInput.value.trim();
-        if (messageContent === '' || !currentReceiverId) return;
-
-        console.log('Sending message to:', currentReceiverId); // Debug log
-
-        var messageData = {
-            senderId: "<?php echo $_SESSION['user']['id']; ?>",
-            receiverId: currentReceiverId,
-            content: messageContent,
-            timestamp: new Date().toISOString()
-        };
-
-        fetch('send_message.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(messageData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Message sent successfully:', data); // Debug log
-                appendMessage({
-                    id: data.messageId,
-                    senderId: messageData.senderId,
-                    content: messageData.content,
-                    timestamp: messageData.timestamp
-                });
-                chatboxInput.value = '';
-                chatboxBody.scrollTop = chatboxBody.scrollHeight;
-                lastMessageTimestamp = new Date(messageData.timestamp).getTime();
-            } else {
-                console.error('Failed to send message:', data.error); // Debug log
-                alert('Failed to send message: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error sending message:', error);
-            alert('An error occurred while sending the message.');
-        });
-    }
-
-    function formatTimestamp(date) {
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        return hours + ':' + minutes + ' ' + ampm;
-    }
-});
-</script>
-
+    
+    
 
 
 </body>
