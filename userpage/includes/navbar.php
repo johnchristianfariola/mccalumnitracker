@@ -425,7 +425,7 @@
         }
     }
 
-    function updateMessageStatus(status) {
+   /* function updateMessageStatus(status) {
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "update_message_status.php", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -449,7 +449,7 @@
         };
 
         xhr.send("message_active=" + status);
-    }
+    }*/
 
 </script>
 
@@ -533,7 +533,7 @@
                 latestMessages.forEach(message => {
                     const messageItem = document.createElement('div');
                     messageItem.className = 'message-item';
-                    messageItem.setAttribute('data-user-id', message.userId);
+                    messageItem.setAttribute('data-message-id', message.messageId); // Store message ID in a data attribute
 
                     messageItem.innerHTML = `
                 <img src="${message.profilePic}" alt="${message.name}">
@@ -545,12 +545,37 @@
 
                     messageItem.addEventListener('click', function () {
                         openChat(message.userId, message.name);
+
+                        // Send request to mark message as read
+                        markMessageAsRead(message.messageId);
                     });
 
                     messageItemsContainer.appendChild(messageItem);
                 });
             }
         }
+
+        function markMessageAsRead(messageId) {
+            fetch('mark_message_read.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `message_id=${messageId}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Message marked as read');
+                    } else {
+                        console.error('Failed to mark message as read:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error marking message as read:', error);
+                });
+        }
+
 
         function openChat(userId, userName) {
             console.log("Opening chat for user:", userId, userName);
