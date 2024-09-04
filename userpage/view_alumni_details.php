@@ -430,29 +430,32 @@ date_default_timezone_set('Asia/Manila');
         </div>
     </div>
 
-    <div id="chatbox" class="chatbox">
-        <div class="chatbox-header">
-            <div class="chatbox-profile">
+    <div id="chatbox" class="unique-chatbox">
+        <div class="unique-chatbox-header">
+            <div class="unique-chatbox-profile">
                 <span
-                    class="chatbox-name"><?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?></span>
+                    class="unique-chatbox-name"><?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?></span>
             </div>
-            <div class="chatbox-icons">
-                <i class="icon close-chat" id="closeChatbox">✖️</i>
+            <div class="unique-chatbox-icons">
+                <i class="unique-icon unique-close-chat" id="closeChatbox">✖️</i>
             </div>
         </div>
-        <div class="chatbox-body" id="chatboxBody">
+        <div class="unique-chatbox-body" id="chatboxBody">
             <?php foreach ($conversation as $message): ?>
-                <div class="message <?php echo ($message['senderId'] == $current_user_id) ? 'outgoing' : 'incoming'; ?>">
+                <div
+                    class="unique-message <?php echo ($message['senderId'] == $current_user_id) ? 'unique-outgoing' : 'unique-incoming'; ?>">
                     <p><?php echo htmlspecialchars($message['content']); ?></p>
-                    <span class="timestamp"><?php echo formatTimestamp($message['timestamp']); ?></span>
+                    <span class="unique-timestamp"><?php echo formatTimestamp($message['timestamp']); ?></span>
                 </div>
             <?php endforeach; ?>
         </div>
-        <div class="chatbox-footer">
-            <input type="text" id="messageInput" placeholder="Type a message..." class="chatbox-input">
-            <button id="sendMessage" class="icon send">Send</button>
+        <div class="unique-chatbox-footer">
+            <input type="text" id="messageInput" placeholder="Type a message..." class="unique-chatbox-input">
+            <button id="sendMessage" class="unique-icon unique-send">Send</button>
         </div>
     </div>
+
+    <?php include 'global_chatbox.php'?>
 
 
 
@@ -810,142 +813,84 @@ date_default_timezone_set('Asia/Manila');
         });
     });
 </script>
+
 <script>
-
     document.getElementById('toggleChatbox').addEventListener('click', function () {
+    document.getElementById('chatbox').classList.toggle('unique-show');
+});
 
-        document.getElementById('chatbox').classList.toggle('show');
+document.getElementById('closeChatbox').addEventListener('click', function () {
+    document.getElementById('chatbox').classList.remove('unique-show');
+});
 
-    });
+document.getElementById('sendMessage').addEventListener('click', sendMessage);
 
-    document.getElementById('closeChatbox').addEventListener('click', function () {
-
-        document.getElementById('chatbox').classList.remove('show');
-
-    });
-
-    document.getElementById('sendMessage').addEventListener('click', sendMessage);
-
-    document.getElementById('messageInput').addEventListener('keypress', function (e) {
-
-        if (e.key === 'Enter') {
-
-            sendMessage();
-
-        }
-
-    });
-
-    function sendMessage() {
-
-        var messageInput = document.getElementById('messageInput');
-
-        var message = messageInput.value.trim();
-
-        if (message) {
-
-            var timestamp = new Date().toISOString();
-
-            var newMessage = {
-
-                senderId: '<?php echo $current_user_id; ?>',
-
-                receiverId: '<?php echo $alumni_id; ?>',
-
-                content: message,
-
-                timestamp: timestamp,
-
-                status: 'sent'
-
-            };
-
-            // Send message to Firebase
-
-            fetch('send_message.php', {
-
-                method: 'POST',
-
-                headers: {
-
-                    'Content-Type': 'application/json',
-
-                },
-
-                body: JSON.stringify(newMessage)
-
-            })
-
-                .then(response => response.json())
-
-                .then(data => {
-
-                    if (data.success) {
-
-                        appendMessage(newMessage, 'outgoing');
-
-                        messageInput.value = '';
-
-                    } else {
-
-                        console.error('Failed to send message:', data.error);
-
-                    }
-
-                })
-
-                .catch(error => {
-
-                    console.error('Error:', error);
-
-                });
-
-        }
-
+document.getElementById('messageInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sendMessage();
     }
+});
 
-    function appendMessage(message, type) {
+function sendMessage() {
+    var messageInput = document.getElementById('messageInput');
+    var message = messageInput.value.trim();
 
-        var chatboxBody = document.getElementById('chatboxBody');
+    if (message) {
+        var timestamp = new Date().toISOString();
+        var newMessage = {
+            senderId: '<?php echo $current_user_id; ?>',
+            receiverId: '<?php echo $alumni_id; ?>',
+            content: message,
+            timestamp: timestamp,
+            status: 'sent'
+        };
 
-        var messageDiv = document.createElement('div');
+        // Send message to Firebase
+        fetch('send_message.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newMessage)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                appendMessage(newMessage, 'unique-outgoing');
+                messageInput.value = '';
+            } else {
+                console.error('Failed to send message:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
 
-        messageDiv.className = 'message ' + type;
-
-        messageDiv.innerHTML = `
-
+function appendMessage(message, type) {
+    var chatboxBody = document.getElementById('chatboxBody');
+    var messageDiv = document.createElement('div');
+    messageDiv.className = 'unique-message ' + type;
+    messageDiv.innerHTML = `
         <p>${escapeHtml(message.content)}</p>
-
-        <span class="timestamp">${formatTimestamp(message.timestamp)}</span>
-
+        <span class="unique-timestamp">${formatTimestamp(message.timestamp)}</span>
     `;
+    chatboxBody.appendChild(messageDiv);
+    chatboxBody.scrollTop = chatboxBody.scrollHeight;
+}
 
-        chatboxBody.appendChild(messageDiv);
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
-        chatboxBody.scrollTop = chatboxBody.scrollHeight;
-
-    }
-
-    function escapeHtml(unsafe) {
-
-        return unsafe
-
-            .replace(/&/g, "&amp;")
-
-            .replace(/</g, "&lt;")
-
-            .replace(/>/g, "&gt;")
-
-            .replace(/"/g, "&quot;")
-
-            .replace(/'/g, "&#039;");
-
-    }
-
-    function formatTimestamp(timestamp) {
-
-        return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    }
+function formatTimestamp(timestamp) {
+    return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
 
 </script>
