@@ -50,10 +50,7 @@
             <div class="background-circle">
                 <div class="message-icon" onclick="messageMenuToggle()">
                     <img src="../images/logo/messenger_black.png" alt="">
-                    <!-- Inline message count display -->
-                    <span class="message-count" style="display: inline-block; margin-left: 5px;">
-                        <?php echo $message_count > 0 ? $message_count : ''; ?>
-                    </span>
+                    <div class="message-count"></div>
                 </div>
             </div>
 
@@ -61,7 +58,7 @@
             <div class="background-circle">
                 <div class="notification-icon" onclick="notificationMenuToggle()">
                     <img src="../images/logo/bell_black.png" alt="">
-                    <span class="notification-count"><?php echo $notification_count; ?></span>
+                    <div class="notification-count" data-count="0"></div>
                 </div>
             </div>
             <div class="background-circle">
@@ -456,6 +453,7 @@
 
 </script>
 
+
 <script>
     // Function to fetch and update message count
     function updateMessageCount() {
@@ -465,16 +463,14 @@
                 const messageCountElement = document.querySelector('.message-count');
                 if (data.message_count > 0) {
                     messageCountElement.textContent = data.message_count;
-                    messageCountElement.style.display = 'inline-block'; // Ensure it's displayed inline
                 } else {
                     messageCountElement.textContent = '';
-                    messageCountElement.style.display = 'none';
                 }
             })
             .catch(error => console.error('Error fetching message count:', error));
     }
 
-    // Refresh the message count every 10 seconds
+    // Refresh the message count every 5 seconds
     setInterval(updateMessageCount, 5000);
 
     // Initial load
