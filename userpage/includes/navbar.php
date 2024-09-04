@@ -58,9 +58,13 @@
             <div class="background-circle">
                 <div class="notification-icon" onclick="notificationMenuToggle()">
                     <img src="../images/logo/bell_black.png" alt="">
-                    <div class="notification-count" data-count="0"></div>
+                    <div class="notification-count" data-count="<?php echo $new_notification_count; ?>">
+                        <?php echo $new_notification_count > 0 ? $new_notification_count : ''; ?>
+                    </div>
                 </div>
             </div>
+
+
             <div class="background-circle">
             </div>
         </ul>
@@ -375,12 +379,21 @@
     document.addEventListener("DOMContentLoaded", function () {
         var notificationIcon = document.querySelector(".notification-icon");
         var notificationMenu = document.querySelector(".notification-menu");
+        var notificationCount = document.querySelector(".notification-count");
 
         function resetNotificationCount() {
-            const countElement = document.querySelector('.notification-count');
-            if (countElement) {
-                countElement.textContent = ''; // Clear the notification count
-                countElement.style.display = 'none'; // Hide the notification count
+            if (notificationCount) {
+                notificationCount.textContent = '';
+                notificationCount.style.display = 'none';
+
+                // Update last_notification_check on the server
+                fetch('update_notification_check.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }),
+                });
             }
         }
 
@@ -388,7 +401,7 @@
             notificationIcon.addEventListener("click", function (event) {
                 event.stopPropagation();
                 notificationMenu.classList.toggle("notification-menu-height");
-                resetNotificationCount(); // Reset and hide the notification count when opening the menu
+                resetNotificationCount();
             });
 
             // Close the notification menu when clicking outside
@@ -399,18 +412,18 @@
             });
         }
 
-        function updateNotificationCount() {
-            const count = document.querySelectorAll('.notification-item').length;
-            const countElement = document.querySelector('.notification-count');
-            if (countElement) {
-                countElement.textContent = count;
-                countElement.style.display = count > 0 ? 'block' : 'none';
-            }
-        }
-
-        // Call this function after loading notifications
+        // Initial setup of notification count
         updateNotificationCount();
     });
+
+    function updateNotificationCount() {
+        const countElement = document.querySelector('.notification-count');
+        if (countElement) {
+            const count = parseInt(countElement.getAttribute('data-count'), 10);
+            countElement.textContent = count > 0 ? count : '';
+            countElement.style.display = count > 0 ? 'block' : 'none';
+        }
+    }
 
 </script>
 
@@ -424,18 +437,18 @@
         if (menu.classList.contains('message-menu-height')) {
             updateMessageStatus(1); // Mark as read
         }
-        
+
         // Stop the event from bubbling up to the document click event
         event.stopPropagation();
     }
 
     // Close the chatbox if clicking outside of it
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         var menu = document.getElementById('messageMenu');
         var icon = document.querySelector('.message-icon');
-        
+
         if (menu.classList.contains('message-menu-height') &&
-            !menu.contains(event.target) && 
+            !menu.contains(event.target) &&
             !icon.contains(event.target)) {
             menu.classList.remove('message-menu-height');
         }

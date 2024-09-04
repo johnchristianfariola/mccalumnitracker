@@ -283,6 +283,7 @@ function processForumNotifications($firebase, $current_user_id, $forum_posts, $f
     }
 }
 
+
 function processAdminContent($content, &$notifications, $type, $firebase = null, $current_user_id = null)
 {
     if (!is_array($content)) {
@@ -307,6 +308,7 @@ function processAdminContent($content, &$notifications, $type, $firebase = null,
         }
     }
 }
+
 function processEventInvitations($event, $event_id, $firebase, $current_user_id, &$notifications)
 {
     $user_data = $firebase->retrieve("alumni/" . $current_user_id);
@@ -332,11 +334,23 @@ function processEventInvitations($event, $event_id, $firebase, $current_user_id,
         ];
     }
 }
-function updateLastNotificationCheck($firebase, $user_id)
-{
-    $timestamp = date('Y-m-d H:i:s');
-    $firebase->update("alumni/" . $user_id, ["last_notification_check" => $timestamp]);
+
+
+function getNewNotificationCount($firebase, $current_user_id, $notifications) {
+    $user_data = $firebase->retrieve("alumni/" . $current_user_id);
+    $user_data = json_decode($user_data, true);
+    $last_check = isset($user_data['last_notification_check']) ? $user_data['last_notification_check'] : '1970-01-01 00:00:00';
+
+    $new_count = 0;
+    foreach ($notifications as $notification) {
+        if (strtotime($notification['date']) > strtotime($last_check)) {
+            $new_count++;
+        }
+    }
+
+    return $new_count;
 }
+$new_notification_count = getNewNotificationCount($firebase, $current_user_id, $notifications);
 
 
 // Process messages
