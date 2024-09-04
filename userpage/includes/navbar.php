@@ -51,7 +51,7 @@
                 <div class="message-icon" onclick="messageMenuToggle()">
                     <img src="../images/logo/messenger_black.png" alt="">
                     <!-- Inline message count display -->
-                    <span class="message-count" style="display: inline-block; margin-left: 5px;">
+                    <span class="message-count" style="display: inline-block;">
                         <?php echo $message_count > 0 ? $message_count : ''; ?>
                     </span>
                 </div>
