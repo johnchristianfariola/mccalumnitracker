@@ -375,6 +375,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         var notificationIcon = document.querySelector(".notification-icon");
         var notificationMenu = document.querySelector(".notification-menu");
+        var messageMenu = document.getElementById('messageMenu');
+        var messageToggle = document.getElementById('messageToggle'); // Assuming this is the trigger for the message menu
 
         function resetNotificationCount() {
             const countElement = document.querySelector('.notification-count');
@@ -399,6 +401,25 @@
             });
         }
 
+        if (messageMenu && messageToggle) {
+            messageToggle.addEventListener("click", function (event) {
+                event.stopPropagation();
+                messageMenu.classList.toggle('message-menu-height');
+
+                // Send AJAX request to update message_active status
+                if (messageMenu.classList.contains('message-menu-height')) {
+                    updateMessageStatus(1); // Mark as read
+                }
+            });
+
+            // Close the message menu when clicking outside
+            document.addEventListener("click", function (event) {
+                if (!event.target.closest('#messageToggle') && !event.target.closest('#messageMenu')) {
+                    messageMenu.classList.remove('message-menu-height');
+                }
+            });
+        }
+
         function updateNotificationCount() {
             const count = document.querySelectorAll('.notification-item').length;
             const countElement = document.querySelector('.notification-count');
@@ -411,47 +432,8 @@
         // Call this function after loading notifications
         updateNotificationCount();
     });
-
 </script>
 
-<script>
-    function messageMenuToggle() {
-        var menu = document.getElementById('messageMenu');
-        menu.classList.toggle('message-menu-height');
-
-        // Send AJAX request to update message_active status
-        if (menu.classList.contains('message-menu-height')) {
-            updateMessageStatus(1); // Mark as read
-        }
-    }
-
-   /* function updateMessageStatus(status) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "update_message_status.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        // Hide the message count after marking as read
-                        var messageCountElement = document.querySelector('.message-count');
-                        if (messageCountElement) {
-                            messageCountElement.textContent = '';
-                            messageCountElement.style.display = 'none';
-                        }
-                    }
-                } catch (e) {
-                    console.error("Error parsing JSON response:", e);
-                }
-            }
-        };
-
-        xhr.send("message_active=" + status);
-    }*/
-
-</script>
 
 
 <script>
