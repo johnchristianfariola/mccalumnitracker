@@ -7,6 +7,8 @@
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
+ 
+    <link rel="shortcut icon" type="image/x-icon" href="mages/logo/title_logo.png">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
