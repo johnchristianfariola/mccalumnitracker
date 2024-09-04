@@ -48,7 +48,7 @@
     <div class="nav-right">
         <ul>
             <div class="background-circle">
-                <div class="message-icon" onclick="messageMenuToggle()">
+                <div class="message-icon" onclick="messageMenuToggle(event)">
                     <img src="../images/logo/messenger_black.png" alt="">
                     <div class="message-count"></div>
                 </div>
@@ -375,8 +375,6 @@
     document.addEventListener("DOMContentLoaded", function () {
         var notificationIcon = document.querySelector(".notification-icon");
         var notificationMenu = document.querySelector(".notification-menu");
-        var messageMenu = document.getElementById('messageMenu');
-        var messageToggle = document.getElementById('messageToggle'); // Assuming this is the trigger for the message menu
 
         function resetNotificationCount() {
             const countElement = document.querySelector('.notification-count');
@@ -401,25 +399,6 @@
             });
         }
 
-        if (messageMenu && messageToggle) {
-            messageToggle.addEventListener("click", function (event) {
-                event.stopPropagation();
-                messageMenu.classList.toggle('message-menu-height');
-
-                // Send AJAX request to update message_active status
-                if (messageMenu.classList.contains('message-menu-height')) {
-                    updateMessageStatus(1); // Mark as read
-                }
-            });
-
-            // Close the message menu when clicking outside
-            document.addEventListener("click", function (event) {
-                if (!event.target.closest('#messageToggle') && !event.target.closest('#messageMenu')) {
-                    messageMenu.classList.remove('message-menu-height');
-                }
-            });
-        }
-
         function updateNotificationCount() {
             const count = document.querySelectorAll('.notification-item').length;
             const countElement = document.querySelector('.notification-count');
@@ -432,8 +411,36 @@
         // Call this function after loading notifications
         updateNotificationCount();
     });
+
 </script>
 
+
+<script>
+    function messageMenuToggle(event) {
+        var menu = document.getElementById('messageMenu');
+        menu.classList.toggle('message-menu-height');
+
+        // Send AJAX request to update message_active status
+        if (menu.classList.contains('message-menu-height')) {
+            updateMessageStatus(1); // Mark as read
+        }
+        
+        // Stop the event from bubbling up to the document click event
+        event.stopPropagation();
+    }
+
+    // Close the chatbox if clicking outside of it
+    document.addEventListener('click', function(event) {
+        var menu = document.getElementById('messageMenu');
+        var icon = document.querySelector('.message-icon');
+        
+        if (menu.classList.contains('message-menu-height') &&
+            !menu.contains(event.target) && 
+            !icon.contains(event.target)) {
+            menu.classList.remove('message-menu-height');
+        }
+    });
+</script>
 
 
 <script>
