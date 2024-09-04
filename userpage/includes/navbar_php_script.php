@@ -358,10 +358,29 @@ if (is_array($messages) && !empty($messages)) {
 }
 
 $message_count = countMessages($processed_messages);
-function countMessages($processed_messages) {
+function countMessages($processed_messages)
+{
     return count($processed_messages);
 }
 
+function countUnreadMessages($messages, $current_user_id)
+{
+    $unread_count = 0;
+
+    if (is_array($messages)) {
+        foreach ($messages as $message_id => $message) {
+            // Count only messages where message_active is 0 and the receiver is the current user
+            if (isset($message['message_active']) && $message['message_active'] === 0 && $message['receiverId'] === $current_user_id) {
+                $unread_count++;
+            }
+        }
+    }
+
+    return $unread_count;
+}
+
+// Use the function to get the count
+$message_count = countUnreadMessages($messages, $current_user_id);
 
 function getTimeAgo($date)
 {

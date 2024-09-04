@@ -27,6 +27,9 @@ if (!isset($message_data['senderId'], $message_data['receiverId'], $message_data
     exit;
 }
 
+// Add message_active field with value 0
+$message_data['message_active'] = 0;
+
 // Add the message to Firebase
 $new_message = $firebase->insert("messages", $message_data);
 
