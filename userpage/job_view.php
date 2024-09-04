@@ -268,7 +268,8 @@
     <script src="js/chat/moment.min.js"></script>
     <script src="js/chat/jquery.chat.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/tawk-chat.js"></script>
+       <!-- <script src="js/tawk-chat.js"></script> -->
+
     <script src="js/dialog/sweetalert2.min.js"></script>
     <script src="js/dialog/dialog-active.js"></script>
     <script>
