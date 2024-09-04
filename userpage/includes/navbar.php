@@ -475,7 +475,7 @@
     }
 
     // Refresh the message count every 10 seconds
-    setInterval(updateMessageCount, 10000);
+    setInterval(updateMessageCount, 5000);
 
     // Initial load
     updateMessageCount();
