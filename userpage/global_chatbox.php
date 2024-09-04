@@ -14,7 +14,7 @@
         <div class="chatbox-footer">
             <i class="icon attachment">📎</i>
             <input type="text" placeholder="Type a message..." class="chatbox-input" id="chatbox-input">
-            <i class="icon send" id="send-message">✉️</i>
+            <i class="fa fa-send" id="send-message" style="cusror:pointer"></i>
         </div>
 
     </div>

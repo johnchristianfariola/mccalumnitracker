@@ -58,9 +58,7 @@
             <div class="background-circle">
                 <div class="notification-icon" onclick="notificationMenuToggle()">
                     <img src="../images/logo/bell_black.png" alt="">
-                    <div class="notification-count" data-count="<?php echo $new_notification_count; ?>">
-                        <?php echo $new_notification_count > 0 ? $new_notification_count : ''; ?>
-                    </div>
+                    <div class="notification-count" style="display: none;">0</div>
                 </div>
             </div>
 
@@ -376,56 +374,74 @@
     });
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var notificationIcon = document.querySelector(".notification-icon");
-        var notificationMenu = document.querySelector(".notification-menu");
-        var notificationCount = document.querySelector(".notification-count");
+   document.addEventListener("DOMContentLoaded", function () {
+    var notificationIcon = document.querySelector(".notification-icon");
+    var notificationMenu = document.querySelector(".notification-menu");
+    var notificationCount = document.querySelector(".notification-count");
 
-        function resetNotificationCount() {
-            if (notificationCount) {
-                notificationCount.textContent = '';
-                notificationCount.style.display = 'none';
-
-                // Update last_notification_check on the server
-                fetch('update_notification_check.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }),
-                });
-            }
-        }
-
-        if (notificationIcon && notificationMenu) {
-            notificationIcon.addEventListener("click", function (event) {
-                event.stopPropagation();
-                notificationMenu.classList.toggle("notification-menu-height");
-                resetNotificationCount();
+    function resetNotificationCount() {
+        if (notificationCount) {
+            notificationCount.textContent = '0';
+            notificationCount.style.display = 'none';
+            
+            // Update last_notification_check on the server
+            fetch('update_notification_check.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({user_id: '<?php echo $current_user_id; ?>'}),
             });
-
-            // Close the notification menu when clicking outside
-            document.addEventListener("click", function (event) {
-                if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) {
-                    notificationMenu.classList.remove("notification-menu-height");
-                }
-            });
-        }
-
-        // Initial setup of notification count
-        updateNotificationCount();
-    });
-
-    function updateNotificationCount() {
-        const countElement = document.querySelector('.notification-count');
-        if (countElement) {
-            const count = parseInt(countElement.getAttribute('data-count'), 10);
-            countElement.textContent = count > 0 ? count : '';
-            countElement.style.display = count > 0 ? 'block' : 'none';
         }
     }
 
+    if (notificationIcon && notificationMenu) {
+        notificationIcon.addEventListener("click", function (event) {
+            event.stopPropagation();
+            notificationMenu.classList.toggle("notification-menu-height");
+            resetNotificationCount();
+        });
+
+        // Close the notification menu when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) {
+                notificationMenu.classList.remove("notification-menu-height");
+            }
+        });
+    }
+
+    // Initial check for notifications
+    checkNewNotifications();
+
+    // Set interval to check for new notifications every 5 seconds
+    setInterval(checkNewNotifications, 5000);
+});
+
+function updateNotificationCount(count) {
+    const countElement = document.querySelector('.notification-count');
+    if (countElement) {
+        countElement.textContent = count;
+        countElement.style.display = count > 0 ? 'inline-block' : 'none';
+    }
+}
+
+function checkNewNotifications() {
+    fetch('check_new_notifications.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({user_id: '<?php echo $current_user_id; ?>'}),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('New notifications count:', data.new_count); // Debug log
+        updateNotificationCount(data.new_count);
+    })
+    .catch(error => console.error('Error:', error));
+}
 </script>
+
 
 
 <script>
