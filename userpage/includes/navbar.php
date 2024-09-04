@@ -459,7 +459,7 @@
 <script>
     // Function to fetch and update message count
     function updateMessageCount() {
-        fetch('fetch_message_count.php')
+        fetch('get_message_count.php')
             .then(response => response.json())
             .then(data => {
                 const messageCountElement = document.querySelector('.message-count');
