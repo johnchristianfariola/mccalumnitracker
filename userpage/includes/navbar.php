@@ -116,10 +116,7 @@
             <div class="background-circle">
                 <div class="notification-icon" onclick="notificationMenuToggle()">
                     <img src="../images/logo/bell_black.png" alt="">
-                    <div class="notification-count" data-count="<?php echo $new_notification_count; ?>"
-                        style="display: <?php echo $new_notification_count > 0 ? 'inline-block' : 'none'; ?>">
-                        <?php echo $new_notification_count > 0 ? $new_notification_count : ''; ?>
-                    </div>
+                    <div class="notification-count" data-count="<?php echo $new_notification_count; ?>"></div>
                 </div>
             </div>
 
@@ -778,9 +775,8 @@
         function resetNotificationCount() {
             if (notificationCount) {
                 notificationCount.textContent = '';
-                notificationCount.style.display = 'none';
+                notificationCount.classList.remove('show');
 
-                // Update last_notification_check on the server
                 fetch('update_notification_check.php', {
                     method: 'POST',
                     headers: {
@@ -798,7 +794,6 @@
                 resetNotificationCount();
             });
 
-            // Close the notification menu when clicking outside
             document.addEventListener("click", function (event) {
                 if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) {
                     notificationMenu.classList.remove("notification-menu-height");
@@ -806,10 +801,7 @@
             });
         }
 
-        // Initial check for notifications
         checkNewNotifications();
-
-        // Set interval to check for new notifications every 5 seconds
         setInterval(checkNewNotifications, 5000);
     });
 
@@ -818,10 +810,10 @@
         if (countElement) {
             if (count > 0) {
                 countElement.textContent = count;
-                countElement.style.display = 'inline-block';
+                countElement.classList.add('show');
             } else {
                 countElement.textContent = '';
-                countElement.style.display = 'none';
+                countElement.classList.remove('show');
             }
         }
     }
@@ -836,14 +828,11 @@
         })
             .then(response => response.json())
             .then(data => {
-                console.log('New notifications count:', data.new_count); // Debug log
+                console.log('New notifications count:', data.new_count);
                 updateNotificationCount(data.new_count);
             })
             .catch(error => console.error('Error:', error));
     }
-
-
-
 
 </script>
 
