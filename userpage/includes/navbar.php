@@ -58,7 +58,9 @@
             <div class="background-circle">
                 <div class="notification-icon" onclick="notificationMenuToggle()">
                     <img src="../images/logo/bell_black.png" alt="">
-                    <div class="notification-count" style="display: none;">0</div>
+                    <div class="notification-count" data-count="<?php echo $new_notification_count; ?>">
+                        <?php echo $new_notification_count > 0 ? $new_notification_count : ''; ?>
+                    </div>
                 </div>
             </div>
 
@@ -340,12 +342,12 @@
             const div = document.createElement("div");
             div.className = "autocomplete-item";
             div.innerHTML = `
-            <img src="${alumni.profile_url}" alt="${alumni.name}" >
-            <div class="autocomplete-item-info">
-                <span class="autocomplete-item-name">${alumni.name}</span>
-                <span class="autocomplete-item-details">Alumni</span>
-            </div>
-        `;
+                    <img src="${alumni.profile_url}" alt="${alumni.name}" >
+                    <div class="autocomplete-item-info">
+                        <span class="autocomplete-item-name">${alumni.name}</span>
+                        <span class="autocomplete-item-details">Alumni</span>
+                    </div>
+                `;
             div.addEventListener("click", function () {
                 input.value = alumni.name;
                 autocompleteList.innerHTML = "";
@@ -384,14 +386,14 @@
         if (notificationCount) {
             notificationCount.textContent = '0';
             notificationCount.style.display = 'none';
-            
+
             // Update last_notification_check on the server
             fetch('update_notification_check.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({user_id: '<?php echo $current_user_id; ?>'}),
+                body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }),
             });
         }
     }
@@ -413,19 +415,17 @@
 
     // Initial check for notifications
     checkNewNotifications();
-    updateNotificationMenu();  // Fetch notifications on page load
 
-    // Set interval to check for new notifications and refresh the menu every 5 seconds
-    setInterval(function() {
+    // Set interval to check for new notifications every 5 seconds
+    setInterval(function () {
         checkNewNotifications();
-        updateNotificationMenu();
     }, 5000);
 });
 
 function updateNotificationCount(count) {
     const countElement = document.querySelector('.notification-count');
     if (countElement) {
-        countElement.textContent = count;
+        countElement.textContent = count > 0 ? count : '';
         countElement.style.display = count > 0 ? 'inline-block' : 'none';
     }
 }
@@ -437,17 +437,15 @@ function checkNewNotifications() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({user_id: '<?php echo $current_user_id; ?>'}),
+        body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }),
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('New notifications count:', data.new_count); // Debug log
-        updateNotificationCount(data.new_count);
-    })
-    .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(data => {
+            console.log('New notifications count:', data.new_count); // Debug log
+            updateNotificationCount(data.new_count);
+        })
+        .catch(error => console.error('Error:', error));
 }
-
-
 
 </script>
 
@@ -529,229 +527,228 @@ function checkNewNotifications() {
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var globalChatbox = document.getElementById('globalchatbox');
-        var chatboxBody = document.querySelector('.chatbox-body');
-        var chatboxInput = document.getElementById('chatbox-input');
-        var sendMessageIcon = document.getElementById('send-message');
-        var messageItemsContainer = document.getElementById('messageItemsContainer');
-        var currentOpenChatUserId = null; // Track the currently open chat user ID
-        let allMessages = []; // Store all messages for chatbox
-        let latestMessages = []; // Store only the latest messages for the message menu
+    var globalChatbox = document.getElementById('globalchatbox');
+    var chatboxBody = document.querySelector('.chatbox-body');
+    var chatboxInput = document.getElementById('chatbox-input');
+    var sendMessageIcon = document.getElementById('send-message');
+    var messageItemsContainer = document.getElementById('messageItemsContainer');
+    var currentOpenChatUserId = null; // Track the currently open chat user ID
+    let allMessages = []; // Store all messages for chatbox
+    let latestMessages = []; // Store only the latest messages for the message menu
 
-        function fetchMessages() {
-            fetch('fetch_messages.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Error:', data.error);
-                        return;
-                    }
+    function fetchMessages() {
+        fetch('fetch_messages.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    return;
+                }
 
-                    // Store messages separately
-                    allMessages = data.messages; // All conversation messages for the chatbox
-                    latestMessages = data.latest_messages; // Only the latest message from each sender for the message menu
+                // Store messages separately
+                allMessages = data.messages; // All conversation messages for the chatbox
+                latestMessages = data.latest_messages; // Only the latest message from each sender for the message menu
 
-                    // Update the message menu
-                    updateMessageMenu(latestMessages);
+                // Update the message menu
+                updateMessageMenu(latestMessages);
 
-                    // Update the chatbox if a chat is open
-                    if (currentOpenChatUserId !== null) {
-                        refreshOpenChat(); // Refresh chatbox for the currently open chat
-                    }
-                })
-                .catch(error => console.error('Error fetching messages:', error));
-        }
-
-        function updateMessageMenu(latestMessages) {
-            messageItemsContainer.innerHTML = ''; // Clear existing messages in the menu
-
-            if (latestMessages.length === 0) {
-                messageItemsContainer.innerHTML = '<div class="no-messages">No new messages.</div>';
-            } else {
-                latestMessages.forEach(message => {
-                    const messageItem = document.createElement('div');
-                    messageItem.className = 'message-item';
-                    messageItem.setAttribute('data-message-id', message.messageId); // Store message ID in a data attribute
-
-                    messageItem.innerHTML = `
-                <img src="${message.profilePic}" alt="${message.name}">
-                <div class="message-info">
-                    <p><strong>${message.name}:</strong> ${message.content}</p>
-                    <span class="message-time">${message.timeAgo}</span>
-                </div>
-            `;
-
-                    messageItem.addEventListener('click', function () {
-                        openChat(message.userId, message.name);
-
-                        // Send request to mark message as read
-                        markMessageAsRead(message.messageId);
-                    });
-
-                    messageItemsContainer.appendChild(messageItem);
-                });
-            }
-        }
-
-        function markMessageAsRead(messageId) {
-            fetch('mark_message_read.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `message_id=${messageId}`
+                // Update the chatbox if a chat is open
+                if (currentOpenChatUserId !== null) {
+                    refreshOpenChat(); // Refresh chatbox for the currently open chat
+                }
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log('Message marked as read');
-                    } else {
-                        console.error('Failed to mark message as read:', data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error marking message as read:', error);
-                });
-        }
+            .catch(error => console.error('Error fetching messages:', error));
+    }
 
+    function updateMessageMenu(latestMessages) {
+        messageItemsContainer.innerHTML = ''; // Clear existing messages in the menu
 
-        function openChat(userId, userName) {
-            console.log("Opening chat for user:", userId, userName);
-            const currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
+        if (latestMessages.length === 0) {
+            messageItemsContainer.innerHTML = '<div class="no-messages">No new messages.</div>';
+        } else {
+            latestMessages.forEach(message => {
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                messageItem.setAttribute('data-message-id', message.messageId); // Store message ID in a data attribute
 
-            // Track the currently open chat user ID
-            currentOpenChatUserId = userId;
-
-            // Update chatbox header with user's name
-            document.querySelector('.chatbox-name').textContent = userName;
-
-            // Clear previous chat content
-            chatboxBody.innerHTML = '';
-
-            // Populate chatbox with messages for this conversation
-            refreshOpenChat();
-
-            // Show the chatbox with a sliding effect
-            globalChatbox.style.bottom = '0px';
-
-            // Set a custom attribute for the active chat receiver ID
-            globalChatbox.setAttribute('data-receiver-id', userId);
-        }
-
-        function refreshOpenChat() {
-            const currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
-
-            if (currentOpenChatUserId === null) return; // No chat is open
-
-            // Filter messages for the selected conversation
-            const filteredMessages = allMessages.filter(message =>
-                (message.senderId === currentUserId && message.receiverId === currentOpenChatUserId) ||
-                (message.senderId === currentOpenChatUserId && message.receiverId === currentUserId)
-            );
-
-            // Clear chatbox body
-            chatboxBody.innerHTML = '';
-
-            // Populate chatbox with filtered messages
-            filteredMessages.forEach(function (message) {
-                var messageDiv = document.createElement('div');
-                messageDiv.className = message.senderId === currentUserId ? 'message outgoing' : 'message incoming';
-                messageDiv.innerHTML = `
-            <p>${message.content}</p>
-            <span class="timestamp">${message.timeAgo}</span>
-        `;
-                chatboxBody.appendChild(messageDiv);
-            });
-
-            // Scroll to the bottom of the chatbox to show the latest message
-            chatboxBody.scrollTop = chatboxBody.scrollHeight;
-        }
-
-        // Fetch messages immediately when the page loads
-        fetchMessages();
-
-        // Then fetch messages every 5 seconds
-        setInterval(fetchMessages, 5000);
-
-        // Close chatbox functionality
-        document.querySelector('.close-chat').addEventListener('click', function () {
-            globalChatbox.style.bottom = '-500px'; // Hide the chatbox with a sliding effect
-            currentOpenChatUserId = null; // Reset the current open chat user ID
-        });
-
-        // Send message functionality
-        sendMessageIcon.addEventListener('click', sendMessage);
-
-        chatboxInput.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        function sendMessage() {
-            var messageContent = chatboxInput.value.trim();
-            if (messageContent === '') {
-                return; // Do not send empty messages
-            }
-
-            var receiverId = globalChatbox.getAttribute('data-receiver-id');
-            var currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
-            var timestamp = new Date().toISOString();
-
-            // Create message data
-            var messageData = {
-                senderId: currentUserId,
-                receiverId: receiverId,
-                content: messageContent,
-                timestamp: timestamp
-            };
-
-            // Send message using AJAX
-            fetch('send_message.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(messageData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Append the message to the chatbox
-                        var messageDiv = document.createElement('div');
-                        messageDiv.className = 'message outgoing';
-                        messageDiv.innerHTML = `
-                    <p>${messageContent}</p>
-                    <span class="timestamp">${formatTimestamp(new Date(timestamp))}</span>
+                messageItem.innerHTML = `
+                    <img src="${message.profilePic}" alt="${message.name}">
+                    <div class="message-info">
+                        <p><strong>${message.name}:</strong> ${message.content}</p>
+                        <span class="message-time">${message.timeAgo}</span>
+                    </div>
                 `;
-                        chatboxBody.appendChild(messageDiv);
 
-                        // Clear the input field
-                        chatboxInput.value = '';
-                        chatboxBody.scrollTop = chatboxBody.scrollHeight; // Scroll to the bottom
+                messageItem.addEventListener('click', function () {
+                    openChat(message.userId, message.name);
 
-                        // Fetch messages to update the list
-                        fetchMessages();
-                    } else {
-                        alert('Failed to send message: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error sending message:', error);
-                    alert('An error occurred while sending the message.');
+                    // Send request to mark all messages as read for this conversation
+                    markMessageAsRead(message.userId); // Send receiverId
                 });
-        }
 
-        // Format timestamp to more readable format
-        function formatTimestamp(date) {
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            var strTime = hours + ':' + minutes + ' ' + ampm;
-            return strTime;
+                messageItemsContainer.appendChild(messageItem);
+            });
+        }
+    }
+
+    function markMessageAsRead(receiverId) {
+        fetch('mark_message_read.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `receiver_id=${receiverId}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                } else {
+                    console.error('Failed to mark messages as read:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error marking messages as read:', error);
+            });
+    }
+
+    function openChat(userId, userName) {
+        console.log("Opening chat for user:", userId, userName);
+        const currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
+
+        // Track the currently open chat user ID
+        currentOpenChatUserId = userId;
+
+        // Update chatbox header with user's name
+        document.querySelector('.chatbox-name').textContent = userName;
+
+        // Clear previous chat content
+        chatboxBody.innerHTML = '';
+
+        // Populate chatbox with messages for this conversation
+        refreshOpenChat();
+
+        // Show the chatbox with a sliding effect
+        globalChatbox.style.bottom = '0px';
+
+        // Set a custom attribute for the active chat receiver ID
+        globalChatbox.setAttribute('data-receiver-id', userId);
+    }
+
+    function refreshOpenChat() {
+        const currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
+
+        if (currentOpenChatUserId === null) return; // No chat is open
+
+        // Filter messages for the selected conversation
+        const filteredMessages = allMessages.filter(message =>
+            (message.senderId === currentUserId && message.receiverId === currentOpenChatUserId) ||
+            (message.senderId === currentOpenChatUserId && message.receiverId === currentUserId)
+        );
+
+        // Clear chatbox body
+        chatboxBody.innerHTML = '';
+
+        // Populate chatbox with filtered messages
+        filteredMessages.forEach(function (message) {
+            var messageDiv = document.createElement('div');
+            messageDiv.className = message.senderId === currentUserId ? 'message outgoing' : 'message incoming';
+            messageDiv.innerHTML = `
+                <p>${message.content}</p>
+                <span class="timestamp">${message.timeAgo}</span>
+            `;
+            chatboxBody.appendChild(messageDiv);
+        });
+
+        // Scroll to the bottom of the chatbox to show the latest message
+        chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    }
+
+    // Fetch messages immediately when the page loads
+    fetchMessages();
+
+    // Then fetch messages every 5 seconds
+    setInterval(fetchMessages, 5000);
+
+    // Close chatbox functionality
+    document.querySelector('.close-chat').addEventListener('click', function () {
+        globalChatbox.style.bottom = '-500px'; // Hide the chatbox with a sliding effect
+        currentOpenChatUserId = null; // Reset the current open chat user ID
+    });
+
+    // Send message functionality
+    sendMessageIcon.addEventListener('click', sendMessage);
+
+    chatboxInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            sendMessage();
         }
     });
+
+    function sendMessage() {
+        var messageContent = chatboxInput.value.trim();
+        if (messageContent === '') {
+            return; // Do not send empty messages
+        }
+
+        var receiverId = globalChatbox.getAttribute('data-receiver-id');
+        var currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
+        var timestamp = new Date().toISOString();
+
+        // Create message data
+        var messageData = {
+            senderId: currentUserId,
+            receiverId: receiverId,
+            content: messageContent,
+            timestamp: timestamp
+        };
+
+        // Send message using AJAX
+        fetch('send_message.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messageData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Append the message to the chatbox
+                    var messageDiv = document.createElement('div');
+                    messageDiv.className = 'message outgoing';
+                    messageDiv.innerHTML = `
+                        <p>${messageContent}</p>
+                        <span class="timestamp">${formatTimestamp(new Date(timestamp))}</span>
+                    `;
+                    chatboxBody.appendChild(messageDiv);
+
+                    // Clear the input field
+                    chatboxInput.value = '';
+                    chatboxBody.scrollTop = chatboxBody.scrollHeight; // Scroll to the bottom
+
+                    // Fetch messages to update the list
+                    fetchMessages();
+                } else {
+                    alert('Failed to send message: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+                alert('An error occurred while sending the message.');
+            });
+    }
+
+    // Format timestamp to more readable format
+    function formatTimestamp(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    }
+});
 </script>
