@@ -13,7 +13,7 @@
         </div>
         <div class="chatbox-footer">
             <i class="icon attachment">📎</i>
-            <input type="text" placeholder="Type a message..." class="chatbox-input" id="chatbox-input">
+            <input type="text" placeholder="Type a message..." class="chatbox-input" id="chatbox-input" autocomplete="off">
             <i class="fa fa-send" id="send-message" style="cusror:pointer"></i>
         </div>
 

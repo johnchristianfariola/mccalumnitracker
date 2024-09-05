@@ -6,7 +6,7 @@
         <img src="../images/logo/alumni_logo.png" class="logo">
         <div class="search-box">
             <img src="../images/search.png">
-            <input type="text" id="myInput" placeholder="Search">
+            <input type="text" id="myInput" placeholder="Search" autocomplete="off">
             <div id="autocomplete-list" class="autocomplete-items"></div>
         </div>
     </div>
@@ -373,8 +373,9 @@
         }
     });
 </script>
+
 <script>
-   document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
     var notificationIcon = document.querySelector(".notification-icon");
     var notificationMenu = document.querySelector(".notification-menu");
     var notificationCount = document.querySelector(".notification-count");
@@ -412,9 +413,13 @@
 
     // Initial check for notifications
     checkNewNotifications();
+    updateNotificationMenu();  // Fetch notifications on page load
 
-    // Set interval to check for new notifications every 5 seconds
-    setInterval(checkNewNotifications, 5000);
+    // Set interval to check for new notifications and refresh the menu every 5 seconds
+    setInterval(function() {
+        checkNewNotifications();
+        updateNotificationMenu();
+    }, 5000);
 });
 
 function updateNotificationCount(count) {
@@ -425,6 +430,7 @@ function updateNotificationCount(count) {
     }
 }
 
+// Function to check for new notifications and update the count
 function checkNewNotifications() {
     fetch('check_new_notifications.php', {
         method: 'POST',
@@ -440,6 +446,23 @@ function checkNewNotifications() {
     })
     .catch(error => console.error('Error:', error));
 }
+
+// Function to refresh the notification menu content
+function updateNotificationMenu() {
+    fetch('get_notifications.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({user_id: '<?php echo $current_user_id; ?>'}),
+    })
+    .then(response => response.text())
+    .then(data => {
+        document.querySelector('.notification-menu-inner').innerHTML = data;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 </script>
 
 
