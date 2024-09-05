@@ -23,13 +23,13 @@
                 <a href="about.php" class="nav-item nav-link ' . ($current_page == 'about.php' ? 'active' : '') . '">About</a>
                 <a href="course.php" class="nav-item nav-link ' . ($current_page == 'course.php' ? 'active' : '') . '">Courses</a>
                 
-                <div class="nav-item dropdown">
+              <!--  <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle ' . (($current_page == '404.php') ? 'active' : '') . '" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="404.php" class="dropdown-item ' . ($current_page == '404.php' ? 'active' : '') . '">In Memoriam</a>
                         <a href="404.php" class="dropdown-item ' . ($current_page == '404.php' ? 'active' : '') . '">Testimonial</a>
                     </div>
-                </div>
+                </div>-->
                 
                 <a href="contact.php" class="nav-item nav-link ' . ($current_page == 'contact.php' ? 'active' : '') . '">Contact</a>
             </div>

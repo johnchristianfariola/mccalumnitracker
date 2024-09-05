@@ -420,7 +420,7 @@ $data = array_slice($data, 0, 5);
     <!-- Event End -->
 
 
-    <!-- Team Start -->
+    <!-- Team Start
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -511,10 +511,10 @@ $data = array_slice($data, 0, 5);
             </div>
         </div>
     </div>
-    <!-- Team End -->
+        Team End -->
 
 
-    <!-- Testimonial Start -->
+    <!-- Testimonial Start
     <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container">
             <div class="text-center">
@@ -577,8 +577,7 @@ $data = array_slice($data, 0, 5);
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Testimonial End -->
+         Testimonial End  -->
 
 
     <!-- Footer Start -->
