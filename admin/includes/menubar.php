@@ -82,6 +82,24 @@
 
         </ul>
       </li>
+
+      <li class="treeview">
+        <a href="#">
+        <i class="fa fa-envelope"></i>
+          <span>MailBox</span>
+          <span class="pull-right-container">
+          
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+        <li><a href="inbox.php"><i class="fa fa-angle-right"></i> Inbox</a></li>
+          <li><a href=""><i class="fa fa-angle-right"></i> Compose</a></li>
+
+        </ul>
+
+  
+      </li>
     </ul>
   </section>
   <!-- /.sidebar -->

@@ -8,37 +8,34 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
 
         <?php
+        $current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
+
         if (isset($_SESSION['alumni'])) {
             echo '
-    <div class="navbar-nav ms-auto p-4 p-lg-0">
-    
-        <a href="../logout.php" class="nav-item nav-link">LOGOUT</a>
-    </div>
-    ';
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="../logout.php" class="nav-item nav-link">LOGOUT</a>
+            </div>
+            ';
         } else {
             echo '
-    <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="index.php" class="nav-item nav-link active">Home</a>
-            <a href="404.php" class="nav-item nav-link">About</a>
-            <a href="404.php" class="nav-item nav-link">Courses</a>
-           
-
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                <div class="dropdown-menu fade-down m-0">
-                    <a href="404.php" class="dropdown-item">In Memoriam</a>
-                    <a href="404.php" class="dropdown-item">Testimonial</a>
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.php" class="nav-item nav-link ' . ($current_page == 'index.php' ? 'active' : '') . '">Home</a>
+                <a href="about.php" class="nav-item nav-link ' . ($current_page == 'about.php' ? 'active' : '') . '">About</a>
+                <a href="course.php" class="nav-item nav-link ' . ($current_page == 'course.php' ? 'active' : '') . '">Courses</a>
+                
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle ' . (($current_page == '404.php') ? 'active' : '') . '" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="404.php" class="dropdown-item ' . ($current_page == '404.php' ? 'active' : '') . '">In Memoriam</a>
+                        <a href="404.php" class="dropdown-item ' . ($current_page == '404.php' ? 'active' : '') . '">Testimonial</a>
+                    </div>
                 </div>
+                
+                <a href="contact.php" class="nav-item nav-link ' . ($current_page == 'contact.php' ? 'active' : '') . '">Contact</a>
             </div>
-
-            <a href="404.php" class="nav-item nav-link">Gallery</a>
-            <a href="404.php" class="nav-item nav-link">Contact</a>
-          
-    ';
+            ';
         }
         ?>
-
-    </div>
 
     </div>
 </nav>
