@@ -447,21 +447,7 @@ function checkNewNotifications() {
     .catch(error => console.error('Error:', error));
 }
 
-// Function to refresh the notification menu content
-function updateNotificationMenu() {
-    fetch('get_notifications.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({user_id: '<?php echo $current_user_id; ?>'}),
-    })
-    .then(response => response.text())
-    .then(data => {
-        document.querySelector('.notification-menu-inner').innerHTML = data;
-    })
-    .catch(error => console.error('Error:', error));
-}
+
 
 </script>
 
