@@ -1,706 +1,699 @@
-<?php require_once 'navbar_php_script.php'; ?> 
+<?php require_once 'navbar_php_script.php'; ?>
 
- 
- 
- 
 
-<nav> 
 
-    <div class="nav-left"> 
 
-        <img src="../images/logo/alumni_logo.png" class="logo"> 
 
-        <div class="search-box"> 
+<nav>
 
-            <img src="../images/search.png"> 
+    <div class="nav-left">
 
-            <input type="text" id="myInput" placeholder="Search" autocomplete="off"> 
+        <img src="../images/logo/alumni_logo.png" class="logo">
 
-            <div id="autocomplete-list" class="autocomplete-items"></div> 
+        <div class="search-box">
 
-        </div> 
+            <img src="../images/search.png">
 
-    </div> 
+            <input type="text" id="myInput" placeholder="Search" autocomplete="off">
 
- 
- 
+            <div id="autocomplete-list" class="autocomplete-items"></div>
 
-    <div class="nav-center"> 
+        </div>
 
-        <ul> 
+    </div>
 
-            <a href="index.php" class="<?php echo isActive('index.php') ? 'line-bottom-visited' : ''; ?>"> 
 
-                <li class="line1 <?php echo isActive('index.php') ? 'border-line-bottom' : ''; ?>"> 
 
-                    <img src="../images/logo/home1.png" alt=""> 
 
-                </li> 
+    <div class="nav-center">
 
-            </a> 
+        <ul>
 
-            <a href="view_news.php" class="<?php echo isActive('view_news') ? 'line-bottom-visited' : ''; ?>"> 
+            <a href="index.php" class="<?php echo isActive('index.php') ? 'line-bottom-visited' : ''; ?>">
 
-                <li class="line1 <?php echo isActive('view_news') ? 'border-line-bottom' : ''; ?>"> 
+                <li class="line1 <?php echo isActive('index.php') ? 'border-line-bottom' : ''; ?>">
 
-                    <img src="../images/logo/newspaper.png" alt=""> 
+                    <img src="../images/logo/home1.png" alt="">
 
-                </li> 
+                </li>
 
-            </a> 
+            </a>
 
-            <a href="event_view.php" class="<?php echo isActive('event') ? 'line-bottom-visited' : ''; ?>"> 
+            <a href="view_news.php" class="<?php echo isActive('view_news') ? 'line-bottom-visited' : ''; ?>">
 
-                <li class="line1 <?php echo isActive('event') ? 'border-line-bottom' : ''; ?>"> 
+                <li class="line1 <?php echo isActive('view_news') ? 'border-line-bottom' : ''; ?>">
 
-                    <img src="../images/logo/calendar.png" alt=""> 
+                    <img src="../images/logo/newspaper.png" alt="">
 
-                </li> 
+                </li>
 
-            </a> 
+            </a>
 
-            <a href="job_view.php" class="<?php echo isActive('job') ? 'line-bottom-visited' : ''; ?>"> 
+            <a href="event_view.php" class="<?php echo isActive('event') ? 'line-bottom-visited' : ''; ?>">
 
-                <li class="line1 <?php echo isActive('job') ? 'border-line-bottom' : ''; ?>"> 
+                <li class="line1 <?php echo isActive('event') ? 'border-line-bottom' : ''; ?>">
 
-                    <img src="../images/logo/suitcase.png" alt=""> 
+                    <img src="../images/logo/calendar.png" alt="">
 
-                </li> 
+                </li>
 
-            </a> 
+            </a>
 
-            <a href="forum.php" class="<?php echo isActive('forum') ? 'line-bottom-visited' : ''; ?>"> 
+            <a href="job_view.php" class="<?php echo isActive('job') ? 'line-bottom-visited' : ''; ?>">
 
-                <li class="line1 <?php echo isActive('forum') ? 'border-line-bottom' : ''; ?>"> 
+                <li class="line1 <?php echo isActive('job') ? 'border-line-bottom' : ''; ?>">
 
-                    <img src="../images/logo/chat.png" alt=""> 
+                    <img src="../images/logo/suitcase.png" alt="">
 
-                </li> 
+                </li>
 
-            </a> 
+            </a>
 
-            <a href="view_gallery.php" class="<?php echo isActive('gallery') ? 'line-bottom-visited' : ''; ?>"> 
+            <a href="forum.php" class="<?php echo isActive('forum') ? 'line-bottom-visited' : ''; ?>">
 
-                <li class="line1 <?php echo isActive('gallery') ? 'border-line-bottom' : ''; ?>"> 
+                <li class="line1 <?php echo isActive('forum') ? 'border-line-bottom' : ''; ?>">
 
-                    <img src="../images/logo/photo-gallery.png" alt=""> 
+                    <img src="../images/logo/chat.png" alt="">
 
-                </li> 
+                </li>
 
-            </a> 
+            </a>
 
-        </ul> 
+            <a href="view_gallery.php" class="<?php echo isActive('gallery') ? 'line-bottom-visited' : ''; ?>">
 
-    </div> 
+                <li class="line1 <?php echo isActive('gallery') ? 'border-line-bottom' : ''; ?>">
 
-    <div class="nav-right"> 
+                    <img src="../images/logo/photo-gallery.png" alt="">
 
-        <ul> 
+                </li>
 
-            <div class="background-circle"> 
+            </a>
 
-                <div class="message-icon" onclick="messageMenuToggle(event)"> 
+        </ul>
 
-                    <img src="../images/logo/messenger_black.png" alt=""> 
+    </div>
 
-                    <div class="message-count"></div> 
+    <div class="nav-right">
 
-                </div> 
+        <ul>
 
-            </div> 
+            <div class="background-circle">
 
- 
- 
- 
+                <div class="message-icon" onclick="messageMenuToggle(event)">
 
-            <div class="background-circle"> 
+                    <img src="../images/logo/messenger_black.png" alt="">
 
-                <div class="notification-icon" onclick="notificationMenuToggle()"> 
+                    <div class="message-count"></div>
 
-                    <img src="../images/logo/bell_black.png" alt=""> 
+                </div>
 
-                    <div class="notification-count" data-count="<?php echo $new_notification_count; ?>"> 
+            </div>
 
-                        <?php echo $new_notification_count > 0 ? $new_notification_count : ''; ?> 
 
-                    </div> 
 
-                </div> 
 
-            </div> 
 
- 
- 
- 
+            <div class="background-circle">
+                <div class="notification-icon" onclick="notificationMenuToggle()">
+                    <img src="../images/logo/bell_black.png" alt="">
+                    <div class="notification-count" data-count="<?php echo $new_notification_count; ?>"
+                        style="display: <?php echo $new_notification_count > 0 ? 'inline-block' : 'none'; ?>">
+                        <?php echo $new_notification_count > 0 ? $new_notification_count : ''; ?>
+                    </div>
+                </div>
+            </div>
 
-            <div class="background-circle"> 
 
-            </div> 
 
-        </ul> 
 
- 
- 
 
-        <div class="nav-user-icon online" onclick="settingsMenuToggle()"> 
+            <div class="background-circle">
 
-            <?php 
+            </div>
 
-            if (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) { 
+        </ul>
 
-                $user_id = $_SESSION['user']['id']; 
 
-                $user_data = $alumni_data[$user_id]; 
 
-                $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : '../images/profile.jpg'; 
 
-                echo '<img src="' . $profile_url . '" alt="Profile Picture" onerror="if (this.src != \'uploads/profile.jpg\') this.src = \'uploads/profile.jpg\';">'; 
+        <div class="nav-user-icon online" onclick="settingsMenuToggle()">
 
-            } 
+            <?php
 
-            ?> 
+            if (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) {
 
-        </div> 
+                $user_id = $_SESSION['user']['id'];
 
-    </div> 
+                $user_data = $alumni_data[$user_id];
 
- 
- 
+                $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : '../images/profile.jpg';
 
-    <!------------------SETTINGS MENU------------------> 
+                echo '<img src="' . $profile_url . '" alt="Profile Picture" onerror="if (this.src != \'uploads/profile.jpg\') this.src = \'uploads/profile.jpg\';">';
 
-    <div class="settings-menu"> 
+            }
 
-        <div id="dark-btn"> 
+            ?>
 
-            <span></span> 
+        </div>
 
-        </div> 
+    </div>
 
- 
- 
 
-        <div class="settings-menu-inner"> 
 
-            <div class="user-profile"> 
 
-                <?php 
+    <!------------------SETTINGS MENU------------------>
 
-                if (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) { 
+    <div class="settings-menu">
 
-                    $user_id = $_SESSION['user']['id']; 
+        <div id="dark-btn">
 
-                    $user_data = $alumni_data[$user_id]; 
+            <span></span>
 
-                    $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : 'upload/profile.jpg'; 
+        </div>
 
-                    $full_name = $user_data['firstname'] . ' ' . $user_data['lastname']; 
 
-                    echo '<img src="' . $profile_url . '" alt="Profile Picture" onerror="if (this.src != \'uploads/profile.jpg\') this.src = \'uploads/profile.jpg\';">'; 
 
- 
- 
 
-                    echo '<div class="">'; 
+        <div class="settings-menu-inner">
 
-                    echo '<p>' . $full_name . '</p>'; 
+            <div class="user-profile">
 
-                    echo '<a href="view_profile.php">See your profile</a>'; 
+                <?php
 
-                    echo '</div>'; 
+                if (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) {
 
-                } else { 
+                    $user_id = $_SESSION['user']['id'];
 
-                    echo '<img src="upload/default-pp.png" alt="Default Profile Picture">'; 
+                    $user_data = $alumni_data[$user_id];
 
-                    echo '<div class="">'; 
+                    $profile_url = isset($user_data['profile_url']) ? $user_data['profile_url'] : 'upload/profile.jpg';
 
-                    echo '<p>Guest User</p>'; 
+                    $full_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
 
-                    echo '<a href="login.php">Login to see your profile</a>'; 
+                    echo '<img src="' . $profile_url . '" alt="Profile Picture" onerror="if (this.src != \'uploads/profile.jpg\') this.src = \'uploads/profile.jpg\';">';
 
-                    echo '</div>'; 
 
-                } 
 
-                ?> 
 
-            </div> 
+                    echo '<div class="">';
 
-            <hr> 
+                    echo '<p>' . $full_name . '</p>';
 
-            <div class="settings-links"> 
+                    echo '<a href="view_profile.php">See your profile</a>';
 
-                <img src="../images/setting.png" class="settings-icon"> 
+                    echo '</div>';
 
-                <a href="profile_overview.php">Settings & Privacy <img src="../images/arrow.png" width="10px"></a> 
+                } else {
 
-            </div> 
+                    echo '<img src="upload/default-pp.png" alt="Default Profile Picture">';
 
-            <div class="settings-links"> 
+                    echo '<div class="">';
 
-                <img src="../images/help.png" class="settings-icon"> 
+                    echo '<p>Guest User</p>';
 
-                <a href="">Help & Support <img src="../images/arrow.png" width="10px"></a> 
+                    echo '<a href="login.php">Login to see your profile</a>';
 
-            </div> 
+                    echo '</div>';
 
-            <div class="settings-links"> 
+                }
 
-                <img src="../images/display.png" class="settings-icon"> 
+                ?>
 
-                <a href="">Display & Access <img src="../images/arrow.png" width="10px"></a> 
+            </div>
 
-            </div> 
+            <hr>
 
-            <div class="settings-links"> 
+            <div class="settings-links">
 
-                <img src="../images/logout.png" class="settings-icon"> 
+                <img src="../images/setting.png" class="settings-icon">
 
-                <a href="../logout.php">Logout <img src="../images/arrow.png" width="10px"></a> 
+                <a href="profile_overview.php">Settings & Privacy <img src="../images/arrow.png" width="10px"></a>
 
-            </div> 
+            </div>
 
-        </div> 
+            <div class="settings-links">
 
-    </div> 
+                <img src="../images/help.png" class="settings-icon">
 
- 
- 
+                <a href="">Help & Support <img src="../images/arrow.png" width="10px"></a>
 
-    <!------------NOTIFICATION--------------------> 
+            </div>
 
-    <div class="notification-menu"> 
+            <div class="settings-links">
 
-        <div class="notification-menu-inner"> 
+                <img src="../images/display.png" class="settings-icon">
 
-            <h3>Notifications</h3> 
+                <a href="">Display & Access <img src="../images/arrow.png" width="10px"></a>
 
-            <?php if (!empty($notifications)): ?> 
+            </div>
 
-                <?php foreach ($notifications as $notification): ?> 
+            <div class="settings-links">
 
-                    <div class="notification-item" data-href="<?php 
+                <img src="../images/logout.png" class="settings-icon">
 
-                    switch ($notification['type']): 
+                <a href="../logout.php">Logout <img src="../images/arrow.png" width="10px"></a>
 
-                        case 'reply': 
+            </div>
 
-                        case 'reaction': 
+        </div>
 
-                            switch ($notification['content_type']): 
+    </div>
 
-                                case 'news': 
 
-                                    echo htmlspecialchars('visit_news.php?id=' . $notification['news_id'] . '#comment-' . $notification['comment_id']); 
 
-                                    break; 
 
-                                case 'job': 
+    <!------------NOTIFICATION-------------------->
 
-                                    echo htmlspecialchars('visit_job.php?id=' . $notification['job_id'] . '#comment-' . $notification['comment_id']); 
+    <div class="notification-menu">
 
-                                    break; 
+        <div class="notification-menu-inner">
 
-                                case 'event': 
+            <h3>Notifications</h3>
 
-                                    echo htmlspecialchars('visit_event.php?id=' . $notification['event_id'] . '#comment-' . $notification['comment_id']); 
+            <?php if (!empty($notifications)): ?>
 
-                                    break; 
+                <?php foreach ($notifications as $notification): ?>
 
-                                default: 
+                    <div class="notification-item" data-href="<?php
 
-                                    echo htmlspecialchars($notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id']); 
+                    switch ($notification['type']):
 
-                            endswitch; 
+                        case 'reply':
 
-                            break; 
+                        case 'reaction':
 
-                        case 'forum_post_reaction': 
+                            switch ($notification['content_type']):
 
-                            echo htmlspecialchars('forum.php?id=' . $notification['post_id']); 
+                                case 'news':
 
-                            break; 
+                                    echo htmlspecialchars('visit_news.php?id=' . $notification['news_id'] . '#comment-' . $notification['comment_id']);
 
-                        case 'forum_comment': 
+                                    break;
 
-                        case 'forum_reply': 
+                                case 'job':
 
-                        case 'forum_comment_reaction': 
+                                    echo htmlspecialchars('visit_job.php?id=' . $notification['job_id'] . '#comment-' . $notification['comment_id']);
 
-                            echo htmlspecialchars('forum.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id']); 
+                                    break;
 
-                            break; 
+                                case 'event':
 
-                        case 'admin_job': 
+                                    echo htmlspecialchars('visit_event.php?id=' . $notification['event_id'] . '#comment-' . $notification['comment_id']);
 
-                            echo htmlspecialchars('visit_job.php?id=' . $notification['id']); 
+                                    break;
 
-                            break; 
+                                default:
 
-                        case 'admin_event': 
+                                    echo htmlspecialchars($notification['content_type'] . '.php?id=' . $notification[$notification['content_type'] . '_id'] . '#comment-' . $notification['comment_id']);
 
-                        case 'event_invitation': 
+                            endswitch;
 
-                            echo htmlspecialchars('visit_event.php?id=' . $notification['id']); 
+                            break;
 
-                            break; 
+                        case 'forum_post_reaction':
 
-                        case 'admin_news': 
+                            echo htmlspecialchars('forum.php?id=' . $notification['post_id']);
 
-                            echo htmlspecialchars('visit_news.php?id=' . $notification['id']); 
+                            break;
 
-                            break; 
+                        case 'forum_comment':
 
-                        case 'admin_gallery': 
+                        case 'forum_reply':
 
-                            echo htmlspecialchars('view_gallery.php?id=' . $notification['id']); 
+                        case 'forum_comment_reaction':
 
-                            break; 
+                            echo htmlspecialchars('forum.php?id=' . $notification['post_id'] . '#comment-' . $notification['comment_id']);
 
-                        default: 
+                            break;
 
-                            echo '#'; 
+                        case 'admin_job':
 
-                    endswitch; 
+                            echo htmlspecialchars('visit_job.php?id=' . $notification['id']);
 
-                    ?>"> 
+                            break;
 
-                        <?php 
+                        case 'admin_event':
+
+                        case 'event_invitation':
+
+                            echo htmlspecialchars('visit_event.php?id=' . $notification['id']);
+
+                            break;
+
+                        case 'admin_news':
+
+                            echo htmlspecialchars('visit_news.php?id=' . $notification['id']);
+
+                            break;
+
+                        case 'admin_gallery':
+
+                            echo htmlspecialchars('view_gallery.php?id=' . $notification['id']);
+
+                            break;
+
+                        default:
+
+                            echo '#';
+
+                    endswitch;
+
+                    ?>">
+
+                        <?php
 
                         // Determine image source based on notification type 
+                
+                        switch ($notification['type']):
 
-                        switch ($notification['type']): 
+                            case 'reply':
 
-                            case 'reply': 
+                                $imageSrc = $notification['replier_profile'] ?? '../images/logo/notification.png';
 
-                                $imageSrc = $notification['replier_profile'] ?? '../images/logo/notification.png'; 
+                                break;
 
-                                break; 
+                            case 'reaction':
 
-                            case 'reaction': 
+                            case 'forum_post_reaction':
 
-                            case 'forum_post_reaction': 
+                            case 'forum_comment_reaction':
 
-                            case 'forum_comment_reaction': 
+                                $imageSrc = $notification['reactor_profile'] ?? '../images/logo/notification.png';
 
-                                $imageSrc = $notification['reactor_profile'] ?? '../images/logo/notification.png'; 
+                                break;
 
-                                break; 
+                            case 'forum_comment':
 
-                            case 'forum_comment': 
+                                $imageSrc = $notification['commenter_profile'] ?? '../images/logo/notification.png';
 
-                                $imageSrc = $notification['commenter_profile'] ?? '../images/logo/notification.png'; 
+                                break;
 
-                                break; 
+                            case 'forum_reply':
 
-                            case 'forum_reply': 
+                                $imageSrc = $notification['replier_profile'] ?? '../images/logo/notification.png';
 
-                                $imageSrc = $notification['replier_profile'] ?? '../images/logo/notification.png'; 
+                                break;
 
-                                break; 
+                            case 'admin_job':
 
-                            case 'admin_job': 
+                                $imageSrc = '../images/logo/suitcase.png';
 
-                                $imageSrc = '../images/logo/suitcase.png'; 
+                                break;
 
-                                break; 
+                            case 'admin_event':
 
-                            case 'admin_event': 
+                            case 'event_invitation':
 
-                            case 'event_invitation': 
+                                $imageSrc = '../images/logo/calendar.png';
 
-                                $imageSrc = '../images/logo/calendar.png'; 
+                                break;
 
-                                break; 
+                            case 'admin_news':
 
-                            case 'admin_news': 
+                                $imageSrc = '../images/logo/newspaper.png';
 
-                                $imageSrc = '../images/logo/newspaper.png'; 
+                                break;
 
-                                break; 
+                            case 'admin_gallery':
 
-                            case 'admin_gallery': 
+                                $imageSrc = '../images/logo/photo-gallery.png';
 
-                                $imageSrc = '../images/logo/photo-gallery.png'; 
+                                break;
 
-                                break; 
+                            default:
 
-                            default: 
+                                $imageSrc = '../images/logo/notification.png';
 
-                                $imageSrc = '../images/logo/notification.png'; 
+                        endswitch;
 
-                        endswitch; 
+                        ?>
 
-                        ?> 
+                        <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="Notification Icon">
 
-                        <img src="<?php echo htmlspecialchars($imageSrc); ?>" alt="Notification Icon"> 
 
- 
- 
 
-                        <div class="notification-info"> 
 
-                            <p> 
+                        <div class="notification-info">
 
-                                <?php 
+                            <p>
 
-                                switch ($notification['type']): 
+                                <?php
 
-                                    case 'reply': 
+                                switch ($notification['type']):
 
-                                        echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment on a ' . htmlspecialchars($notification['content_type']); 
+                                    case 'reply':
 
-                                        break; 
+                                        echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment on a ' . htmlspecialchars($notification['content_type']);
 
-                                    case 'reaction': 
+                                        break;
 
-                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment on a ' . htmlspecialchars($notification['content_type']); 
+                                    case 'reaction':
 
-                                        break; 
+                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment on a ' . htmlspecialchars($notification['content_type']);
 
-                                    case 'forum_post_reaction': 
+                                        break;
 
-                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted with ' . htmlspecialchars($notification['reaction_type']) . ' to your forum post'; 
+                                    case 'forum_post_reaction':
 
-                                        break; 
+                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted with ' . htmlspecialchars($notification['reaction_type']) . ' to your forum post';
 
-                                    case 'forum_comment': 
+                                        break;
 
-                                        echo '<strong>' . htmlspecialchars($notification['commenter_name']) . '</strong> commented on your forum post'; 
+                                    case 'forum_comment':
 
-                                        break; 
+                                        echo '<strong>' . htmlspecialchars($notification['commenter_name']) . '</strong> commented on your forum post';
 
-                                    case 'forum_reply': 
+                                        break;
 
-                                        echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment in a forum'; 
+                                    case 'forum_reply':
 
-                                        break; 
+                                        echo '<strong>' . htmlspecialchars($notification['replier_name']) . '</strong> replied to your comment in a forum';
 
-                                    case 'forum_comment_reaction': 
+                                        break;
 
-                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment in a forum'; 
+                                    case 'forum_comment_reaction':
 
-                                        break; 
+                                        echo '<strong>' . htmlspecialchars($notification['reactor_name']) . '</strong> reacted to your comment in a forum';
 
-                                    case 'admin_job': 
+                                        break;
 
-                                        echo 'New job posting: <strong>' . htmlspecialchars($notification['title']) . '</strong>'; 
+                                    case 'admin_job':
 
-                                        break; 
+                                        echo 'New job posting: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
 
-                                    case 'admin_event': 
+                                        break;
 
-                                        echo 'New event: <strong>' . htmlspecialchars($notification['title']) . '</strong>'; 
+                                    case 'admin_event':
 
-                                        break; 
+                                        echo 'New event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
 
-                                    case 'admin_news': 
+                                        break;
 
-                                        echo 'New news article: <strong>' . htmlspecialchars($notification['title']) . '</strong>'; 
+                                    case 'admin_news':
 
-                                        break; 
+                                        echo 'New news article: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
 
-                                    case 'admin_gallery': 
+                                        break;
 
-                                        echo 'New gallery album: <strong>' . htmlspecialchars($notification['title']) . '</strong>'; 
+                                    case 'admin_gallery':
 
-                                        break; 
+                                        echo 'New gallery album: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
 
-                                    case 'event_invitation': 
+                                        break;
 
-                                        echo 'You\'re invited to the event: <strong>' . htmlspecialchars($notification['title']) . '</strong>'; 
+                                    case 'event_invitation':
 
-                                        break; 
+                                        echo 'You\'re invited to the event: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
 
-                                    default: 
+                                        break;
 
-                                        echo 'New notification: <strong>' . htmlspecialchars($notification['title']) . '</strong>'; 
+                                    default:
 
-                                endswitch; 
+                                        echo 'New notification: <strong>' . htmlspecialchars($notification['title']) . '</strong>';
 
-                                ?> 
+                                endswitch;
 
-                            </p> 
+                                ?>
 
-                            <span 
+                            </p>
 
-                                class="notification-time"><?php echo htmlspecialchars(getTimeAgo($notification['date'])); ?></span> 
+                            <span
+                                class="notification-time"><?php echo htmlspecialchars(getTimeAgo($notification['date'])); ?></span>
 
-                        </div> 
+                        </div>
 
-                    </div> 
+                    </div>
 
-                <?php endforeach; ?> 
+                <?php endforeach; ?>
 
-            <?php else: ?> 
+            <?php else: ?>
 
-                <p class="no-notifications">No new notifications</p> 
+                <p class="no-notifications">No new notifications</p>
 
-            <?php endif; ?> 
+            <?php endif; ?>
 
-            <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a> 
+            <a href="all_notifications.php" class="view-all-notifications">View All Notifications</a>
 
-        </div> 
+        </div>
 
-    </div> 
+    </div>
 
- 
- 
- 
 
-    <!----------MESSAGE--------------> 
 
- 
- 
- 
 
-    <div class="message-menu" id="messageMenu"> 
 
-        <div class="message-menu-inner"> 
+    <!----------MESSAGE-------------->
 
-            <div class="message-header"> 
 
-                <h3>Messages</h3> 
 
-            </div> 
 
-            <hr> 
 
-            <div class="message-items-container" id="messageItemsContainer"> 
+    <div class="message-menu" id="messageMenu">
 
-                <!-- Messages will be dynamically loaded here --> 
+        <div class="message-menu-inner">
 
-            </div> 
+            <div class="message-header">
 
-            <a href="view_all_messages.php" class="view-all-messages">View All Messages</a> 
+                <h3>Messages</h3>
 
-        </div> 
+            </div>
 
-    </div> 
+            <hr>
 
- 
- 
+            <div class="message-items-container" id="messageItemsContainer">
 
-</nav> 
+                <!-- Messages will be dynamically loaded here -->
 
- 
- 
+            </div>
 
-<script> 
+            <a href="view_all_messages.php" class="view-all-messages">View All Messages</a>
 
-    var settingsmenu = document.querySelector(".settings-menu"); 
+        </div>
 
-    var darkBtn = document.getElementById("dark-btn"); 
+    </div>
 
- 
- 
 
-    function settingsMenuToggle() { 
 
-        settingsmenu.classList.toggle("settings-menu-height"); 
 
-    } 
+</nav>
 
-    darkBtn.onclick = function () { 
 
-        darkBtn.classList.toggle("dark-btn-on"); 
 
-        document.body.classList.toggle("dark-theme"); 
 
- 
- 
+<script>
 
-        if (localStorage.getItem("theme") == "light") { 
+    var settingsmenu = document.querySelector(".settings-menu");
 
-            localStorage.setItem("theme", "dark"); 
+    var darkBtn = document.getElementById("dark-btn");
 
-        } else { 
 
-            localStorage.setItem("theme", "light"); 
 
-        } 
 
- 
- 
- 
+    function settingsMenuToggle() {
 
-    } 
+        settingsmenu.classList.toggle("settings-menu-height");
 
- 
- 
+    }
 
-    if (localStorage.getItem("theme") == "light") { 
+    darkBtn.onclick = function () {
 
-        darkBtn.classList.remove("dark-btn-on"); 
+        darkBtn.classList.toggle("dark-btn-on");
 
-        document.body.classList.remove("dark-theme"); 
+        document.body.classList.toggle("dark-theme");
 
-    } else if (localStorage.getItem("theme") == "dark") { 
 
-        darkBtn.classList.add("dark-btn-on"); 
 
-        document.body.classList.add("dark-theme"); 
 
-    } else { 
+        if (localStorage.getItem("theme") == "light") {
 
-        localStorage.setItem("theme", "dark"); 
+            localStorage.setItem("theme", "dark");
 
-    } 
+        } else {
 
- 
- 
+            localStorage.setItem("theme", "light");
 
-</script> 
+        }
 
- 
- 
- 
 
-<script> 
+
+
+
+    }
+
+
+
+
+    if (localStorage.getItem("theme") == "light") {
+
+        darkBtn.classList.remove("dark-btn-on");
+
+        document.body.classList.remove("dark-theme");
+
+    } else if (localStorage.getItem("theme") == "dark") {
+
+        darkBtn.classList.add("dark-btn-on");
+
+        document.body.classList.add("dark-theme");
+
+    } else {
+
+        localStorage.setItem("theme", "dark");
+
+    }
+
+
+
+
+</script>
+
+
+
+
+
+<script>
 
     // Use PHP to inject alumni info into JavaScript 
 
-    const alumniInfo = <?php echo $alumni_info_json; ?>; 
+    const alumniInfo = <?php echo $alumni_info_json; ?>;
 
- 
- 
 
-    const input = document.getElementById("myInput"); 
 
-    const autocompleteList = document.getElementById("autocomplete-list"); 
 
- 
- 
+    const input = document.getElementById("myInput");
 
-    input.addEventListener("input", function () { 
+    const autocompleteList = document.getElementById("autocomplete-list");
 
-        const value = this.value.toLowerCase(); 
 
-        autocompleteList.innerHTML = ""; 
 
- 
- 
 
-        if (!value) return; 
+    input.addEventListener("input", function () {
 
- 
- 
+        const value = this.value.toLowerCase();
 
-        const matchingAlumni = alumniInfo.filter(alumni => 
+        autocompleteList.innerHTML = "";
 
-            alumni.name.toLowerCase().includes(value) 
+
+
+
+        if (!value) return;
+
+
+
+
+        const matchingAlumni = alumniInfo.filter(alumni =>
+
+            alumni.name.toLowerCase().includes(value)
 
         ).slice(0, 5); // Limit to 5 results 
 
- 
- 
 
-        matchingAlumni.forEach(alumni => { 
 
-            const div = document.createElement("div"); 
 
-            div.className = "autocomplete-item"; 
+        matchingAlumni.forEach(alumni => {
+
+            const div = document.createElement("div");
+
+            div.className = "autocomplete-item";
 
             div.innerHTML = ` 
 
@@ -714,870 +707,534 @@
 
                     </div> 
 
-                `; 
+                `;
 
-            div.addEventListener("click", function () { 
+            div.addEventListener("click", function () {
 
-                input.value = alumni.name; 
+                input.value = alumni.name;
 
-                autocompleteList.innerHTML = ""; 
+                autocompleteList.innerHTML = "";
 
                 // Redirect to the alumni's profile 
 
-                window.location.href = `view_alumni_details.php?id=${alumni.id}`; 
+                window.location.href = `view_alumni_details.php?id=${alumni.id}`;
 
-            }); 
+            });
 
-            autocompleteList.appendChild(div); 
+            autocompleteList.appendChild(div);
 
-        }); 
+        });
 
-    }); 
+    });
 
- 
- 
 
-    document.addEventListener("click", function (e) { 
 
-        if (e.target !== input) { 
 
-            autocompleteList.innerHTML = ""; 
+    document.addEventListener("click", function (e) {
 
-        } 
+        if (e.target !== input) {
 
-    }); 
+            autocompleteList.innerHTML = "";
 
- 
- 
+        }
+
+    });
+
+
+
 
     // Add event listener for Enter key press 
 
-    input.addEventListener("keypress", function (event) { 
+    input.addEventListener("keypress", function (event) {
 
-        if (event.key === "Enter") { 
+        if (event.key === "Enter") {
 
-            event.preventDefault(); 
+            event.preventDefault();
 
-            const searchQuery = input.value.trim(); 
+            const searchQuery = input.value.trim();
 
-            if (searchQuery) { 
+            if (searchQuery) {
 
-                window.location.href = `search_results.php?query=${encodeURIComponent(searchQuery)}`; 
+                window.location.href = `search_results.php?query=${encodeURIComponent(searchQuery)}`;
 
-            } 
+            }
 
-        } 
+        }
 
-    }); 
+    });
 
-</script> 
+</script>
 
- 
- 
 
-<script> 
 
-  document.addEventListener("DOMContentLoaded", function () { 
 
-    var notificationIcon = document.querySelector(".notification-icon"); 
+<script>
 
-    var notificationMenu = document.querySelector(".notification-menu"); 
+    document.addEventListener("DOMContentLoaded", function () {
+        var notificationIcon = document.querySelector(".notification-icon");
+        var notificationMenu = document.querySelector(".notification-menu");
+        var notificationCount = document.querySelector(".notification-count");
 
-    var notificationCount = document.querySelector(".notification-count"); 
+        function resetNotificationCount() {
+            if (notificationCount) {
+                notificationCount.textContent = '';
+                notificationCount.style.display = 'none';
 
- 
- 
+                // Update last_notification_check on the server
+                fetch('update_notification_check.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }),
+                });
+            }
+        }
 
-    function resetNotificationCount() { 
+        if (notificationIcon && notificationMenu) {
+            notificationIcon.addEventListener("click", function (event) {
+                event.stopPropagation();
+                notificationMenu.classList.toggle("notification-menu-height");
+                resetNotificationCount();
+            });
 
-        if (notificationCount) { 
+            // Close the notification menu when clicking outside
+            document.addEventListener("click", function (event) {
+                if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) {
+                    notificationMenu.classList.remove("notification-menu-height");
+                }
+            });
+        }
 
-            notificationCount.textContent = '0'; 
+        // Initial check for notifications
+        checkNewNotifications();
 
-            notificationCount.style.display = 'none'; 
+        // Set interval to check for new notifications every 5 seconds
+        setInterval(checkNewNotifications, 5000);
+    });
 
- 
- 
+    function updateNotificationCount(count) {
+        const countElement = document.querySelector('.notification-count');
+        if (countElement) {
+            if (count > 0) {
+                countElement.textContent = count;
+                countElement.style.display = 'inline-block';
+            } else {
+                countElement.textContent = '';
+                countElement.style.display = 'none';
+            }
+        }
+    }
 
-            // Update last_notification_check on the server 
+    function checkNewNotifications() {
+        fetch('check_new_notifications.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('New notifications count:', data.new_count); // Debug log
+                updateNotificationCount(data.new_count);
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
-            fetch('update_notification_check.php', { 
 
-                method: 'POST', 
 
-                headers: { 
 
-                    'Content-Type': 'application/json', 
+</script>
 
-                }, 
 
-                body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }), 
 
-            }); 
 
-        } 
+<script>
 
-    } 
+    document.querySelectorAll('.notification-item').forEach(item => {
 
- 
- 
+        item.addEventListener('click', () => {
 
-    if (notificationIcon && notificationMenu) { 
+            const url = item.getAttribute('data-href');
 
-        notificationIcon.addEventListener("click", function (event) { 
+            if (url) {
 
-            event.stopPropagation(); 
+                window.location.href = url;
 
-            notificationMenu.classList.toggle("notification-menu-height"); 
+            }
 
-            resetNotificationCount(); 
+        });
 
-        }); 
+    });
 
- 
- 
+</script>
 
-        // Close the notification menu when clicking outside 
 
-        document.addEventListener("click", function (event) { 
 
-            if (!event.target.closest('.notification-icon') && !event.target.closest('.notification-menu')) { 
 
-                notificationMenu.classList.remove("notification-menu-height"); 
 
-            } 
 
-        }); 
+<script>
 
-    } 
+    function messageMenuToggle(event) {
 
- 
- 
+        var menu = document.getElementById('messageMenu');
 
-    // Initial check for notifications 
+        menu.classList.toggle('message-menu-height');
 
-    checkNewNotifications(); 
 
- 
- 
 
-    // Set interval to check for new notifications every 5 seconds 
-
-    setInterval(function () { 
-
-        checkNewNotifications(); 
-
-    }, 5000); 
-
-}); 
-
- 
- 
-
-function updateNotificationCount(count) { 
-
-    const countElement = document.querySelector('.notification-count'); 
-
-    if (countElement) { 
-
-        countElement.textContent = count > 0 ? count : ''; 
-
-        countElement.style.display = count > 0 ? 'inline-block' : 'none'; 
-
-    } 
-
-} 
-
- 
- 
-
-// Function to check for new notifications and update the count 
-
-function checkNewNotifications() { 
-
-    fetch('check_new_notifications.php', { 
-
-        method: 'POST', 
-
-        headers: { 
-
-            'Content-Type': 'application/json', 
-
-        }, 
-
-        body: JSON.stringify({ user_id: '<?php echo $current_user_id; ?>' }), 
-
-    }) 
-
-        .then(response => response.json()) 
-
-        .then(data => { 
-
-            console.log('New notifications count:', data.new_count); // Debug log 
-
-            updateNotificationCount(data.new_count); 
-
-        }) 
-
-        .catch(error => console.error('Error:', error)); 
-
-} 
-
- 
- 
-
-</script> 
-
- 
- 
-
-<script> 
-
-    document.querySelectorAll('.notification-item').forEach(item => { 
-
-        item.addEventListener('click', () => { 
-
-            const url = item.getAttribute('data-href'); 
-
-            if (url) { 
-
-                window.location.href = url; 
-
-            } 
-
-        }); 
-
-    }); 
-
-</script> 
-
- 
- 
- 
- 
-
-<script> 
-
-    function messageMenuToggle(event) { 
-
-        var menu = document.getElementById('messageMenu'); 
-
-        menu.classList.toggle('message-menu-height'); 
-
- 
- 
 
         // Send AJAX request to update message_active status 
 
-        if (menu.classList.contains('message-menu-height')) { 
+        if (menu.classList.contains('message-menu-height')) {
 
             updateMessageStatus(1); // Mark as read 
 
-        } 
+        }
 
- 
- 
+
+
 
         // Stop the event from bubbling up to the document click event 
 
-        event.stopPropagation(); 
+        event.stopPropagation();
 
-    } 
+    }
 
- 
- 
+
+
 
     // Close the chatbox if clicking outside of it 
 
-    document.addEventListener('click', function (event) { 
+    document.addEventListener('click', function (event) {
 
-        var menu = document.getElementById('messageMenu'); 
+        var menu = document.getElementById('messageMenu');
 
-        var icon = document.querySelector('.message-icon'); 
+        var icon = document.querySelector('.message-icon');
 
- 
- 
 
-        if (menu.classList.contains('message-menu-height') && 
 
-            !menu.contains(event.target) && 
 
-            !icon.contains(event.target)) { 
+        if (menu.classList.contains('message-menu-height') &&
 
-            menu.classList.remove('message-menu-height'); 
+            !menu.contains(event.target) &&
 
-        } 
+            !icon.contains(event.target)) {
 
-    }); 
+            menu.classList.remove('message-menu-height');
 
-</script> 
+        }
 
- 
- 
- 
+    });
 
-<script> 
+</script>
+
+
+
+
+
+<script>
 
     // Function to fetch and update message count 
 
-    function updateMessageCount() { 
+    function updateMessageCount() {
 
-        fetch('get_message_count.php') 
+        fetch('get_message_count.php')
 
-            .then(response => response.json()) 
+            .then(response => response.json())
 
-            .then(data => { 
+            .then(data => {
 
-                const messageCountElement = document.querySelector('.message-count'); 
+                const messageCountElement = document.querySelector('.message-count');
 
-                if (data.message_count > 0) { 
+                if (data.message_count > 0) {
 
-                    messageCountElement.textContent = data.message_count; 
+                    messageCountElement.textContent = data.message_count;
 
-                } else { 
+                } else {
 
-                    messageCountElement.textContent = ''; 
+                    messageCountElement.textContent = '';
 
-                } 
+                }
 
-            }) 
+            })
 
-            .catch(error => console.error('Error fetching message count:', error)); 
+            .catch(error => console.error('Error fetching message count:', error));
 
-    } 
+    }
 
- 
- 
+
+
 
     // Refresh the message count every 5 seconds 
 
-    setInterval(updateMessageCount, 5000); 
+    setInterval(updateMessageCount, 5000);
 
- 
- 
+
+
 
     // Initial load 
 
-    updateMessageCount(); 
+    updateMessageCount();
 
-</script> 
+</script>
 
- 
- 
- 
 
-<script> 
 
-    document.querySelectorAll('.notification-item').forEach(item => { 
 
-        item.addEventListener('click', () => { 
 
-            const url = item.getAttribute('data-href'); 
+<script>
 
-            if (url) { 
+    document.querySelectorAll('.notification-item').forEach(item => {
 
-                window.location.href = url; 
+        item.addEventListener('click', () => {
 
-            } 
+            const url = item.getAttribute('data-href');
 
-        }); 
+            if (url) {
 
-    }); 
+                window.location.href = url;
 
-</script> 
+            }
 
- 
- 
+        });
 
-<script> 
+    });
 
-    document.addEventListener("DOMContentLoaded", function () { 
+</script>
 
-        var globalChatbox = document.getElementById('globalchatbox'); 
 
-        var chatboxBody = document.querySelector('.chatbox-body'); 
 
-        var chatboxInput = document.getElementById('chatbox-input'); 
 
-        var sendMessageIcon = document.getElementById('send-message'); 
+<script>
 
-        var messageItemsContainer = document.getElementById('messageItemsContainer'); 
+    document.addEventListener("DOMContentLoaded", function () {
+        var globalChatbox = document.getElementById('globalchatbox');
+        var chatboxBody = document.querySelector('.chatbox-body');
+        var chatboxInput = document.getElementById('chatbox-input');
+        var sendMessageIcon = document.getElementById('send-message');
+        var messageItemsContainer = document.getElementById('messageItemsContainer');
+        var currentOpenChatUserId = null; // Track the currently open chat user ID
+        let allMessages = []; // Store all messages for chatbox
+        let latestMessages = []; // Store only the latest messages for the message menu
 
-        var currentOpenChatUserId = null; // Track the currently open chat user ID 
+        function fetchMessages() {
+            fetch('fetch_messages.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                        return;
+                    }
 
-        let allMessages = []; // Store all messages for chatbox 
+                    // Store messages separately
+                    allMessages = data.messages; // All conversation messages for the chatbox
+                    latestMessages = data.latest_messages; // Only the latest message from each sender for the message menu
 
-        let latestMessages = []; // Store only the latest messages for the message menu 
+                    // Update the message menu
+                    updateMessageMenu(latestMessages);
 
- 
- 
+                    // Update the chatbox if a chat is open
+                    if (currentOpenChatUserId !== null) {
+                        refreshOpenChat(); // Refresh chatbox for the currently open chat
+                    }
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
 
-        function fetchMessages() { 
+        function updateMessageMenu(latestMessages) {
+            messageItemsContainer.innerHTML = ''; // Clear existing messages in the menu
 
-            fetch('fetch_messages.php') 
+            if (latestMessages.length === 0) {
+                messageItemsContainer.innerHTML = '<div class="no-messages">No new messages.</div>';
+            } else {
+                latestMessages.forEach(message => {
+                    const messageItem = document.createElement('div');
+                    messageItem.className = 'message-item';
+                    messageItem.setAttribute('data-message-id', message.messageId); // Store message ID in a data attribute
 
-                .then(response => response.json()) 
+                    messageItem.innerHTML = `
+                    <img src="${message.profilePic}" alt="${message.name}">
+                    <div class="message-info">
+                        <p><strong>${message.name}:</strong> ${message.content}</p>
+                        <span class="message-time">${message.timeAgo}</span>
+                    </div>
+                `;
 
-                .then(data => { 
+                    messageItem.addEventListener('click', function () {
+                        openChat(message.userId, message.name);
 
-                    if (data.error) { 
+                        // Send request to mark all messages as read for this conversation
+                        markMessageAsRead(message.userId); // Send receiverId
+                    });
 
-                        console.error('Error:', data.error); 
+                    messageItemsContainer.appendChild(messageItem);
+                });
+            }
+        }
 
-                        return; 
-
-                    } 
-
- 
- 
-
-                    // Store messages separately 
-
-                    allMessages = data.messages; // All conversation messages for the chatbox 
-
-                    latestMessages = data.latest_messages; // Only the latest message from each sender for the message menu 
-
- 
- 
-
-                    // Update the message menu 
-
-                    updateMessageMenu(latestMessages); 
-
- 
- 
-
-                    // Update the chatbox if a chat is open 
-
-                    if (currentOpenChatUserId !== null) { 
-
-                        refreshOpenChat(); // Refresh chatbox for the currently open chat 
-
-                    } 
-
-                }) 
-
-                .catch(error => console.error('Error fetching messages:', error)); 
-
-        } 
-
- 
- 
-
-        function updateMessageMenu(latestMessages) { 
-
-            messageItemsContainer.innerHTML = ''; // Clear existing messages in the menu 
-
- 
- 
-
-            if (latestMessages.length === 0) { 
-
-                messageItemsContainer.innerHTML = '<div class="no-messages">No new messages.</div>'; 
-
-            } else { 
-
-                latestMessages.forEach(message => { 
-
-                    const messageItem = document.createElement('div'); 
-
-                    messageItem.className = 'message-item'; 
-
-                    messageItem.setAttribute('data-message-id', message.messageId); // Store message ID in a data attribute 
-
- 
- 
-
-                    messageItem.innerHTML = ` 
-
-                        <img src="${message.profilePic}" alt="${message.name}"> 
-
-                        <div class="message-info"> 
-
-                            <p><strong>${message.name}:</strong> ${message.content}</p> 
-
-                            <span class="message-time">${message.timeAgo}</span> 
-
-                        </div> 
-
-                    `; 
-
- 
- 
-
-                    messageItem.addEventListener('click', function () { 
-
-                        openChat(message.userId, message.name); 
-
- 
- 
-
-                        // Send request to mark message as read 
-
-                        markMessageAsRead(message.messageId); 
-
-                    }); 
-
- 
- 
-
-                    messageItemsContainer.appendChild(messageItem); 
-
-                }); 
-
-            } 
-
-        } 
-
- 
- 
-
-        function markMessageAsRead(messageId) { 
-
-            fetch('mark_message_read.php', { 
-
-                method: 'POST', 
-
-                headers: { 
-
-                    'Content-Type': 'application/x-www-form-urlencoded' 
-
-                }, 
-
-                body: `message_id=${messageId}` 
-
-            }) 
-
-                .then(response => response.json()) 
-
-                .then(data => { 
-
-                    if (data.success) { 
-
-                        console.log('Message marked as read'); 
-
-                    } else { 
-
-                        console.error('Failed to mark message as read:', data.error); 
-
-                    } 
-
-                }) 
-
-                .catch(error => { 
-
-                    console.error('Error marking message as read:', error); 
-
-                }); 
-
-        } 
-
- 
- 
- 
-
-        function openChat(userId, userName) { 
-
-            console.log("Opening chat for user:", userId, userName); 
-
-            const currentUserId = "<?php echo $_SESSION['user']['id']; ?>"; 
-
- 
- 
-
-            // Track the currently open chat user ID 
-
-            currentOpenChatUserId = userId; 
-
- 
- 
-
-            // Update chatbox header with user's name 
-
-            document.querySelector('.chatbox-name').textContent = userName; 
-
- 
- 
-
-            // Clear previous chat content 
-
-            chatboxBody.innerHTML = ''; 
-
- 
- 
-
-            // Populate chatbox with messages for this conversation 
-
-            refreshOpenChat(); 
-
- 
- 
-
-            // Show the chatbox with a sliding effect 
-
-            globalChatbox.style.bottom = '0px'; 
-
- 
- 
-
-            // Set a custom attribute for the active chat receiver ID 
-
-            globalChatbox.setAttribute('data-receiver-id', userId); 
-
-        } 
-
- 
- 
-
-        function refreshOpenChat() { 
-
-            const currentUserId = "<?php echo $_SESSION['user']['id']; ?>"; 
-
- 
- 
-
-            if (currentOpenChatUserId === null) return; // No chat is open 
-
- 
- 
-
-            // Filter messages for the selected conversation 
-
-            const filteredMessages = allMessages.filter(message => 
-
-                (message.senderId === currentUserId && message.receiverId === currentOpenChatUserId) || 
-
-                (message.senderId === currentOpenChatUserId && message.receiverId === currentUserId) 
-
-            ); 
-
- 
- 
-
-            // Clear chatbox body 
-
-            chatboxBody.innerHTML = ''; 
-
- 
- 
-
-            // Populate chatbox with filtered messages 
-
-            filteredMessages.forEach(function (message) { 
-
-                var messageDiv = document.createElement('div'); 
-
-                messageDiv.className = message.senderId === currentUserId ? 'message outgoing' : 'message incoming'; 
-
-                messageDiv.innerHTML = ` 
-
-                    <p>${message.content}</p> 
-
-                    <span class="timestamp">${message.timeAgo}</span> 
-
-                `; 
-
-                chatboxBody.appendChild(messageDiv); 
-
-            }); 
-
- 
- 
-
-            // Scroll to the bottom of the chatbox to show the latest message 
-
-            chatboxBody.scrollTop = chatboxBody.scrollHeight; 
-
-        } 
-
- 
- 
-
-        // Fetch messages immediately when the page loads 
-
-        fetchMessages(); 
-
- 
- 
-
-        // Then fetch messages every 5 seconds 
-
-        setInterval(fetchMessages, 5000); 
-
- 
- 
-
-        // Close chatbox functionality 
-
-        document.querySelector('.close-chat').addEventListener('click', function () { 
-
-            globalChatbox.style.bottom = '-500px'; // Hide the chatbox with a sliding effect 
-
-            currentOpenChatUserId = null; // Reset the current open chat user ID 
-
-        }); 
-
- 
- 
-
-        // Send message functionality 
-
-        sendMessageIcon.addEventListener('click', sendMessage); 
-
- 
- 
-
-        chatboxInput.addEventListener('keypress', function (event) { 
-
-            if (event.key === 'Enter') { 
-
-                sendMessage(); 
-
-            } 
-
-        }); 
-
- 
- 
-
-        function sendMessage() { 
-
-            var messageContent = chatboxInput.value.trim(); 
-
-            if (messageContent === '') { 
-
-                return; // Do not send empty messages 
-
-            } 
-
- 
- 
-
-            var receiverId = globalChatbox.getAttribute('data-receiver-id'); 
-
-            var currentUserId = "<?php echo $_SESSION['user']['id']; ?>"; 
-
-            var timestamp = new Date().toISOString(); 
-
- 
- 
-
-            // Create message data 
-
-            var messageData = { 
-
-                senderId: currentUserId, 
-
-                receiverId: receiverId, 
-
-                content: messageContent, 
-
-                timestamp: timestamp 
-
-            }; 
-
- 
- 
-
-            // Send message using AJAX 
-
-            fetch('send_message.php', { 
-
-                method: 'POST', 
-
-                headers: { 
-
-                    'Content-Type': 'application/json' 
-
-                }, 
-
-                body: JSON.stringify(messageData) 
-
-            }) 
-
-                .then(response => response.json()) 
-
-                .then(data => { 
-
-                    if (data.success) { 
-
-                        // Append the message to the chatbox 
-
-                        var messageDiv = document.createElement('div'); 
-
-                        messageDiv.className = 'message outgoing'; 
-
-                        messageDiv.innerHTML = ` 
-
-                            <p>${messageContent}</p> 
-
-                            <span class="timestamp">${formatTimestamp(new Date(timestamp))}</span> 
-
-                        `; 
-
-                        chatboxBody.appendChild(messageDiv); 
-
- 
- 
-
-                        // Clear the input field 
-
-                        chatboxInput.value = ''; 
-
-                        chatboxBody.scrollTop = chatboxBody.scrollHeight; // Scroll to the bottom 
-
- 
- 
-
-                        // Fetch messages to update the list 
-
-                        fetchMessages(); 
-
-                    } else { 
-
-                        alert('Failed to send message: ' + data.error); 
-
-                    } 
-
-                }) 
-
-                .catch(error => { 
-
-                    console.error('Error sending message:', error); 
-
-                    alert('An error occurred while sending the message.'); 
-
-                }); 
-
-        } 
-
- 
- 
-
-        // Format timestamp to more readable format 
-
-        function formatTimestamp(date) { 
-
-            var hours = date.getHours(); 
-
-            var minutes = date.getMinutes(); 
-
-            var ampm = hours >= 12 ? 'PM' : 'AM'; 
-
-            hours = hours % 12; 
-
-            hours = hours ? hours : 12; // the hour '0' should be '12' 
-
-            minutes = minutes < 10 ? '0' + minutes : minutes; 
-
-            var strTime = hours + ':' + minutes + ' ' + ampm; 
-
-            return strTime; 
-
-        } 
-
-    }); 
-
-</script> 
-
- 
+        function markMessageAsRead(receiverId) {
+            fetch('mark_message_read.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `receiver_id=${receiverId}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.message);
+                    } else {
+                        console.error('Failed to mark messages as read:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error marking messages as read:', error);
+                });
+        }
+
+        function openChat(userId, userName) {
+            console.log("Opening chat for user:", userId, userName);
+            const currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
+
+            // Track the currently open chat user ID
+            currentOpenChatUserId = userId;
+
+            // Update chatbox header with user's name
+            document.querySelector('.chatbox-name').textContent = userName;
+
+            // Clear previous chat content
+            chatboxBody.innerHTML = '';
+
+            // Populate chatbox with messages for this conversation
+            refreshOpenChat();
+
+            // Show the chatbox with a sliding effect
+            globalChatbox.style.bottom = '0px';
+
+            // Set a custom attribute for the active chat receiver ID
+            globalChatbox.setAttribute('data-receiver-id', userId);
+        }
+
+        function refreshOpenChat() {
+            const currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
+
+            if (currentOpenChatUserId === null) return; // No chat is open
+
+            // Filter messages for the selected conversation
+            const filteredMessages = allMessages.filter(message =>
+                (message.senderId === currentUserId && message.receiverId === currentOpenChatUserId) ||
+                (message.senderId === currentOpenChatUserId && message.receiverId === currentUserId)
+            );
+
+            // Clear chatbox body
+            chatboxBody.innerHTML = '';
+
+            // Populate chatbox with filtered messages
+            filteredMessages.forEach(function (message) {
+                var messageDiv = document.createElement('div');
+                messageDiv.className = message.senderId === currentUserId ? 'message outgoing' : 'message incoming';
+                messageDiv.innerHTML = `
+                <p>${message.content}</p>
+                <span class="timestamp">${message.timeAgo}</span>
+            `;
+                chatboxBody.appendChild(messageDiv);
+            });
+
+            // Scroll to the bottom of the chatbox to show the latest message
+            chatboxBody.scrollTop = chatboxBody.scrollHeight;
+        }
+
+        // Fetch messages immediately when the page loads
+        fetchMessages();
+
+        // Then fetch messages every 5 seconds
+        setInterval(fetchMessages, 5000);
+
+        // Close chatbox functionality
+        document.querySelector('.close-chat').addEventListener('click', function () {
+            globalChatbox.style.bottom = '-500px'; // Hide the chatbox with a sliding effect
+            currentOpenChatUserId = null; // Reset the current open chat user ID
+        });
+
+        // Send message functionality
+        sendMessageIcon.addEventListener('click', sendMessage);
+
+        chatboxInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            var messageContent = chatboxInput.value.trim();
+            if (messageContent === '') {
+                return; // Do not send empty messages
+            }
+
+            var receiverId = globalChatbox.getAttribute('data-receiver-id');
+            var currentUserId = "<?php echo $_SESSION['user']['id']; ?>";
+            var timestamp = new Date().toISOString();
+
+            // Create message data
+            var messageData = {
+                senderId: currentUserId,
+                receiverId: receiverId,
+                content: messageContent,
+                timestamp: timestamp
+            };
+
+            // Send message using AJAX
+            fetch('send_message.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(messageData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Append the message to the chatbox
+                        var messageDiv = document.createElement('div');
+                        messageDiv.className = 'message outgoing';
+                        messageDiv.innerHTML = `
+                        <p>${messageContent}</p>
+                        <span class="timestamp">${formatTimestamp(new Date(timestamp))}</span>
+                    `;
+                        chatboxBody.appendChild(messageDiv);
+
+                        // Clear the input field
+                        chatboxInput.value = '';
+                        chatboxBody.scrollTop = chatboxBody.scrollHeight; // Scroll to the bottom
+
+                        // Fetch messages to update the list
+                        fetchMessages();
+                    } else {
+                        alert('Failed to send message: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    alert('An error occurred while sending the message.');
+                });
+        }
+
+        // Format timestamp to more readable format
+        function formatTimestamp(date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
+        }
+    });
+
+
+</script>
