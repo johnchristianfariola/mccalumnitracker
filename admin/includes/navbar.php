@@ -18,8 +18,8 @@
   <!-- Header Navbar: style can be found in header.less -->
   <nav class="navbar navbar-static-top">
     <!-- Sidebar toggle button-->
-    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-      <span class="sr-only">Toggle navigation</span>
+    <a  class="sidebar-toggle" data-toggle="push-menu" role="button">
+      <i class="fa fa-bars"></i>
     </a>
 
     <div class="navbar-custom-menu">
@@ -232,16 +232,16 @@
 
 </script>
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
     function updateContactQueries() {
-        $.ajax({
-            url: 'get_contact_queries.php',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                let queriesHtml = '';
-                data.queries.forEach(function(query) {
-                    queriesHtml += `
+      $.ajax({
+        url: 'get_contact_queries.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          let queriesHtml = '';
+          data.queries.forEach(function (query) {
+            queriesHtml += `
                         <li>
                             <a href="#" data-query-id="${query.id}">
                                 <div class="pull-left">
@@ -255,25 +255,25 @@
                             </a>
                         </li>
                     `;
-                });
+          });
 
-                $('.dropdown-menu .menu').html(queriesHtml);
-                $('.dropdown-menu .header').text(`You have ${data.total_count} messages`);
-                updateNotificationCount(data.total_count);
-            },
-            error: function(xhr, status, error) {
-                console.error("Error fetching contact queries:", error);
-            }
-        });
+          $('.dropdown-menu .menu').html(queriesHtml);
+          $('.dropdown-menu .header').text(`You have ${data.total_count} messages`);
+          updateNotificationCount(data.total_count);
+        },
+        error: function (xhr, status, error) {
+          console.error("Error fetching contact queries:", error);
+        }
+      });
     }
 
     function updateNotificationCount(count) {
-        const notificationCount = $('.messages-menu .label-success');
-        if (count > 0) {
-            notificationCount.text(count).show();
-        } else {
-            notificationCount.hide();
-        }
+      const notificationCount = $('.messages-menu .label-success');
+      if (count > 0) {
+        notificationCount.text(count).show();
+      } else {
+        notificationCount.hide();
+      }
     }
 
     // Update contact queries immediately and then every 30 seconds
@@ -281,12 +281,12 @@
     setInterval(updateContactQueries, 30000);
 
     // Handle click on a contact query
-    $(document).on('click', '.dropdown-menu .menu a', function(e) {
-        e.preventDefault();
-        const queryId = $(this).data('query-id');
-        // Here you can implement the logic to show the full message
-        // For example, open a modal with the full message details
-        console.log("Clicked query ID:", queryId);
+    $(document).on('click', '.dropdown-menu .menu a', function (e) {
+      e.preventDefault();
+      const queryId = $(this).data('query-id');
+      // Here you can implement the logic to show the full message
+      // For example, open a modal with the full message details
+      console.log("Clicked query ID:", queryId);
     });
-});
+  });
 </script>
