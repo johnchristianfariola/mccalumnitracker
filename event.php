@@ -34,7 +34,6 @@ if ($existingData) {
 <?php
 require_once 'includes/firebaseRDB.php';
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
 $data = $firebase->retrieve("news");

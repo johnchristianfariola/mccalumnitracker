@@ -3,8 +3,6 @@
 require_once 'includes/firebaseRDB.php';
 require_once 'includes/config.php';
 
-// Initialize Firebase
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
 // Retrieve job data
