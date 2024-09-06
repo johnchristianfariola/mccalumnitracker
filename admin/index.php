@@ -36,20 +36,41 @@ if (isset($_SESSION['admin'])) {
             flex-direction: column;
             justify-content: flex-start;
         }
+
         .login100-form-btn {
             pointer-events: auto;
         }
+
         .text-center {
             text-align: center;
         }
+
         .p-t-12 {
             padding-top: 12px;
         }
+
         .txt2 {
             font-family: Poppins-Regular;
             font-size: 13px;
             line-height: 1.5;
             color: #666666;
+        }
+
+        @media (max-width: 992px) {
+            .wrap-login100 {
+                flex-direction: column;
+                align-items: center;
+                padding: 50px 15px 50px 15px;
+            }
+
+            .login100-pic {
+                position: static;
+                margin-bottom: 50px;
+            }
+
+            .login100-form {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -84,111 +105,9 @@ if (isset($_SESSION['admin'])) {
     </script>
     <!--===============================================================================================-->
     <script src="../dist/js/login.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const formContainer = document.getElementById('form-container');
-            
-            const loginFormHTML = `
-                <form class="login100-form validate-form" id="login-form" action="login.php" method="POST">
-                    <span class="login100-form-title">
-                        Admin Login
-                    </span>
 
-                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="text" name="username" placeholder="Input Username" required autofocus autocomplete="off">
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="fa fa-envelope" aria-hidden="true"></i>
-                        </span>
-                    </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Password is required">
-                        <input class="input100" type="password" name="password" placeholder="Input Password">
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                        </span>
-                    </div>
 
-                    <?php
-                    if (isset($_SESSION['error'])) {
-                        echo "
-                            <div class='callout callout-danger text-center mt20'>
-                                <p>" . $_SESSION['error'] . "</p> 
-                            </div>
-                        ";
-                        unset($_SESSION['error']);
-                    }
-                    ?>
-
-                    <div class="container-login100-form-btn">
-                        <button class="login100-form-btn" name="login">
-                            Login
-                        </button>
-                    </div>
-
-                    <div class="text-center p-t-12">
-                        <span class="txt1">
-                            Forgot
-                        </span>
-                        <a class="txt2" href="#" id="forgot-password-link">
-                            Username / Password?
-                        </a>
-                    </div>
-
-                    <div class="text-center p-t-136">
-                    </div>
-                </form>
-            `;
-
-            const forgotPasswordFormHTML = `
-                <form class="login100-form validate-form" id="forgot-password-form">
-                    <span class="login100-form-title">
-                        Forgot Password
-                    </span>
-
-                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="text" name="email" placeholder="Email" required>
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="fa fa-envelope" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
-                    <div class="container-login100-form-btn">
-                        <button class="login100-form-btn" type="submit">
-                            Reset Password
-                        </button>
-                    </div>
-
-                    <div class="text-center p-t-12">
-                        <a class="txt2" href="#" id="back-to-login">
-                            Back to Login
-                        </a>
-                    </div>
-                </form>
-            `;
-
-            function showLoginForm() {
-                formContainer.innerHTML = loginFormHTML;
-                document.getElementById('forgot-password-link').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showForgotPasswordForm();
-                });
-            }
-
-            function showForgotPasswordForm() {
-                formContainer.innerHTML = forgotPasswordFormHTML;
-                document.getElementById('back-to-login').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showLoginForm();
-                });
-            }
-
-            // Initially show the login form
-            showLoginForm();
-        });
-    </script>
 </body>
 
 </html>
