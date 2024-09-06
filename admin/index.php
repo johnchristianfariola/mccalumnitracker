@@ -4,13 +4,13 @@ if (isset($_SESSION['admin'])) {
     header('location: home.php');
     exit();
 }
+include 'controllerUserData.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Login V1</title>
+    <title>Home</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -76,6 +76,18 @@ if (isset($_SESSION['admin'])) {
 </head>
 
 <body>
+
+    <?php
+    if (count($errors) > 0) {
+        foreach ($errors as $error) {
+            echo "<div class='alert alert-danger text-center'>$error</div>";
+        }
+    }
+    if (isset($_SESSION['info'])) {
+        echo "<div class='alert alert-success text-center'>" . $_SESSION['info'] . "</div>";
+        unset($_SESSION['info']);
+    }
+    ?>
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
@@ -107,7 +119,6 @@ if (isset($_SESSION['admin'])) {
     <script src="../dist/js/login.js"></script>
 
     <script>
-
         document.addEventListener('DOMContentLoaded', function () {
             const formContainer = document.getElementById('form-container');
 
@@ -133,8 +144,6 @@ if (isset($_SESSION['admin'])) {
                         </span>
                     </div>
 
-             
-
                     <div class="container-login100-form-btn">
                         <button class="login100-form-btn" name="login">
                             Login
@@ -156,13 +165,13 @@ if (isset($_SESSION['admin'])) {
             `;
 
             const forgotPasswordFormHTML = `
-                <form class="login100-form validate-form" id="forgot-password-form"  action="forgot-password.php" method="POST" autocomplete="">
+                <form class="login100-form validate-form" id="forgot-password-form" action="index.php" method="POST" autocomplete="off">
                     <span class="login100-form-title">
                         Forgot Password
                     </span>
 
                     <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="text" name="email" placeholder="Email" required value="<?php echo $email ?>>
+                        <input class="input100" type="email" name="email" placeholder="Email" required>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -170,7 +179,7 @@ if (isset($_SESSION['admin'])) {
                     </div>
 
                     <div class="container-login100-form-btn">
-                        <button class="login100-form-btn"  type="submit" name="check-email">
+                        <button class="login100-form-btn" type="submit" name="check-email">
                             Reset Password
                         </button>
                     </div>
@@ -202,7 +211,6 @@ if (isset($_SESSION['admin'])) {
             // Initially show the login form
             showLoginForm();
         });
-
     </script>
 
 </body>
