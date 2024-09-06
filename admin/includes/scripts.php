@@ -53,20 +53,20 @@
 
 <!-- Active Script -->
 <script>
-$(function(){
+  $(function () {
     var url = window.location.href;
-    
+
     // Close all menu items initially
     $('.treeview-menu').hide();
-    
+
     // For sidebar menu entirely but not cover treeview
-    $('ul.sidebar-menu a').filter(function() {
-        return this.href == url;
+    $('ul.sidebar-menu a').filter(function () {
+      return this.href == url;
     }).parent().addClass('active');
 
     // For treeview
-    $('ul.treeview-menu a').filter(function() {
-        return this.href == url;
+    $('ul.treeview-menu a').filter(function () {
+      return this.href == url;
     }).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
 
     // Expand only the active treeview menu
@@ -74,26 +74,26 @@ $(function(){
     $('.sidebar-menu .active').parents('.treeview-menu').show();
 
     // Toggle submenu on click
-    $('.treeview > a').on('click', function(e) {
-        e.preventDefault();
-        var $this = $(this);
-        var $parent = $this.parent();
-        var $submenu = $this.next('.treeview-menu');
+    $('.treeview > a').on('click', function (e) {
+      e.preventDefault();
+      var $this = $(this);
+      var $parent = $this.parent();
+      var $submenu = $this.next('.treeview-menu');
 
-        if ($parent.hasClass('active')) {
-            $submenu.slideUp('fast', function() {
-                $parent.removeClass('active menu-open');
-            });
-        } else {
-            // Close other open menus
-            $('.treeview.active').not($parent).removeClass('active menu-open').find('.treeview-menu').slideUp('fast');
-            
-            $submenu.slideDown('fast', function() {
-                $parent.addClass('active menu-open');
-            });
-        }
+      if ($parent.hasClass('active')) {
+        $submenu.slideUp('fast', function () {
+          $parent.removeClass('active menu-open');
+        });
+      } else {
+        // Close other open menus
+        $('.treeview.active').not($parent).removeClass('active menu-open').find('.treeview-menu').slideUp('fast');
+
+        $submenu.slideDown('fast', function () {
+          $parent.addClass('active menu-open');
+        });
+      }
     });
-});
+  });
 </script>
 
 <!-- Data Table Initialize -->
@@ -103,12 +103,12 @@ $(function(){
       responsive: true
     })
     $('#example2').DataTable({
-      'paging'      : true,
+      'paging': true,
       'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
+      'searching': false,
+      'ordering': true,
+      'info': true,
+      'autoWidth': false
     })
   })
 </script>
@@ -125,5 +125,4 @@ $(function(){
     format: 'yyyy-mm-dd'
   }) 
 </script>
-
 
