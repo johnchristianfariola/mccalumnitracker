@@ -67,7 +67,7 @@ usort($jobData, function ($a, $b) {
                             <center>
                                 <a class="openFormButton probootstrap-featured-news-box">
                                     <figure class="probootstrap-media">
-                                        <img src="uploads/<?php echo $job['image_path']; ?>" alt="Job Image" class="img-responsive fixed-dimension-img">
+                                        <img src="admin/<?php echo $job['image_path']; ?>" alt="Job Image" class="img-responsive fixed-dimension-img">
                                     </figure>
                                     <div class="probootstrap-text" style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
                                         <h3 class="job-title"><?php echo $job['job_title']; ?></h3>
