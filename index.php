@@ -43,6 +43,15 @@ $data = json_decode($data, true);
 $eventData = $firebase->retrieve("event");
 $eventData = json_decode($eventData, true);
 
+$jobData = $firebase->retrieve("job");
+$jobData = json_decode($jobData, true);
+
+// Sort job data by creation date in descending order
+usort($jobData, function ($a, $b) {
+    return strtotime($b['job_created']) - strtotime($a['job_created']);
+});
+
+
 // Sort data by date in descending order
 usort($data, function ($a, $b) {
     return strtotime($b['news_created']) - strtotime($a['news_created']);
@@ -346,7 +355,7 @@ $data = array_slice($data, 0, 5);
 
 
     <!-- News Start -->
-   
+
     </style>
 
 
@@ -400,11 +409,15 @@ $data = array_slice($data, 0, 5);
                                         <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
                                             class="img-responsive fixed-dimension-img">
                                     </figure>
-                                    <div class="probootstrap-text" style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">                                        <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
+                                    <div class="probootstrap-text"
+                                        style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                                        <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
                                         <p class="event-description"><?php echo strip_tags($event['event_description']); ?>
                                         </p>
                                         <span class="probootstrap-date" style="font-size:14px"><i
-                                                class="icon-calendar"></i><b>Date Posted:</b> <?php echo $event['event_created']; ?> | <b>Date of Event:</b>   <?php echo $event['event_date']; ?></span>
+                                                class="icon-calendar"></i><b>Date Posted:</b>
+                                            <?php echo $event['event_created']; ?> | <b>Date of Event:</b>
+                                            <?php echo $event['event_date']; ?></span>
                                     </div>
                                 </a>
                             </center>
@@ -418,6 +431,42 @@ $data = array_slice($data, 0, 5);
 
 
     <!-- Event End -->
+
+
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center px-3">JOBS</h6>
+                <h1 class="mb-5">Available Job Listings</h1>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <?php foreach ($jobData as $key => $job): ?>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="item">
+                            <center>
+                                <a class="openFormButton probootstrap-featured-news-box">
+                                    <figure class="probootstrap-media">
+                                        <img src="uploads/<?php echo $job['image_path']; ?>" alt="Job Image"
+                                            class="img-responsive fixed-dimension-img">
+                                    </figure>
+                                    <div class="probootstrap-text"
+                                        style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                                        <h3 class="job-title"><?php echo $job['job_title']; ?></h3>
+                                        <p class="event-description"><?php echo strip_tags($job['job_description']); ?></p>
+                                        <span class="probootstrap-date" style="font-size:14px"><i
+                                                class="icon-calendar"></i><b>Date Posted:</b>
+                                            <?php echo $job['job_created']; ?> | <b>Company:</b>
+                                            <?php echo $job['company_name']; ?> | <b>Work Time:</b>
+                                            <?php echo $job['work_time']; ?></span>
+                                    </div>
+                                </a>
+                            </center>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Team Start
