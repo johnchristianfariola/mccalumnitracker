@@ -31,7 +31,7 @@ if (isset($_SESSION['admin'])) {
     <!--===============================================================================================-->
     <style>
         .form-container {
-            min-height: 500px;
+            min-height: 450px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
