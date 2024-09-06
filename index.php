@@ -446,7 +446,7 @@ $data = array_slice($data, 0, 5);
                             <center>
                                 <a class="openFormButton probootstrap-featured-news-box">
                                     <figure class="probootstrap-media">
-                                        <img src="uploads/<?php echo $job['image_path']; ?>" alt="Job Image"
+                                        <img src="admin/<?php echo $job['image_path']; ?>" alt="Job Image"
                                             class="img-responsive fixed-dimension-img">
                                     </figure>
                                     <div class="probootstrap-text"
