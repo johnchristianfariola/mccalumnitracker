@@ -1,6 +1,6 @@
 <style>
   .scrollable-menu {
-    max-height: 250px;  /* Set maximum height */
+    max-height: 350px;  /* Set maximum height */
     overflow-y: auto;   /* Enable vertical scrolling */
 }
 
@@ -104,10 +104,10 @@
         <li class="dropdown notifications-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-bell-o"></i>
-            <span class="label label-warning">10</span>
+            <span class="label label-warning"></span>
           </a>
           <ul class="dropdown-menu">
-            <li class="header">You have 10 notifications</li>
+            <li class="header">Loading...</li>
             <li>
               <!-- inner menu: contains the actual data -->
               <div id="recent-comments-list" class="recent-comments-list scrollable-menu">
@@ -116,7 +116,6 @@
             </li>
 
         </li>
-        <li class="footer"><a href="#">View all</a></li>
       </ul>
       </li>
       <!-- Tasks: style can be found in dropdown.less -->
@@ -255,80 +254,115 @@
 <?php include 'includes/profile_modal.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
-
-  function updateActivities() {
-    $.ajax({
-      url: 'get_recent_notification.php',
-      type: 'GET',
-      data: { last_read_timestamp: lastReadTimestamp },
-      dataType: 'json',
-      success: function (data) {
-        let activitiesHtml = '';
-
-        // Display all recent activities
-        data.activities.forEach(function (activity) {
-          let newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
-
-          let activityContent = activity.action === 'commented on'
-            ? `<div class="comment-text"><p><i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
-            : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
-
-          activitiesHtml += `
-          <div class="recent-comment-item ${newClass}">
-            <a href="#">
-              <div class="comment-flex">
-                <div class="comment-img">
-                  <img src="../userpage/${activity.profile_url}" alt="${activity.alumni_name}" />
-                </div>
-                <div class="comment-content">
-                  <div class="comment-header">
-                    <h3>${activity.alumni_name} <span class="comment-time">${activity.time_elapsed}</span></h3>
-                    <span>on ${activity.item_title}</span>
-                  </div>
-                  ${activityContent}
-                </div>
-              </div>
-            </a>
-          </div>
-        `;
-        });
-
-        $('#recent-comments-list').html(activitiesHtml);
-        updateNotificationCount(data.new_activity_count);
-        updateNotificationHeader(data.new_activity_count);
-      },
-      error: function (xhr, status, error) {
-        console.error("Error fetching activities:", error);
+  // Your existing script for the signout button
+  document.getElementById('signout_button').addEventListener('click', function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: 'Are you sure you want to leave this page?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, sign out',
+      cancelButtonText: 'No, stay here'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'logout.php';
       }
     });
-  }
-
-
-  function updateNotificationCount(count) {
-    const notificationCount = $('.notification-count');
-    if (count > 0) {
-      notificationCount.text(count).show();
-    } else {
-      notificationCount.hide();
-    }
-  }
-
-  function updateNotificationHeader(count) {
-    const header = $('.dropdown.notifications-menu .header');
-    header.html(`You have ${count} notifications`);
-  }
-
-  $('.read-all-btn').on('click', function (e) {
-    e.preventDefault();
-    lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-    localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
-    updateNotificationCount(0);
-    $('.new-comment').removeClass('new-comment');
   });
+  // Your existing script
+  document.getElementById('signout_button').addEventListener('click', function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: 'Are you sure you want to leave this page?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, sign out',
+      cancelButtonText: 'No, stay here'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'logout.php';
+      }
+    });
+  });
+</script>
 
-  // Update activities immediately and then every 5 seconds
-  updateActivities();
-  setInterval(updateActivities, 5000);
+
+<script>
+  let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
+
+function updateActivities() {
+  $.ajax({
+    url: 'get_recent_notification.php',
+    type: 'GET',
+    data: { last_read_timestamp: lastReadTimestamp },
+    dataType: 'json',
+    success: function (data) {
+      let activitiesHtml = '';
+
+      // Display all recent activities
+      data.activities.forEach(function (activity) {
+        let newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
+
+        let activityContent = activity.action === 'commented on'
+          ? `<div class="comment-text"><p><i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
+          : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
+
+        activitiesHtml += `
+        <div class="recent-comment-item ${newClass}">
+          <a href="#">
+            <div class="comment-flex">
+              <div class="comment-img">
+                <img src="../userpage/${activity.profile_url}" alt="${activity.alumni_name}" />
+              </div>
+              <div class="comment-content">
+                <div class="comment-header">
+                  <h3>${activity.alumni_name} <span class="comment-time">${activity.time_elapsed}</span></h3>
+                  <span>on ${activity.item_title}</span>
+                </div>
+                ${activityContent}
+              </div>
+            </div>
+          </a>
+        </div>
+      `;
+      });
+
+      $('#recent-comments-list').html(activitiesHtml);
+      updateNotificationCount(data.new_activity_count);
+      updateNotificationHeader(data.new_activity_count);
+    },
+    error: function (xhr, status, error) {
+      console.error("Error fetching activities:", error);
+    }
+  });
+}
+
+function updateNotificationCount(count) {
+  const notificationCount = $('.label.label-warning');
+  if (count > 0) {
+    notificationCount.text(count).show();
+  } else {
+    notificationCount.text(0).hide();
+  }
+}
+
+function updateNotificationHeader(count) {
+  const header = $('.dropdown.notifications-menu .header');
+  header.html(`You have ${count} notifications`);
+}
+
+// When the bell icon is clicked, reset the notification count
+$('.dropdown-toggle').on('click', function (e) {
+  lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+  localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
+  
+  // Reset the notification count to 0 in the UI
+  updateNotificationCount(0);
+  $('.new-comment').removeClass('new-comment');
+});
+
+// Update activities immediately and then every 5 seconds
+updateActivities();
+setInterval(updateActivities, 5000);
 
 </script>
