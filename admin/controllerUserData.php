@@ -45,7 +45,7 @@ if (isset($_POST['check-email'])) {
             // Send email with reset link
             $subject = "Password Reset";
             $message = <<<END
-            Click <a href="http://localhost/mccalumnitracker/mccalumnitracker/admin/new-password.php?token=$token">here</a> to reset your password.
+            Click <a href="https://mccalumnitracker.com/admin/new-password.php?token=$token">here</a> to reset your password.
             END;
             $sender = "From: johnchristianfariola@gmail.com";
 
