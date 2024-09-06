@@ -34,12 +34,22 @@
 <script src="../dist/js/pages/dashboard2.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../dist/js/demo.js"></script>
+<!-- FastClick -->
+<script src="../bower_components/fastclick/lib/fastclick.js"></script>
+<!-- iCheck -->
+<script src="../plugins/iCheck/icheck.min.js"></script>
+<!-- iCheck -->
+<script src="../../plugins/iCheck/icheck.min.js"></script>
 
 <!-- Additional Chart Libraries -->
 <script src="../plugins/chart/Chart.min.js"></script>
 <script src="../plugins/chart/chart.js"></script>
 <script src="../plugins/chart/apexcharts.min.js"></script>
 <script src="../plugins/chart/chart-apex.js"></script>
+
+<!-- Bootstrap WYSIHTML5 -->
+<script src="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- Page Script -->
 
 <!-- Active Script -->
 <script>
@@ -115,3 +125,5 @@ $(function(){
     format: 'yyyy-mm-dd'
   }) 
 </script>
+
+

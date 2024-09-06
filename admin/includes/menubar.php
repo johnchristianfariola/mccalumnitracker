@@ -94,7 +94,7 @@
         </a>
         <ul class="treeview-menu">
         <li><a href="inbox.php"><i class="fa fa-angle-right"></i> Inbox</a></li>
-          <li><a href=""><i class="fa fa-angle-right"></i> Compose</a></li>
+          <li><a href="compose.php"><i class="fa fa-angle-right"></i> Compose</a></li>
 
         </ul>
 

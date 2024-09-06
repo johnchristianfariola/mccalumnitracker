@@ -13,6 +13,12 @@ $contact_query = json_decode($firebase->retrieve("contact_query"), true);
 
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/flat/blue.css" />
+
+
+
   <style>
     .box-header {
       width: 100%;
@@ -202,6 +208,40 @@ $contact_query = json_decode($firebase->retrieve("contact_query"), true);
     <?php include 'includes/news_modal.php'; ?>
   </div>
   <?php include 'includes/scripts.php'; ?>
+
+ 
+<script>
+  $(function () {
+    // Initialize iCheck for all checkboxes
+    $('.mailbox-messages input[type="checkbox"]').iCheck({
+      checkboxClass: 'icheckbox_flat-blue',
+      radioClass: 'iradio_flat-blue'
+    });
+
+    // Check/uncheck all checkboxes functionality
+    $('.checkbox-toggle').click(function () {
+      var $this = $(this);
+      var isChecked = $this.data('clicks');
+      if (isChecked) {
+        // Uncheck all checkboxes
+        $('.mailbox-messages input[type="checkbox"]').iCheck('uncheck');
+        $this.find('i').removeClass('fa-check-square-o').addClass('fa-square-o');
+      } else {
+        // Check all checkboxes
+        $('.mailbox-messages input[type="checkbox"]').iCheck('check');
+        $this.find('i').removeClass('fa-square-o').addClass('fa-check-square-o');
+      }
+      $this.data('clicks', !isChecked);
+    });
+
+    // Handle starring for glyphicon and font awesome
+    $(".mailbox-star").click(function (e) {
+      e.preventDefault();
+      var $this = $(this).find("a > i");
+      $this.toggleClass("glyphicon-star glyphicon-star-empty fa-star fa-star-o");
+    });
+  });
+</script>
 
 </body>
 
