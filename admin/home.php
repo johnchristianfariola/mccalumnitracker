@@ -202,7 +202,7 @@ usort($all_comments, function ($a, $b) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>AdminLTE 2 | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
-<?php include 'includes/header.php'; ?>
+  <?php include 'includes/header.php'; ?>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -468,76 +468,76 @@ usort($all_comments, function ($a, $b) {
 
 
   </section>
-      <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
+  <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
 
 
 
-    <!-- /.control-sidebar -->
-    <!-- Add the sidebar's background. This div must be placed
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
-    <div class="control-sidebar-bg"></div>
+  <div class="control-sidebar-bg"></div>
 
   </div>
- <?php include 'includes/scripts.php';?>
+  <?php include 'includes/scripts.php'; ?>
 </body>
 
 </html>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const ctx = document.getElementById('myBarChart').getContext('2d');
+<script>
+  const ctx = document.getElementById('myBarChart').getContext('2d');
 
-    const courseCodes = <?php echo $courseCodesJson; ?>;
-    const courseCounts = <?php echo $courseCountsJson; ?>;
+  const courseCodes = <?php echo $courseCodesJson; ?>;
+  const courseCounts = <?php echo $courseCountsJson; ?>;
 
-    const myBarChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: courseCodes,
-        datasets: [{
-          label: 'Number of Alumni',
-          data: courseCounts,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)'
-          ],
-          borderWidth: 1
-        }]
+  const myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: courseCodes,
+      datasets: [{
+        label: 'Number of Alumni',
+        data: courseCounts,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false // Hide default legend if you're using a custom one
+        }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false // Hide default legend if you're using a custom one
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1,
-              callback: function (value) {
-                return Number.isInteger(value) ? value : '';
-              }
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            callback: function (value) {
+              return Number.isInteger(value) ? value : '';
             }
           }
         }
       }
-    });
-  </script>
+    }
+  });
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var options = {
@@ -677,86 +677,4 @@ usort($all_comments, function ($a, $b) {
     );
     chart.render();
   });
-</script>
-<script>
-  let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
-
-  function updateActivities() {
-    $.ajax({
-      url: 'get_recent_notification.php',
-      type: 'GET',
-      data: { last_read_timestamp: lastReadTimestamp },
-      dataType: 'json',
-      success: function (data) {
-        var activitiesHtml = '';
-        var newActivityCount = 0;
-
-        for (var i = 0; i < data.activities.length; i++) {
-          var activity = data.activities[i];
-          var newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
-          if (newClass) {
-            newActivityCount++;
-          }
-
-          var activityContent = activity.action === 'commented on'
-            ? `<div class="comment-text"><p>  <i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
-            : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
-
-          activitiesHtml += `
-                    <div class="recent-comment-item ${newClass}">
-                        <a href="#">
-                            <div class="comment-flex">
-                                <div class="comment-img">
-                                    <img src="../userpage/${activity.profile_url}" alt="${activity.alumni_name}" />
-                                </div>
-                                <div class="comment-content">
-                                    <div class="comment-header">
-                                        <h3>${activity.alumni_name} | <span class="comment-time">${activity.time_elapsed}</span></h3>
-                                        <span>on ${activity.item_title}</span>
-                                    </div>
-                                   ${activityContent}
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                `;
-        }
-
-        activitiesHtml += `
-                <div class="recent-comment-item view-all">
-                    <a href="#">
-                        <p>View All</p>
-                    </a>
-                </div>
-            `;
-
-        $('#recent-comments-list').html(activitiesHtml);
-        updateNotificationCount(newActivityCount);
-      },
-      error: function (xhr, status, error) {
-        console.error("Error fetching activities:", error);
-      }
-    });
-  }
-
-  function updateNotificationCount(count) {
-    const notificationCount = $('.notification-count');
-    if (count > 0) {
-      notificationCount.text(count).show();
-    } else {
-      notificationCount.hide();
-    }
-  }
-
-  $('.read-all-btn').on('click', function (e) {
-    e.preventDefault();
-    lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-    localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
-    updateNotificationCount(0);
-    $('.new-comment').removeClass('new-comment');
-  });
-
-  // Update activities immediately and then every 5 seconds
-  updateActivities();
-  setInterval(updateActivities, 5000);
 </script>

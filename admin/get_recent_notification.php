@@ -25,6 +25,7 @@ $newsComments = json_decode($newsCommentsData, true) ?: [];
 $eventComments = json_decode($eventCommentsData, true) ?: [];
 $jobComments = json_decode($jobCommentsData, true) ?: [];
 
+// Helper function to get the alumni name
 function getAlumniName($alumni_id, $alumni)
 {
     if (isset($alumni[$alumni_id])) {
@@ -33,6 +34,7 @@ function getAlumniName($alumni_id, $alumni)
     return "Unknown";
 }
 
+// Helper function to get the item title (news, event, or job)
 function getItemTitle($item_id, $items)
 {
     if (isset($items[$item_id])) {
@@ -43,6 +45,7 @@ function getItemTitle($item_id, $items)
     return "Unknown";
 }
 
+// Helper function to calculate time elapsed since the activity occurred
 function timeElapsed($timestamp) {
     $now = time();
     $diff = $now - $timestamp;
@@ -66,10 +69,10 @@ function timeElapsed($timestamp) {
     }
 }
 
-// Combine all comments and likes
+// Combine all comments and likes into a unified activity log
 $all_activities = [];
 
-// Process comments
+// Process comments (news, event, job)
 foreach ($newsComments as $id => $comment) {
     $all_activities[] = [
         'type' => 'news_comment',
@@ -98,7 +101,7 @@ foreach ($jobComments as $id => $comment) {
     ];
 }
 
-// Process likes
+// Process likes (news, event, job)
 foreach ($news as $id => $item) {
     if (isset($item['likes'])) {
         foreach ($item['likes'] as $alumni_id => $timestamp) {
@@ -136,20 +139,23 @@ foreach ($jobs as $id => $item) {
     }
 }
 
-// Sort activities by date, newest first
+// Sort all activities by date (newest first)
 usort($all_activities, function ($a, $b) {
     return $b['date'] - $a['date'];
 });
 
-// Get the last read timestamp from a cookie or session
+// Get the last read timestamp (from session or GET parameter)
 $last_read_timestamp = isset($_GET['last_read_timestamp']) ? intval($_GET['last_read_timestamp']) : 0;
 
 $new_activity_count = 0;
 $formatted_activities = [];
 
-$recent_activities = array_slice($all_activities, 0, 5);
-
-foreach ($recent_activities as $activity) {
+// Process all activities, count the new ones, and format them for output
+foreach ($all_activities as $activity) {
+    if ($activity['date'] > $last_read_timestamp) {
+        $new_activity_count++;
+    }
+    
     $alumni_name = getAlumniName($activity['alumni_id'], $alumni);
     $item_title = getItemTitle($activity['item_id'], 
         strpos($activity['type'], 'news') !== false ? $news : 
@@ -173,7 +179,9 @@ foreach ($recent_activities as $activity) {
 // Set the content type to JSON
 header('Content-Type: application/json');
 
-// Output the JSON-encoded activities
+// Return JSON with new activity count and formatted activities
 echo json_encode([
-    'activities' => $formatted_activities
+    'activities' => $formatted_activities, // No limit to the number of notifications
+    'new_activity_count' => $new_activity_count
 ]);
+?>
