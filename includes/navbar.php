@@ -30,6 +30,11 @@
                         <a href="404.php" class="dropdown-item ' . ($current_page == '404.php' ? 'active' : '') . '">Testimonial</a>
                     </div>
                 </div>-->
+
+                <a href="news.php" class="nav-item nav-link ' . ($current_page == 'news.php' ? 'active' : '') . '">News</a>
+
+                <a href="event.php" class="nav-item nav-link ' . ($current_page == 'event.php' ? 'active' : '') . '">Event</a>
+
                 
                 <a href="contact.php" class="nav-item nav-link ' . ($current_page == 'contact.php' ? 'active' : '') . '">Contact</a>
             </div>
