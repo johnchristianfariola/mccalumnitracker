@@ -1,9 +1,10 @@
 <style>
   .scrollable-menu {
-    max-height: 350px;  /* Set maximum height */
-    overflow-y: auto;   /* Enable vertical scrolling */
-}
-
+    max-height: 350px;
+    /* Set maximum height */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+  }
 </style>
 
 <header class="main-header">
@@ -27,74 +28,14 @@
         <li class="dropdown messages-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-envelope-o"></i>
-            <span class="label label-success">4</span>
+            <span class="label label-success"></span>
           </a>
           <ul class="dropdown-menu">
-            <li class="header">You have 4 messages</li>
+            <li class="header">You have 0 messages</li>
             <li>
               <!-- inner menu: contains the actual data -->
               <ul class="menu">
-                <li><!-- start message -->
-                  <a href="#">
-                    <div class="pull-left">
-                      <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                    </div>
-                    <h4>
-                      Support Team
-                      <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                    </h4>
-                    <p>Why not buy a new awesome theme?</p>
-                  </a>
-                </li>
-                <!-- end message -->
-                <li>
-                  <a href="#">
-                    <div class="pull-left">
-                      <img src="../dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                    </div>
-                    <h4>
-                      AdminLTE Design Team
-                      <small><i class="fa fa-clock-o"></i> 2 hours</small>
-                    </h4>
-                    <p>Why not buy a new awesome theme?</p>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <div class="pull-left">
-                      <img src="../dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                    </div>
-                    <h4>
-                      Developers
-                      <small><i class="fa fa-clock-o"></i> Today</small>
-                    </h4>
-                    <p>Why not buy a new awesome theme?</p>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <div class="pull-left">
-                      <img src="../dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                    </div>
-                    <h4>
-                      Sales Department
-                      <small><i class="fa fa-clock-o"></i> Yesterday</small>
-                    </h4>
-                    <p>Why not buy a new awesome theme?</p>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <div class="pull-left">
-                      <img src="../dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                    </div>
-                    <h4>
-                      Reviewers
-                      <small><i class="fa fa-clock-o"></i> 2 days</small>
-                    </h4>
-                    <p>Why not buy a new awesome theme?</p>
-                  </a>
-                </li>
+                <!-- Contact queries will be inserted here dynamically -->
               </ul>
             </li>
             <li class="footer"><a href="#">See All Messages</a></li>
@@ -119,7 +60,7 @@
       </ul>
       </li>
       <!-- Tasks: style can be found in dropdown.less -->
-     
+
       <!-- User Account: style can be found in dropdown.less -->
       <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -214,24 +155,24 @@
 <script>
   let lastReadTimestamp = parseInt(localStorage.getItem('lastReadTimestamp')) || 0;
 
-function updateActivities() {
-  $.ajax({
-    url: 'get_recent_notification.php',
-    type: 'GET',
-    data: { last_read_timestamp: lastReadTimestamp },
-    dataType: 'json',
-    success: function (data) {
-      let activitiesHtml = '';
+  function updateActivities() {
+    $.ajax({
+      url: 'get_recent_notification.php',
+      type: 'GET',
+      data: { last_read_timestamp: lastReadTimestamp },
+      dataType: 'json',
+      success: function (data) {
+        let activitiesHtml = '';
 
-      // Display all recent activities
-      data.activities.forEach(function (activity) {
-        let newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
+        // Display all recent activities
+        data.activities.forEach(function (activity) {
+          let newClass = activity.timestamp > lastReadTimestamp ? 'new-comment' : '';
 
-        let activityContent = activity.action === 'commented on'
-          ? `<div class="comment-text"><p><i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
-          : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
+          let activityContent = activity.action === 'commented on'
+            ? `<div class="comment-text"><p><i class="fa fa-wechat"></i> ${activity.comment}</p></div>`
+            : `<div class="comment-text"><p><i class="fa fa-thumbs-o-up"></i> Liked this ${activity.item_type}</p></div>`;
 
-        activitiesHtml += `
+          activitiesHtml += `
         <div class="recent-comment-item ${newClass}">
           <a href="#">
             <div class="comment-flex">
@@ -249,44 +190,103 @@ function updateActivities() {
           </a>
         </div>
       `;
-      });
+        });
 
-      $('#recent-comments-list').html(activitiesHtml);
-      updateNotificationCount(data.new_activity_count);
-      updateNotificationHeader(data.new_activity_count);
-    },
-    error: function (xhr, status, error) {
-      console.error("Error fetching activities:", error);
-    }
-  });
-}
-
-function updateNotificationCount(count) {
-  const notificationCount = $('.label.label-warning');
-  if (count > 0) {
-    notificationCount.text(count).show();
-  } else {
-    notificationCount.text(0).hide();
+        $('#recent-comments-list').html(activitiesHtml);
+        updateNotificationCount(data.new_activity_count);
+        updateNotificationHeader(data.new_activity_count);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching activities:", error);
+      }
+    });
   }
-}
 
-function updateNotificationHeader(count) {
-  const header = $('.dropdown.notifications-menu .header');
-  header.html(`You have ${count} notifications`);
-}
+  function updateNotificationCount(count) {
+    const notificationCount = $('.label.label-warning');
+    if (count > 0) {
+      notificationCount.text(count).show();
+    } else {
+      notificationCount.text(0).hide();
+    }
+  }
 
-// When the bell icon is clicked, reset the notification count
-$('.dropdown-toggle').on('click', function (e) {
-  lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-  localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
-  
-  // Reset the notification count to 0 in the UI
-  updateNotificationCount(0);
-  $('.new-comment').removeClass('new-comment');
+  function updateNotificationHeader(count) {
+    const header = $('.dropdown.notifications-menu .header');
+    header.html(`You have ${count} notifications`);
+  }
+
+  // When the bell icon is clicked, reset the notification count
+  $('.dropdown-toggle').on('click', function (e) {
+    lastReadTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+    localStorage.setItem('lastReadTimestamp', lastReadTimestamp);
+
+    // Reset the notification count to 0 in the UI
+    updateNotificationCount(0);
+    $('.new-comment').removeClass('new-comment');
+  });
+
+  // Update activities immediately and then every 5 seconds
+  updateActivities();
+  setInterval(updateActivities, 5000);
+
+</script>
+<script>
+  $(document).ready(function() {
+    function updateContactQueries() {
+        $.ajax({
+            url: 'get_contact_queries.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                let queriesHtml = '';
+                data.queries.forEach(function(query) {
+                    queriesHtml += `
+                        <li>
+                            <a href="#" data-query-id="${query.id}">
+                                <div class="pull-left">
+                                    <img src="../images/profile.jpg" class="img-circle" alt="User Image">
+                                </div>
+                                <h4>
+                                    ${query.name}
+                                    <small><i class="fa fa-clock-o"></i> ${query.time_elapsed}</small>
+                                </h4>
+                                <p>${query.subject}</p>
+                            </a>
+                        </li>
+                    `;
+                });
+
+                $('.dropdown-menu .menu').html(queriesHtml);
+                $('.dropdown-menu .header').text(`You have ${data.total_count} messages`);
+                updateNotificationCount(data.total_count);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching contact queries:", error);
+            }
+        });
+    }
+
+    function updateNotificationCount(count) {
+        const notificationCount = $('.messages-menu .label-success');
+        if (count > 0) {
+            notificationCount.text(count).show();
+        } else {
+            notificationCount.hide();
+        }
+    }
+
+    // Update contact queries immediately and then every 30 seconds
+    updateContactQueries();
+    setInterval(updateContactQueries, 30000);
+
+    // Handle click on a contact query
+    $(document).on('click', '.dropdown-menu .menu a', function(e) {
+        e.preventDefault();
+        const queryId = $(this).data('query-id');
+        // Here you can implement the logic to show the full message
+        // For example, open a modal with the full message details
+        console.log("Clicked query ID:", queryId);
+    });
 });
-
-// Update activities immediately and then every 5 seconds
-updateActivities();
-setInterval(updateActivities, 5000);
-
 </script>
