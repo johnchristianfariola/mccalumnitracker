@@ -1,10 +1,9 @@
 <?php
 // Include necessary files
-require_once 'includes/firebaseRDB.php';
-require_once 'includes/config.php';
+require_once 'firebaseRDB.php';
+require_once 'config.php';
 
 // Initialize Firebase
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
 // Retrieve gallery data
@@ -15,6 +14,9 @@ $galleryData = json_decode($galleryData, true);
 usort($galleryData, function ($a, $b) {
     return strtotime($b['created_on']) - strtotime($a['created_on']);
 });
+
+// Limit gallery data to 6 items
+$galleryData = array_slice($galleryData, 0, 6);
 ?>
 <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">
@@ -44,7 +46,7 @@ usort($galleryData, function ($a, $b) {
                     <?php foreach ($galleryData as $galleryItem): ?>
                         <?php if (isset($galleryItem['image_url']) && !empty($galleryItem['image_url'])): ?>
                             <div class="col-4">
-                                <img class="img-fluid bg-light p-1" src="admin/<?php echo htmlspecialchars($galleryItem['image_url']); ?>" alt="<?php echo htmlspecialchars($galleryItem['gallery_name']); ?>">
+                                <img class="img-fluid bg-light p-1" src="<?php echo htmlspecialchars($galleryItem['image_url']); ?>" alt="<?php echo htmlspecialchars($galleryItem['gallery_name']); ?>">
                             </div>
                         <?php endif; ?>
                     <?php endforeach; ?>
