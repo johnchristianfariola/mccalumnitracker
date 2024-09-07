@@ -75,7 +75,45 @@
     $currentEmploymentDateFormatted = str_replace('-', '/', $currentEmploymentDate);
 
     ?>
+<style>
+    .cover-photo-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px; /* Adjust max-width as needed for your layout */
+    height: 400px; /* Adjust height as needed */
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto; /* Center container horizontally */
+}
 
+.cover-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the container without stretching */
+}
+
+.cover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 18px;
+    transition: opacity 0.3s ease;
+}
+
+.cover-photo-container:hover .cover-overlay {
+    opacity: 1;
+}
+
+</style>
 </head>
 
 <body>
@@ -367,16 +405,16 @@
                             </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="form-group">
-                                    <label for="company_name" class="form-label"><i class="fas fa-building icon"></i>
-                                        Company Name</label>
-                                    <div class="nk-int-st">
-                                        <input type="text" id="company_name" name="name_company" class="form-control"
-                                            value="<?php echo getValue($current_user, 'name_company'); ?>"
-                                            placeholder="Company Name">
+                                    <div class="form-group">
+                                        <label for="company_name" class="form-label"><i class="fas fa-building icon"></i>
+                                            Company Name</label>
+                                        <div class="nk-int-st">
+                                            <input type="text" id="company_name" name="name_company" class="form-control"
+                                                value="<?php echo getValue($current_user, 'name_company'); ?>"
+                                                placeholder="Company Name">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
