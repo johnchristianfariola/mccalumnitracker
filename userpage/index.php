@@ -177,7 +177,7 @@ if (isset($_SESSION['forms_completed']) && $_SESSION['forms_completed'] == false
                                     data-wow-delay="0.3">
                                     <div class="card">
                                         <div class="card-content">
-                                            <a href=""><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
+                                            <a href="forum.php"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Forum Link</a>
                                         </div>
                                     </div>
                                 </div>
