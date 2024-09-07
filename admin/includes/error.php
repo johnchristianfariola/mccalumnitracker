@@ -5,7 +5,7 @@ $error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.'
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include '../../includes/header.php'; ?>
+<?php include '../includes/header.php'; ?>
 
 <body>
     <!-- Spinner Start -->
