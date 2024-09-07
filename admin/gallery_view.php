@@ -125,11 +125,7 @@ $album = json_decode($albumData, true) ?: [];
                                                             Remove
                                                         </div>
                                                     </div>
-                                                    <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
-                                                        <a href="gallery_view.php?id=<?php echo urlencode($id); ?>"
-                                                            target="_parent" class='btn btn-default btn-class'
-                                                            style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none; ">View</a>
-                                                    </div>
+                                                  
                                                 </div>
                                                 <div class="album-title">
                                                     <?php echo htmlspecialchars(pathinfo($gallery['image_url'], PATHINFO_FILENAME)); ?>

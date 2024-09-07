@@ -5,8 +5,6 @@
 
 <head>
     <?php include 'includes/header.php'; ?>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/jquery.fancybox.css">
 
     <?php
 
@@ -104,13 +102,8 @@
     <?php include 'global_chatbox.php'?>
 
 
-    <!-- Scripts -->
-    <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/jquery.fancybox.js"></script>
-    <script src="js/main.js"></script>
-    <script src="../bower_components/ckeditor/ckeditor.js"></script>
+
+  
 </body>
 
 </html>

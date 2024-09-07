@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="css/normalize.css">
 <link rel="stylesheet" href="css/scrollbar/jquery.mCustomScrollbar.min.css">
 <link rel="stylesheet" href="css/jvectormap/jquery-jvectormap-2.0.3.css">
+<link rel="stylesheet" href="css/jquery.fancybox.css">
 <link rel="stylesheet" href="css/notika-custom-icon.css">
 <link rel="stylesheet" href="css/wave/waves.min.css">
 <link rel="stylesheet" href="css/main.css">
@@ -64,6 +65,7 @@
 <script src="js/sparkline/sparkline-active.js"></script>
 <script src="js/flot/jquery.flot.js"></script>
 <script src="js/flot/jquery.flot.resize.js"></script>
+<script src="js/jquery.fancybox.js"></script>
 <script src="js/flot/curvedLines.js"></script>
 <script src="js/flot/flot-active.js"></script>
 <script src="js/knob/jquery.knob.js"></script>
