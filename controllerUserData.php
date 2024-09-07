@@ -133,7 +133,7 @@ if (isset($_POST['check-email'])) {
                         <img src="https://ucarecdn.com/09bcae53-4a97-41fa-a664-25c0c1042382/airywomanopeninglockwithakey.png" alt="Password Reset Image">
                         <h1>Reset your password</h1>
                         <p>We've got a request from you to reset the password for your account. Please click on the button below to get a new password.</p>
-                        <a href="http://localhost/mccalumnitracker/mccalumnitracker/new-password.php?token=$token" class="button">Reset my password</a>
+                        <a href="https://mccalumnitracker.com/new-password.php?token=$token" class="button">Reset my password</a>
                         <p>If you didn't request a password reset, please ignore this email or contact support if you have questions.</p>
                     </div>
                     <div class="footer">
