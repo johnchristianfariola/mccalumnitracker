@@ -29,50 +29,7 @@ include 'controllerUserData.php';
     <link rel="stylesheet" type="text/css" href="../dist/css/login_util.css">
     <link rel="stylesheet" type="text/css" href="../dist/css/login_main.css">
     <!--===============================================================================================-->
-    <style>
-        .form-container {
-            min-height: 450px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
 
-        .login100-form-btn {
-            pointer-events: auto;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .p-t-12 {
-            padding-top: 12px;
-        }
-
-        .txt2 {
-            font-family: Poppins-Regular;
-            font-size: 13px;
-            line-height: 1.5;
-            color: #666666;
-        }
-
-        @media (max-width: 992px) {
-            .wrap-login100 {
-                flex-direction: column;
-                align-items: center;
-                padding: 50px 15px 50px 15px;
-            }
-
-            .login100-pic {
-                position: static;
-                margin-bottom: 50px;
-            }
-
-            .login100-form {
-                width: 100%;
-            }
-        }
-    </style>
 </head>
 
 <body>
