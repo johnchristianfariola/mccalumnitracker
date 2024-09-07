@@ -89,7 +89,7 @@
 
         .cover-photo {
             width: 100%;
-            height: 100%;
+            height: 50%;
             object-fit: cover;
         }
 
@@ -635,7 +635,7 @@
 
                 <!-- Cover Photo Section -->
                 <h3>Cover Photo</h3>
-                <div class="post-col" style="width:100% !important">
+                <div class="post-col" style="width:100%; !important" >
                     <div class="post-container">
                         <div class="cover-photo-container">
                             <input type="file" id="coverPhotoInput" name="cover_photo_url" accept="image/*"
