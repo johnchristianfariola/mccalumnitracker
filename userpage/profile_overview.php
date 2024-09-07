@@ -90,9 +90,272 @@
             gap: 20px;
         }
 
+        .profile-image-container {
+            grid-column: span 3;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-info div {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-info h3 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .profile-info p strong {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #f4f4f4;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .profile-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        .post-col {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .profile-section {
+            margin-bottom: 30px;
+        }
+
+        /* New styles for the ID card */
+        .id-card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: nowrap;
+            max-width: 1240px;
+            padding: 20px;
+        }
+
+        .id-card {
+            width: 600px;
+            height: 340px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-front,
+        .card-back {
+            background-color: rgba(33, 37, 51, 0.9);
+            /* Slightly transparent background */
+        }
+
+        .card-left,
+        .card-back-left {
+            width: 55%;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* New styles for background image */
+        .id-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('img/card_background.png');
+            /* Replace with your actual image path */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            /* Adjust this value to change the opacity */
+            z-index: 0;
+        }
+
+        .card-left::before,
+        .card-back-left::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background-image: url('img/logo/school_logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .card-right,
+        .card-back-right {
+            width: 45%;
+            background: #1c1e29;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .card-back-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .logo-card,
+        .card-text,
+        .contact-info,
+        .signature {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-card {
+            width: 50px;
+            height: 50px;
+        }
+
+        .card-text h2 {
+            color: #F5921D;
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .card-text p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .card-text h3 {
+            margin: 10px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
 
 
-      
+        .contact-info h3 {
+            color: #F5921D;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .signature {
+            margin-top: 20px;
+        }
+
+        .signature-line {
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+        }
+
+        .barcode img {
+            width: 100%;
+            height: auto;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+            max-height: 200px;
+        }
+
+        @media (max-width: 1260px) {
+            .id-card {
+                width: 100%;
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-image-container {
+                grid-column: 1;
+            }
+        }
     </style>
 </head>
 
@@ -227,7 +490,6 @@
 
     <?php include 'global_chatbox.php' ?>
 
-   
 </body>
 
 </html>

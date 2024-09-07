@@ -75,45 +75,7 @@
     $currentEmploymentDateFormatted = str_replace('-', '/', $currentEmploymentDate);
 
     ?>
-<style>
-    .cover-photo-container {
-    position: relative;
-    width: 100%;
-    max-width: 1200px; /* Adjust max-width as needed for your layout */
-    height: 400px; /* Adjust height as needed */
-    overflow: hidden;
-    cursor: pointer;
-    margin: 0 auto; /* Center container horizontally */
-}
 
-.cover-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image covers the container without stretching */
-}
-
-.cover-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 18px;
-    transition: opacity 0.3s ease;
-}
-
-.cover-photo-container:hover .cover-overlay {
-    opacity: 1;
-}
-
-</style>
 </head>
 
 <body>
@@ -635,7 +597,7 @@
 
                 <!-- Cover Photo Section -->
                 <h3>Cover Photo</h3>
-                <div class="post-col" style="width:100%; !important" >
+                <div class="post-col" style="width:100% !important">
                     <div class="post-container">
                         <div class="cover-photo-container">
                             <input type="file" id="coverPhotoInput" name="cover_photo_url" accept="image/*"
