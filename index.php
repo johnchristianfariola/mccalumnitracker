@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once 'controllerUserData.php';
+
 if (isset($_SESSION['alumni'])) {
     if ($_SESSION['forms_completed'] == false) {
         header('location: userpage/alumni_profile.php');
@@ -10,10 +11,7 @@ if (isset($_SESSION['alumni'])) {
 }
 ?>
 <?php
-require_once 'includes/firebaseRDB.php';
-require_once 'includes/config.php';
 
-$firebase = new firebaseRDB($databaseURL);
 
 // Get current date
 $date = date('Y-m-d');
@@ -30,12 +28,9 @@ if ($existingData) {
     // Create new entry for today
     $firebase->insert("track_visitors", [$date => ['count' => 1]]);
 }
-?>
-<?php
-require_once 'includes/firebaseRDB.php';
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
-$firebase = new firebaseRDB($databaseURL);
+
+
 
 $data = $firebase->retrieve("news");
 $data = json_decode($data, true);
@@ -61,6 +56,7 @@ usort($data, function ($a, $b) {
 $data = array_slice($data, 0, 5);
 
 ?>
+
 
 <script>
 
@@ -98,25 +94,33 @@ $data = array_slice($data, 0, 5);
 <!DOCTYPE html>
 <html lang="en">
 
-
+<style>
+    .swal2-shown,
+    .swal2-height-auto {
+        padding: 0 !important;
+    }
+</style>
 <?php include 'includes/header.php' ?>
 
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner"
-        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <!-- Spinner End -->
 
+
+    <?php
+    if (count($errors) > 0) {
+        foreach ($errors as $error) {
+            echo "<div class='alert alert-danger text-center'>$error</div>";
+        }
+    }
+    if (isset($_SESSION['info'])) {
+        echo "<div class='alert alert-success text-center'>" . $_SESSION['info'] . "</div>";
+        unset($_SESSION['info']);
+    }
+    ?>
 
     <!-- Navbar Start -->
     <?php include 'includes/navbar.php' ?>
     <!-- Navbar End -->
-
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5">
