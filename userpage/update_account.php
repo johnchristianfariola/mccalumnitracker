@@ -79,7 +79,7 @@
      .cover-photo-container {
             position: relative;
             width: 100%;
-
+            height: 80%;
             /* Adjust height as needed */
             overflow: hidden;
             cursor: pointer;
@@ -89,7 +89,7 @@
 
         .cover-photo {
             width: 100%;
-            height: 50%;
+            height: 100%;
             object-fit: cover;
         }
 
