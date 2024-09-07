@@ -37,6 +37,19 @@ $error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.'
         </div>
     </div>
 
+    <div class="container-fluid p-0 mb-5" style="height: 40%">
+    <div class="position-relative">
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+            style="background: rgba(24, 29, 56, .7);">
+            <div class="container">
+                <div class="row justify-content-start">
+                    <!-- Your content here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <!-- Error Message Start -->
     <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
