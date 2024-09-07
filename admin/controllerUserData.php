@@ -122,7 +122,7 @@ if (isset($_POST['check-email'])) {
                         <img src="https://mccalumnitracker.com/images/logo/alumni_logo.png" alt="Company Logo">
                     </div>
                     <div class="content">
-                        <img src="../images/airy-woman-opening-lock-with-a-key.png" alt="Password Reset Image">
+                        <img src="https://ucarecdn.com/09bcae53-4a97-41fa-a664-25c0c1042382/airywomanopeninglockwithakey.png" alt="Password Reset Image">
                         <h1>Reset your password</h1>
                         <p>We've got a request from you to reset the password for your account. Please click on the button below to get a new password.</p>
                         <a href="https://mccalumnitracker.com/admin/new-password.php?token=$token" class="button">Reset my password</a>
@@ -131,9 +131,9 @@ if (isset($_POST['check-email'])) {
                     <div class="footer">
                         <p>Questions? Contact us at <a href="mailto:support@company.com">support@company.com</a> or call 1-877-123-4567.</p>
                         <p class="social-icons">
-                            <a href="https://facebook.com"><img src="https://your-image-url.com/facebook-icon.png" alt="Facebook"></a>
-                            <a href="https://instagram.com"><img src="https://your-image-url.com/instagram-icon.png" alt="Instagram"></a>
-                            <a href="https://twitter.com"><img src="https://your-image-url.com/twitter-icon.png" alt="Twitter"></a>
+                            <a href="https://facebook.com"><img src="https://ucarecdn.com/7ead65a8-a270-4a31-8f89-abdbdc718677/fb.png" alt="Facebook"></a>
+                            <a href="https://instagram.com"><img src="https://img.icons8.com/fluency/50/instagram-new.png" alt="Instagram"></a>
+                            <a href="https://twitter.com"><img src="https://img.icons8.com/papercut/120/twitter.png" alt="Twitter"></a>
                         </p>
                         <p>© 2024 Company. All rights reserved.</p>
                     </div>
