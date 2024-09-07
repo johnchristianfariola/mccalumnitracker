@@ -1,90 +1,46 @@
+<?php
+$error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <title>Error</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap 5 -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
-    <style>
-        body, html {
-            height: 100%;
-            font-family: 'Nunito', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-        }
-
-        .container-center {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-        }
-
-        .error-box {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .error-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .error-icon {
-            color: #e74c3c;
-            margin-bottom: 20px;
-        }
-
-        .error-message {
-            font-size: 1.5rem;
-            color: #333333;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .btn-primary {
-            background-color: #3498db;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-    </style>
-</head>
+<?php include '../../includes/header.php'; ?>
 
 <body>
-    <div class="container-center">
-        <div class="error-box">
-            <i class="fas fa-exclamation-triangle fa-4x error-icon"></i>
-            <p class="error-message">
-                <?php echo htmlspecialchars($_GET['error']); ?>
-            </p>
-            <a href="index.php" class="btn btn-primary">Go Back</a>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    
+
+    <!-- Error Message Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
+                    <h1 class="display-4 mb-4">Error</h1>
+                    <p class="lead mb-4"><?php echo $error_message; ?></p>
+                    <a class="btn btn-primary rounded-pill py-3 px-5" href="index.php">Go Back To Home</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-    <!-- FontAwesome -->
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="homepage/lib/wow/wow.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="homepage/js/main.js"></script>
+
+    <!-- Modal -->
+    <?php include 'includes/auth.php'; ?>
 </body>
 
 </html>
