@@ -15,7 +15,7 @@ $token = $_GET["token"] ?? null;
 $errors = [];
 
 if (!$token) {
-    header('location: includes/error.php?error=No+token+provided');
+    header('location: /includes/error.php?error=No+token+provided');
     exit();
 }
 
