@@ -37,7 +37,7 @@
 
                 <a href="job.php" class="nav-item nav-link ' . ($current_page == 'job.php' ? 'active' : '') . '">Job Posting</a>
 
-                <a href="contact.php" class="nav-item nav-link ' . ($current_page == 'contact.php' ? 'active' : '') . '">Contact</a>
+               <!-- <a href="contact.php" class="nav-item nav-link ' . ($current_page == 'contact.php' ? 'active' : '') . '">Contact</a> -->
             </div>
             ';
         }
