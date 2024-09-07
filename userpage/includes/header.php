@@ -45,8 +45,12 @@
 <script src="../homepage/lib/waypoints/waypoints.min.js"></script>
 <script src="../homepage/lib/owlcarousel/owl.carousel.min.js"></script>
 
-<!-- Additional JavaScript Libraries -->
+<!-- JavaScript Libraries -->
+<script src="js/vendor/jquery-1.12.4.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/wow.min.js"></script>
 <script src="js/jquery-price-slider.js"></script>
+<script src="js/owl.carousel.min.js"></script>
 <script src="js/jquery.scrollUp.min.js"></script>
 <script src="js/meanmenu/jquery.meanmenu.js"></script>
 <script src="js/counterup/jquery.counterup.min.js"></script>
@@ -74,5 +78,4 @@
 <script src="js/main.js"></script>
 <script src="js/dialog/sweetalert2.min.js"></script>
 <script src="js/dialog/dialog-active.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
-        
+<script src="../bower_components/ckeditor/ckeditor.js"></script>
