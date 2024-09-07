@@ -37,7 +37,93 @@
     // Make the data available to the HTML file
     $jobsData = $activeJobs;
     ?>
+    <style>
+        .breadcomb-area {
+            padding: 20px 0;
+        }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .rows {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .card p {
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .breadcomb-area {
+            padding: 20px 0;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+            /* Add some bottom margin to create spacing */
+        }
+
+        .section-title::before {
+            position: absolute;
+            content: "";
+            width: calc(100% + 80px);
+            height: 2px;
+            top: -10px;
+            /* Move the top line higher */
+            left: -40px;
+            background: #06BBCC;
+            z-index: -1;
+        }
+
+        .section-title::after {
+            position: absolute;
+            content: "";
+            width: calc(100% + 120px);
+            height: 2px;
+            bottom: -8px;
+            /* Move the bottom line lower */
+            left: -60px;
+            background: #06BBCC;
+            z-index: 1000;
+        }
+
+        .section-title.text-start::before {
+            width: calc(100% + 40px);
+            left: 0;
+        }
+
+        .section-title.text-start::after {
+            width: calc(100% + 60px);
+            left: 0;
+        }
+    </style>
 </head>
 
 <body>
