@@ -224,7 +224,7 @@
 
                 <img src="../images/setting.png" class="settings-icon">
 
-                <a href="profile_overview.php">Settings & Privacy <img src="../images/arrow.png" width="10px"></a>
+                <a href="profile_overview.php">Settings<img src="../images/arrow.png" width="10px"></a>
 
             </div>
 
