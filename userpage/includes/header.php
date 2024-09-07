@@ -75,3 +75,5 @@
 <script src="js/dialog/sweetalert2.min.js"></script>
 <script src="js/dialog/dialog-active.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
+<script src="../../bower_components/ckeditor/ckeditor.js"></script>
+<script src="js/jquery/jquery-3.5.1.min.js"></script>
