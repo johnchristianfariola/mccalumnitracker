@@ -646,9 +646,6 @@
 </html>
 <script src="../bower_components/ckeditor/ckeditor.js"></script>
 
-<script src="js/bootstrap-select/bootstrap-select.js"></script>
-<script src="js/datapicker/bootstrap-datepicker.js"></script>
-<script src="js/datapicker/datepicker-active.js"></script>
 
 <script>
     var maxLength = 101;
