@@ -45,7 +45,75 @@ if (isset($_POST['check-email'])) {
             // Send email with reset link
             $subject = "Password Reset";
             $message = <<<END
-            Click <a href="https://mccalumnitracker.com/admin/new-password.php?token=$token">here</a> to reset your password.
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        margin: 0;
+                        padding: 0;
+                        -webkit-font-smoothing: antialiased;
+                        font-size: 16px;
+                        line-height: 1.6;
+                        color: #333;
+                    }
+                    .email-container {
+                        width: 100%;
+                        max-width: 600px;
+                        margin: 20px auto;
+                        background-color: #ffffff;
+                        border: 1px solid #dddddd;
+                        padding: 20px;
+                    }
+                    .email-header {
+                        text-align: center;
+                        padding: 20px 0;
+                        background-color: #007BFF;
+                        color: #ffffff;
+                    }
+                    .email-body {
+                        margin: 20px 0;
+                    }
+                    .email-footer {
+                        text-align: center;
+                        padding: 10px;
+                        font-size: 12px;
+                        color: #888888;
+                    }
+                    .btn {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        color: white;
+                        background: linear-gradient(to right, #da8cff, #9a55ff);
+                        text-decoration: none;
+                        border-radius: 5px;
+                    }
+                    .btn:hover {
+                        background-color: #218838;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="email-container">
+                    <div class="email-header">
+                        <h2>Password Reset Request</h2>
+                    </div>
+                    <div class="email-body">
+                        <p>Dear User,</p>
+                        <p>We received a request to reset your password. Click the button below to reset it:</p>
+                        <p>
+                            <a href="https://mccalumnitracker.com/admin/new-password.php?token=$token" class="btn">Reset Password</a>
+                        </p>
+                        <p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
+                    </div>
+                    <div class="email-footer">
+                        <p>&copy; 2024 MCC Alumni Tracker. All rights reserved.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
             END;
             $sender = "From: johnchristianfariola@gmail.com";
 
@@ -54,6 +122,7 @@ if (isset($_POST['check-email'])) {
             $mail->setFrom("noreply@example.com");
             $mail->addAddress($email);
             $mail->Subject = $subject;
+            $mail->isHTML(true); // Set email format to HTML
             $mail->Body = $message;
 
             try {
@@ -74,6 +143,7 @@ if (isset($_POST['check-email'])) {
         }
     }
 }
+
 
 if (isset($_POST['change-password'])) {
     $_SESSION['info'] = "";
