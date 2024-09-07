@@ -50,66 +50,92 @@ if (isset($_POST['check-email'])) {
                 <style>
                     body {
                         font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
+                        background-color: #f9f9f9;
                         margin: 0;
                         padding: 0;
-                        -webkit-font-smoothing: antialiased;
-                        font-size: 16px;
-                        line-height: 1.6;
                         color: #333;
                     }
-                    .email-container {
+                    .container {
                         width: 100%;
                         max-width: 600px;
-                        margin: 20px auto;
+                        margin: 0 auto;
                         background-color: #ffffff;
-                        border: 1px solid #dddddd;
                         padding: 20px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
                     }
-                    .email-header {
+                    .header {
                         text-align: center;
                         padding: 20px 0;
-                        background-color: #007BFF;
-                        color: #ffffff;
+                        background-color: #f2f2f2;
+                        border-bottom: 1px solid #ddd;
                     }
-                    .email-body {
-                        margin: 20px 0;
+                    .header img {
+                        max-width: 150px;
                     }
-                    .email-footer {
+                    .content {
+                        padding: 20px;
                         text-align: center;
-                        padding: 10px;
-                        font-size: 12px;
-                        color: #888888;
                     }
-                    .btn {
-                        display: inline-block;
-                        padding: 10px 20px;
+                    .content h1 {
+                        font-size: 24px;
+                        color: #333;
+                    }
+                    .content p {
                         font-size: 16px;
-                        color: white;
-                        background: linear-gradient(to right, #da8cff, #9a55ff);
+                        line-height: 1.5;
+                        color: #666;
+                    }
+                    .button {
+                        display: inline-block;
+                        padding: 15px 25px;
+                        font-size: 16px;
+                        color: #ffffff;
+                        background-color: #007BFF;
                         text-decoration: none;
                         border-radius: 5px;
+                        margin: 20px 0;
                     }
-                    .btn:hover {
-                        background-color: #218838;
+                    .footer {
+                        padding: 20px;
+                        text-align: center;
+                        font-size: 14px;
+                        color: #777;
+                        border-top: 1px solid #ddd;
+                    }
+                    .footer a {
+                        color: #007BFF;
+                        text-decoration: none;
+                    }
+                    .social-icons {
+                        margin-top: 10px;
+                    }
+                    .social-icons img {
+                        width: 24px;
+                        margin: 0 5px;
                     }
                 </style>
             </head>
             <body>
-                <div class="email-container">
-                    <div class="email-header">
-                        <h2>Password Reset Request</h2>
+                <div class="container">
+                    <div class="header">
+                        <img src="https://mccalumnitracker.com/images/logo/alumni_logo.png" alt="Company Logo">
                     </div>
-                    <div class="email-body">
-                        <p>Dear User,</p>
-                        <p>We received a request to reset your password. Click the button below to reset it:</p>
-                        <p>
-                            <a href="https://mccalumnitracker.com/admin/new-password.php?token=$token" class="btn">Reset Password</a>
+                    <div class="content">
+                        <img src="../images/airy-woman-opening-lock-with-a-key.png" alt="Password Reset Image">
+                        <h1>Reset your password</h1>
+                        <p>We've got a request from you to reset the password for your account. Please click on the button below to get a new password.</p>
+                        <a href="https://mccalumnitracker.com/admin/new-password.php?token=$token" class="button">Reset my password</a>
+                        <p>If you didn't request a password reset, please ignore this email or contact support if you have questions.</p>
+                    </div>
+                    <div class="footer">
+                        <p>Questions? Contact us at <a href="mailto:support@company.com">support@company.com</a> or call 1-877-123-4567.</p>
+                        <p class="social-icons">
+                            <a href="https://facebook.com"><img src="https://your-image-url.com/facebook-icon.png" alt="Facebook"></a>
+                            <a href="https://instagram.com"><img src="https://your-image-url.com/instagram-icon.png" alt="Instagram"></a>
+                            <a href="https://twitter.com"><img src="https://your-image-url.com/twitter-icon.png" alt="Twitter"></a>
                         </p>
-                        <p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
-                    </div>
-                    <div class="email-footer">
-                        <p>&copy; 2024 MCC Alumni Tracker. All rights reserved.</p>
+                        <p>© 2024 Company. All rights reserved.</p>
                     </div>
                 </div>
             </body>
