@@ -59,7 +59,7 @@ $error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.'
                     <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
                     <h1 class="display-4 mb-4">Error</h1>
                     <p class="lead mb-4"><?php echo $error_message; ?></p>
-                    <a class="btn btn-primary rounded-pill py-3 px-5" href="index.php">Go Back To Home</a>
+                    <a class="btn btn-primary rounded-pill py-3 px-5" href="../index.php">Go Back To Home</a>
                 </div>
             </div>
         </div>
