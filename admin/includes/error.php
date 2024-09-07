@@ -15,15 +15,15 @@ $error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.'
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="../homepage/lib/animate/animate.min.css" rel="stylesheet">
-    <link href="../homepage/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="../../homepage/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="../../homepage/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="../homepage/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../homepage/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="../homepage/css/style.css" rel="stylesheet">
-    <link href="../homepage/css/styles-merged.css" rel="stylesheet">
+    <link href="../../homepage/css/style.css" rel="stylesheet">
+    <link href="../../homepage/css/styles-merged.css" rel="stylesheet">
 
 
 </head>
