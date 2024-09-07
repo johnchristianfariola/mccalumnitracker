@@ -222,6 +222,9 @@ body.dark-theme {
   color-scheme: #626262;
 
 }
+.post-content h3 {
+  margin-bottom: 10px;
+}
 
 .user-profile span {
   font-size: 13px;
@@ -254,6 +257,15 @@ body.dark-theme {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.activity-icons {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 
 .activity-icons div img {
@@ -262,10 +274,16 @@ body.dark-theme {
 }
 
 .activity-icons div {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  margin-right: 30px;
+  font-size: 14px;
+  margin-right: 10px;
 }
+
+.activity-icons i {
+  margin-right: 5px;
+}
+
 
 .post-profile-icon {
   display: flex;
@@ -2310,6 +2328,37 @@ ul {
 
 .reply-list .comment-box .comment-head {
   background: #f0f0f0;
+}
+
+.subject-input,
+.message-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    background: none;
+    font-size: 16px;
+    padding: 8px 0;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ccc;
+    /* Adds a subtle underline */
+}
+
+.subject-input:focus,
+.message-input:focus {
+    border-bottom: 1px solid #007bff;
+    /* Change underline color on focus */
+}
+
+.subject-input::placeholder,
+.message-input::placeholder {
+    color: #999;
+    /* Placeholder color */
+}
+
+.subject-input:hover,
+.message-input:hover {
+    border-bottom: 1px solid #007bff;
+    /* Hover state to match focus */
 }
 
 /* Responsive adjustments */

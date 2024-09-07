@@ -79,48 +79,6 @@
     date_default_timezone_set('Asia/Manila');
     ?>
     <style>
-        .post-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .post-content h3 {
-            margin-bottom: 10px;
-        }
-
-        .activity-icons {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
-
-        .activity-icons div {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-
-        .activity-icons i {
-            margin-right: 5px;
-        }
-
         .comment-box {
             display: flex;
             align-items: center;
@@ -150,36 +108,6 @@
             cursor: pointer;
         }
 
-        .subject-input,
-        .message-input {
-            border: none;
-            outline: none;
-            width: 100%;
-            background: none;
-            font-size: 16px;
-            padding: 8px 0;
-            box-sizing: border-box;
-            border-bottom: 1px solid #ccc;
-            /* Adds a subtle underline */
-        }
-
-        .subject-input:focus,
-        .message-input:focus {
-            border-bottom: 1px solid #007bff;
-            /* Change underline color on focus */
-        }
-
-        .subject-input::placeholder,
-        .message-input::placeholder {
-            color: #999;
-            /* Placeholder color */
-        }
-
-        .subject-input:hover,
-        .message-input:hover {
-            border-bottom: 1px solid #007bff;
-            /* Hover state to match focus */
-        }
     </style>
 </head>
 
