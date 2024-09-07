@@ -286,6 +286,7 @@
     <?php include 'global_chatbox.php'?>
 
 
+    <script src="../bower_components/ckeditor/ckeditor.js"></script>
 
 
     <script>

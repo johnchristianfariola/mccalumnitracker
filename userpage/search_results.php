@@ -94,13 +94,8 @@ date_default_timezone_set('Asia/Manila'); // Adjust this to your local timezone
 
     <!-- Scripts -->
     <?php include 'includes/script.php' ?>
-    <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/dialog/sweetalert2.min.js"></script>
-    <script src="js/dialog/dialog-active.js"></script>
-    <script src="js/main.js"></script>
-    <script src="../bower_components/ckeditor/ckeditor.js"></script>
-    <script src="js/jquery/jquery-3.5.1.min.js"></script>
+  
+
 </body>
 
 </html>

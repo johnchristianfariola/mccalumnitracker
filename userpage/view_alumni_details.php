@@ -121,50 +121,7 @@ date_default_timezone_set('Asia/Manila');
     </title>
     <?php include 'includes/header.php'; ?>
     <style>
-        /* Your CSS code here */
-        .post-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .post-content h3 {
-            margin-bottom: 10px;
-        }
-
-        .activity-icons {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
-
-        .activity-icons div {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-
-        .activity-icons i {
-            margin-right: 5px;
-        }
-
-        .comment-box {
+         .comment-box {
             display: flex;
             align-items: center;
             margin-top: 10px;
@@ -193,32 +150,6 @@ date_default_timezone_set('Asia/Manila');
             cursor: pointer;
         }
 
-        .subject-input,
-        .message-input {
-            border: none;
-            outline: none;
-            width: 100%;
-            background: none;
-            font-size: 16px;
-            padding: 8px 0;
-            box-sizing: border-box;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .subject-input:focus,
-        .message-input:focus {
-            border-bottom: 1px solid #007bff;
-        }
-
-        .subject-input::placeholder,
-        .message-input::placeholder {
-            color: #999;
-        }
-
-        .subject-input:hover,
-        .message-input:hover {
-            border-bottom: 1px solid #007bff;
-        }
     </style>
 </head>
 
@@ -242,13 +173,13 @@ date_default_timezone_set('Asia/Manila');
                     <div>
                         <h3><?php echo htmlspecialchars(getValue($alumni_profile, 'firstname') . ' ' . getValue($alumni_profile, 'lastname')); ?>
                         </h3>
-                        <p>1.8K Followers - 120 Following</p>
+                        <!--<p>1.8K Followers - 120 Following</p>-->
                         <!-- Add follower images here if available -->
                     </div>
                 </div>
             </div>
             <div class="pd-right">
-                <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+              <!--  <a href="#"><i class="fas fa-ellipsis-v"></i></a>-->
                 <?php if ($is_logged_in && $_SESSION['alumni_id'] !== $alumni_id): ?>
                     <button id="toggleChatbox" class="btn notika-btn-primary">
                         <i class="fa fa-group"></i>&nbsp;&nbsp;Message
@@ -374,7 +305,7 @@ date_default_timezone_set('Asia/Manila');
                                         <span><?php echo $formatted_date; ?> &bull; <?php echo $time_ago; ?></span>
                                     </div>
                                 </div>
-                                <a href="#" class="post-options"><i class="fas fa-ellipsis-v"></i></a>
+                               <!-- <a href="#" class="post-options"><i class="fas fa-ellipsis-v"></i></a>-->
                             </div>
 
                             <div class="post-content">
@@ -462,14 +393,6 @@ date_default_timezone_set('Asia/Manila');
 </body>
 
 </html>
-
-<script src="js/vendor/jquery-1.12.4.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/dialog/sweetalert2.min.js"></script>
-<script src="js/dialog/dialog-active.js"></script>
-<script src="js/main.js"></script>
-<script src="../bower_components/ckeditor/ckeditor.js"></script>
-<script src="js/jquery/jquery-3.5.1.min.js"></script>
 
 <script>
     $(document).ready(function () {

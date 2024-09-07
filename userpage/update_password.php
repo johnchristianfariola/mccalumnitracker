@@ -3,7 +3,6 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="css/datapicker/datepicker3.css">
     <?php include 'includes/header.php'; ?>
     <?php
     require_once '../includes/firebaseRDB.php';
@@ -78,80 +77,6 @@
     ?>
 
 
-    <style>
-        .dropup .dropdown-menu {
-            top: auto;
-            bottom: 100%;
-            margin-bottom: 5px;
-        }
-
-        /* Modern and GUI-friendly styles for post-container */
-
-
-
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            background-color: #f4f4f4;
-            padding: 15px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-        }
-
-        .sidebar h2 {
-            margin-top: 0;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin: 10px 0;
-        }
-
-        .sidebar ul li a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-
-        /* Profile Content Styles */
-        .profile-content {
-            margin-left: 250px;
-            /* Adjust according to sidebar width */
-            padding: 20px;
-            width: calc(100% - 250px);
-            /* Ensure it takes the full width minus the sidebar width */
-        }
-
-        .post-col {
-            width: 100%;
-            /* Ensure it uses the full width of .profile-content */
-            box-sizing: border-box;
-            /* Include padding and border in the element's total width */
-        }
-
-
-        .profile-section {
-            margin-bottom: 30px;
-        }
-
-        .form-label {
-            color: #6482AD;
-        }
-
-        .icon {
-            color: #6482AD;
-            margin-right: 5px;
-            /* Adjust spacing between icon and label */
-        }
-    </style>
 </head>
 
 <body>
@@ -226,15 +151,3 @@
 </body>
 
 </html>
-
-<script src="js/vendor/jquery-1.12.4.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/dialog/sweetalert2.min.js"></script>
-<script src="js/dialog/dialog-active.js"></script>
-<script src="js/main.js"></script>
-<script src="../bower_components/ckeditor/ckeditor.js"></script>
-<script src="js/jquery/jquery-3.5.1.min.js"></script>
-<script src="js/bootstrap-select/bootstrap-select.js"></script>
-<script src="js/jasny-bootstrap.min.js"></script>
-<script src="js/datapicker/bootstrap-datepicker.js"></script>
-<script src="js/datapicker/datepicker-active.js"></script>

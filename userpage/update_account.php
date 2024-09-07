@@ -75,6 +75,45 @@
     $currentEmploymentDateFormatted = str_replace('-', '/', $currentEmploymentDate);
 
     ?>
+<style>
+     .cover-photo-container {
+            position: relative;
+            width: 100%;
+
+            /* Adjust height as needed */
+            overflow: hidden;
+            cursor: pointer;
+
+            /* Space for profile image */
+        }
+
+        .cover-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 18px;
+            transition: opacity 0.3s ease;
+        }
+
+        .cover-photo-container:hover .cover-overlay {
+            opacity: 1;
+        }
+</style>
 </head>
 
 <body>
@@ -371,7 +410,7 @@
                                         Company Name</label>
                                     <div class="nk-int-st">
                                         <input type="text" id="company_name" name="name_company" class="form-control"
-                                            value="<?php echo getValue($current_user, 'company_name'); ?>"
+                                            value="<?php echo getValue($current_user, 'name_company'); ?>"
                                             placeholder="Company Name">
                                     </div>
                                 </div>
@@ -643,16 +682,9 @@
 </body>
 
 </html>
-
-<script src="js/vendor/jquery-1.12.4.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/dialog/sweetalert2.min.js"></script>
-<script src="js/dialog/dialog-active.js"></script>
-<script src="js/main.js"></script>
 <script src="../bower_components/ckeditor/ckeditor.js"></script>
-<script src="js/jquery/jquery-3.5.1.min.js"></script>
+
 <script src="js/bootstrap-select/bootstrap-select.js"></script>
-<script src="js/jasny-bootstrap.min.js"></script>
 <script src="js/datapicker/bootstrap-datepicker.js"></script>
 <script src="js/datapicker/datepicker-active.js"></script>
 

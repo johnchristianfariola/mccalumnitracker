@@ -13,6 +13,8 @@
 
 <!-- CSS Libraries -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/datapicker/datepicker3.css">
+
 <link rel="stylesheet" href="css/font-awesome.min.css">
 <link rel="stylesheet" href="css/owl.carousel.css">
 <link rel="stylesheet" href="css/owl.theme.css">
@@ -80,4 +82,3 @@
 <script src="js/main.js"></script>
 <script src="js/dialog/sweetalert2.min.js"></script>
 <script src="js/dialog/dialog-active.js"></script>
-<script src="../../bower_components/ckeditor/ckeditor.js"></script>
