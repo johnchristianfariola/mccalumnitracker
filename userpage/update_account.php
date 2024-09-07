@@ -79,7 +79,7 @@
      .cover-photo-container {
             position: relative;
             width: 100%;
-            height: 80%;
+            height: 80px;
             /* Adjust height as needed */
             overflow: hidden;
             cursor: pointer;
