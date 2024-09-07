@@ -34,13 +34,12 @@ $error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.'
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="homepage/lib/wow/wow.min.js"></script>
+    <script src="../../homepage/lib/wow/wow.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="homepage/js/main.js"></script>
+    <script src="../../homepage/js/main.js"></script>
 
     <!-- Modal -->
-    <?php include 'includes/auth.php'; ?>
 </body>
 
 </html>
