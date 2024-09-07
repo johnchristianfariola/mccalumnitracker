@@ -15,7 +15,8 @@ $token = $_GET["token"] ?? null;
 $errors = [];
 
 if (!$token) {
-    die("No token provided");
+    header('location: includes/error.php?error=No+token+provided');
+    exit();
 }
 
 // Fetch admin data from Firebase
@@ -25,11 +26,13 @@ $admin = json_decode($data, true);
 $token_hash = hash("sha256", $token);
 
 if (!$admin || !isset($admin['reset_token_hash']) || $admin['reset_token_hash'] !== $token_hash) {
-    die("Token not found or invalid");
+    header('location: error.php?error=Token+not+found+or+invalid');
+    exit();
 }
 
 if (isset($admin["reset_token_expires_at"]) && strtotime($admin["reset_token_expires_at"]) <= time()) {
-    die("Token has expired");
+    header('location: error.php?error=Token+has+expired');
+    exit();
 }
 
 // The password change logic is now handled in controllerUserData.php
