@@ -228,7 +228,7 @@
 
             </div>
 
-            <div class="settings-links">
+            <!--<div class="settings-links">
 
                 <img src="../images/help.png" class="settings-icon">
 
@@ -242,7 +242,7 @@
 
                 <a href="">Display & Access <img src="../images/arrow.png" width="10px"></a>
 
-            </div>
+            </div> -->
 
             <div class="settings-links">
 

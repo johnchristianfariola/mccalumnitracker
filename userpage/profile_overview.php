@@ -16,11 +16,26 @@
     $category_data = $firebase->retrieve("category");
     $category_data = json_decode($category_data, true);
 
+    $courseData = $firebase->retrieve("course");
+    $courseData = json_decode($courseData, true);
+
+    $batchData = $firebase->retrieve("batch_yr");
+    $batchData = json_decode($batchData, true);
+
+    function getBatchYear($batchData, $batch_id)
+    {
+        return isset($batchData[$batch_id]['batch_yrs']) ? $batchData[$batch_id]['batch_yrs'] : "Unknown Batch";
+    }
+
+    function getCourseName($courseData, $course_id)
+    {
+        return isset($courseData[$course_id]['course_name']) ? $courseData[$course_id]['course_name'] : "Unknown Course";
+    }
+
     // Assuming you have the current user's ID stored in a session variable
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
 
-    
     $messages = json_decode($firebase->retrieve("messages"), true);
 
     // Convert messages array to JSON for JavaScript
@@ -37,40 +52,46 @@
         return isset($array[$key]) && !empty($array[$key]) ? $array[$key] : "N/A";
     }
 
-    function getCategoryName($category_data, $category_id)
-    {
-        return isset($category_data[$category_id]) ? $category_data[$category_id]['category_name'] : "Unknown Category";
+    function getCourseCode($courseData, $course_id) {
+        return isset($courseData[$course_id]['courCode']) ? $courseData[$course_id]['courCode'] : "Unknown";
     }
 
     // Get the work classification ID from the current user's data
     $work_classification_id = getValue($current_user, 'work_classification');
 
     // Get the readable category name using the work classification ID
-    $category_name = getCategoryName($category_data, $work_classification_id);
+    $category_name = getCourseCode($category_data, $work_classification_id);
+
+
+    function generateQRCode($batchYear, $studentId, $courseCode) {
+        $data = "MCCALUMNI-{$batchYear}-{$studentId}-{$courseCode}-{$batchYear}";
+        $size = 200;
+        $apiUrl = "https://api.qrserver.com/v1/create-qr-code/?size={$size}x{$size}&data=" . urlencode($data);
+        return $apiUrl;
+    }
+    
+    // In the main code, before the HTML, add:
+    $qrCodeUrl = generateQRCode(
+        getBatchYear($batchData, getValue($current_user, 'batch')),
+        getValue($current_user, 'studentid'),
+        getCourseCode($courseData, getValue($current_user, 'course'))
+    );
+    
     ?>
 
-
     <style>
-        /* Modern and GUI-friendly styles for post-container */
-
-
+        /* Existing styles */
         .profile-info {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            /* 3 equal columns */
             grid-template-rows: auto 1fr;
-            /* Auto row for image, remaining space for columns */
             gap: 20px;
-            /* Space between columns and rows */
         }
 
-        /* Profile Image Container */
         .profile-image-container {
             grid-column: span 3;
-            /* Span across all 3 columns */
             display: flex;
             justify-content: center;
-            /* Center the image horizontally */
             margin-bottom: 20px;
         }
 
@@ -78,15 +99,12 @@
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            /* Make the image circular */
             object-fit: cover;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* Section Styles */
         .profile-info div {
             background-color: #f9f9f9;
-            /* Light background for sections */
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -97,7 +115,6 @@
             font-size: 18px;
             color: #333;
             border-bottom: 2px solid #ddd;
-            /* Underline for section headers */
             padding-bottom: 10px;
             margin-bottom: 10px;
         }
@@ -113,22 +130,6 @@
             color: #555;
         }
 
-        /* Responsive design for smaller screens */
-        @media (max-width: 768px) {
-            .profile-info {
-                grid-template-columns: 1fr;
-                /* Stack all content vertically on small screens */
-            }
-
-            .profile-image-container {
-                grid-column: 1;
-                /* Adjust for single column layout */
-            }
-        }
-
-
-
-        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -160,64 +161,268 @@
             font-weight: bold;
         }
 
-        /* Profile Content Styles */
         .profile-content {
             margin-left: 250px;
-            /* Adjust according to sidebar width */
             padding: 20px;
             width: calc(100% - 250px);
-            /* Ensure it takes the full width minus the sidebar width */
         }
 
         .post-col {
             width: 100%;
-            /* Ensure it uses the full width of .profile-content */
             box-sizing: border-box;
-            /* Include padding and border in the element's total width */
         }
-
 
         .profile-section {
             margin-bottom: 30px;
+        }
+
+
+
+
+
+
+        /* New styles for the ID card */
+        .id-card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: nowrap;
+            max-width: 1240px;
+            padding: 20px;
+        }
+
+        .id-card {
+            width: 600px;
+            height: 340px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-front,
+        .card-back {
+            background-color: rgba(33, 37, 51, 0.9);
+            /* Slightly transparent background */
+        }
+
+        .card-left,
+        .card-back-left {
+            width: 55%;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* New styles for background image */
+        .id-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('img/card_background.png');
+            /* Replace with your actual image path */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            /* Adjust this value to change the opacity */
+            z-index: 0;
+        }
+
+        .card-left::before,
+        .card-back-left::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background-image: url('img/logo/school_logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .card-right,
+        .card-back-right {
+            width: 45%;
+            background: #1c1e29;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            overflow: hidden;
+        }
+        .card-back-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+        .card-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .logo-card,
+        .card-text,
+        .contact-info,
+        .signature {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-card {
+            width: 50px;
+            height: 50px;
+        }
+
+        .card-text h2 {
+            color: #F5921D;
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .card-text p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .card-text h3 {
+            margin: 10px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+
+        .contact-info h3 {
+            color: #F5921D;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .signature {
+            margin-top: 20px;
+        }
+
+        .signature-line {
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+        }
+
+        .barcode img {
+            width: 100%;
+            height: auto;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+            max-height: 200px;
+        }
+
+        @media (max-width: 1260px) {
+            .id-card {
+                width: 100%;
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-image-container {
+                grid-column: 1;
+            }
         }
     </style>
 </head>
 
 <body>
-
     <?php include 'includes/navbar.php'; ?>
-
-    <!-----PROFILE PAGE---->
     <?php include 'includes/sidebar.php'; ?>
 
     <div class="profile-content">
         <div id="personal-info" class="profile-section">
             <h3>Personal Info</h3>
-
-
-
             <div class="post-col" style="width:100% !important">
                 <div class="write-post-container">
-                    <div class="user-profile">
-                        <img src="../images/profile.jpg" alt="Profile Picture">
-                        <div>
-                            <p>John Doe</p>
-                            <small>Public <i class="fas fa-caret-down"></i></small>
-                        </div>
-                    </div>
+                    <div class="id-card-container">
+                        <!-- Front Side -->
+                        <div class="id-card">
+                            <div class="card-content card-front">
+                                <div class="card-left">
+                                    <div class="logo-card">
+                                        <img src="img/logo/alumni_logo.png" alt=" Logo">
+                                    </div>
+                                    <div class="card-text">
+                                        <h4>MCC ALUMNI</h4>
+                                        <p>Madridejos Community College, Alumni Association.</p>
+                                        <h3><?php echo strtoupper(getValue($current_user, 'lastname') . ', ' . getValue($current_user, 'firstname') . ' ' . substr(getValue($current_user, 'middlename'), 0, 1) . '.'); ?>
+                                        </h3>
+                                        <p class="id-number"><?php echo getValue($current_user, 'studentid'); ?></p>
+                                        <p><?php echo getCourseName($courseData, getValue($current_user, 'course')); ?>
+                                        </p>
+                                        <p>BATCH
+                                            <?php echo getBatchYear($batchData, getValue($current_user, 'batch')); ?>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="card-right">
+                                    <img src="../homepage/img/sir-manuel-p4eU0iHsBoU-unsplash.jpg"
+                                        alt="Graduate Picture" class=""
+                                        onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                                </div>
 
-                    <div class="post-input-container">
-                        <textarea rows="3" placeholder="What's on your mind, John?"></textarea>
-                        <div class="add-post-links">
-                            <a href="#"><img src="../images/live-video.png">Live Video</a>
-                            <a href="#"><img src="../images/photo.png">Photo/Video</a>
-                            <a href="#"><img src="../images/feeling.png">Feeling</a>
+                            </div>
+                        </div>
+
+                        <!-- Back Side -->
+                        <div class="id-card">
+                            <div class="card-content card-back">
+                                <div class="card-back-left">
+                                    <div class="contact-info">
+                                        <h3>Contact Information</h3>
+                                        <p>Madridejos Community College</p>
+                                        <p>Bunakan, Madridejos, Cebu</p>
+                                        <p>Contact Number: <?php echo getValue($current_user, 'contactnumber'); ?></p>
+                                        <p>Email: <?php echo getValue($current_user, 'email'); ?></p>
+                                    </div>
+                                    <div class="signature">
+                                        <p>Signature</p>
+                                        <div class="signature-line"></div>
+                                    </div>
+                                </div>
+                                <div class="qr-code">
+                                    <img src="<?php echo $qrCodeUrl; ?>" alt="QR Code">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Post Section -->
-
 
                 <div class="post-container">
                     <div class="profile-image-container">
@@ -235,7 +440,6 @@
                             $formatted_date = date("F j, Y", strtotime($birthdate));
                             echo $formatted_date; ?>
                             </p>
-
                             <p><strong>Gender:</strong> <?php echo getValue($current_user, 'gender'); ?></p>
                             <p><strong>Address:</strong>
                                 <?php echo getValue($current_user, 'barangay') . ', ' . getValue($current_user, 'city') . ',  ' . getValue($current_user, 'state'); ?>
@@ -247,7 +451,7 @@
                         <!-- Employment Info Column -->
                         <div class="employment-info">
                             <h3>Employment Info</h3>
-                            <p><strong>Status:</strong> <span class=" btn-warning notika-btn-warning"
+                            <p><strong>Status:</strong> <span class="btn-warning notika-btn-warning"
                                     style="padding:5px 10px 5px 10px; border-radius:10px"><?php echo getValue($current_user, 'work_status'); ?></span>
                             </p>
                             <p><strong>Company:</strong> <?php echo getValue($current_user, 'name_company'); ?></p>
@@ -257,7 +461,6 @@
                                 $formatted_date = date("F j, Y", strtotime($start_date));
                                 echo $formatted_date; ?>
                             </p>
-
                             <p><strong>Work Status:</strong>
                                 <?php echo getValue($current_user, 'work_employment_status'); ?></p>
                             <p><strong>Work Classification:</strong>
@@ -280,23 +483,19 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 
-    <?php include 'global_chatbox.php'?>
+    <?php include 'global_chatbox.php' ?>
 
-
+    <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/dialog/sweetalert2.min.js"></script>
+    <script src="js/dialog/dialog-active.js"></script>
+    <script src="js/main.js"></script>
+    <script src="../bower_components/ckeditor/ckeditor.js"></script>
+    <script src="js/jquery/jquery-3.5.1.min.js"></script>
 </body>
 
 </html>
-
-<script src="js/vendor/jquery-1.12.4.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/dialog/sweetalert2.min.js"></script>
-<script src="js/dialog/dialog-active.js"></script>
-<script src="js/main.js"></script>
-<script src="../bower_components/ckeditor/ckeditor.js"></script>
-<script src="js/jquery/jquery-3.5.1.min.js"></script>

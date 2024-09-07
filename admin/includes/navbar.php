@@ -18,14 +18,14 @@
   <!-- Header Navbar: style can be found in header.less -->
   <nav class="navbar navbar-static-top">
     <!-- Sidebar toggle button-->
-    <a  class="sidebar-toggle" data-toggle="push-menu" role="button">
+    <a class="sidebar-toggle" data-toggle="push-menu" role="button">
       <i class="fa fa-bars"></i>
     </a>
 
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
-        <!-- Messages: style can be found in dropdown.less-->
-        <li class="dropdown messages-menu">
+
+    <!--    <li class="dropdown messages-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-envelope-o"></i>
             <span class="label label-success"></span>
@@ -33,85 +33,71 @@
           <ul class="dropdown-menu">
             <li class="header">You have 0 messages</li>
             <li>
-              <!-- inner menu: contains the actual data -->
               <ul class="menu">
-                <!-- Contact queries will be inserted here dynamically -->
               </ul>
             </li>
             <li class="footer"><a href="#">See All Messages</a></li>
           </ul>
         </li>
-        <!-- Notifications: style can be found in dropdown.less -->
-        <li class="dropdown notifications-menu">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-bell-o"></i>
-            <span class="label label-warning"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li class="header">Loading...</li>
-            <li>
-              <!-- inner menu: contains the actual data -->
-              <div id="recent-comments-list" class="recent-comments-list scrollable-menu">
-                <!-- Fetched notifications will be inserted here dynamically -->
-              </div>
-            </li>
 
+-->
+    <!-- Notifications: style can be found in dropdown.less -->
+    <li class="dropdown notifications-menu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-bell-o"></i>
+        <span class="label label-warning"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li class="header">Loading...</li>
+        <li>
+          <!-- inner menu: contains the actual data -->
+          <div id="recent-comments-list" class="recent-comments-list scrollable-menu">
+            <!-- Fetched notifications will be inserted here dynamically -->
+          </div>
+        </li>
+
+    </li>
+    </ul>
+    </li>
+    <!-- Tasks: style can be found in dropdown.less -->
+
+    <!-- User Account: style can be found in dropdown.less -->
+    <li class="dropdown user user-menu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <img src="<?php echo (!empty($user['image_url'])) ? $user['image_url'] : 'uploads/profile.png'; ?>"
+          class="user-image" alt="User Image">
+        <span class="hidden-xs"><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></span>
+      </a>
+      <ul class="dropdown-menu">
+        <!-- User image -->
+        <li class="user-header">
+          <img src="<?php echo (!empty($user['image_url'])) ? $user['image_url'] : 'uploads/profile.png'; ?>"
+            class="img-circle" alt="User Image">
+
+
+          <p>
+            <?php echo $user['firstname'] . ' ' . $user['lastname']; ?>
+            <!-- Assuming 'created_on' is part of the admin data -->
+            <small>Member since <?php echo date('M. Y', strtotime($user['created_on'])); ?></small>
+          </p>
+        </li>
+
+        <!-- Menu Footer-->
+        <li class="user-footer">
+          <div class="pull-left">
+            <a href="#profile" data-toggle="modal" class="btn btn-default btn-flat" id="admin_profile">Update</a>
+          </div>
+          <div class="pull-right">
+            <a href="#" class="btn btn-default btn-flat" id="signout_button">Sign out</a>
+          </div>
         </li>
       </ul>
-      </li>
-      <!-- Tasks: style can be found in dropdown.less -->
-
-      <!-- User Account: style can be found in dropdown.less -->
-      <li class="dropdown user user-menu">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <img src="<?php echo (!empty($user['image_url'])) ? $user['image_url'] : 'uploads/profile.png'; ?>"
-            class="user-image" alt="User Image">
-          <span class="hidden-xs"><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></span>
-        </a>
-        <ul class="dropdown-menu">
-          <!-- User image -->
-          <li class="user-header">
-            <img src="<?php echo (!empty($user['image_url'])) ? $user['image_url'] : 'uploads/profile.png'; ?>"
-              class="img-circle" alt="User Image">
-
-
-            <p>
-              <?php echo $user['firstname'] . ' ' . $user['lastname']; ?>
-              <!-- Assuming 'created_on' is part of the admin data -->
-              <small>Member since <?php echo date('M. Y', strtotime($user['created_on'])); ?></small>
-            </p>
-          </li>
-          <!-- Menu Body -->
-          <li class="user-body">
-            <div class="row">
-              <div class="col-xs-4 text-center">
-                <a href="#">Followers</a>
-              </div>
-              <div class="col-xs-4 text-center">
-                <a href="#">Sales</a>
-              </div>
-              <div class="col-xs-4 text-center">
-                <a href="#">Friends</a>
-              </div>
-            </div>
-            <!-- /.row -->
-          </li>
-          <!-- Menu Footer-->
-          <li class="user-footer">
-            <div class="pull-left">
-              <a href="#profile" data-toggle="modal" class="btn btn-default btn-flat" id="admin_profile">Update</a>
-            </div>
-            <div class="pull-right">
-              <a href="#" class="btn btn-default btn-flat" id="signout_button">Sign out</a>
-            </div>
-          </li>
-        </ul>
-      </li>
-      <!-- Control Sidebar Toggle Button -->
-      <li>
-        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-      </li>
-      </ul>
+    </li>
+    <!-- Control Sidebar Toggle Button -->
+    <li>
+      <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+    </li>
+    </ul>
     </div>
   </nav>
 </header>

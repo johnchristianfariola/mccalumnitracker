@@ -208,11 +208,11 @@
 
                         <h3><?php echo htmlspecialchars(getValue($current_user, 'firstname') . ' ' . getValue($current_user, 'middlename') . ' ' . getValue($current_user, 'lastname')); ?>
                         </h3>
-                        <p>1.8K Followers - 120 Following</p>
+                        <!--  <p>1.8K Followers - 120 Following</p>
                         <img src="../images/profile.jpg" alt="Joann">
                         <img src="../images/profile.jpg" alt="Jagdon">
                         <img src="../images/profile.jpg" alt="Alvie">
-                        <img src="../images/profile.jpg" alt="Fredrick">
+                        <img src="../images/profile.jpg" alt="Fredrick">-->
                     </div>
 
 
@@ -220,9 +220,9 @@
 
 
             </div>
-            <div class="pd-right">
+            <!--  <div class="pd-right">
                 <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-            </div>
+            </div> -->
 
         </div>
 
@@ -396,7 +396,7 @@
                                 </span>
                             </div>
                         </div>
-                        <a href="#" class="post-options"><i class="fas fa-ellipsis-v"></i></a>
+                     <!--   <a href="#" class="post-options"><i class="fas fa-ellipsis-v"></i></a> -->
                     </div>
 
                     <div class="post-content">

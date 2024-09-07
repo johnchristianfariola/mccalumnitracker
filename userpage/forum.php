@@ -131,7 +131,7 @@
                                             <span style="font-size:11px"><?php echo htmlspecialchars($formatted_date); ?> &bull;
                                                 <?php echo $time_ago; ?></span>
                                         </div>
-                                        <div class="dropdown">
+                                       <!-- <div class="dropdown">
                                             <button class="btn btn-default btn-icon-notika dropdown-toggle" type="button"
                                                 id="dropdownMenu<?php echo $forum_id; ?>" data-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">
@@ -141,7 +141,7 @@
                                                 <a class="dropdown-item" href="#">Edit</a>
                                                 <a class="dropdown-item" href="#">Delete</a>
                                             </div>
-                                        </div>
+                                        </div> -->  
                                     </div>
                                     <div class="content">
                                         <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
