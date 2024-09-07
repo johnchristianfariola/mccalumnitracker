@@ -5,7 +5,28 @@ $error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.'
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include '../includes/header.php'; ?>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="../homepage/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="../homepage/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../homepage/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="../homepage/css/style.css" rel="stylesheet">
+    <link href="../homepage/css/styles-merged.css" rel="stylesheet">
+
+
+</head>
 
 <body>
     <!-- Spinner Start -->
@@ -15,7 +36,7 @@ $error_message = htmlspecialchars($_GET['error'] ?? 'An unknown error occurred.'
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    
+
 
     <!-- Error Message Start -->
     <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
