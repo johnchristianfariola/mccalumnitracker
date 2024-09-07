@@ -15,7 +15,7 @@ $token = $_GET["token"] ?? null;
 $errors = [];
 
 if (!$token) {
-    header('location: /includes/error.php?error=No+token+provided');
+    header('location: includes/error.php?error=No+token+provided');
     exit();
 }
 
@@ -26,12 +26,12 @@ $admin = json_decode($data, true);
 $token_hash = hash("sha256", $token);
 
 if (!$admin || !isset($admin['reset_token_hash']) || $admin['reset_token_hash'] !== $token_hash) {
-    header('location: error.php?error=Token+not+found+or+invalid');
+    header('location: includes/error.php?error=Token+not+found+or+invalid');
     exit();
 }
 
 if (isset($admin["reset_token_expires_at"]) && strtotime($admin["reset_token_expires_at"]) <= time()) {
-    header('location: error.php?error=Token+has+expired');
+    header('location: includes/error.php?error=Token+has+expired');
     exit();
 }
 
