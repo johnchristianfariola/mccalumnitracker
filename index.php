@@ -106,7 +106,7 @@ $data = array_slice($data, 0, 5);
 <body>
 
 
-    <?php
+<?php
     if (count($errors) > 0) {
         foreach ($errors as $error) {
             echo "<div class='alert alert-danger text-center'>$error</div>";

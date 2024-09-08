@@ -314,7 +314,7 @@
     </div>
 
     <?php include 'global_chatbox.php'?>
-
+    
    
     <script>
        $('#logoutBtn').on('click', function () {

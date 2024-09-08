@@ -44,6 +44,7 @@
 <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
 <script src="../homepage/lib/easing/easing.min.js"></script>
 <script src="../homepage/lib/waypoints/waypoints.min.js"></script>
 <script src="../homepage/lib/owlcarousel/owl.carousel.min.js"></script>

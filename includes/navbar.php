@@ -1,4 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+    
     <a href="index.php" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary"><i class="fa fa-graduation-cap me-3"></i>MCC ALUMNI</h2>
     </a>
