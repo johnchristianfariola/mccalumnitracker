@@ -19,13 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $labels = isset($_POST['label']) ? $_POST['label'] : [];
     
     // Validate required fields
-    if (empty($survey_set_id) || empty($question) || empty($type) || empty($labels)) {
+    if (empty($survey_set_id) || empty($question) || empty($type)) {
+        $response['message'] = 'All fields are required.';
+    } elseif (($type !== 'textfield_s') && empty($labels)) {
+        // Only check labels if the type is not textfield_s
         $response['message'] = 'All fields are required.';
     } else {
-        // Create formatted options
+        // Create formatted options if applicable
         $frm_option = [];
-        foreach ($labels as $label) {
-            $frm_option[uniqid()] = $label; // Using uniqid() for unique IDs
+        if ($type !== 'textfield_s') {
+            foreach ($labels as $label) {
+                $frm_option[uniqid()] = $label; // Using uniqid() for unique IDs
+            }
         }
         $frm_option_json = json_encode($frm_option);
 

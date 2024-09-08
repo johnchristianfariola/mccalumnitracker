@@ -7,108 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Survey Dashboard</title>
     <?php include 'includes/header.php' ?>
-    <style>
-        .tab-container {
-            display: flex;
-            background-color: #fff;
-            
-            margin-bottom: 20px;
-        }
 
-        .tab {
-            flex: 1;
-            padding: 15px 20px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #65676b;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .tab:hover {
-            background-color: #f2f2f2;
-        }
-
-        .tab.active {
-            color: #1877f2;
-            border-bottom: 3px solid #1877f2;
-        }
-
-        .gradient-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .survey-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: box-shadow 0.3s;
-        }
-
-        .survey-card:hover {
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .container-card {
-            padding: 12px 16px;
-        }
-
-        .card-title {
-            font-size: 17px;
-            font-weight: 600;
-            color: #050505;
-            margin-bottom: 8px;
-        }
-
-        .card-description {
-            font-size: 13px;
-            color: #65676b;
-            margin-bottom: 12px;
-        }
-
-        .card-meta {
-            font-size: 12px;
-            color: #65676b;
-            margin-bottom: 4px;
-        }
-
-        .survey-status {
-            display: inline-block;
-            padding: 4px 8px;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 4px;
-            margin-top: 8px;
-        }
-
-        .status-done {
-            background-color: #e4f0d5;
-            color: #3c763d;
-        }
-
-        .no-surveys-message {
-            text-align: center;
-            padding: 40px;
-            font-size: 15px;
-            color: #65676b;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-    </style>
 </head>
 
 <body>
@@ -185,7 +84,7 @@
                         $cardContent = '
                 <div id="survey-' . $id . '" class="survey-card" ' . $isDisabled . ' style="opacity: ' . $opacity . ';">
                     <div class="container-card">
-                        <h2 class="card-title">' . htmlspecialchars($surveyData['survey_title']) . '</h2>
+                        <h2 class="meta-card-title">' . htmlspecialchars($surveyData['survey_title']) . '</h2>
                         <p class="card-description">' . htmlspecialchars($surveyData['survey_desc']) . '</p>
                         <p class="card-meta">Start: ' . htmlspecialchars($surveyData['survey_start']) . '</p>
                         <p class="card-meta">End: ' . htmlspecialchars($surveyData['survey_end']) . '</p>

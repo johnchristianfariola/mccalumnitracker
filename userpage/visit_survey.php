@@ -21,7 +21,7 @@ $questionData = $firebase->retrieve("questions");
 $questionData = json_decode($questionData, true);
 
 // Filter questions based on survey_set_unique_id
-$filteredQuestions = array_filter($questionData, function($question) use ($survey_id) {
+$filteredQuestions = array_filter($questionData, function ($question) use ($survey_id) {
     return isset($question['survey_set_unique_id']) && $question['survey_set_unique_id'] == $survey_id;
 });
 
@@ -97,7 +97,7 @@ function generateQuestionHTML($question, $questionId)
             }
             $html .= '</div>';
             break;
-        case 'text_opt':
+        case 'textfield_s':
             $html .= '<textarea class="form-control-modern" name="question_' . $questionId . '" rows="4" placeholder="Type your answer here..."></textarea>';
             break;
         default:
@@ -115,135 +115,80 @@ function generateQuestionHTML($question, $questionId)
 <head>
     <?php include 'includes/header.php' ?>
     <style>
-        .survey-form-modern {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
-            margin-top: 20px;
+      
+
+        /* Modern Card Design */
+        .card-modern {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            max-width: 100%;
         }
 
-        .form-header {
-            border-top: 10px solid #4285f4;
-            margin: -40px -40px 30px;
-            padding: 20px 40px;
-            background-color: #f8f9fa;
+        .card-modern:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
-        .form-title {
-            font-size: 32px;
-            font-weight: 400;
-            color: #202124;
-            margin-bottom: 10px;
+        /* Section Titles */
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
         }
 
-        .form-description {
-            font-size: 14px;
-            color: #5f6368;
+        /* Modern List Styling */
+        ul {
+            list-style-type: none;
+            padding-left: 0;
         }
 
-        .survey-question-modern {
-            font-size: 16px;
-            font-weight: 500;
-            color: #202124;
-            margin-bottom: 12px;
-        }
-
-        .radio-group-modern,
-        .checkbox-group-modern {
-            margin-bottom: 24px;
-        }
-
-        .radio-modern,
-        .checkbox-modern {
+        .event-item-modern,
+        .job-item-modern,
+        .forum-item-modern {
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #202124;
         }
 
-        .custom-radio,
-        .custom-checkbox {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border: 2px solid #5f6368;
-            transition: all 0.2s ease;
+        .event-date,
+        .event-title,
+        .job-title,
+        .forum-title {
+            font-size: 0.95em;
+            color: #555;
+            transition: color 0.3s ease;
         }
 
-        .custom-radio {
-            border-radius: 50%;
-        }
-
-        .custom-checkbox {
-            border-radius: 2px;
-        }
-
-        .radio-modern input[type="radio"],
-        .checkbox-modern input[type="checkbox"] {
-            display: none;
-        }
-
-        .radio-modern input[type="radio"]:checked~.custom-radio,
-        .checkbox-modern input[type="checkbox"]:checked~.custom-checkbox {
-            background-color: #4285f4;
-            border-color: #4285f4;
-        }
-
-        .custom-radio::after,
-        .custom-checkbox::after {
-            content: "";
-            display: block;
-            width: 10px;
-            height: 10px;
-            margin: 3px;
-            border-radius: 50%;
-            background-color: white;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .radio-modern input[type="radio"]:checked~.custom-radio::after,
-        .checkbox-modern input[type="checkbox"]:checked~.custom-checkbox::after {
-            opacity: 1;
-        }
-
-        .form-control-modern {
-            width: 100%;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-size: 14px;
-            color: #202124;
-            transition: border-color 0.2s ease;
-        }
-
-        .form-control-modern:focus {
-            border-color: #4285f4;
-            outline: none;
-        }
-
-        .btn-modern {
-            background-color: #4285f4;
+        .event-date {
+            background-color: #007bff;
             color: #ffffff;
-            padding: 10px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: background-color 0.2s ease;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-right: 10px;
+            font-weight: bold;
         }
 
-        .btn-modern:hover {
-            background-color: #3367d6;
+        .event-item-modern:hover .event-title,
+        .job-item-modern:hover .job-title,
+        .forum-item-modern:hover .forum-title {
+            color: #007bff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .right-section {
+                position: static;
+                height: auto;
+            }
         }
     </style>
+
 </head>
 
 <body>
@@ -257,7 +202,8 @@ function generateQuestionHTML($question, $questionId)
                         <form class="survey-form-modern" method="POST">
                             <div class="form-header">
                                 <h1 class="form-title"><?php echo htmlspecialchars($surveyData['survey_title']); ?></h1>
-                                <p class="form-description"><?php echo htmlspecialchars($surveyData['survey_desc']); ?></p>
+                                <p class="form-description"><?php echo htmlspecialchars($surveyData['survey_desc']); ?>
+                                </p>
                             </div>
 
                             <?php
@@ -272,11 +218,31 @@ function generateQuestionHTML($question, $questionId)
                         </form>
                     </div>
 
-                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12" >
                         <div class="right-section">
-                            <!-- Event, Job, and Forum sections will be loaded here -->
+                            <div class="content-wrapper-modern">
+                                <div class="card-modern">
+                                    <h3 class="section-title">Upcoming Events</h3>
+                                    <ul class="event-list-modern">
+                                        <li class="event-item-modern">
+                                            <span class="event-date">Sep 15, 2024</span>
+                                            <p class="event-title">Alumni Meetup</p>
+                                        </li>
+                                        <li class="event-item-modern">
+                                            <span class="event-date">Sep 20, 2024</span>
+                                            <p class="event-title">Webinar on Industry Trends</p>
+                                        </li>
+                                        <li class="event-item-modern">
+                                            <span class="event-date">Oct 5, 2024</span>
+                                            <p class="event-title">Job Fair</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>

@@ -2994,3 +2994,237 @@ ul {
 .cover-photo-container:hover .cover-overlay {
   opacity: 1;
 }
+
+/*======================SURVEY START HERE==============================*/
+.tab-container {
+  display: flex;
+  background-color: #fff;
+  
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 15px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #65676b;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab:hover {
+  background-color: #f2f2f2;
+}
+
+.tab.active {
+  color: #1877f2;
+  border-bottom: 3px solid #1877f2;
+}
+
+.gradient-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.survey-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+}
+
+.survey-card:hover {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.container-card {
+  padding: 12px 16px;
+}
+
+.meta-card-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #050505;
+  margin-bottom: 8px;
+}
+
+.card-description {
+  font-size: 13px;
+  color: #65676b;
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  font-size: 12px;
+  color: #65676b;
+  margin-bottom: 4px;
+}
+
+.survey-status {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.status-done {
+  background-color: #e4f0d5;
+  color: #3c763d;
+}
+
+.no-surveys-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 15px;
+  color: #65676b;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/*============================SURVEY END HERE============================*/
+/*============================VISIT SURVEY START HERE============================*/
+.survey-form-modern {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+  margin-top: 20px;
+}
+
+.form-header {
+  border-top: 10px solid #4285f4;
+  margin: -40px -40px 30px;
+  padding: 20px 40px;
+  background-color: #f8f9fa;
+}
+
+.form-title {
+  font-size: 32px;
+  font-weight: 400;
+  color: #202124;
+  margin-bottom: 10px;
+}
+
+.form-description {
+  font-size: 14px;
+  color: #5f6368;
+}
+
+.survey-question-modern {
+  font-size: 16px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 12px;
+}
+
+.radio-group-modern,
+.checkbox-group-modern {
+  margin-bottom: 24px;
+}
+
+.radio-modern,
+.checkbox-modern {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #202124;
+}
+
+.custom-radio,
+.custom-checkbox {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 2px solid #5f6368;
+  transition: all 0.2s ease;
+}
+
+.custom-radio {
+  border-radius: 50%;
+}
+
+.custom-checkbox {
+  border-radius: 2px;
+}
+
+.radio-modern input[type="radio"],
+.checkbox-modern input[type="checkbox"] {
+  display: none;
+}
+
+.radio-modern input[type="radio"]:checked~.custom-radio,
+.checkbox-modern input[type="checkbox"]:checked~.custom-checkbox {
+  background-color: #4285f4;
+  border-color: #4285f4;
+}
+
+.custom-radio::after,
+.custom-checkbox::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 3px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.radio-modern input[type="radio"]:checked~.custom-radio::after,
+.checkbox-modern input[type="checkbox"]:checked~.custom-checkbox::after {
+  opacity: 1;
+}
+
+.form-control-modern {
+  width: 100%;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #202124;
+  transition: border-color 0.2s ease;
+}
+
+.form-control-modern:focus {
+  border-color: #4285f4;
+  outline: none;
+}
+
+.btn-modern {
+  background-color: #4285f4;
+  color: #ffffff;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-modern:hover {
+  background-color: #3367d6;
+}
+/*============================VISIT SURVEY END HERE============================*/

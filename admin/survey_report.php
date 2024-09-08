@@ -23,7 +23,7 @@ $survey = json_decode($surveyData, true) ?: [];
             <!-- Content Header (Page header) -->
             <section class="content-header box-header-background">
                 <h1>
-                    Survey <i class="fa fa-angle-right"></i> Survey List
+                    Report <i class="fa fa-angle-right"></i> Survey
                 </h1>
                 <div class="box-inline ">
 
@@ -71,7 +71,6 @@ $survey = json_decode($surveyData, true) ?: [];
                 ?>
 
 
-                <h1>Active Survey</h1>
 
                 <div class="row">
                     <div class="col-xs-12">
@@ -87,7 +86,6 @@ $survey = json_decode($surveyData, true) ?: [];
                                                 <img src="../images/school_logo.png" class="report-img" alt="">
                                                 <div class="report-detail">
                                                     <h4><?php echo htmlspecialchars($surveyDetails['survey_title']); ?></h4>
-                                                    <p><?php echo htmlspecialchars($surveyDetails['survey_desc']); ?></p>
                                                 </div>
                                                 <div class="overlay" style="background-color: rgba(0, 0, 0, 0.5);">
                                                 <a href="answer_set.php?id=<?php echo htmlspecialchars($surveyId); ?>" class='btn btn-default btn-class' style="opacity: 1; background:linear-gradient(to right, #90caf9, #047edf 99%); color:white; width: 100px; border: none;">View Report</a>
