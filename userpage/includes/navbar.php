@@ -39,9 +39,9 @@
 
             </a>
 
-            <a href="view_news.php" class="<?php echo isActive('view_news') ? 'line-bottom-visited' : ''; ?>">
+            <a href="view_news.php" class="<?php echo isActive('news') ? 'line-bottom-visited' : ''; ?>">
 
-                <li class="line1 <?php echo isActive('view_news') ? 'border-line-bottom' : ''; ?>">
+                <li class="line1 <?php echo isActive('news') ? 'border-line-bottom' : ''; ?>">
 
                     <img src="../images/logo/newspaper.png" alt="">
 
@@ -84,6 +84,16 @@
                 <li class="line1 <?php echo isActive('gallery') ? 'border-line-bottom' : ''; ?>">
 
                     <img src="../images/logo/photo-gallery.png" alt="">
+
+                </li>
+
+            </a>
+
+            <a href="view_survey.php" class="<?php echo isActive('survey') ? 'line-bottom-visited' : ''; ?>">
+
+                <li class="line1 <?php echo isActive('survey') ? 'border-line-bottom' : ''; ?>">
+
+                    <img src="images/logo/research.png" alt="">
 
                 </li>
 
