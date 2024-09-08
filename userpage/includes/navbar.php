@@ -93,7 +93,7 @@
 
                 <li class="line1 <?php echo isActive('survey') ? 'border-line-bottom' : ''; ?>">
 
-                    <img src="images/logo/research.png" alt="">
+                    <img src="../images/logo/research.png" alt="">
 
                 </li>
 
