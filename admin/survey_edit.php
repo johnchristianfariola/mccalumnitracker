@@ -7,7 +7,7 @@ $response = array('status' => 'error', 'message' => 'An unknown error occurred')
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure all necessary data is provided and not empty
-    $required_fields = ['id', 'edit_survey_title', 'edit_survey_desc', 'edit_survey_start', 'edit_survey_end'];
+    $required_fields = ['id', 'edit_survey_title', 'edit_survey_desc', 'edit_survey_start', 'edit_survey_end', 'edit_survey_batch', 'edit_survey_courses'];
 
     $valid = true;
     foreach ($required_fields as $field) {
@@ -30,6 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "survey_desc" => $_POST['edit_survey_desc'],
             "survey_start" => $_POST['edit_survey_start'],
             "survey_end" => $_POST['edit_survey_end'],
+            "survey_batch" => is_array($_POST['edit_survey_batch']) ? $_POST['edit_survey_batch'] : [$_POST['edit_survey_batch']],
+            "survey_courses" => is_array($_POST['edit_survey_courses']) ? $_POST['edit_survey_courses'] : [$_POST['edit_survey_courses']]
         ];
 
         // Function to get existing survey data
@@ -45,7 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if the data has changed
         $dataChanged = false;
         foreach ($updateData as $key => $value) {
-            if ($existingData[$key] !== $value) {
+            if ($key === 'survey_batch' || $key === 'survey_courses') {
+                // For arrays, we need to compare contents
+                if (!isset($existingData[$key]) || count(array_diff($value, $existingData[$key])) > 0 || count(array_diff($existingData[$key], $value)) > 0) {
+                    $dataChanged = true;
+                    break;
+                }
+            } else if (!isset($existingData[$key]) || $existingData[$key] !== $value) {
                 $dataChanged = true;
                 break;
             }

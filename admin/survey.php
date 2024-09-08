@@ -94,78 +94,99 @@
   </div>
   <?php include 'includes/scripts.php'; ?>
   <script>
-    $(document).ready(function () {
-      // Function to fetch content from the server
-      function fetcheventData(id, successCallback, errorCallback) {
-        $.ajax({
-          url: 'survey_row.php',
-          type: 'GET',
-          data: { id: id },
-          dataType: 'json',
-          success: successCallback,
-          error: errorCallback
-        });
-      }
-
-
-
-      // Open edit modal when edit button is clicked
-      $('.open-modal').click(function () {
-        var id = $(this).data('id');
-
-        // Fetch event data via AJAX
-        fetcheventData(id, function (response) {
-          $('#editId').val(id);
-          $('#edit_survey_title').val(response.survey_title);
-          $('#edit_survey_desc').val(response.survey_desc);
-          $('#edit_survey_start').val(response.survey_start);
-          $('#edit_survey_end').val(response.survey_end);
-
-
-          // Show the edit modal after setting the form fields
-          $('#editModal').modal('show');
-
-
-        }, function (xhr, status, error) {
-          console.error('AJAX Error: ' + status + ' ' + error);
-        });
-      });
-
-
-      // Open delete modal when delete button is clicked
-      $(document).ready(function () {
-        // Open delete confirmation modal
-        $('.open-delete').click(function () {
-          var id = $(this).data('id');
-
-          // Make an AJAX request to fetch job details
-
-          $.ajax({
-            url: 'survey_row.php',
-            type: 'GET',
-            data: { id: id },
-            dataType: 'json',
-
-            success: function (response) {
-              // Populate modal with alumni name
-              $('.deleteId').val(id); // Update value of deleteId input field
-
-              $('.edit_survey_title').text(response.survey_title);
-
-              // Show the delete confirmation modal
-              $('#deleteModal').modal('show');
-
-              // Store the ID in a data attribute of the delete button
-              $('.btn-confirm-delete').data('id', id);
-            },
-            error: function (xhr, status, error) {
-              console.error('AJAX Error: ' + status + ' ' + error);
-            }
-          });
-        });
-      });
-
+   $(document).ready(function () {
+  // Function to fetch content from the server
+  function fetcheventData(id, successCallback, errorCallback) {
+    $.ajax({
+      url: 'survey_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: successCallback,
+      error: errorCallback
     });
+  }
+
+  // Open edit modal when edit button is clicked
+  $('.open-modal').click(function () {
+    var id = $(this).data('id');
+    console.log('Edit button clicked for ID:', id);
+
+    // Fetch event data via AJAX
+    fetcheventData(id, function (response) {
+      console.log('Received data:', response);
+
+      try {
+        $('#editId').val(id);
+        $('#edit_survey_title').val(response.survey_title);
+        $('#edit_survey_desc').val(response.survey_desc);
+        $('#edit_survey_start').val(response.survey_start);
+        $('#edit_survey_end').val(response.survey_end);
+
+        // Handle survey_batch multi-select
+        if (response.survey_batch) {
+          console.log('Setting survey_batch:', response.survey_batch);
+          $('#edit_survey_batch').val(Array.isArray(response.survey_batch) ? response.survey_batch : [response.survey_batch]);
+        } else {
+          $('#edit_survey_batch').val([]);
+        }
+
+        // Handle survey_courses multi-select
+        if (response.survey_courses) {
+          console.log('Setting survey_courses:', response.survey_courses);
+          $('#edit_survey_courses').val(Array.isArray(response.survey_courses) ? response.survey_courses : [response.survey_courses]);
+        } else {
+          $('#edit_survey_courses').val([]);
+        }
+
+        // Check if selectpicker is initialized
+        if ($.fn.selectpicker) {
+          $('#edit_survey_batch, #edit_survey_courses').selectpicker('refresh');
+        } else {
+          console.warn('Bootstrap Select not initialized');
+        }
+
+        // Show the edit modal after setting the form fields
+        $('#editModal').modal('show');
+      } catch (error) {
+        console.error('Error while populating form:', error);
+      }
+    }, function (xhr, status, error) {
+      console.error('AJAX Error:', status, error);
+      console.log('Response Text:', xhr.responseText);
+    });
+  });
+
+  // Open delete modal when delete button is clicked
+  $('.open-delete').click(function () {
+    var id = $(this).data('id');
+    console.log('Delete button clicked for ID:', id);
+
+    // Make an AJAX request to fetch job details
+    $.ajax({
+      url: 'survey_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: function (response) {
+        console.log('Received delete data:', response);
+        // Populate modal with alumni name
+        $('.deleteId').val(id); // Update value of deleteId input field
+        $('.edit_survey_title').text(response.survey_title);
+
+        // Show the delete confirmation modal
+        $('#deleteModal').modal('show');
+
+        // Store the ID in a data attribute of the delete button
+        $('.btn-confirm-delete').data('id', id);
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX Error:', status, error);
+        console.log('Response Text:', xhr.responseText);
+      }
+    });
+  });
+});
   </script>
   <script>
     $(document).ready(function () {

@@ -189,7 +189,7 @@ if ($id) {
                             <div class="box-body survey-detail">
                                 <center>
                                     <p><strong>Title</strong><br> <?php echo $title ?></p>
-                                    <p><strong>Description</strong><br> <?php echo $description ?></p>
+                                    <p style="text-align:justify;"><strong>Description</strong><br> <?php echo $description ?></p>
                                     <hr>
                                     <p><strong>Start Date</strong><br> <?php echo $startDate ?></p>
                                     <p><strong>End Date</strong><br> <?php echo $endDate ?></p>

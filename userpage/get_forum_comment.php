@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 require_once '../includes/firebaseRDB.php';
@@ -38,7 +37,6 @@ function time_elapsed_string($datetime, $full = false)
     return $string ? implode(', ', $string) . ' ago' : 'just now';
 }
 
-
 if (isset($_GET['forum_id'])) {
     $forum_id = $_GET['forum_id'];
 
@@ -48,78 +46,73 @@ if (isset($_GET['forum_id'])) {
     $alumni_data = $firebase->retrieve("alumni");
     $alumni_data = json_decode($alumni_data, true);
 
-    if ($all_comments === null) {
+    if (empty($all_comments) || !is_array($all_comments)) {
         echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
     } else {
-        if (!is_array($all_comments)) {
+        $forum_comments = array_filter($all_comments, function ($comment) use ($forum_id) {
+            return isset($comment['forum_id']) && $comment['forum_id'] === $forum_id;
+        });
+
+        if (empty($forum_comments)) {
             echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
         } else {
-            $forum_comments = array_filter($all_comments, function ($comment) use ($forum_id) {
-                return isset($comment['forum_id']) && $comment['forum_id'] === $forum_id;
-            });
-
-            if ($forum_comments) {
-                foreach ($forum_comments as $comment_id => $comment) {
-                    $commenter = $alumni_data[$comment['alumni_id']] ?? null;
-                    $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
-                    $commenter_profile = $commenter['profile_url'] ?? '../images/profile.png';
-                    ?>
-                    <div class="comment">
-                        <div class="comment-author">
-                            <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
-                            <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo htmlspecialchars($commenter_name); ?></a></span>
-                            &nbsp;&nbsp;&nbsp;
-                            <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
+            foreach ($forum_comments as $comment_id => $comment) {
+                $commenter = isset($alumni_data[$comment['alumni_id']]) ? $alumni_data[$comment['alumni_id']] : null;
+                $commenter_name = $commenter ? $commenter['firstname'] . ' ' . $commenter['lastname'] : 'Unknown Alumni';
+                $commenter_profile = isset($commenter['profile_url']) ? $commenter['profile_url'] : '../images/profile.png';
+                ?>
+                <div class="comment">
+                    <div class="comment-author">
+                        <img src="<?php echo htmlspecialchars($commenter_profile); ?>" class="comment-avatar" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                        <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo htmlspecialchars($commenter_name); ?></a></span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="comment-time"><?php echo time_elapsed_string($comment['date_commented']); ?></span>
+                    </div>
+                    <div class="comment-content">
+                        <?php echo htmlspecialchars($comment['comment']); ?>
+                    </div>
+                    <div class="reply-section">
+                        <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
+                            <i class="fa <?php echo (!empty($comment['liked_by']) && in_array($_SESSION['user']['id'], $comment['liked_by'])) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
+                        </span>
+                        <span class="heart-count"><?php echo isset($comment['heart_count']) ? $comment['heart_count'] : 0; ?></span>
+                        &nbsp;&nbsp;
+                        <span class="dislike-btn" data-comment-id="<?php echo $comment_id; ?>">
+                            <i class="fa <?php echo (!empty($comment['disliked_by']) && in_array($_SESSION['user']['id'], $comment['disliked_by'])) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
+                        </span>
+                        <span class="dislike-count"><?php echo isset($comment['dislike_count']) ? $comment['dislike_count'] : 0; ?></span>
+                        <button class="reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
+                        <div class="reply-input-area" style="display: none;">
+                            <input type="text" class="reply-input" placeholder="Write a reply...">
+                            <button class="submit-reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
                         </div>
-                        <div class="comment-content">
-                            <?php echo htmlspecialchars($comment['comment']); ?>
-                        </div>
-                        <div class="reply-section">
-                            <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
-                                <i class="fa <?php echo in_array($_SESSION['user']['id'], $comment['liked_by'] ?? []) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
-                            </span>
-                            <span class="heart-count"><?php echo $comment['heart_count'] ?? 0; ?></span>
-                            &nbsp;&nbsp;
-                            <span class="dislike-btn" data-comment-id="<?php echo $comment_id; ?>">
-                                <i class="fa <?php echo in_array($_SESSION['user']['id'], $comment['disliked_by'] ?? []) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
-                            </span>
-                            <span class="dislike-count"><?php echo $comment['dislike_count'] ?? 0; ?></span>
-                            <button class="reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
-                            <div class="reply-input-area" style="display: none;">
-                                <input type="text" class="reply-input" placeholder="Write a reply...">
-                                <button class="submit-reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>
-                            </div>
-                            <div class="reply-list">
-                                <?php
-                                if (isset($comment['replies'])) {
-                                    $replies = is_array($comment['replies']) ? $comment['replies'] : [$comment['replies']];
-                                    foreach ($replies as $reply_id => $reply) {
-                                        $replier = $alumni_data[$reply['alumni_id']] ?? null;
-                                        $replier_name = $replier ? $replier['firstname'] . ' ' . $replier['lastname'] : 'Unknown Alumni';
-                                        $replier_profile = $replier['profile_url'] ?? '../images/profile.png';
-                                        ?>
-                                        <div class="reply">
-                                            <div class="reply-author">
-                                                <img class="comment-avatar" src="<?php echo htmlspecialchars($replier_profile); ?>" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
-                                                <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($reply['alumni_id']); ?>"><?php echo htmlspecialchars($replier_name); ?></a></span>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <span class="reply-time"><?php echo time_elapsed_string($reply['date_replied']); ?></span>
-                                            </div>
-                                            <div class="reply-content">
-                                                <?php echo htmlspecialchars($reply['reply']); ?>
-                                            </div>
+                        <div class="reply-list">
+                            <?php
+                            if (!empty($comment['replies']) && is_array($comment['replies'])) {
+                                foreach ($comment['replies'] as $reply_id => $reply) {
+                                    $replier = isset($alumni_data[$reply['alumni_id']]) ? $alumni_data[$reply['alumni_id']] : null;
+                                    $replier_name = $replier ? $replier['firstname'] . ' ' . $replier['lastname'] : 'Unknown Alumni';
+                                    $replier_profile = isset($replier['profile_url']) ? $replier['profile_url'] : '../images/profile.png';
+                                    ?>
+                                    <div class="reply">
+                                        <div class="reply-author">
+                                            <img class="comment-avatar" src="<?php echo htmlspecialchars($replier_profile); ?>" alt="author" onerror="if (this.src != 'uploads/profile.jpg') this.src = 'uploads/profile.jpg';">
+                                            <span><a href="view_alumni_details.php?id=<?php echo htmlspecialchars($reply['alumni_id']); ?>"><?php echo htmlspecialchars($replier_name); ?></a></span>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <span class="reply-time"><?php echo time_elapsed_string($reply['date_replied']); ?></span>
                                         </div>
-                                        <?php
-                                    }
+                                        <div class="reply-content">
+                                            <?php echo htmlspecialchars($reply['reply']); ?>
+                                        </div>
+                                    </div>
+                                    <?php
                                 }
-                                ?>
-                            </div>
+                            }
+                            ?>
                         </div>
                     </div>
-                    <?php
-                }
-            } else {
-                echo '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+                </div>
+                <?php
             }
         }
     }
