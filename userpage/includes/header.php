@@ -52,6 +52,8 @@
 <!-- JavaScript Libraries -->
 <script src="js/vendor/jquery-1.12.4.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-select/bootstrap-select.js"></script>
+
 <script src="js/wow.min.js"></script>
 <script src="js/jquery-price-slider.js"></script>
 <script src="js/owl.carousel.min.js"></script>
