@@ -1,7 +1,0 @@
-{
-    "require": {
-        "phpoffice/phpspreadsheet": "^2.1",
-        "phpmailer/phpmailer": "^6.9",
-        "google/cloud-storage": "^1.42"
-    }
-}
