@@ -218,7 +218,7 @@ function generateQuestionHTML($question, $questionId)
                         </form>
                     </div>
 
-                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12" >
+                   <!-- <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12" >
                         <div class="right-section">
                             <div class="content-wrapper-modern">
                                 <div class="card-modern">
@@ -240,7 +240,7 @@ function generateQuestionHTML($question, $questionId)
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
 
                 </div>

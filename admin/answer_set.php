@@ -4,9 +4,8 @@
 <?php
 function getAlumniName($alumniId, $alumniData)
 {
-    if (isset($alumniData[$alumniId])) {
-        $alumni = $alumniData[$alumniId];
-        return $alumni['firstname'] . ' ' . $alumni['lastname'];
+    if (isset($alumniData[$alumniId]['firstname']) && isset($alumniData[$alumniId]['lastname'])) {
+        return $alumniData[$alumniId]['firstname'] . ' ' . $alumniData[$alumniId]['lastname'];
     }
     return 'Unknown';
 }
@@ -17,30 +16,30 @@ function displaySurveyQuestionsAndAnswers($surveyId)
 
     // Fetch survey details
     $surveyData = $firebase->retrieve("survey_set/$surveyId");
-    $survey = json_decode($surveyData, true);
+    $survey = json_decode($surveyData, true) ?: [];
 
-    if (!$survey) {
-        echo "<p>Survey not found.</p>";
+    if (empty($survey)) {
+        echo "<p>Survey not found or is empty.</p>";
         return;
     }
 
     // Fetch alumni data
     $alumniData = $firebase->retrieve("alumni");
-    $alumni = json_decode($alumniData, true);
+    $alumni = json_decode($alumniData, true) ?: [];
 
     echo "<div class='row'>";
     echo "<div class='col-md-9'>";  // Left column for survey results
 
-    echo "<h2>" . htmlspecialchars($survey['survey_title']) . "</h2>";
-    echo "<p>" . htmlspecialchars($survey['survey_desc']) . "</p>";
+    echo "<h2>" . htmlspecialchars($survey['survey_title'] ?? 'Untitled Survey') . "</h2>";
+    echo "<p>" . htmlspecialchars($survey['survey_desc'] ?? 'No description available.') . "</p>";
 
     // Fetch questions for this survey
     $questionsData = $firebase->retrieve("questions");
-    $questions = json_decode($questionsData, true);
+    $questions = json_decode($questionsData, true) ?: [];
 
     // Fetch answers for this survey
     $answersData = $firebase->retrieve("answers");
-    $answers = json_decode($answersData, true);
+    $answers = json_decode($answersData, true) ?: [];
 
     echo "<div class='box'>";
     echo "<div class='box-header'>";
@@ -53,25 +52,25 @@ function displaySurveyQuestionsAndAnswers($surveyId)
     $questionCount = 0;
     $allRespondents = [];
     foreach ($questions as $questionId => $question) {
-        if ($question['survey_set_unique_id'] == $surveyId) {
+        if (($question['survey_set_unique_id'] ?? '') == $surveyId) {
             $questionCount++;
             $respondents = [];
 
-            if ($question['type'] === 'textfield_s') {
+            if (($question['type'] ?? '') === 'textfield_s') {
                 // Handle textfield_s type questions
                 $textAnswers = [];
                 foreach ($answers as $answerId => $answer) {
-                    if ($answer['question_id'] == $questionId) {
-                        $textAnswers[] = $answer['answer'];
-                        $respondents[] = $answer['alumni_id'];
+                    if (($answer['question_id'] ?? '') == $questionId) {
+                        $textAnswers[] = $answer['answer'] ?? '';
+                        $respondents[] = $answer['alumni_id'] ?? '';
                     }
                 }
 
-                $totalRespondents = count(array_unique($respondents));
+                $totalRespondents = count(array_filter($respondents));
 
                 echo "<tr>";
                 echo "<td>" . $questionCount . "</td>";
-                echo "<td>" . htmlspecialchars($question['question']) . "</td>";
+                echo "<td>" . htmlspecialchars($question['question'] ?? 'Unknown Question') . "</td>";
                 echo "<td>";
                 echo "<div style='max-height: 200px; overflow-y: auto;'>";
                 foreach ($textAnswers as $textAnswer) {
@@ -81,35 +80,33 @@ function displaySurveyQuestionsAndAnswers($surveyId)
                 echo "</td>";
                 echo "<td>N/A</td>";
                 echo "</tr>";
-            } elseif ($question['type'] === 'check_opt') {
+            } elseif (($question['type'] ?? '') === 'check_opt') {
                 // Handle check_opt type questions
-                $options = json_decode($question['frm_option'], true);
+                $options = json_decode($question['frm_option'] ?? '{}', true) ?: [];
                 $answerCounts = array_fill_keys(array_keys($options), 0);
 
                 foreach ($answers as $answerId => $answer) {
-                    if ($answer['question_id'] == $questionId) {
-                        $answerValues = json_decode($answer['answer'], true);
-                        if (is_array($answerValues)) {
-                            foreach ($answerValues as $value) {
-                                if (isset($answerCounts[$value])) {
-                                    $answerCounts[$value]++;
-                                }
+                    if (($answer['question_id'] ?? '') == $questionId) {
+                        $answerValues = json_decode($answer['answer'] ?? '[]', true) ?: [];
+                        foreach ($answerValues as $value) {
+                            if (isset($answerCounts[$value])) {
+                                $answerCounts[$value]++;
                             }
                         }
-                        $respondents[] = $answer['alumni_id'];
+                        $respondents[] = $answer['alumni_id'] ?? '';
                     }
                 }
 
-                $totalRespondents = count(array_unique($respondents));
+                $totalRespondents = count(array_filter($respondents));
 
                 echo "<tr>";
                 echo "<td rowspan='" . (count($options) + 1) . "'>" . $questionCount . "</td>";
-                echo "<td rowspan='" . (count($options) + 1) . "'>" . htmlspecialchars($question['question']) . "</td>";
+                echo "<td rowspan='" . (count($options) + 1) . "'>" . htmlspecialchars($question['question'] ?? 'Unknown Question') . "</td>";
                 echo "<td colspan='2'></td>";  // Empty cell for spacing
                 echo "</tr>";
 
                 foreach ($options as $optionId => $optionText) {
-                    $count = $answerCounts[$optionId];
+                    $count = $answerCounts[$optionId] ?? 0;
                     $percentage = $totalRespondents > 0 ? round(($count / $totalRespondents) * 100, 2) : 0;
                     echo "<tr>";
                     echo "<td>";
@@ -126,29 +123,29 @@ function displaySurveyQuestionsAndAnswers($surveyId)
                 }
             } else {
                 // Existing code for other question types (e.g., radio_opt)
-                $options = json_decode($question['frm_option'], true);
+                $options = json_decode($question['frm_option'] ?? '{}', true) ?: [];
                 $answerCounts = array_fill_keys(array_keys($options), 0);
 
                 foreach ($answers as $answerId => $answer) {
-                    if ($answer['question_id'] == $questionId) {
-                        $answerValue = $answer['answer'];
+                    if (($answer['question_id'] ?? '') == $questionId) {
+                        $answerValue = $answer['answer'] ?? '';
                         if (isset($answerCounts[$answerValue])) {
                             $answerCounts[$answerValue]++;
-                            $respondents[] = $answer['alumni_id'];
+                            $respondents[] = $answer['alumni_id'] ?? '';
                         }
                     }
                 }
 
-                $totalRespondents = count(array_unique($respondents));
+                $totalRespondents = count(array_filter($respondents));
 
                 echo "<tr>";
                 echo "<td rowspan='" . (count($options) + 1) . "'>" . $questionCount . "</td>";
-                echo "<td rowspan='" . (count($options) + 1) . "'>" . htmlspecialchars($question['question']) . "</td>";
+                echo "<td rowspan='" . (count($options) + 1) . "'>" . htmlspecialchars($question['question'] ?? 'Unknown Question') . "</td>";
                 echo "<td colspan='2'></td>";  // Empty cell for spacing
                 echo "</tr>";
 
                 foreach ($options as $optionId => $optionText) {
-                    $count = $answerCounts[$optionId];
+                    $count = $answerCounts[$optionId] ?? 0;
                     $percentage = $totalRespondents > 0 ? round(($count / $totalRespondents) * 100, 2) : 0;
                     echo "<tr>";
                     echo "<td>";
@@ -188,7 +185,7 @@ function displaySurveyQuestionsAndAnswers($surveyId)
     echo "<div class='box-body no-padding'>";
     echo "<ul class='nav nav-pills nav-stacked'>";
     
-    $uniqueRespondents = array_unique($allRespondents);
+    $uniqueRespondents = array_filter(array_unique($allRespondents));
     foreach ($uniqueRespondents as $respondentId) {
         $respondentName = getAlumniName($respondentId, $alumni);
         echo "<li><a href='alumni_profile.php?id=" . urlencode($respondentId) . "'>" . htmlspecialchars($respondentName) . "</a></li>";
@@ -266,10 +263,10 @@ function displaySurveyQuestionsAndAnswers($surveyId)
                                 <ul class="nav nav-pills nav-stacked">
                                     <?php
                                     $surveysData = $firebase->retrieve("survey_set");
-                                    $surveys = json_decode($surveysData, true);
+                                    $surveys = json_decode($surveysData, true) ?: [];
                                     $surveyId = isset($_GET['id']) ? $_GET['id'] : null;
                                     foreach ($surveys as $id => $survey) {
-                                        echo '<li' . ($id == $surveyId ? ' class="active"' : '') . '><a href="?id=' . $id . '">' . htmlspecialchars($survey['survey_title']) . '</a></li>';
+                                        echo '<li' . ($id == $surveyId ? ' class="active"' : '') . '><a href="?id=' . $id . '">' . htmlspecialchars($survey['survey_title'] ?? 'Untitled Survey') . '</a></li>';
                                     }
                                     ?>
                                 </ul>
@@ -331,8 +328,6 @@ function displaySurveyQuestionsAndAnswers($surveyId)
                 }
                 $this.data('clicks', !isChecked);
             });
-
-            // Handle starring for glyphicon and font awesome
             $(".mailbox-star").click(function (e) {
                 e.preventDefault();
                 var $this = $(this).find("a > i");
@@ -341,11 +336,25 @@ function displaySurveyQuestionsAndAnswers($surveyId)
         });
 
         function filterTable() {
-            // Implement search functionality here
-            console.log("Search functionality not implemented yet");
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search-input");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1]; // Assuming the question text is in the second column
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
         }
     </script>
 
 </body>
-
 </html>
