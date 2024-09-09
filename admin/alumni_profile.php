@@ -27,6 +27,18 @@ $batchData = json_decode($firebase->retrieve("batch_yr"), true) ?: [];
 $categoryData = json_decode($firebase->retrieve("category"), true) ?: [];
 ?>
 
+<style>
+    .box-header {
+        width: 100%;
+        height: 35px;
+        background: white !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+    }
+    .box{
+        border-radius: 0 !important;
+    }
+</style>
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
 
@@ -140,8 +152,8 @@ $categoryData = json_decode($firebase->retrieve("category"), true) ?: [];
               <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                   <li class="active"><a href="#activity" data-toggle="tab">Personal</a></li>
-                  <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
-                  <li><a href="#settings" data-toggle="tab">Settings</a></li>
+                 <!-- <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
+                  <li><a href="#settings" data-toggle="tab">Settings</a></li>-->
                 </ul>
                 <div class="tab-content">
                   <div class="active tab-pane" id="activity">

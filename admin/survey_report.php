@@ -12,6 +12,9 @@ $surveyData = $firebase->retrieve("survey_set");
 $survey = json_decode($surveyData, true) ?: [];
 ?>
 
+
+
+
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
@@ -113,45 +116,3 @@ $survey = json_decode($surveyData, true) ?: [];
 </body>
 
 </html>
-
-
-<style>
-    .report-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 28px;
-
-        /* Adjust the gap between items */
-    }
-
-    .report-item {
-        flex: 0 1 calc((100% - 4 * 28px) / 5);
-        /* Adjust width to fit exactly 5 per row considering the gap */
-        box-sizing: border-box;
-        text-align: center;
-        cursor: pointer;
-        margin-bottom: 20px;
-
-        /* Adjust margin if needed */
-    }
-
-    .report-box {
-        position: relative;
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
-        background-color: white;
-        border-radius: 5px;
-    }
-
-    .report-box:hover .overlay {
-        top: 0;
-        background-color: #333;
-    }
-
-    .report-img {
-        width: 70%;
-        height: auto;
-    }
-</style>

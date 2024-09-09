@@ -1,6 +1,16 @@
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
+
 <?php
+function getAlumniName($alumniId, $alumniData)
+{
+    if (isset($alumniData[$alumniId])) {
+        $alumni = $alumniData[$alumniId];
+        return $alumni['firstname'] . ' ' . $alumni['lastname'];
+    }
+    return 'Unknown';
+}
+
 function displaySurveyQuestionsAndAnswers($surveyId)
 {
     global $firebase;
@@ -13,6 +23,13 @@ function displaySurveyQuestionsAndAnswers($surveyId)
         echo "<p>Survey not found.</p>";
         return;
     }
+
+    // Fetch alumni data
+    $alumniData = $firebase->retrieve("alumni");
+    $alumni = json_decode($alumniData, true);
+
+    echo "<div class='row'>";
+    echo "<div class='col-md-9'>";  // Left column for survey results
 
     echo "<h2>" . htmlspecialchars($survey['survey_title']) . "</h2>";
     echo "<p>" . htmlspecialchars($survey['survey_desc']) . "</p>";
@@ -34,56 +51,155 @@ function displaySurveyQuestionsAndAnswers($surveyId)
     echo "<tr><th style='width: 5%'>#</th><th style='width: 30%'>Question</th><th style='width: 55%'>Progress</th><th style='width: 10%'>Percentage</th></tr>";
 
     $questionCount = 0;
+    $allRespondents = [];
     foreach ($questions as $questionId => $question) {
         if ($question['survey_set_unique_id'] == $surveyId) {
             $questionCount++;
-            $options = json_decode($question['frm_option'], true);
-            $answerCounts = array_fill_keys(array_keys($options), 0);
             $respondents = [];
 
-            // Count answers for this question
-            foreach ($answers as $answerId => $answer) {
-                if ($answer['question_id'] == $questionId) {
-                    $answerValue = $answer['answer'];
-                    if (isset($answerCounts[$answerValue])) {
-                        $answerCounts[$answerValue]++;
+            if ($question['type'] === 'textfield_s') {
+                // Handle textfield_s type questions
+                $textAnswers = [];
+                foreach ($answers as $answerId => $answer) {
+                    if ($answer['question_id'] == $questionId) {
+                        $textAnswers[] = $answer['answer'];
                         $respondents[] = $answer['alumni_id'];
                     }
                 }
-            }
 
-            $totalRespondents = count(array_unique($respondents));
+                $totalRespondents = count(array_unique($respondents));
 
-            echo "<tr>";
-            echo "<td rowspan='" . (count($options) + 1) . "'>" . $questionCount . "</td>";
-            echo "<td rowspan='" . (count($options) + 1) . "'>" . htmlspecialchars($question['question']) . "</td>";
-            echo "<td colspan='2'></td>";  // Empty cell for spacing
-            echo "</tr>";
-
-            foreach ($options as $optionId => $optionText) {
-                $count = $answerCounts[$optionId];
-                $percentage = $totalRespondents > 0 ? round(($count / $totalRespondents) * 100, 2) : 0;
                 echo "<tr>";
+                echo "<td>" . $questionCount . "</td>";
+                echo "<td>" . htmlspecialchars($question['question']) . "</td>";
                 echo "<td>";
-                echo "<div style='display: flex; justify-content: space-between;'>";
-                echo "<span>" . htmlspecialchars($optionText) . "</span>";
-                echo "<span>(" . $count . " responses)</span>";
-                echo "</div>";
-                echo "<div class='progress progress-xs'>";
-                echo "<div class='progress-bar progress-bar-primary' style='width: " . $percentage . "%'></div>";
+                echo "<div style='max-height: 200px; overflow-y: auto;'>";
+                foreach ($textAnswers as $textAnswer) {
+                    echo "<div>" . htmlspecialchars($textAnswer) . "</div>";
+                }
                 echo "</div>";
                 echo "</td>";
-                echo "<td><span class='badge bg-light-blue'>" . $percentage . "%</span></td>";
+                echo "<td>N/A</td>";
                 echo "</tr>";
+            } elseif ($question['type'] === 'check_opt') {
+                // Handle check_opt type questions
+                $options = json_decode($question['frm_option'], true);
+                $answerCounts = array_fill_keys(array_keys($options), 0);
+
+                foreach ($answers as $answerId => $answer) {
+                    if ($answer['question_id'] == $questionId) {
+                        $answerValues = json_decode($answer['answer'], true);
+                        if (is_array($answerValues)) {
+                            foreach ($answerValues as $value) {
+                                if (isset($answerCounts[$value])) {
+                                    $answerCounts[$value]++;
+                                }
+                            }
+                        }
+                        $respondents[] = $answer['alumni_id'];
+                    }
+                }
+
+                $totalRespondents = count(array_unique($respondents));
+
+                echo "<tr>";
+                echo "<td rowspan='" . (count($options) + 1) . "'>" . $questionCount . "</td>";
+                echo "<td rowspan='" . (count($options) + 1) . "'>" . htmlspecialchars($question['question']) . "</td>";
+                echo "<td colspan='2'></td>";  // Empty cell for spacing
+                echo "</tr>";
+
+                foreach ($options as $optionId => $optionText) {
+                    $count = $answerCounts[$optionId];
+                    $percentage = $totalRespondents > 0 ? round(($count / $totalRespondents) * 100, 2) : 0;
+                    echo "<tr>";
+                    echo "<td>";
+                    echo "<div style='display: flex; justify-content: space-between;'>";
+                    echo "<span>" . htmlspecialchars($optionText) . "</span>";
+                    echo "<span>(" . $count . " responses)</span>";
+                    echo "</div>";
+                    echo "<div class='progress progress-xs'>";
+                    echo "<div class='progress-bar progress-bar-primary' style='width: " . $percentage . "%'></div>";
+                    echo "</div>";
+                    echo "</td>";
+                    echo "<td><span class='badge bg-light-blue'>" . $percentage . "%</span></td>";
+                    echo "</tr>";
+                }
+            } else {
+                // Existing code for other question types (e.g., radio_opt)
+                $options = json_decode($question['frm_option'], true);
+                $answerCounts = array_fill_keys(array_keys($options), 0);
+
+                foreach ($answers as $answerId => $answer) {
+                    if ($answer['question_id'] == $questionId) {
+                        $answerValue = $answer['answer'];
+                        if (isset($answerCounts[$answerValue])) {
+                            $answerCounts[$answerValue]++;
+                            $respondents[] = $answer['alumni_id'];
+                        }
+                    }
+                }
+
+                $totalRespondents = count(array_unique($respondents));
+
+                echo "<tr>";
+                echo "<td rowspan='" . (count($options) + 1) . "'>" . $questionCount . "</td>";
+                echo "<td rowspan='" . (count($options) + 1) . "'>" . htmlspecialchars($question['question']) . "</td>";
+                echo "<td colspan='2'></td>";  // Empty cell for spacing
+                echo "</tr>";
+
+                foreach ($options as $optionId => $optionText) {
+                    $count = $answerCounts[$optionId];
+                    $percentage = $totalRespondents > 0 ? round(($count / $totalRespondents) * 100, 2) : 0;
+                    echo "<tr>";
+                    echo "<td>";
+                    echo "<div style='display: flex; justify-content: space-between;'>";
+                    echo "<span>" . htmlspecialchars($optionText) . "</span>";
+                    echo "<span>(" . $count . " responses)</span>";
+                    echo "</div>";
+                    echo "<div class='progress progress-xs'>";
+                    echo "<div class='progress-bar progress-bar-primary' style='width: " . $percentage . "%'></div>";
+                    echo "</div>";
+                    echo "</td>";
+                    echo "<td><span class='badge bg-light-blue'>" . $percentage . "%</span></td>";
+                    echo "</tr>";
+                }
             }
 
             echo "<tr><td colspan='4'>Total Respondents: " . $totalRespondents . "</td></tr>";
+            $allRespondents = array_merge($allRespondents, $respondents);
         }
     }
 
     echo "</table>";
     echo "</div>";
     echo "</div>";
+
+    echo "</div>";  // End of left column
+
+    // Right column for respondents list
+    echo "<div class='col-md-3'>";
+    echo "<div class='box box-solid' style='border-radius: none !important;'>";
+    echo "<div class='box-header with-border'>";
+    echo "<h3 class='box-title'>Respondents</h3>";
+    echo "<div class='box-tools'>";
+    echo "<button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button>";
+    echo "</div>";
+    echo "</div>";
+    echo "<div class='box-body no-padding'>";
+    echo "<ul class='nav nav-pills nav-stacked'>";
+    
+    $uniqueRespondents = array_unique($allRespondents);
+    foreach ($uniqueRespondents as $respondentId) {
+        $respondentName = getAlumniName($respondentId, $alumni);
+        echo "<li><a href='alumni_profile.php?id=" . urlencode($respondentId) . "'>" . htmlspecialchars($respondentName) . "</a></li>";
+    }
+    
+    echo "</ul>";
+    echo "</div>";
+    echo "</div>";
+    echo "</div>";  // End of right column
+
+    echo "</div>";  // End of row
 }
 ?>
 
@@ -94,6 +210,9 @@ function displaySurveyQuestionsAndAnswers($surveyId)
         background: white !important;
         border-top-left-radius: 0 !important;
         border-top-right-radius: 0 !important;
+    }
+    .box{
+        border-radius: 0 !important;
     }
 </style>
 
