@@ -3,6 +3,9 @@ session_start();
 
 header('Content-Type: application/json');
 
+require_once '../vendor/autoload.php'; // Make sure you have the Firebase PHP SDK installed
+use Google\Cloud\Storage\StorageClient;
+
 $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -81,6 +84,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        // Handle image upload
+        $imageUrl = '';
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            $upload_dir = 'uploads/'; // Local directory to store uploads
+            $filename = uniqid() . '_' . $_FILES['image']['name'];
+            $upload_file = $upload_dir . $filename;
+
+            // Move uploaded file to local directory
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_file)) {
+                // Upload to Firebase Storage
+                try {
+                    $storage = new StorageClient([
+                        'keyFilePath' => '/path/to/your/firebase-credentials.json'
+                    ]);
+
+                    $bucket = $storage->bucket('mccnians-bc4d4d.appspot.com');
+                    $object = $bucket->upload(
+                        fopen($upload_file, 'r'),
+                        [
+                            'name' => 'alumni_images/' . $filename
+                        ]
+                    );
+
+                    // Get the public URL
+                    $imageUrl = $object->signedUrl(new \DateTime('tomorrow'));
+                } catch (Exception $e) {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Failed to upload image to Firebase Storage: ' . $e->getMessage();
+                    echo json_encode($response);
+                    exit;
+                }
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'Failed to move uploaded file.';
+                echo json_encode($response);
+                exit;
+            }
+        }
+
         // Prepare alumni data
         $alumniData = array(
             'firstname' => $firstname,
@@ -99,7 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'course' => $course,
             'batch' => $batch,
             'studentid' => $studentid,
-            'forms_completed' => false
+            'forms_completed' => false,
+            'image_url' => $imageUrl
         );
 
         // Add alumni data
@@ -112,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log('Firebase error: Failed to insert alumni data.');
         } else {
             $response['status'] = 'success';
-            $response['message'] = 'Alumni data added successfully!';
+            $response['message'] = 'Alumni data and image added successfully!';
         }
 
         echo json_encode($response);
