@@ -45,9 +45,16 @@ foreach ($alumniData as $id => $alumni) {
         // Map batch and course codes using unique IDs
         $batchYear = isset($batchData[$alumni['batch']]['batch_yrs']) ? $batchData[$alumni['batch']]['batch_yrs'] : 'Unknown Batch';
         $courseCode = isset($courseData[$alumni['course']]['courCode']) ? $courseData[$alumni['course']]['courCode'] : 'Unknown Course';
-        $categoryName = isset($categoryData[$alumni['work_classification']]['category_name']) ? $categoryData[$alumni['work_classification']]['category_name'] : 'Unknown Category';
-
         
+        // Check if work_classification exists and is not empty
+        $workClassification = isset($alumni['work_classification']) && !empty($alumni['work_classification']) 
+                              ? $alumni['work_classification'] 
+                              : null;
+        
+        $categoryName = $workClassification && isset($categoryData[$workClassification]['category_name']) 
+                        ? $categoryData[$workClassification]['category_name'] 
+                        : 'Unspecified';
+
         // Alumni user is authenticated, store user data in session
         $user = [
             'id' => $id,
@@ -71,7 +78,7 @@ foreach ($alumniData as $id => $alumni) {
             'category' => $categoryName,
             'batch_id' => $alumni['batch'],
             'course_id' => $alumni['course'],
-            'category_id' => $alumni['work_classification'],
+            'category_id' => $workClassification,
         ];
         $_SESSION['user'] = $user;
         $_SESSION['alumni_id'] = $id; // Store alumni ID in session
