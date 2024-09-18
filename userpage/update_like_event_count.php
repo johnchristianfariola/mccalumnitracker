@@ -1,9 +1,10 @@
 <?php
-session_start();
 require_once '../includes/firebaseRDB.php';
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
+
 date_default_timezone_set('Asia/Manila');
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $event_id = $_POST['event_id'];
