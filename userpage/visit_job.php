@@ -169,12 +169,12 @@
                                     <?php else: ?>
                                         <?php foreach ($jobComments as $commentId => $comment): ?>
                                             <?php
-                                               $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
-                                               $commenterData = json_decode($commenterData, true);
-                                               $commenterProfileUrl = $commenterData["profile_url"] ?? '';
-                                               $commenterFirstName = $commenterData["firstname"] ?? '';
-                                               $commenterLastName = $commenterData["lastname"] ?? '';
-                                               $isLiked = isset($comment["liked_by"][$alumni_id]);
+                                            $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
+                                            $commenterData = json_decode($commenterData, true);
+                                            $commenterProfileUrl = $commenterData["profile_url"] ?? '';
+                                            $commenterFirstName = $commenterData["firstname"] ?? '';
+                                            $commenterLastName = $commenterData["lastname"] ?? '';
+                                            $isLiked = isset($comment["liked_by"][$alumni_id]);
                                             ?>
                                             <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
                                                 <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt="">
@@ -578,12 +578,17 @@
                 });
 
                 // Heart icon click event
-                $(document).off('click', '.heart-icon').on('click', '.heart-icon', function () {
+                $('#comment-list').on('click', '.heart-icon', function () {
                     var $heartIcon = $(this);
                     var commentId = $heartIcon.data('comment-id');
                     var $heartCount = $heartIcon.next('.heart-count');
                     var currentCount = parseInt($heartCount.text());
                     var alumniId = '<?php echo $alumni_id; ?>';
+
+                    // Optimistic update
+                    var isLiked = $heartIcon.hasClass('liked');
+                    $heartIcon.toggleClass('liked');
+                    $heartCount.text(isLiked ? currentCount - 1 : currentCount + 1);
 
                     $.ajax({
                         type: 'POST',
@@ -594,23 +599,27 @@
                         },
                         dataType: 'json',
                         success: function (response) {
-                            if (response.status === 'success') {
+                            if (response.status !== 'success') {
+                                // Revert changes if the server request failed
+                                $heartIcon.toggleClass('liked');
+                                $heartCount.text(currentCount);
+                            } else {
                                 if (response.action === 'liked') {
-                                    $heartIcon.addClass('liked');
-                                    $heartCount.text(currentCount + 1);
                                     heartedComments.add(commentId);
                                 } else {
-                                    $heartIcon.removeClass('liked');
-                                    $heartCount.text(currentCount - 1);
                                     heartedComments.delete(commentId);
                                 }
                             }
                         },
                         error: function () {
+                            // Revert changes on error
+                            $heartIcon.toggleClass('liked');
+                            $heartCount.text(currentCount);
                             console.log('Error updating like');
                         }
                     });
                 });
+
             }
 
             attachEventListeners();
