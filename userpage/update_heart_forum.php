@@ -1,88 +1,70 @@
 <?php
-require_once '../includes/session.php';
-
+include '../includes/session.php';
 require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
 
 $firebase = new firebaseRDB($databaseURL);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_id']) && isset($_POST['action'])) {
-    $commentId = $_POST['comment_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $comment_id = $_POST['comment_id'];
     $action = $_POST['action'];
-    $userId = $_SESSION['user']['id']; // Assuming you have user sessions
+    $alumni_id = $_SESSION['user']['id'];
 
-    // Retrieve the current comment data
-    $commentData = $firebase->retrieve("forum_comments/$commentId");
-    $commentData = json_decode($commentData, true);
+    // Get the current comment data
+    $comment = $firebase->retrieve("forum_comments/$comment_id");
+    $comment = json_decode($comment, true);
 
-    if (!$commentData) {
-        echo json_encode(['status' => 'error', 'message' => 'Comment not found']);
-        exit;
-    }
-
-    // Initialize arrays if they don't exist
-    $commentData['liked_by'] = $commentData['liked_by'] ?? [];
-    $commentData['disliked_by'] = $commentData['disliked_by'] ?? [];
-    $commentData['heart_count'] = $commentData['heart_count'] ?? 0;
-    $commentData['dislike_count'] = $commentData['dislike_count'] ?? 0;
-
-    $liked = in_array($userId, $commentData['liked_by']);
-    $disliked = in_array($userId, $commentData['disliked_by']);
+    $current_time = date('Y-m-d H:i:s');
 
     if ($action === 'like') {
-        if ($liked) {
-            // Remove like
-            $commentData['liked_by'] = array_diff($commentData['liked_by'], [$userId]);
-            $commentData['heart_count']--;
-            $liked = false;
-        } else {
-            // Add like and remove dislike if exists
-            $commentData['liked_by'][] = $userId;
-            $commentData['heart_count']++;
-            $commentData['disliked_by'] = array_diff($commentData['disliked_by'], [$userId]);
-            if ($disliked) {
-                $commentData['dislike_count']--;
+        if (!isset($comment['liked_by'][$alumni_id])) {
+            // Add like
+            $comment['liked_by'][$alumni_id] = $current_time;
+            $comment['heart_count'] = isset($comment['heart_count']) ? $comment['heart_count'] + 1 : 1;
+            
+            // Remove dislike if exists
+            if (isset($comment['disliked_by'][$alumni_id])) {
+                unset($comment['disliked_by'][$alumni_id]);
+                $comment['dislike_count'] = max(0, ($comment['dislike_count'] ?? 0) - 1);
             }
-            $liked = true;
-            $disliked = false;
+        } else {
+            // Remove like
+            unset($comment['liked_by'][$alumni_id]);
+            $comment['heart_count'] = max(0, ($comment['heart_count'] ?? 0) - 1);
         }
     } elseif ($action === 'dislike') {
-        if ($disliked) {
-            // Remove dislike
-            $commentData['disliked_by'] = array_diff($commentData['disliked_by'], [$userId]);
-            $commentData['dislike_count']--;
-            $disliked = false;
-        } else {
-            // Add dislike and remove like if exists
-            $commentData['disliked_by'][] = $userId;
-            $commentData['dislike_count']++;
-            $commentData['liked_by'] = array_diff($commentData['liked_by'], [$userId]);
-            if ($liked) {
-                $commentData['heart_count']--;
+        if (!isset($comment['disliked_by'][$alumni_id])) {
+            // Add dislike
+            $comment['disliked_by'][$alumni_id] = $current_time;
+            $comment['dislike_count'] = isset($comment['dislike_count']) ? $comment['dislike_count'] + 1 : 1;
+            
+            // Remove like if exists
+            if (isset($comment['liked_by'][$alumni_id])) {
+                unset($comment['liked_by'][$alumni_id]);
+                $comment['heart_count'] = max(0, ($comment['heart_count'] ?? 0) - 1);
             }
-            $disliked = true;
-            $liked = false;
+        } else {
+            // Remove dislike
+            unset($comment['disliked_by'][$alumni_id]);
+            $comment['dislike_count'] = max(0, ($comment['dislike_count'] ?? 0) - 1);
         }
     }
 
-    // Reindex the arrays
-    $commentData['liked_by'] = array_values($commentData['liked_by']);
-    $commentData['disliked_by'] = array_values($commentData['disliked_by']);
-
-    // Update the comment data in Firebase
-    $result = $firebase->update("forum_comments", $commentId, $commentData);
+    // Update the comment in the database
+    $result = $firebase->update("forum_comments", $comment_id, $comment);
 
     if ($result) {
         echo json_encode([
             'status' => 'success',
-            'heart_count' => $commentData['heart_count'],
-            'dislike_count' => $commentData['dislike_count'],
-            'liked' => $liked,
-            'disliked' => $disliked
+            'heart_count' => $comment['heart_count'] ?? 0,
+            'dislike_count' => $comment['dislike_count'] ?? 0,
+            'liked' => isset($comment['liked_by'][$alumni_id]),
+            'disliked' => isset($comment['disliked_by'][$alumni_id])
         ]);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update rating']);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update comment']);
     }
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
 }
+?>

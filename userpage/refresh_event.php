@@ -33,7 +33,7 @@ if (empty($commentData) || !is_array($commentData)) {
             $heartCount = isset($comment['heart_count']) ? $comment['heart_count'] : 0;
 
             // Check if the current user has liked this comment
-            $isLiked = in_array($current_user_id, $comment['liked_by'] ?? []);
+            $isLiked = isset($comment['liked_by'][$current_user_id]);
             $likedClass = $isLiked ? 'liked' : '';
 
             $html .= '<li data-comment-id="' . $commentId . '">
@@ -70,7 +70,7 @@ if (empty($commentData) || !is_array($commentData)) {
                         <div class="comment-box">
                             <div class="comment-head">
                                 <h6 class="comment-name by-author">
-                                <a href="view_alumni_details.php?id=' . htmlspecialchars($comment['alumni_id']) . '">' . $replyAuthorFirstName . ' ' . $replyAuthorLastName . '</a>
+                                <a href="view_alumni_details.php?id=' . htmlspecialchars($reply['alumni_id']) . '">' . $replyAuthorFirstName . ' ' . $replyAuthorLastName . '</a>
                                 </h6>
                                 <span>' . timeAgo($reply['date_replied']) . '</span>
                             </div>

@@ -677,7 +677,7 @@ $(document).ready(function() {
 
 </script>
 <script>
-    $(document).ready(function() {
+   $(document).ready(function() {
     // Existing click handler
     $(document).on('click', '.fa-heart', function() {
         var $heart = $(this);

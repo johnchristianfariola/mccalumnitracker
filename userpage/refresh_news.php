@@ -4,7 +4,6 @@ require_once '../includes/firebaseRDB.php';
 // Initialize Firebase URL
 date_default_timezone_set('Asia/Manila');
 
-
 $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 $news_id = $_GET['news_id'];
@@ -28,9 +27,12 @@ if (empty($commentData) || !is_array($commentData)) {
             $commenterFirstName = $commenterData['firstname'] ?? 'Unknown';
             $commenterLastName = $commenterData['lastname'] ?? 'User';
 
-            $isLiked = in_array($current_user_id, $comment['liked_by'] ?? []);
+            // Check if the current user has liked this comment
+            $isLiked = isset($comment['liked_by'][$current_user_id]);
             $likedClass = $isLiked ? 'liked' : '';
-            $heartCount = isset($comment['heart_count']) ? $comment['heart_count'] : 0;
+            
+            // Calculate heart count based on the number of entries in liked_by
+            $heartCount = isset($comment['liked_by']) ? count($comment['liked_by']) : 0;
             
             $html .= '<li data-comment-id="' . $commentId . '">
                 <div class="comment-main-level">
@@ -42,7 +44,7 @@ if (empty($commentData) || !is_array($commentData)) {
                             </h6>
                             <span>' . timeAgo($comment['date_commented']) . '</span>
                             <i class="fa fa-reply reply-button"></i>
-                             <i class="fa fa-heart ' . $likedClass . '" data-comment-id="' . $commentId . '"></i>
+                            <i class="fa fa-heart ' . $likedClass . '" data-comment-id="' . $commentId . '"></i>
                             <span style="float:right;" class="heart-count">' . $heartCount . '</span>
                         </div>
                         <div class="comment-content">

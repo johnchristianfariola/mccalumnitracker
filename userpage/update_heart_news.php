@@ -1,43 +1,41 @@
 <?php
-require_once '../includes/firebaseRDB.php';
+require_once "../includes/firebaseRDB.php";
+require_once "../includes/config.php";
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
-if (isset($_POST['comment_id']) && isset($_POST['alumni_id']) && isset($_POST['is_liked'])) {
-    $comment_id = $_POST['comment_id'];
-    $alumni_id = $_POST['alumni_id'];
-    $is_liked = $_POST['is_liked'] === 'true';
-    
-    // Retrieve current comment data
-    $commentData = $firebase->retrieve("news_comments/{$comment_id}");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $commentId = $_POST['comment_id'];
+    $alumniId = $_POST['alumni_id'];
+    $isLiked = $_POST['is_liked'] === 'true';
+
+    $commentData = $firebase->retrieve("news_comments/{$commentId}");
     $commentData = json_decode($commentData, true);
-    
+
     if (!isset($commentData['liked_by'])) {
         $commentData['liked_by'] = [];
     }
-    
-    if ($is_liked) {
-        // Add the user to liked_by if not already present
-        if (!in_array($alumni_id, $commentData['liked_by'])) {
-            $commentData['liked_by'][] = $alumni_id;
-            $commentData['heart_count'] = isset($commentData['heart_count']) ? $commentData['heart_count'] + 1 : 1;
-        }
+
+    if ($isLiked) {
+        $commentData['liked_by'][$alumniId] = date('Y-m-d H:i:s');
     } else {
-        // Remove the user from liked_by if present
-        $commentData['liked_by'] = array_values(array_diff($commentData['liked_by'], [$alumni_id]));
-        $commentData['heart_count'] = max((isset($commentData['heart_count']) ? $commentData['heart_count'] - 1 : 0), 0);
+        unset($commentData['liked_by'][$alumniId]);
     }
-    
-    // Update the comment with new data
-    $firebase->update("news_comments", $comment_id, $commentData);
-    
+
+    $heartCount = count($commentData['liked_by']);
+
+    $updateData = [
+        'liked_by' => $commentData['liked_by'],
+        'heart_count' => $heartCount
+    ];
+
+    $firebase->update("news_comments", $commentId, $updateData);
+
     echo json_encode([
-        'success' => true, 
-        'heart_count' => $commentData['heart_count'],
-        'is_liked' => in_array($alumni_id, $commentData['liked_by'])
+        'success' => true,
+        'is_liked' => $isLiked,
+        'heart_count' => $heartCount
     ]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Required data not provided']);
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
-?>

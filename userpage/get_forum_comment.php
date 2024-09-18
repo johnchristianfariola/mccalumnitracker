@@ -73,12 +73,12 @@ if (isset($_GET['forum_id'])) {
                     </div>
                     <div class="reply-section">
                         <span class="heart-btn" data-comment-id="<?php echo $comment_id; ?>">
-                            <i class="fa <?php echo (!empty($comment['liked_by']) && in_array($_SESSION['user']['id'], $comment['liked_by'])) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
+                            <i class="fa <?php echo (isset($comment['liked_by'][$_SESSION['user']['id']])) ? 'fa-heart' : 'fa-heart-o'; ?>"></i>
                         </span>
                         <span class="heart-count"><?php echo isset($comment['heart_count']) ? $comment['heart_count'] : 0; ?></span>
                         &nbsp;&nbsp;
                         <span class="dislike-btn" data-comment-id="<?php echo $comment_id; ?>">
-                            <i class="fa <?php echo (!empty($comment['disliked_by']) && in_array($_SESSION['user']['id'], $comment['disliked_by'])) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
+                            <i class="fa <?php echo (isset($comment['disliked_by'][$_SESSION['user']['id']])) ? 'fa-thumbs-down' : 'fa-thumbs-o-down'; ?>"></i>
                         </span>
                         <span class="dislike-count"><?php echo isset($comment['dislike_count']) ? $comment['dislike_count'] : 0; ?></span>
                         <button class="reply-btn" data-comment-id="<?php echo $comment_id; ?>">Reply</button>

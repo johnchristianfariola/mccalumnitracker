@@ -169,11 +169,12 @@
                                     <?php else: ?>
                                         <?php foreach ($jobComments as $commentId => $comment): ?>
                                             <?php
-                                            $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
-                                            $commenterData = json_decode($commenterData, true);
-                                            $commenterProfileUrl = $commenterData["profile_url"] ?? '';
-                                            $commenterFirstName = $commenterData["firstname"] ?? '';
-                                            $commenterLastName = $commenterData["lastname"] ?? '';
+                                               $commenterData = $firebase->retrieve("alumni/{$comment["alumni_id"]}");
+                                               $commenterData = json_decode($commenterData, true);
+                                               $commenterProfileUrl = $commenterData["profile_url"] ?? '';
+                                               $commenterFirstName = $commenterData["firstname"] ?? '';
+                                               $commenterLastName = $commenterData["lastname"] ?? '';
+                                               $isLiked = isset($comment["liked_by"][$alumni_id]);
                                             ?>
                                             <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
                                                 <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt="">
@@ -181,14 +182,12 @@
                                                 <div class="comment-box">
                                                     <div class="comment-header">
                                                         <h6 class="comment-author">
-
                                                             <a
                                                                 href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
-
                                                         </h6>
                                                         <span><?php echo $comment["date_ago"]; ?></span>
                                                         <i class="fa fa-reply reply-button"></i>
-                                                        <i class="fa fa-heart heart-icon <?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? 'liked' : ''; ?>"
+                                                        <i class="fa fa-heart heart-icon <?php echo $isLiked ? 'liked' : ''; ?>"
                                                             data-comment-id="<?php echo $commentId; ?>"></i>
                                                         <span
                                                             class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
@@ -316,8 +315,8 @@
             </div>
         </div>
     </div>
- 
-    <?php include 'global_chatbox.php'?>
+
+    <?php include 'global_chatbox.php' ?>
 
 
     <!-- Custom JS -->
@@ -584,13 +583,14 @@
                     var commentId = $heartIcon.data('comment-id');
                     var $heartCount = $heartIcon.next('.heart-count');
                     var currentCount = parseInt($heartCount.text());
+                    var alumniId = '<?php echo $alumni_id; ?>';
 
                     $.ajax({
                         type: 'POST',
                         url: 'like_job_comment.php',
                         data: {
                             comment_id: commentId,
-                            alumni_id: '<?php echo $alumni_id; ?>'
+                            alumni_id: alumniId
                         },
                         dataType: 'json',
                         success: function (response) {

@@ -1,26 +1,23 @@
 <?php
-require_once '../includes/firebaseRDB.php';
+require_once "../includes/firebaseRDB.php";
+require_once "../includes/config.php";
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
-if (isset($_GET['comment_id']) && isset($_GET['alumni_id'])) {
-    $comment_id = $_GET['comment_id'];
-    $alumni_id = $_GET['alumni_id'];
-    
-    // Retrieve current comment data
-    $commentData = $firebase->retrieve("news_comments/{$comment_id}");
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $commentId = $_GET['comment_id'];
+    $alumniId = $_GET['alumni_id'];
+
+    $commentData = $firebase->retrieve("news_comments/{$commentId}");
     $commentData = json_decode($commentData, true);
-    
-    $isLiked = in_array($alumni_id, $commentData['liked_by'] ?? []);
-    $heartCount = $commentData['heart_count'] ?? 0;
-    
+
+    $isLiked = isset($commentData['liked_by'][$alumniId]);
+    $heartCount = isset($commentData['liked_by']) ? count($commentData['liked_by']) : 0;
+
     echo json_encode([
-        'success' => true,
         'is_liked' => $isLiked,
         'heart_count' => $heartCount
     ]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Required data not provided']);
+    echo json_encode(['error' => 'Invalid request method']);
 }
-?>

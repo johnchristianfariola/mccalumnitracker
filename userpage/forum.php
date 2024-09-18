@@ -131,7 +131,7 @@
                                             <span style="font-size:11px"><?php echo htmlspecialchars($formatted_date); ?> &bull;
                                                 <?php echo $time_ago; ?></span>
                                         </div>
-                                       <!-- <div class="dropdown">
+                                        <!-- <div class="dropdown">
                                             <button class="btn btn-default btn-icon-notika dropdown-toggle" type="button"
                                                 id="dropdownMenu<?php echo $forum_id; ?>" data-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">
@@ -141,7 +141,7 @@
                                                 <a class="dropdown-item" href="#">Edit</a>
                                                 <a class="dropdown-item" href="#">Delete</a>
                                             </div>
-                                        </div> -->  
+                                        </div> -->
                                     </div>
                                     <div class="content">
                                         <h1><?php echo htmlspecialchars($forum_post['forumName'] ?? 'Untitled'); ?></h1>
@@ -283,7 +283,7 @@
 
 
 
-    <?php include 'global_chatbox.php'?>
+    <?php include 'global_chatbox.php' ?>
 
 
     <script src="../bower_components/ckeditor/ckeditor.js"></script>
@@ -672,26 +672,18 @@
                             // Toggle the icon
                             var $icon = $this.find('i');
                             if (action === 'like') {
-                                if (data.liked) {
-                                    $icon.removeClass('fa-heart-o').addClass('fa-heart');
-                                } else {
-                                    $icon.removeClass('fa-heart').addClass('fa-heart-o');
-                                }
+                                $icon.toggleClass('fa-heart-o fa-heart', data.liked);
                             } else {
-                                if (data.disliked) {
-                                    $icon.removeClass('fa-thumbs-o-down').addClass('fa-thumbs-down');
-                                } else {
-                                    $icon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
-                                }
+                                $icon.toggleClass('fa-thumbs-o-down fa-thumbs-down', data.disliked);
                             }
 
-                            // Update the opposite button if needed
+                            // Update the opposite button
                             var $oppositeBtn = action === 'like' ? $('.dislike-btn[data-comment-id="' + commentId + '"]') : $('.heart-btn[data-comment-id="' + commentId + '"]');
                             var $oppositeIcon = $oppositeBtn.find('i');
-                            if (action === 'like' && data.liked) {
-                                $oppositeIcon.removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
-                            } else if (action === 'dislike' && data.disliked) {
-                                $oppositeIcon.removeClass('fa-heart').addClass('fa-heart-o');
+                            if (action === 'like') {
+                                $oppositeIcon.toggleClass('fa-thumbs-down fa-thumbs-o-down', !data.disliked);
+                            } else {
+                                $oppositeIcon.toggleClass('fa-heart fa-heart-o', !data.liked);
                             }
                             $oppositeBtn.siblings('.' + (action === 'like' ? 'dislike' : 'heart') + '-count').text(data[action === 'like' ? 'dislike_count' : 'heart_count']);
                         } else {
