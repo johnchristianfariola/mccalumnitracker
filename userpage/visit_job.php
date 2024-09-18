@@ -174,7 +174,6 @@
                                             $commenterProfileUrl = $commenterData["profile_url"] ?? '';
                                             $commenterFirstName = $commenterData["firstname"] ?? '';
                                             $commenterLastName = $commenterData["lastname"] ?? '';
-                                            $isLiked = isset($comment["liked_by"][$alumni_id]);
                                             ?>
                                             <li data-comment-id="<?php echo $commentId; ?>" style="list-style:none;">
                                                 <div class="comment-avatar"><img src="<?php echo $commenterProfileUrl; ?>" alt="">
@@ -182,12 +181,14 @@
                                                 <div class="comment-box">
                                                     <div class="comment-header">
                                                         <h6 class="comment-author">
+
                                                             <a
                                                                 href="view_alumni_details.php?id=<?php echo htmlspecialchars($comment['alumni_id']); ?>"><?php echo $commenterFirstName . " " . $commenterLastName; ?></a>
+
                                                         </h6>
                                                         <span><?php echo $comment["date_ago"]; ?></span>
                                                         <i class="fa fa-reply reply-button"></i>
-                                                        <i class="fa fa-heart heart-icon <?php echo $isLiked ? 'liked' : ''; ?>"
+                                                        <i class="fa fa-heart heart-icon <?php echo in_array($alumni_id, $comment["liked_by"] ?? []) ? 'liked' : ''; ?>"
                                                             data-comment-id="<?php echo $commentId; ?>"></i>
                                                         <span
                                                             class="heart-count"><?php echo isset($comment["heart_count"]) ? $comment["heart_count"] : 0; ?></span>
@@ -315,8 +316,8 @@
             </div>
         </div>
     </div>
-
-    <?php include 'global_chatbox.php' ?>
+ 
+    <?php include 'global_chatbox.php'?>
 
 
     <!-- Custom JS -->
@@ -578,48 +579,38 @@
                 });
 
                 // Heart icon click event
-                $('#comment-list').on('click', '.heart-icon', function () {
+                $(document).off('click', '.heart-icon').on('click', '.heart-icon', function () {
                     var $heartIcon = $(this);
                     var commentId = $heartIcon.data('comment-id');
                     var $heartCount = $heartIcon.next('.heart-count');
                     var currentCount = parseInt($heartCount.text());
-                    var alumniId = '<?php echo $alumni_id; ?>';
-
-                    // Optimistic update
-                    var isLiked = $heartIcon.hasClass('liked');
-                    $heartIcon.toggleClass('liked');
-                    $heartCount.text(isLiked ? currentCount - 1 : currentCount + 1);
 
                     $.ajax({
                         type: 'POST',
                         url: 'like_job_comment.php',
                         data: {
                             comment_id: commentId,
-                            alumni_id: alumniId
+                            alumni_id: '<?php echo $alumni_id; ?>'
                         },
                         dataType: 'json',
                         success: function (response) {
-                            if (response.status !== 'success') {
-                                // Revert changes if the server request failed
-                                $heartIcon.toggleClass('liked');
-                                $heartCount.text(currentCount);
-                            } else {
+                            if (response.status === 'success') {
                                 if (response.action === 'liked') {
+                                    $heartIcon.addClass('liked');
+                                    $heartCount.text(currentCount + 1);
                                     heartedComments.add(commentId);
                                 } else {
+                                    $heartIcon.removeClass('liked');
+                                    $heartCount.text(currentCount - 1);
                                     heartedComments.delete(commentId);
                                 }
                             }
                         },
                         error: function () {
-                            // Revert changes on error
-                            $heartIcon.toggleClass('liked');
-                            $heartCount.text(currentCount);
                             console.log('Error updating like');
                         }
                     });
                 });
-
             }
 
             attachEventListeners();

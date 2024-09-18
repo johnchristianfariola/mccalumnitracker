@@ -1,67 +1,45 @@
 <?php
-session_start();
 require_once '../includes/firebaseRDB.php';
 require_once '../includes/config.php';
 
-header('Content-Type: application/json');
+$firebase = new firebaseRDB($databaseURL);
 
-function sendResponse($status, $message = '', $action = '') {
-    echo json_encode([
-        'status' => $status,
-        'message' => $message,
-        'action' => $action
-    ]);
-    exit;
-}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $commentId = $_POST["comment_id"];
+    $alumniId = $_POST["alumni_id"];
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    sendResponse('error', 'Invalid request method');
-}
+    $comment = $firebase->retrieve("job_comments/{$commentId}");
+    $comment = json_decode($comment, true);
 
-$commentId = $_POST['comment_id'] ?? '';
-$alumniId = $_POST['alumni_id'] ?? '';
-
-if (empty($commentId) || empty($alumniId)) {
-    sendResponse('error', 'Missing required data');
-}
-
-try {
-    $firebase = new firebaseRDB($databaseURL);
-    $commentData = $firebase->retrieve("job_comments/$commentId");
-    $commentData = json_decode($commentData, true);
-
-    if (!$commentData) {
-        sendResponse('error', 'Comment not found');
+    if (!isset($comment["liked_by"])) {
+        $comment["liked_by"] = [];
     }
 
-    if (!isset($commentData['liked_by'])) {
-        $commentData['liked_by'] = [];
-    }
-
-    $timezone = new DateTimeZone('Asia/Manila');
-    $current_time = new DateTime('now', $timezone);
-    $formatted_time = $current_time->format('Y-m-d H:i:s');
-
-    if (!isset($commentData['liked_by'][$alumniId])) {
-        // Like the comment
-        $commentData['liked_by'][$alumniId] = $formatted_time;
-        $commentData['heart_count'] = ($commentData['heart_count'] ?? 0) + 1;
-        $action = 'liked';
+    $index = array_search($alumniId, $comment["liked_by"]);
+    if ($index !== false) {
+        // Unlike
+        unset($comment["liked_by"][$index]);
+        $comment["heart_count"] = max(0, ($comment["heart_count"] ?? 0) - 1);
+        $action = "unliked";
     } else {
-        // Unlike the comment
-        unset($commentData['liked_by'][$alumniId]);
-        $commentData['heart_count'] = max(0, ($commentData['heart_count'] ?? 1) - 1);
-        $action = 'unliked';
+        // Like
+        $comment["liked_by"][] = $alumniId;
+        $comment["heart_count"] = ($comment["heart_count"] ?? 0) + 1;
+        $action = "liked";
     }
 
-    $result = $firebase->update("job_comments", $commentId, $commentData);
+    $result = $firebase->update($table, "job_comments/{$commentId}", $comment);
 
-    if ($result === null) {
-        sendResponse('error', 'Failed to update like status');
+    if ($result) {
+        echo json_encode([
+            "status" => "success",
+            "action" => $action,
+            "heart_count" => $comment["heart_count"]
+        ]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error updating like status"]);
     }
-
-    sendResponse('success', 'Like status updated successfully', $action);
-
-} catch (Exception $e) {
-    sendResponse('error', 'An error occurred: ' . $e->getMessage());
+} else {
+    echo json_encode(["status" => "error", "message" => "Invalid request method"]);
 }
+?>
