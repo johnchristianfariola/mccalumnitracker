@@ -202,7 +202,7 @@
                                                         <i class="fa fa-reply reply-button"></i>
                                                         <i class="fa fa-heart heart-icon" data-comment-id="<?php echo $commentId; ?>"
                                                             data-liked="<?php echo $isLiked ? 'true' : 'false'; ?>"></i>
-                                                        <span class="heart-count"><?php echo $heartCount; ?></span>
+                                              
                                                     </div>
                                                     <div class="comment-content">
                                                         <?php echo htmlspecialchars(

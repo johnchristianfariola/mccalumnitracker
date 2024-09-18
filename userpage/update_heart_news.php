@@ -2,6 +2,9 @@
 require_once "../includes/firebaseRDB.php";
 require_once "../includes/config.php";
 
+// Set the desired timezone (e.g., 'America/New_York')
+date_default_timezone_set('Asia/Manila');
+
 $firebase = new firebaseRDB($databaseURL);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

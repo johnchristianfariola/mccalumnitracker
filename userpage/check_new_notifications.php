@@ -19,8 +19,6 @@ function getNotifications($firebase, $current_user_id)
 {
     $notifications = [];
 
-
-
     // Fetch news comments
     $news_comments = $firebase->retrieve("news_comments");
     $news_comments = json_decode($news_comments, true);
@@ -80,7 +78,6 @@ function getNotifications($firebase, $current_user_id)
     // Process gallery notifications
     processAdminContent($gallery, $notifications, 'gallery');
 
-
     // Sort notifications by date, most recent first
     usort($notifications, function ($a, $b) {
         return strtotime($b['date']) - strtotime($a['date']);
@@ -121,24 +118,53 @@ function processComments($firebase, $current_user_id, $comments, &$notifications
         }
 
         // Notifications for reactions
-        if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id && isset($comment['liked_by']) && is_array($comment['liked_by'])) {
-            foreach ($comment['liked_by'] as $reactor_id) {
-                if ($reactor_id != $current_user_id) {
-                    $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
-                    $reactor_data = json_decode($reactor_data, true);
-                    if ($reactor_data) {
-                        $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
-                        $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+        if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id) {
+            // Process likes
+            if (isset($comment['liked_by']) && is_array($comment['liked_by'])) {
+                foreach ($comment['liked_by'] as $reactor_id => $reaction_date) {
+                    if ($reactor_id != $current_user_id) {
+                        $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                        $reactor_data = json_decode($reactor_data, true);
+                        if ($reactor_data) {
+                            $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                            $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
 
-                        $notifications[] = [
-                            'type' => 'reaction',
-                            'content_type' => $type,
-                            'reactor_name' => $reactor_name,
-                            'reactor_profile' => $reactor_profile,
-                            'date' => date('Y-m-d H:i:s'),
-                            'comment_id' => $comment_id,
-                            $type . '_id' => $comment[$type . '_id']
-                        ];
+                            $notifications[] = [
+                                'type' => 'reaction',
+                                'content_type' => $type,
+                                'reactor_name' => $reactor_name,
+                                'reactor_profile' => $reactor_profile,
+                                'date' => $reaction_date,
+                                'comment_id' => $comment_id,
+                                $type . '_id' => $comment[$type . '_id'],
+                                'reaction_type' => 'like'
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Process dislikes
+            if (isset($comment['dislike_by']) && is_array($comment['dislike_by'])) {
+                foreach ($comment['dislike_by'] as $reactor_id => $reaction_date) {
+                    if ($reactor_id != $current_user_id) {
+                        $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                        $reactor_data = json_decode($reactor_data, true);
+                        if ($reactor_data) {
+                            $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                            $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+
+                            $notifications[] = [
+                                'type' => 'reaction',
+                                'content_type' => $type,
+                                'reactor_name' => $reactor_name,
+                                'reactor_profile' => $reactor_profile,
+                                'date' => $reaction_date,
+                                'comment_id' => $comment_id,
+                                $type . '_id' => $comment[$type . '_id'],
+                                'reaction_type' => 'dislike'
+                            ];
+                        }
                     }
                 }
             }
@@ -151,27 +177,50 @@ function processForumNotifications($firebase, $current_user_id, $forum_posts, $f
     // Process forum post reactions
     if (is_array($forum_posts)) {
         foreach ($forum_posts as $post_id => $post) {
-            if (isset($post['alumniId']) && $post['alumniId'] == $current_user_id && isset($post['reactions']) && is_array($post['reactions'])) {
-                foreach ($post['reactions'] as $reaction_type => $reactors) {
-                    if (is_array($reactors)) {
-                        foreach ($reactors as $reactor_id => $reaction_date) {
-                            if ($reactor_id != $current_user_id) {
-                                $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
-                                $reactor_data = json_decode($reactor_data, true);
-                                if ($reactor_data) {
-                                    $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
-                                    $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+            if (isset($post['alumniId']) && $post['alumniId'] == $current_user_id) {
+                // Process likes
+                if (isset($post['liked_by']) && is_array($post['liked_by'])) {
+                    foreach ($post['liked_by'] as $reactor_id => $reaction_date) {
+                        if ($reactor_id != $current_user_id) {
+                            $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                            $reactor_data = json_decode($reactor_data, true);
+                            if ($reactor_data) {
+                                $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                                $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
 
-                                    $notifications[] = [
-                                        'type' => 'forum_post_reaction',
-                                        'content_type' => 'forum',
-                                        'reactor_name' => $reactor_name,
-                                        'reactor_profile' => $reactor_profile,
-                                        'date' => $reaction_date,
-                                        'post_id' => $post_id,
-                                        'reaction_type' => $reaction_type
-                                    ];
-                                }
+                                $notifications[] = [
+                                    'type' => 'forum_post_reaction',
+                                    'content_type' => 'forum',
+                                    'reactor_name' => $reactor_name,
+                                    'reactor_profile' => $reactor_profile,
+                                    'date' => $reaction_date,
+                                    'post_id' => $post_id,
+                                    'reaction_type' => 'like'
+                                ];
+                            }
+                        }
+                    }
+                }
+
+                // Process dislikes
+                if (isset($post['dislike_by']) && is_array($post['dislike_by'])) {
+                    foreach ($post['dislike_by'] as $reactor_id => $reaction_date) {
+                        if ($reactor_id != $current_user_id) {
+                            $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                            $reactor_data = json_decode($reactor_data, true);
+                            if ($reactor_data) {
+                                $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                                $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+
+                                $notifications[] = [
+                                    'type' => 'forum_post_reaction',
+                                    'content_type' => 'forum',
+                                    'reactor_name' => $reactor_name,
+                                    'reactor_profile' => $reactor_profile,
+                                    'date' => $reaction_date,
+                                    'post_id' => $post_id,
+                                    'reaction_type' => 'dislike'
+                                ];
                             }
                         }
                     }
@@ -235,24 +284,53 @@ function processForumNotifications($firebase, $current_user_id, $forum_posts, $f
             }
 
             // Notifications for reactions to user's comments
-            if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id && isset($comment['liked_by']) && is_array($comment['liked_by'])) {
-                foreach ($comment['liked_by'] as $reactor_id) {
-                    if ($reactor_id != $current_user_id) {
-                        $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
-                        $reactor_data = json_decode($reactor_data, true);
-                        if ($reactor_data) {
-                            $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
-                            $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+            if (isset($comment['alumni_id']) && $comment['alumni_id'] == $current_user_id) {
+                // Process likes
+                if (isset($comment['liked_by']) && is_array($comment['liked_by'])) {
+                    foreach ($comment['liked_by'] as $reactor_id => $reaction_date) {
+                        if ($reactor_id != $current_user_id) {
+                            $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                            $reactor_data = json_decode($reactor_data, true);
+                            if ($reactor_data) {
+                                $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                                $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
 
-                            $notifications[] = [
-                                'type' => 'forum_comment_reaction',
-                                'content_type' => 'forum',
-                                'reactor_name' => $reactor_name,
-                                'reactor_profile' => $reactor_profile,
-                                'date' => date('Y-m-d H:i:s'),
-                                'post_id' => $comment['forum_id'],
-                                'comment_id' => $comment_id
-                            ];
+                                $notifications[] = [
+                                    'type' => 'forum_comment_reaction',
+                                    'content_type' => 'forum',
+                                    'reactor_name' => $reactor_name,
+                                    'reactor_profile' => $reactor_profile,
+                                    'date' => $reaction_date,
+                                    'post_id' => $comment['forum_id'],
+                                    'comment_id' => $comment_id,
+                                    'reaction_type' => 'like'
+                                ];
+                            }
+                        }
+                    }
+                }
+
+                // Process dislikes
+                if (isset($comment['dislike_by']) && is_array($comment['dislike_by'])) {
+                    foreach ($comment['dislike_by'] as $reactor_id => $reaction_date) {
+                        if ($reactor_id != $current_user_id) {
+                            $reactor_data = $firebase->retrieve("alumni/" . $reactor_id);
+                            $reactor_data = json_decode($reactor_data, true);
+                            if ($reactor_data) {
+                                $reactor_name = $reactor_data['firstname'] . ' ' . $reactor_data['lastname'];
+                                $reactor_profile = isset($reactor_data['profile_url']) ? $reactor_data['profile_url'] : '../images/profile.jpg';
+
+                                $notifications[] = [
+                                    'type' => 'forum_comment_reaction',
+                                    'content_type' => 'forum',
+                                    'reactor_name' => $reactor_name,
+                                    'reactor_profile' => $reactor_profile,
+                                    'date' => $reaction_date,
+                                    'post_id' => $comment['forum_id'],
+                                    'comment_id' => $comment_id,
+                                    'reaction_type' => 'dislike'
+                                ];
+                            }
                         }
                     }
                 }
@@ -260,7 +338,6 @@ function processForumNotifications($firebase, $current_user_id, $forum_posts, $f
         }
     }
 }
-
 
 function processAdminContent($content, &$notifications, $type, $firebase = null, $current_user_id = null)
 {
@@ -312,8 +389,6 @@ function processEventInvitations($event, $event_id, $firebase, $current_user_id,
         ];
     }
 }
-
-
 
 function getNewNotificationCount($firebase, $user_id, $notifications) {
     $notification_log = $firebase->retrieve("notification_log/" . $user_id);

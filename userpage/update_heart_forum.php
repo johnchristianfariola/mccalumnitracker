@@ -14,12 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $comment = $firebase->retrieve("forum_comments/$comment_id");
     $comment = json_decode($comment, true);
 
-    $current_time = date('Y-m-d H:i:s');
+    // Set timezone to Asia/Manila or any other timezone in Asia
+    $timezone = new DateTimeZone('Asia/Manila');
+    $current_time = new DateTime('now', $timezone);
+    $formatted_time = $current_time->format('Y-m-d H:i:s');
 
     if ($action === 'like') {
         if (!isset($comment['liked_by'][$alumni_id])) {
             // Add like
-            $comment['liked_by'][$alumni_id] = $current_time;
+            $comment['liked_by'][$alumni_id] = $formatted_time;
             $comment['heart_count'] = isset($comment['heart_count']) ? $comment['heart_count'] + 1 : 1;
             
             // Remove dislike if exists
@@ -35,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'dislike') {
         if (!isset($comment['disliked_by'][$alumni_id])) {
             // Add dislike
-            $comment['disliked_by'][$alumni_id] = $current_time;
+            $comment['disliked_by'][$alumni_id] = $formatted_time;
             $comment['dislike_count'] = isset($comment['dislike_count']) ? $comment['dislike_count'] + 1 : 1;
             
             // Remove like if exists

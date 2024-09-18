@@ -16,9 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $commentData['liked_by'] = [];
     }
     
+    // Set timezone to Asia/Manila or any other desired timezone
+    $timezone = new DateTimeZone('Asia/Manila');
+    $current_time = new DateTime('now', $timezone);
+    $formatted_time = $current_time->format('Y-m-d H:i:s');
+
     if (!isset($commentData['liked_by'][$alumniId])) {
         // Like the comment
-        $commentData['liked_by'][$alumniId] = date('Y-m-d H:i:s');
+        $commentData['liked_by'][$alumniId] = $formatted_time;
         $commentData['heart_count'] = isset($commentData['heart_count']) ? $commentData['heart_count'] + 1 : 1;
         $action = 'liked';
     } else {
