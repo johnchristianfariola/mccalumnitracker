@@ -17,11 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Get the current time in Asia/Manila timezone and format it
+    $timezone = new DateTimeZone('Asia/Manila');
+    $date = new DateTime('now', $timezone);
+    $formattedDate = $date->format('F j, Y H:i:s');  // e.g., September 18, 2024 10:57:25
+
     // Create reply data
     $replyData = [
         'alumni_id' => $alumni_id,
         'comment' => $comment,
-        'date_replied' => date('c') // Using ISO 8601 date format
+        'date_replied' => $formattedDate  // Use formatted date with Asia timezone
     ];
 
     // Insert reply into Firebase as a sub-comment

@@ -17,11 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Get current time in Asia/Manila timezone
+    $timezone = new DateTimeZone('Asia/Manila');
+    $date = new DateTime('now', $timezone);
+    $formattedDate = $date->format('F j, Y H:i:s');
+
     // Create reply data
     $replyData = [
         'comment' => $reply,
         'alumni_id' => $alumni_id,
-        'date_replied' => date('F j, Y H:i:s'),
+        'date_replied' => $formattedDate,  // Use formatted date with Asia timezone
         'event_id' => $event_id
     ];
 

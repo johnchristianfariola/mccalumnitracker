@@ -983,30 +983,6 @@
 
 
 
-
-<script>
-
-    document.querySelectorAll('.notification-item').forEach(item => {
-
-        item.addEventListener('click', () => {
-
-            const url = item.getAttribute('data-href');
-
-            if (url) {
-
-                window.location.href = url;
-
-            }
-
-        });
-
-    });
-
-</script>
-
-
-
-
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
