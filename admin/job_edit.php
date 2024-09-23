@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "job_title" => $_POST['edit_job_title'],
             "company_name" => $_POST['edit_company_name'],
             "job_description" => $_POST['edit_job_description'],
-            "edit_expertise_specification" => $_POST['edit_expertise_specification'],
-            "edit_about_the_role" => $_POST['edit_about_the_role'],
+            "expertise_specification" => $_POST['edit_expertise_specification'],
+            "about_the_role" => $_POST['edit_about_the_role'],
             "status" => $_POST['edit_status'],
             "work_time" => $_POST['edit_work_status'],
             "location" => $_POST['edit_location'],  // New field
