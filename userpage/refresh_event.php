@@ -3,7 +3,7 @@ require_once '../includes/firebaseRDB.php';
 date_default_timezone_set('Asia/Manila');
 
 // Initialize Firebase URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+$databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 $event_id = $_GET['event_id'];
 $current_user_id = $_GET['alumni_id']; // Make sure to pass this from your JavaScript

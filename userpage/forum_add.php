@@ -7,7 +7,7 @@ include '../includes/firebaseRDB.php';
 
 header('Content-Type: application/json');
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+$databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
 date_default_timezone_set('Asia/Manila');

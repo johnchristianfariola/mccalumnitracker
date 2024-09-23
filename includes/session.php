@@ -3,7 +3,7 @@ session_start();
 include 'firebaseRDB.php';
 
 // Firebase Realtime Database URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+$databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
 
 // Instantiate FirebaseRDB object
 $firebase = new firebaseRDB($databaseURL);

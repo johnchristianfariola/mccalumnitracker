@@ -2,7 +2,7 @@
 require_once '../includes/firebaseRDB.php';
 session_start();
 
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+$databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

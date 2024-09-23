@@ -2,7 +2,7 @@
 require_once '../includes/firebaseRDB.php';
 
 // Initialize Firebase URL
-$databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+$databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
 $firebase = new firebaseRDB($databaseURL);
 
 // Set the default timezone to Philippine Time

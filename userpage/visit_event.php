@@ -9,7 +9,7 @@
     require_once "../includes/firebaseRDB.php";
 
     // Initialize Firebase URL
-    $databaseURL = "https://mccnians-bc4f4-default-rtdb.firebaseio.com";
+    $databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
     $firebase = new firebaseRDB($databaseURL);
 
     // Function to calculate time difference in a human-readable format
