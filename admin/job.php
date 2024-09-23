@@ -11,7 +11,7 @@
       <!-- Content Header (Page header) -->
       <section class="content-header box-header-background">
         <h1>
-          Contet <i class="fa fa-angle-right"></i> Job
+          Content <i class="fa fa-angle-right"></i> Job
         </h1>
         <div class="box-inline">
           <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
