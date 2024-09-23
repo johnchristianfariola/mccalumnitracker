@@ -11,34 +11,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         isset($_POST['job_description']) && !empty($_POST['job_description']) &&
         isset($_POST['status']) && !empty($_POST['status']) &&
         isset($_POST['work_status']) && !empty($_POST['work_status']) &&
-        isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_ERR_OK
+        isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_ERR_OK &&
+        isset($_FILES['imageUploadlogo']) && $_FILES['imageUploadlogo']['error'] === UPLOAD_ERR_OK && // New line for logo upload
+        isset($_POST['job_categories']) && !empty($_POST['job_categories']) &&
+        isset($_POST['expertise_specification']) && !empty($_POST['expertise_specification']) &&
+        isset($_POST['about_the_role']) && !empty($_POST['about_the_role'])
     ) {
         $job_title = $_POST['job_title'];
         $company_name = $_POST['company_name'];
         $job_description = $_POST['job_description'];
         $status = $_POST['status'];
-        $work_time = $_POST['work_status']; // Correctly capture the value of work_status
+        $work_time = $_POST['work_status'];
+        $location = $_POST['location']; // Capture location
+        $salary_range = $_POST['salary_range']; // Capture salary range
+        $job_categories = json_decode($_POST['job_categories'], true); // Decode JSON array of categories
+        $expertise_specification = $_POST['expertise_specification'];
+        $about_the_role = $_POST['about_the_role'];
 
-        // Handle the image upload
+        // Handle the image uploads
         $image = $_FILES['imageUpload'];
         $imagePath = 'uploads/' . basename($image['name']);
+        
+        $logo = $_FILES['imageUploadlogo']; // New line for logo upload
+        $logoPath = 'uploads/' . basename($logo['name']); // New line for logo path
 
-        if (move_uploaded_file($image['tmp_name'], $imagePath)) {
+        // Move the files
+        if (move_uploaded_file($image['tmp_name'], $imagePath) && move_uploaded_file($logo['tmp_name'], $logoPath)) { // Modified line
             // Include Firebase RDB class and initialize
             require_once 'includes/firebaseRDB.php';
             require_once 'includes/config.php'; // Include your config file
             $firebase = new firebaseRDB($databaseURL);
 
             // Function to add job
-            function addJob($firebase, $job_title, $company_name, $job_description, $status, $work_time, $imagePath) {
+            function addJob($firebase, $job_title, $company_name, $job_description, $status, $work_time, $location, $salary_range, $job_categories, $imagePath, $logoPath, $expertise_specification, $about_the_role) { // Modified line
                 $table = 'job'; // Assuming 'jobs' is your Firebase database node for job postings
                 $data = array(
                     'job_title' => $job_title,
                     'company_name' => $company_name,
                     'job_description' => $job_description,
+                    'expertise_specification' => $expertise_specification,
+                    'about_the_role' => $about_the_role,
                     'status' => $status,
                     'work_time' => $work_time,
-                    'image_path' => $imagePath, // Add the image path to the job data
+                    'location' => $location,
+                    'salary_range' => $salary_range,
+                    'job_categories' => $job_categories, // Store categories as an array
+                    'image_path' => $imagePath,
+                    'logo_path' => $logoPath, // New line for logo path
                     'job_created' => date('F j, Y')
                 );
                 $result = $firebase->insert($table, $data);
@@ -46,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Add job to Firebase
-            $result = addJob($firebase, $job_title, $company_name, $job_description, $status, $work_time, $imagePath);
+            $result = addJob($firebase, $job_title, $company_name, $job_description, $status, $work_time, $location, $salary_range, $job_categories, $imagePath, $logoPath, $expertise_specification, $about_the_role); // Modified line
 
             // Check result
             if ($result === null) {
@@ -59,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            $response = array('status' => 'error', 'message' => 'Failed to upload image.');
+            $response = array('status' => 'error', 'message' => 'Failed to upload image(s).');
             echo json_encode($response);
             exit;
         }

@@ -507,3 +507,14 @@ td {
   width: 70%;
   height: auto;
 }
+.image-upload-container {
+  margin-right: 15px; /* Space between containers */
+}
+
+.d-flex {
+  display: flex; /* Enable flexbox layout */
+}
+
+.justify-content-between {
+  justify-content: space-between; /* Space out children evenly */
+}

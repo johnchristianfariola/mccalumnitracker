@@ -14,11 +14,14 @@
           Content <i class="fa fa-angle-right"></i> Job
         </h1>
         <div class="box-inline">
-          <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
+          <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat"><i
+              class="fa fa-plus-circle"></i>&nbsp;&nbsp; New</a>
           <div class="search-container">
             <input type="text" class="search-input" id="search-input" placeholder="Search...">
             <button class="search-button" onclick="filterTable()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-search">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
@@ -87,10 +90,11 @@
     <?php include 'includes/job_modal.php'; ?>
   </div>
   <?php include 'includes/scripts.php'; ?>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <script>
-  $(document).ready(function () {
+$(document).ready(function () {
   var originalData = {};
-  var currentEditor = null;
+  var currentEditors = {};
 
   function fetcheventData(id, successCallback, errorCallback) {
     $.ajax({
@@ -106,11 +110,11 @@
   function initializeCKEditor(elementId) {
     if (window.CKEDITOR && CKEDITOR.replace) {
       // Destroy existing instance if it exists
-      if (currentEditor) {
-        currentEditor.destroy();
+      if (currentEditors[elementId]) {
+        currentEditors[elementId].destroy();
       }
       // Create new instance
-      currentEditor = CKEDITOR.replace(elementId);
+      currentEditors[elementId] = CKEDITOR.replace(elementId);
     } else {
       console.error('CKEditor is not defined or replace method is missing.');
     }
@@ -122,34 +126,58 @@
       $('#editId').val(id);
       $('#edit_job_title').val(response.job_title);
       $('#edit_company_name').val(response.company_name);
+      $('#edit_location').val(response.location);
+      $('#edit_salary_range').val(response.salary_range);
+      $('#edit_contact_email').val(response.contact_email);
+
       $('#edit_parttime').prop('checked', response.work_time === 'Part-Time');
       $('#edit_fulltime').prop('checked', response.work_time === 'Full-Time');
       $('#edit_statusActive').prop('checked', response.status === 'Active');
       $('#edit_statusArchive').prop('checked', response.status === 'Archive');
 
+      // Initialize Select2
+      $('#edit_job_categories').select2();
+
+      // Populate job categories
+      if (response.job_categories && Array.isArray(response.job_categories)) {
+        $('#edit_job_categories').val(response.job_categories).trigger('change');
+      }
+
       if (response.image_path && response.image_path.trim() !== '') {
-          $('#imagePreviewImg2').attr('src', response.image_path).show();
-        } else {
-          $('#imagePreviewImg2').hide();
-        }
-      
-      // Set the textarea value before initializing CKEditor
+        $('#imagePreviewImg2').attr('src', response.image_path).show();
+      } else {
+        $('#imagePreviewImg2').hide();
+      }
+
+      if (response.logo_path && response.logo_path.trim() !== '') {
+        $('#imagePreviewImgLogo2').attr('src', response.logo_path).show();
+      } else {
+        $('#imagePreviewImgLogo2').hide();
+      }
+
+      // Set the textarea values before initializing CKEditor
       $('#edit_description').val(response.job_description);
-      
+      $('#edit_expertise_specification').val(response.expertise_specification);
+      $('#edit_about_the_role').val(response.about_the_role);
+
       originalData = {
         job_title: response.job_title,
         company_name: response.company_name,
         work_time: response.work_time,
         status: response.status,
         job_description: response.job_description,
+        expertise_specification: response.expertise_specification,
+        about_the_role: response.about_the_role,
         image_path: response.image_path
       };
 
       $('#editModal').modal('show');
 
       // Use a setTimeout to ensure the modal is fully shown before initializing CKEditor
-      setTimeout(function() {
+      setTimeout(function () {
         initializeCKEditor('edit_description');
+        initializeCKEditor('edit_expertise_specification');
+        initializeCKEditor('edit_about_the_role');
       }, 100);
     }, function (xhr, status, error) {
       console.error('AJAX Error: ' + status + ' ' + error);
@@ -157,59 +185,58 @@
   });
 
   $('#editModal').on('hidden.bs.modal', function () {
-    // Destroy the CKEditor instance when the modal is closed
-    if (currentEditor) {
-      currentEditor.destroy();
-      currentEditor = null;
+    // Destroy all CKEditor instances when the modal is closed
+    for (var elementId in currentEditors) {
+      if (currentEditors.hasOwnProperty(elementId)) {
+        currentEditors[elementId].destroy();
+        delete currentEditors[elementId];
+      }
     }
   });
 
   // Open delete modal when delete button is clicked
-  $(document).ready(function () {
-        // Open delete confirmation modal
-        $('.open-delete').click(function () {
-          var id = $(this).data('id');
+  $('.open-delete').click(function () {
+    var id = $(this).data('id');
 
-          // Make an AJAX request to fetch job details
+    // Make an AJAX request to fetch job details
+    $.ajax({
+      url: 'job_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: function (response) {
+        // Populate modal with alumni name
+        $('.deleteId').val(id); // Update value of deleteId input field
+        $('.deleteTitle').text(response.job_title);
 
-          $.ajax({
-            url: 'job_row.php',
-            type: 'GET',
-            data: { id: id },
-            dataType: 'json',
+        // Show the delete confirmation modal
+        $('#deleteModal').modal('show');
 
-            success: function (response) {
-              // Populate modal with alumni name
-              $('.deleteId').val(id); // Update value of deleteId input field
-
-              $('.deleteTitle').text(response.job_title);
-
-              // Show the delete confirmation modal
-              $('#deleteModal').modal('show');
-
-              // Store the ID in a data attribute of the delete button
-              $('.btn-confirm-delete').data('id', id);
-            },
-            error: function (xhr, status, error) {
-              console.error('AJAX Error: ' + status + ' ' + error);
-            }
-          });
-        });
-      });
-
+        // Store the ID in a data attribute of the delete button
+        $('.btn-confirm-delete').data('id', id);
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX Error: ' + status + ' ' + error);
+      }
+    });
+  });
 
   $('#addJobForm').on('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission
 
     var formData = new FormData(this); // Create FormData object
 
+    // Manually handle multiple select if needed
+    var jobCategories = $('#job_categories').val(); // Get the selected categories
+    formData.append('job_categories', JSON.stringify(jobCategories)); // Convert to JSON string
+
     $.ajax({
       type: 'POST',
-      url: 'job_add.php', // The URL of your PHP script for adding news
+      url: 'job_add.php', // The URL of your PHP script for adding the job
       data: formData,
       contentType: false, // Important for file upload
       processData: false, // Important for file upload
-      dataType: 'json',
+      dataType: 'json', // Expect JSON response from server
       success: function (response) {
         if (response.status === 'success') {
           showAlert('success', response.message);
@@ -222,7 +249,6 @@
       }
     });
   });
-
 
   $('#deleteJobForm').on('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission
@@ -252,6 +278,12 @@
   $('#editJobForm').on('submit', function (event) {
     event.preventDefault();
     var formData = new FormData(this);
+    
+    // Get the updated content from CKEditor instances
+    formData.set('edit_description', currentEditors['edit_description'].getData());
+    formData.set('edit_expertise_specification', currentEditors['edit_expertise_specification'].getData());
+    formData.set('edit_about_the_role', currentEditors['edit_about_the_role'].getData());
+
     $.ajax({
       type: 'POST',
       url: 'job_edit.php',
@@ -264,8 +296,7 @@
           showAlert('success', response.message);
         } else if (response.status === 'info') {
           showAlertEdit(response.status, response.message);
-        } 
-        else {
+        } else {
           showAlert('error', response.message);
         }
       },
@@ -304,6 +335,7 @@
     });
   }
 });
-  </script>
+</script>
 </body>
+
 </html>
