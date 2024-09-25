@@ -140,8 +140,8 @@
                     </div>
                     <div class="input-field">
                         <label>Region</label>
-                        <select id="regionSelect" name="addressline1" class="form-control selectpicker"
-                            data-live-search="true">
+                        <select id="regionSelect" name="" class="form-control selectpicker"
+                            data-live-search="true" required>
                             <option value="">Loading regions...</option>
                         </select>
                     </div>
@@ -149,14 +149,14 @@
                         <label>Province</label>
                         <select id="provinceSelect" name="state" class="form-control selectpicker"
                             data-live-search="true"
-                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['state']); ?>">
+                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['state']); ?>" required>
                             <option value="">Select a region first</option>
                         </select>
                     </div>
                     <div class="input-field">
                         <label>City</label>
                         <select id="citySelect" name="city" class="form-control selectpicker" data-live-search="true"
-                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['city']); ?>">
+                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['city']); ?>" required>
                             <option value="">Select a province first</option>
                         </select>
                     </div>
@@ -164,7 +164,7 @@
                         <label>Barangay</label>
                         <select id="barangaySelect" name="barangay" class="form-control selectpicker"
                             data-live-search="true"
-                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['barangay']); ?>">
+                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['barangay']); ?>" required>
                             <option value="">Select a city first</option>
                         </select>
                     </div>

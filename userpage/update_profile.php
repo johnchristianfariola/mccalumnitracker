@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $birthdate = htmlspecialchars($_POST['birthdate'] ?? '');
     $gender = htmlspecialchars($_POST['gender'] ?? '');
     $civilstatus = htmlspecialchars($_POST['civilstatus'] ?? '');
-    $addressline1 = htmlspecialchars($_POST['addressline1'] ?? '');
     $city = htmlspecialchars($_POST['city'] ?? '');
     $state = htmlspecialchars($_POST['state'] ?? '');
     $zipcode = htmlspecialchars($_POST['zipcode'] ?? '');
@@ -62,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'birthdate' => $birthdate,
         'gender' => $gender,
         'civilstatus' => $civilstatus,
-        'addressline1' => $addressline1,
         'city' => $city,
         'state' => $state,
         'zipcode' => $zipcode,
