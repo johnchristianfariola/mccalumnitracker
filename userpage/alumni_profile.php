@@ -95,7 +95,7 @@
 
 
     <div class="form-container">
-        <form action="update_profile.php" method="POST" class="form" enctype="multipart/form-data">
+        <form action="update_profile.php" method="POST" class="form" id="alumniForm" enctype="multipart/form-data">
             <!-- Hidden fields -->
             <input type="hidden" name="alumni_id" value="<?php echo htmlspecialchars($user['id']); ?>">
             <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token']); ?>">
@@ -140,7 +140,7 @@
                     </div>
                     <div class="input-field">
                         <label>Region</label>
-                        <select id="regionSelect" name="region" class="form-control selectpicker"
+                        <select id="regionSelect" name="addressline1" class="form-control selectpicker"
                             data-live-search="true">
                             <option value="">Loading regions...</option>
                         </select>
@@ -219,6 +219,11 @@
                 <h2><span class="step-icon">02</span> Additional Information</h2>
 
                 <div class="fields">
+                    <div class="input-field">
+                        <label>Student ID</label>
+                        <input type="text" name="studentid" placeholder="Enter your School ID"
+                            value="<?php echo htmlspecialchars($user['studentid']); ?>" required>
+                    </div>
                     <div class="input-field">
                         <label>Course</label>
                         <select class="form-control" id="course" name="course" required>
@@ -377,158 +382,3 @@
 
 
 <?php include 'includes/script.php' ?>
-
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Define the path to your JSON files
-        const regionUrl = 'json/regions.json';
-        const provinceUrl = 'json/provinces.json'; // Path to your province JSON
-        const cityUrl = 'json/municipalities.json';
-        const barangayUrl = 'json/barangays.json';
-
-        let provincesData = [];
-        let citiesData = [];
-        let barangaysData = [];
-
-        function setSelectedValue(selectElement, value) {
-            if (value) {
-                const option = selectElement.querySelector(`option[value="${value}"]`);
-                if (option) {
-                    option.selected = true;
-                }
-            }
-        }
-
-        // Fetch and populate regions
-        fetch(regionUrl)
-            .then(response => response.json())
-            .then(data => {
-                const regionSelect = document.getElementById('regionSelect');
-                regionSelect.innerHTML = '<option value="">Select a region</option>';
-                data.forEach(region => {
-                    const option = document.createElement('option');
-                    option.value = region.designation;
-                    option.textContent = region.name;
-                    regionSelect.appendChild(option);
-                });
-                setSelectedValue(regionSelect, regionSelect.dataset.currentValue);
-                $('.selectpicker').selectpicker('refresh');
-                regionSelect.dispatchEvent(new Event('change'));
-            })
-            .catch(error => console.error('Error fetching regions:', error));
-
-        // Fetch provinces data
-        fetch(provinceUrl)
-            .then(response => response.json())
-            .then(data => {
-                provincesData = data;
-            })
-            .catch(error => console.error('Error fetching provinces:', error));
-
-        // Fetch cities data
-        fetch(cityUrl)
-            .then(response => response.json())
-            .then(data => {
-                citiesData = data;
-            })
-            .catch(error => console.error('Error fetching cities:', error));
-
-        // Fetch barangays data
-        fetch(barangayUrl)
-            .then(response => response.json())
-            .then(data => {
-                barangaysData = data;
-            })
-            .catch(error => console.error('Error fetching barangays:', error));
-
-        // Handle region selection change
-        document.getElementById('regionSelect').addEventListener('change', function () {
-            const selectedRegion = this.value;
-            const provinceSelect = document.getElementById('provinceSelect');
-            provinceSelect.innerHTML = '';
-
-            if (selectedRegion) {
-                const filteredProvinces = provincesData.filter(province => province.region === selectedRegion);
-                if (filteredProvinces.length > 0) {
-                    filteredProvinces.forEach(province => {
-                        const option = document.createElement('option');
-                        option.value = province.name;
-                        option.textContent = province.name;
-                        provinceSelect.appendChild(option);
-                    });
-                    provinceSelect.disabled = false;
-                } else {
-                    provinceSelect.innerHTML = '<option value="">No provinces available</option>';
-                    provinceSelect.disabled = true;
-                }
-            } else {
-                provinceSelect.innerHTML = '<option value="">Select a region first</option>';
-                provinceSelect.disabled = true;
-            }
-            setSelectedValue(provinceSelect, provinceSelect.dataset.currentValue);
-            provinceSelect.dispatchEvent(new Event('change')); // Trigger province change event if needed
-            $('.selectpicker').selectpicker('refresh');
-        });
-
-        // Handle province selection change
-        document.getElementById('provinceSelect').addEventListener('change', function () {
-            const selectedProvince = this.value;
-            const citySelect = document.getElementById('citySelect');
-            citySelect.innerHTML = '';
-
-            if (selectedProvince) {
-                const filteredCities = citiesData.filter(city => city.province === selectedProvince);
-                if (filteredCities.length > 0) {
-                    filteredCities.forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city.name;
-                        option.textContent = city.name;
-                        citySelect.appendChild(option);
-                    });
-                    citySelect.disabled = false;
-                } else {
-                    citySelect.innerHTML = '<option value="">No cities available</option>';
-                    citySelect.disabled = true;
-                }
-            } else {
-                citySelect.innerHTML = '<option value="">Select a province first</option>';
-                citySelect.disabled = true;
-            }
-            setSelectedValue(citySelect, citySelect.dataset.currentValue);
-            citySelect.dispatchEvent(new Event('change')); // Trigger city change event if needed
-            $('.selectpicker').selectpicker('refresh');
-        });
-
-        // Handle city selection change
-        document.getElementById('citySelect').addEventListener('change', function () {
-            const selectedCity = this.value;
-            const barangaySelect = document.getElementById('barangaySelect');
-            barangaySelect.innerHTML = '';
-
-            if (selectedCity) {
-                const filteredBarangays = barangaysData.filter(barangay => barangay.citymun === selectedCity);
-                if (filteredBarangays.length > 0) {
-                    filteredBarangays.forEach(barangay => {
-                        const option = document.createElement('option');
-                        option.value = barangay.name;
-                        option.textContent = barangay.name;
-                        barangaySelect.appendChild(option);
-                    });
-                    barangaySelect.disabled = false;
-                } else {
-                    barangaySelect.innerHTML = '<option value="">No barangays available</option>';
-                    barangaySelect.disabled = true;
-                }
-            } else {
-                barangaySelect.innerHTML = '<option value="">Select a city/municipality first</option>';
-                barangaySelect.disabled = true;
-            }
-            setSelectedValue(barangaySelect, barangaySelect.dataset.currentValue);
-            $('.selectpicker').selectpicker('refresh');
-        });
-    });
-
-</script>

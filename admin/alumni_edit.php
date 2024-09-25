@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     foreach ($allAlumni as $key => $alumni) {
         if ($key !== $id) {
-            if ($alumni['studentid'] === $updateData['studentid']) {
+            if ($alumni['studentid'] === $updateData['studentid'] && $updateData['studentid'] !== $existingData['studentid']) {
                 $response['message'] = 'Cannot update. The new Alumni ID already exists.';
                 echo json_encode($response);
                 exit;
@@ -94,15 +94,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response['status'] = 'info';
         $response['message'] = 'You have not made any changes';
     } else {
-        // Perform update
-        $result = $firebase->update('alumni', $id, $updateData);
+        // Perform update in Firebase
+        $firebaseResult = $firebase->update('alumni', $id, $updateData);
 
-        if ($result === null) {
-            $response['message'] = 'Failed to update alumni data in Firebase.';
-            error_log('Firebase error: Failed to update alumni data.');
+        // Perform update in MySQL
+        $mysqlConn = getMySQLConnection();
+
+        if (!$mysqlConn) {
+            $response['message'] = 'Failed to connect to MySQL database.';
+            echo json_encode($response);
+            exit;
+        }
+
+        $mysqlUpdateData = [
+            'firstname' => $updateData['firstname'],
+            'lastname' => $updateData['lastname'],
+            'middlename' => $updateData['middlename'],
+            'studentid' => $updateData['studentid']
+        ];
+
+        $mysqlQuery = "UPDATE alumni_verified SET ";
+        $updateParts = [];
+        foreach ($mysqlUpdateData as $key => $value) {
+            $updateParts[] = "$key = '" . $mysqlConn->real_escape_string($value) . "'";
+        }
+        $mysqlQuery .= implode(", ", $updateParts);
+        $mysqlQuery .= " WHERE id = '" . $mysqlConn->real_escape_string($id) . "'";
+
+        $mysqlResult = $mysqlConn->query($mysqlQuery);
+
+        $mysqlConn->close();
+
+        if ($firebaseResult === null || !$mysqlResult) {
+            $response['message'] = 'Failed to update alumni data in one or both databases.';
+            error_log('Firebase error: ' . ($firebaseResult === null ? 'Failed to update' : 'Updated successfully'));
+            error_log('MySQL error: ' . ($mysqlResult ? 'Updated successfully' : $mysqlConn->error));
         } else {
             $response['status'] = 'success';
-            $response['message'] = 'Alumni data updated successfully!';
+            $response['message'] = 'Alumni data updated successfully in both databases!';
         }
     }
 } else {

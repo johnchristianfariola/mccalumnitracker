@@ -43,6 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
             $importedEntries = array();
             $errors = array();
 
+            // Get MySQL connection
+            $mysqlConn = getMySQLConnection();
+            if (!$mysqlConn) {
+                $response['message'] = 'Failed to connect to MySQL database.';
+                echo json_encode($response);
+                exit;
+            }
+
             foreach ($sheetData as $index => $data) {
                 if ($index == 1) continue; // Skip the header row
 
@@ -97,12 +105,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['import_file'])) {
                     continue; // Skip this entry if course not found
                 }
 
-                // Add alumni data
-                addAlumniData($firebase, $firstname, $lastname, $middlename, $auxiliaryname, $birthdate, $civilstatus, $gender, $addressline1, $city, $state, $zipcode, $contactnumber, $email, $courseId, $batchId, $studentid);
+                // Add alumni data to Firebase
+                $firebaseId = addAlumniData($firebase, $firstname, $lastname, $middlename, $auxiliaryname, $birthdate, $civilstatus, $gender, $addressline1, $city, $state, $zipcode, $contactnumber, $email, $courseId, $batchId, $studentid);
+
+                // Add alumni data to MySQL
+                if ($firebaseId) {
+                    $mysqlData = array(
+                        'id' => $firebaseId,
+                        'firstname' => $firstname,
+                        'forms_completed' => '0',
+                        'lastname' => $lastname,
+                        'middlename' => $middlename,
+                        'studentid' => $studentid,
+                    );
+
+                    $mysqlResult = addAlumniDataToMySQL($mysqlConn, $mysqlData);
+
+                    if (!$mysqlResult) {
+                        $errors[] = "Failed to insert data into MySQL for $firstname $lastname ($studentid)";
+                    }
+                } else {
+                    $errors[] = "Failed to insert data into Firebase for $firstname $lastname ($studentid)";
+                }
 
                 // Record this entry as imported
                 $importedEntries[] = $entryKey;
             }
+
+            // Close MySQL connection
+            $mysqlConn->close();
 
             if (!empty($errors)) {
                 $response['message'] = implode('<br>', $errors);
@@ -168,6 +199,29 @@ function addAlumniData($firebase, $firstname, $lastname, $middlename, $auxiliary
         'batch' => $batchId,
         'studentid' => $studentid
     );
-    $firebase->insert($table, $data);
+    $result = $firebase->insert($table, $data);
+    
+    // Parse the Firebase response to get the ID
+    if ($result) {
+        $resultArray = json_decode($result, true);
+        return isset($resultArray['name']) ? $resultArray['name'] : null;
+    }
+    return null;
+}
+
+function addAlumniDataToMySQL($mysqlConn, $mysqlData) {
+    $query = "INSERT INTO alumni_verified (id, firstname, forms_completed, lastname, middlename, studentid) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $mysqlConn->prepare($query);
+    $stmt->bind_param("ssssss", 
+        $mysqlData['id'], 
+        $mysqlData['firstname'], 
+        $mysqlData['forms_completed'], 
+        $mysqlData['lastname'], 
+        $mysqlData['middlename'], 
+        $mysqlData['studentid']
+    );
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
 }
 ?>
