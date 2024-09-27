@@ -72,6 +72,16 @@
     $categoriesData = $firebase->retrieve('category');
     $categories = json_decode($categoriesData, true);
     ?>
+
+    <style>
+        .warning-message {
+    display: block;
+    color: #d32f2f;
+    font-size: 0.85em;
+    margin-top: 5px;
+    text-align: left;
+}
+    </style>
 </head>
 
 <body style="background:white; ">
@@ -140,8 +150,8 @@
                     </div>
                     <div class="input-field">
                         <label>Region</label>
-                        <select id="regionSelect" name="" class="form-control selectpicker"
-                            data-live-search="true" required>
+                        <select id="regionSelect" name="" class="form-control selectpicker" data-live-search="true"
+                            required>
                             <option value="">Loading regions...</option>
                         </select>
                     </div>
@@ -164,7 +174,8 @@
                         <label>Barangay</label>
                         <select id="barangaySelect" name="barangay" class="form-control selectpicker"
                             data-live-search="true"
-                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['barangay']); ?>" required>
+                            data-current-value="<?php echo htmlspecialchars($_SESSION['user']['barangay']); ?>"
+                            required>
                             <option value="">Select a city first</option>
                         </select>
                     </div>
@@ -220,9 +231,32 @@
 
                 <div class="fields">
                     <div class="input-field">
-                        <label>Student ID</label>
+                        <label>Batch</label>
+                        <select class="form-control" id="batch" name="batch" required>
+                            <option value="<?php echo htmlspecialchars($_SESSION['user']['batch_id']); ?>">
+                                <?php echo htmlspecialchars($_SESSION['user']['batch']); ?>
+                            </option>
+                            <?php
+                            if (!empty($batchYears) && is_array($batchYears)) {
+                                foreach ($batchYears as $batchId => $batchDetails) {
+                                    $batchYear = isset($batchDetails['batch_yrs']) ? htmlspecialchars($batchDetails['batch_yrs']) : 'Unknown';
+                                    echo "<option value=\"" . htmlspecialchars($batchId) . "\">" . $batchYear . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label for="graduation_year">Year Graduated</label>
+                        <input type="number" id="graduation_year" name="graduation_year" min="1900" max="2099" step="1"
+                            required>
+                    </div>
+                    <div class="input-field">
+                        <label>Alumni ID</label>
                         <input type="text" name="studentid" placeholder="Enter your School ID"
-                            value="<?php echo htmlspecialchars($user['studentid']); ?>" required>
+                            value="<?php echo htmlspecialchars($user['studentid']); ?>" readonly>
+                        <small class="warning-message"><i class="fa fa-info-circle"></i> Caution: Your Alumni ID is a confidential identifier for the
+                            Document Tracker Website. Keep it secure and do not share it with others.</small>
                     </div>
                     <div class="input-field">
                         <label>Course</label>
@@ -240,22 +274,7 @@
                             ?>
                         </select>
                     </div>
-                    <div class="input-field">
-                        <label>Batch</label>
-                        <select class="form-control" id="batch" name="batch" required>
-                            <option value="<?php echo htmlspecialchars($_SESSION['user']['batch_id']); ?>">
-                                <?php echo htmlspecialchars($_SESSION['user']['batch']); ?>
-                            </option>
-                            <?php
-                            if (!empty($batchYears) && is_array($batchYears)) {
-                                foreach ($batchYears as $batchId => $batchDetails) {
-                                    $batchYear = isset($batchDetails['batch_yrs']) ? htmlspecialchars($batchDetails['batch_yrs']) : 'Unknown';
-                                    echo "<option value=\"" . htmlspecialchars($batchId) . "\">" . $batchYear . "</option>";
-                                }
-                            }
-                            ?>
-                        </select>
-                    </div>
+
                     <div class="input-field">
                         <label>Current Work Status</label>
                         <select class="form-control" name="work_status" id="work-status" required>

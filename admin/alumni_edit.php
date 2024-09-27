@@ -13,20 +13,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $studentid = $_POST['edit_studentid'];
-    if (!preg_match('/^\d{4}-\d{4}$/', $studentid)) {
-        $response['message'] = 'Alumni ID must be in the format 1234-5678';
+    
+    // Check if the student ID is in the standard format or the new format
+    if (preg_match('/^\d{4}-\d{4}$/', $studentid)) {
+        // Standard format (e.g., 2021-2020)
+        $currentYear = date('Y');
+        $idYear = substr($studentid, 0, 4);
+        if ($currentYear - $idYear < 4) {
+            $response['message'] = 'Alumni ID year must be at least 4 years ago';
+            echo json_encode($response);
+            exit;
+        }
+    } elseif (!preg_match('/^-[A-Za-z0-9_]{19}$/', $studentid)) {
+        // If it's not in the standard format and not in the new format
+        $response['message'] = 'Invalid Alumni ID format';
         echo json_encode($response);
         exit;
     }
-
-    // Validate the year in the student ID
-    $currentYear = date('Y');
-    $idYear = substr($studentid, 0, 4);
-    if ($currentYear - $idYear < 4) {
-        $response['message'] = 'Alumni ID year must be at least 4 years ago';
-        echo json_encode($response);
-        exit;
-    }
+    // If it's in the new format (-O4VZlnaiVkvz3rSp_Fx), we allow it to proceed without additional checks
 
     require_once 'includes/firebaseRDB.php';
     require_once 'includes/config.php';
@@ -107,19 +111,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $mysqlUpdateData = [
-            'firstname' => $updateData['firstname'],
-            'lastname' => $updateData['lastname'],
-            'middlename' => $updateData['middlename'],
-            'studentid' => $updateData['studentid']
+            
+
+            'alumni_id' => $updateData['studentid'],
+            'fullname' => $updateData['firstname'] . ' ' .  $updateData['middlename'] . ' ' .  $updateData['lastname'] ,
+        
+          
         ];
 
-        $mysqlQuery = "UPDATE alumni_verified SET ";
+        $mysqlQuery = "UPDATE applicant SET ";
         $updateParts = [];
         foreach ($mysqlUpdateData as $key => $value) {
             $updateParts[] = "$key = '" . $mysqlConn->real_escape_string($value) . "'";
         }
         $mysqlQuery .= implode(", ", $updateParts);
-        $mysqlQuery .= " WHERE id = '" . $mysqlConn->real_escape_string($id) . "'";
+        $mysqlQuery .= " WHERE unique_id = '" . $mysqlConn->real_escape_string($id) . "'";
 
         $mysqlResult = $mysqlConn->query($mysqlQuery);
 

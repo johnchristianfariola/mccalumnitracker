@@ -26,31 +26,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $zipcode = htmlspecialchars($_POST['zipcode'] ?? '');
     $email = htmlspecialchars($_POST['email'] ?? '');
     $contactnumber = htmlspecialchars($_POST['contactnumber'] ?? '');
-    $course = htmlspecialchars($_POST['course'] ?? '');
-    $batch = htmlspecialchars($_POST['batch'] ?? '');
+    $course_id = htmlspecialchars($_POST['course'] ?? '');
+    $batch_id = htmlspecialchars($_POST['batch'] ?? '');
     $studentid = htmlspecialchars($_POST['studentid'] ?? '');
     $work_status = htmlspecialchars($_POST['work_status'] ?? '');
     $barangay = htmlspecialchars($_POST['barangay'] ?? '');
-
-    $currentYear = date('Y');
-    $idYear = substr($studentid, 0, 4);
-
-    if ($currentYear - $idYear < 4) {
-        echo json_encode(['status' => 'error', 'message' => 'Alumni ID year must be at least 4 years ago.']);
-        exit();
-    }
+    $graduation_year = htmlspecialchars($_POST['graduation_year'] ?? '');
 
     // Handle file upload
     $profileImage = $_FILES['profileImage'] ?? null;
     $uploadDir = 'uploads/';
     $profile_url = '';
-
     if ($profileImage && $profileImage['error'] === UPLOAD_ERR_OK) {
         $uploadFile = $uploadDir . basename($profileImage['name']);
         if (move_uploaded_file($profileImage['tmp_name'], $uploadFile)) {
             $profile_url = $uploadFile;
         }
     }
+
+    // Fetch course name and batch year from Firebase
+    $courseData = json_decode($firebase->retrieve("course/{$course_id}"), true);
+    $batchData = json_decode($firebase->retrieve("batch_yr/{$batch_id}"), true);
+    $course_name = $courseData['course_name'] ?? 'Unknown';
+    $batch_year = $batchData['batch_yrs'] ?? 'Unknown';
 
     // Initialize the update data array for Firebase
     $firebaseUpdateData = [
@@ -66,68 +64,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'zipcode' => $zipcode,
         'email' => $email,
         'contactnumber' => $contactnumber,
-        'course' => $course,
-        'batch' => $batch,
+        'course' => $course_id, // Use the course ID
+        'batch' => $batch_id, // Use the batch ID
         'work_status' => $work_status,
         'barangay' => $barangay,
         'profile_url' => $profile_url,
         'forms_completed' => true,
         'date_responded' => date('F j, Y'),
-        'studentid' => $studentid
+        'studentid' => $alumni_id, // Use the Firebase ID as the studentid
+        'graduation_year' => $graduation_year
     ];
 
     // Conditionally add employment-related fields if the status is "Employed"
     if ($work_status === 'Employed') {
         $employmentFields = [
-            'first_employment_date', 'date_for_current_employment', 'type_of_work',
-            'work_position', 'current_monthly_income', 'work_related',
-            'work_classification', 'name_company', 'work_employment_status',
-            'employment_location', 'job_satisfaction'
+            'first_employment_date', 'date_for_current_employment', 'type_of_work', 'work_position',
+            'current_monthly_income', 'work_related', 'work_classification', 'name_company',
+            'work_employment_status', 'employment_location', 'job_satisfaction'
         ];
-
         foreach ($employmentFields as $field) {
             $firebaseUpdateData[$field] = htmlspecialchars($_POST[$field] ?? '');
         }
     }
 
-    // Initialize the update data array for MySQL
-    $mysqlUpdateData = [
-        'firstname' => $firstname,
-        'lastname' => $lastname,
-        'middlename' => $middlename,
-        'studentid' => $studentid,
-        'forms_completed' => 1
+    // Initialize the insert data array for MySQL
+    $mysqlInsertData = [
+        'unique_id' => $alumni_id,
+        'alumni_id' => $alumni_id,
+        'fullname' => $firstname . ' ' . $middlename . ' ' . $lastname,
+        'email' => $email,
+        'contact' => $contactnumber,
+        'sex' => $gender,
+        'dob' => $birthdate,
+        'year_graduated' => $graduation_year,
+        'admission' => $batch_year,
+        'program_graduated' => $course_name,
+        'is_verified' => 1, // Assuming new applicants are not verified by default
+        'password' => $_SESSION['user']['password'] // Add the password from the session
     ];
 
     try {
         // Update alumni data in Firebase
         $firebase->update('alumni', $alumni_id, $firebaseUpdateData);
 
-        // Update alumni data in MySQL
+        // Insert applicant data into MySQL
         $mysqlConn = getMySQLConnection();
         if (!$mysqlConn) {
             throw new Exception('Failed to connect to MySQL database.');
         }
-
-        $mysqlQuery = "UPDATE alumni_verified SET ";
-        $updateParts = [];
-        foreach ($mysqlUpdateData as $key => $value) {
-            $updateParts[] = "$key = '" . $mysqlConn->real_escape_string($value) . "'";
-        }
-        $mysqlQuery .= implode(", ", $updateParts);
-        $mysqlQuery .= " WHERE id = '" . $mysqlConn->real_escape_string($alumni_id) . "'";
-
+        $mysqlQuery = "INSERT INTO applicant (" . implode(", ", array_keys($mysqlInsertData)) . ") VALUES ('" . implode("', '", array_map([$mysqlConn, 'real_escape_string'], array_values($mysqlInsertData))) . "')";
         $mysqlResult = $mysqlConn->query($mysqlQuery);
-
         if (!$mysqlResult) {
-            throw new Exception('Failed to update MySQL database: ' . $mysqlConn->error);
+            throw new Exception('Failed to insert into MySQL database: ' . $mysqlConn->error);
         }
-
         $mysqlConn->close();
 
         // Update the session data
         $_SESSION['user'] = array_merge($_SESSION['user'], $firebaseUpdateData);
-        
+
         // Set a flag indicating the form has been completed
         $_SESSION['forms_completed'] = true;
 
@@ -139,4 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
+
+// If it's not a POST request, display the form
 ?>
