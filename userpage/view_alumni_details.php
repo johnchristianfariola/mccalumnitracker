@@ -213,9 +213,6 @@ date_default_timezone_set('Asia/Manila');
                         </li>
                         <li><img src="../images/profile-study.png" alt="Study"> Studied At Madridejos Community College
                         </li>
-                        <li><img src="../images/profile-study.png" alt="Study"> Alumni ID:
-                            <?php echo htmlspecialchars(getValue($alumni_profile, 'studentid')) ?>
-                        </li>
                         <li><img src="../images/profile-study.png" alt="Study"> Batch Year:
                             <?php echo htmlspecialchars(getBatchYear(getValue($alumni_profile, 'batch'), $batchData)) ?>
                         </li>

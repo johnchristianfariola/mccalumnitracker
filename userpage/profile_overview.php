@@ -446,7 +446,7 @@
                                 <?php echo getValue($current_user, 'barangay') . ', ' . getValue($current_user, 'city') . ',  ' . getValue($current_user, 'state'); ?>
                             </p>
                             <p><strong>Civil Status:</strong> <?php echo getValue($current_user, 'civilstatus'); ?></p>
-                            <p><strong>Student ID:</strong> <?php echo getValue($current_user, 'studentid'); ?></p>
+                            <p><strong>Alumni ID:</strong> <?php echo getValue($current_user, 'studentid'); ?></p>
                         </div>
 
                         <!-- Employment Info Column -->

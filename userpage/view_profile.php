@@ -177,9 +177,7 @@
                         </li>
                         <li><img src="../images/profile-study.png" alt="Study"> Studied At Madridejos Community College
                         </li>
-                        <li><img src="../images/profile-study.png" alt="Study"> Alumni ID:
-                            <?php echo htmlspecialchars(getValue($current_user, 'studentid')) ?>
-                        </li>
+                
                         <li><img src="../images/profile-study.png" alt="Study"> Batch Year:
                             <?php echo htmlspecialchars(getBatchYear(getValue($current_user, 'batch'), $batchData)) ?>
                         </li>
