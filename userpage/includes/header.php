@@ -80,6 +80,8 @@
 <script src="js/wave/wave-active.js"></script>
 <script src="js/todo/jquery.todo.js"></script>
 <script src="js/plugins.js"></script>
+<script src="js/datapicker/bootstrap-datepicker.js"></script>
+<script src="js/datapicker/datepicker-active.js"></script>
 <script src="js/chat/moment.min.js"></script>
 <script src="js/chat/jquery.chat.js"></script>
 <script src="js/main.js"></script>

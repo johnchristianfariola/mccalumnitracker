@@ -235,7 +235,7 @@ if (isset($_POST['change-password'])) {
                 if (!$mysqlResult) {
                     $errors['mysql'] = 'Failed to update password in MySQL database.';
                 } else {
-                    $_SESSION['info'] = "Your password has been changed. Now you can log in with your new password.";
+                    $_SESSION['info'] = "Your password has been changed. Now you can log in with your new password in Both MCC ALUMNI TRACKER AND MCC DOCUMENT TRACKER.";
                     header('Location: index.php');
                     exit();
                 }

@@ -96,8 +96,7 @@ $fields = [
     'zipcode', 'work_status', 'first_employment_date', 'date_for_current_employment',
     'name_company', 'employment_location', 'type_of_work', 'work_position',
     'current_monthly_income', 'job_satisfaction', 'work_related',
-    'course', 'major', 'batch', 'graduation_year', 'work_classification',
-    'bio'
+    'major', 'graduation_year', 'work_classification', 'bio'
 ];
 
 foreach ($fields as $field) {
@@ -124,36 +123,120 @@ if (isset($_POST['birthdate'])) {
     }
 }
 
-// Check if there is any data to update
-if (empty($update_data)) {
-    $_SESSION['update_message'] = 'No changes were made to your profile.';
-    header('Location: update_account.php');
-    exit();
-}
-
-// Update the data in Firebase
+// Update the data in Firebase and MySQL
 try {
-    $result = $firebase->update("alumni/", $user_id, $update_data);
+    $mysql_conn = getMySQLConnection();
+    if (!$mysql_conn) {
+        throw new Exception('Failed to connect to MySQL database.');
+    }
 
-    if ($result) {
+    // Prepare MySQL update data
+    $mysql_update_data = [];
+    
+    // Handle name fields separately
+    $name_fields = ['firstname', 'middlename', 'lastname'];
+    $name_parts = [];
+    foreach ($name_fields as $field) {
+        if (isset($update_data[$field])) {
+            $name_parts[$field] = $update_data[$field];
+        } else {
+            // If a name part wasn't updated, fetch it from the session
+            $name_parts[$field] = $_SESSION['user'][$field] ?? '';
+        }
+    }
+    
+    // Construct the full name
+    $fullname = trim(implode(' ', $name_parts));
+    if (!empty($fullname)) {
+        $mysql_update_data['fullname'] = $fullname;
+    }
+
+    // Add other fields that need to be updated in MySQL
+    $mysql_fields = [
+        'contactnumber' => 'contact',
+        'addressline1' => 'address',
+        'gender' => 'sex',
+        'birthdate' => 'dob',
+        'graduation_year' => 'year_graduated'
+    ];
+
+    foreach ($mysql_fields as $firebase_field => $mysql_field) {
+        if (isset($update_data[$firebase_field])) {
+            $mysql_update_data[$mysql_field] = $update_data[$firebase_field];
+        }
+    }
+
+    // Handle course update
+    if (isset($_POST['course']) && $_POST['course'] !== $_SESSION['user']['course_id']) {
+        $course_id = $_POST['course'];
+        $update_data['course'] = $course_id;
+        $course_data = $firebase->retrieve("course/$course_id");
+        $course_data = json_decode($course_data, true);
+        if (isset($course_data['courCode'])) {
+            $mysql_update_data['program_graduated'] = $course_data['courCode'];
+        }
+    }
+
+    // Handle batch update
+    if (isset($_POST['batch']) && $_POST['batch'] !== $_SESSION['user']['batch_id']) {
+        $batch_id = $_POST['batch'];
+        $update_data['batch'] = $batch_id;
+        $batch_data = $firebase->retrieve("batch_yr/$batch_id");
+        $batch_data = json_decode($batch_data, true);
+        if (isset($batch_data['batch_yrs'])) {
+            $mysql_update_data['admission'] = $batch_data['batch_yrs'];
+        }
+    }
+
+    // Update Firebase
+    if (!empty($update_data)) {
+        $firebase_result = $firebase->update("alumni/", $user_id, $update_data);
+    } else {
+        $firebase_result = true;
+    }
+
+    // Build MySQL query
+    if (!empty($mysql_update_data)) {
+        $mysql_query = "UPDATE applicant SET ";
+        $update_parts = [];
+        foreach ($mysql_update_data as $key => $value) {
+            $update_parts[] = "$key = '" . $mysql_conn->real_escape_string($value) . "'";
+        }
+        $mysql_query .= implode(", ", $update_parts);
+        $mysql_query .= " WHERE unique_id = '" . $mysql_conn->real_escape_string($user_id) . "'";
+
+        $mysql_result = $mysql_conn->query($mysql_query);
+
+        if (!$mysql_result) {
+            throw new Exception('Failed to update MySQL database: ' . $mysql_conn->error);
+        }
+    } else {
+        $mysql_result = true; // No MySQL update needed
+    }
+
+    if ($firebase_result && $mysql_result) {
         // Update session data
         foreach ($update_data as $key => $value) {
             $_SESSION['user'][$key] = $value;
         }
-        
-        if (count($updated_fields) == 1) {
-            $_SESSION['update_message'] = 'Data Updated Successfully';
-        } else {
-            $last_field = array_pop($updated_fields);
-            $_SESSION['update_message'] = 'Data Updated Successfully';
+        if (isset($course_data['courCode'])) {
+            $_SESSION['user']['course'] = $course_data['courCode'];
         }
+        if (isset($batch_data['batch_yrs'])) {
+            $_SESSION['user']['batch'] = $batch_data['batch_yrs'];
+        }
+        
+        $_SESSION['update_message'] = 'Data Updated Successfully';
     } else {
-        $_SESSION['update_message'] = 'Failed to update profile. Please try again.';
+        throw new Exception('Failed to update profile in one or both databases.');
     }
+
+    $mysql_conn->close();
 } catch (Exception $e) {
     $_SESSION['update_message'] = 'Error: ' . $e->getMessage();
 }
 
 // Redirect back to the main page
 header('Location: update_account.php');
-exit(); 
+exit();
+?>

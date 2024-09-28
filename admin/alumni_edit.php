@@ -5,6 +5,20 @@ header('Content-Type: application/json');
 
 $response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
 
+// New function to get readable batch and course
+function getReadableBatchAndCourse($firebase, $batchId, $courseId) {
+    $batchData = $firebase->retrieve("batch_yr/$batchId");
+    $courseData = $firebase->retrieve("course/$courseId");
+    
+    $batchData = json_decode($batchData, true);
+    $courseData = json_decode($courseData, true);
+    
+    $readableBatch = $batchData['batch_yrs'] ?? '';
+    $readableCourse = $courseData['courCode'] ?? '';
+    
+    return array('batch' => $readableBatch, 'course' => $readableCourse);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['edit_studentid']) || empty($_POST['edit_studentid'])) {
         $response['message'] = 'Alumni ID is required.';
@@ -101,6 +115,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Perform update in Firebase
         $firebaseResult = $firebase->update('alumni', $id, $updateData);
 
+        // Get readable batch and course
+        $readableData = getReadableBatchAndCourse($firebase, $updateData['batch'], $updateData['course']);
+
         // Perform update in MySQL
         $mysqlConn = getMySQLConnection();
 
@@ -111,12 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $mysqlUpdateData = [
-            
-
             'alumni_id' => $updateData['studentid'],
             'fullname' => $updateData['firstname'] . ' ' .  $updateData['middlename'] . ' ' .  $updateData['lastname'] ,
-        
-          
+            'contact' => $updateData['contactnumber'],
+            'address' => $updateData['addressline1'],
+            'dob' => $updateData['birthdate'],
+            'program_graduated' => $readableData['course'],
+            'admission' => $readableData['batch'],
         ];
 
         $mysqlQuery = "UPDATE applicant SET ";

@@ -9,32 +9,24 @@
     require_once '../includes/config.php';
 
     $firebase = new firebaseRDB($databaseURL);
-
     $alumni_data = $firebase->retrieve("alumni");
     $alumni_data = json_decode($alumni_data, true);
-
     $categoriesData = $firebase->retrieve('category');
     $categories = json_decode($categoriesData, true);
-
     $batchYears = $firebase->retrieve("batch_yr");
-    $batchYears = json_decode($batchYears, true); // Decode JSON data into associative arrays
-    
-    $courseKey = "course"; // Replace with your actual Firebase path or key for courses
+    $batchYears = json_decode($batchYears, true);
+
+    $courseKey = "course";
     $data = $firebase->retrieve($courseKey);
-    $data = json_decode($data, true); // Decode JSON data into associative arrays
-    
-    // Assuming you have the current user's ID stored in a session variable
+    $data = json_decode($data, true);
+
     $current_user_id = $_SESSION['alumni_id'];
     $current_user = $alumni_data[$current_user_id] ?? null;
 
-    
     $messages = json_decode($firebase->retrieve("messages"), true);
-
-    // Convert messages array to JSON for JavaScript
     $messages_json = json_encode($messages);
 
     if (!$current_user) {
-        // Handle the case where the user is not found
         echo "User not found";
         exit;
     }
@@ -46,34 +38,35 @@
 
     function formatValue($value)
     {
-        // Check if the value is numeric
         if (is_numeric($value)) {
-            // Convert to float and format it with 2 decimal places
             return number_format((float) $value, 2);
         } else {
-            // Return a default message or value for non-numeric values
             return 'N/A';
         }
     }
 
-    // Retrieve the birthdate from the user data
+    function formatDate($date)
+    {
+        if (empty($date) || $date == 'N/A') {
+            return 'N/A';
+        }
+
+        $timestamp = strtotime($date);
+        if ($timestamp === false) {
+            return 'Invalid Date';
+        }
+
+        return date("d/m/Y", $timestamp);
+    }
+
     $birthdate = getValue($current_user, 'birthdate');
+    $birthdateFormatted = formatDate($birthdate);
 
-    // Convert the date from YYYY-MM-DD to DD/MM/YYYY
-    $birthdateFormatted = date("d/m/Y", strtotime($birthdate));
-
-    // Retrieve the first employment date from the user data
     $firstEmploymentDate = getValue($current_user, 'first_employment_date');
+    $firstEmploymentDateFormatted = formatDate($firstEmploymentDate);
 
-    // Replace hyphens with slashes
-    $firstEmploymentDateFormatted = str_replace('-', '/', $firstEmploymentDate);
-
-    // Retrieve the date for current employment from the user data
     $currentEmploymentDate = getValue($current_user, 'date_for_current_employment');
-
-    // Replace hyphens with slashes
-    $currentEmploymentDateFormatted = str_replace('-', '/', $currentEmploymentDate);
-
+    $currentEmploymentDateFormatted = formatDate($currentEmploymentDate);
     ?>
 
 </head>
@@ -220,7 +213,7 @@
                                     <div class="nk-datapk-ctm form-elet-mg" id="data_1">
                                         <div class="input-group date nk-int-st">
                                             <span class="input-group-addon"></span>
-                                            <input type="text" class="form-control" id="birthdate" name="birthdate"
+                                            <input type="text" id="birthdate" class="form-control"
                                                 value="<?php echo $birthdateFormatted; ?>">
                                         </div>
                                     </div>
@@ -345,7 +338,7 @@
                                     <div class="nk-datapk-ctm form-elet-mg" id="data_1">
                                         <div class="input-group date nk-int-st">
                                             <span class="input-group-addon"></span>
-                                            <input type="text" class="form-control" name="first_employment_date"
+                                            <input type="date" class="form-control" name="first_employment_date"
                                                 value="<?php echo getValue($current_user, 'first_employment_date'); ?>">
                                         </div>
                                     </div>
@@ -359,7 +352,7 @@
                                     <div class="nk-datapk-ctm" id="data_1">
                                         <div class="input-group date nk-int-st">
                                             <span class="input-group-addon"></span>
-                                            <input type="text" class="form-control" name="date_for_current_employment"
+                                            <input type="date" class="form-control" name="date_for_current_employment"
                                                 value="<?php echo getValue($current_user, 'date_for_current_employment'); ?>">
                                         </div>
                                     </div>
@@ -367,16 +360,16 @@
                             </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <div class="form-group">
-                                        <label for="company_name" class="form-label"><i class="fas fa-building icon"></i>
-                                            Company Name</label>
-                                        <div class="nk-int-st">
-                                            <input type="text" id="company_name" name="name_company" class="form-control"
-                                                value="<?php echo getValue($current_user, 'name_company'); ?>"
-                                                placeholder="Company Name">
-                                        </div>
+                                <div class="form-group">
+                                    <label for="company_name" class="form-label"><i class="fas fa-building icon"></i>
+                                        Company Name</label>
+                                    <div class="nk-int-st">
+                                        <input type="text" id="company_name" name="name_company" class="form-control"
+                                            value="<?php echo getValue($current_user, 'name_company'); ?>"
+                                            placeholder="Company Name">
                                     </div>
                                 </div>
+                            </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <div class="form-group">
@@ -638,7 +631,7 @@
 
     </div>
 
-    <?php include 'global_chatbox.php'?>
+    <?php include 'global_chatbox.php' ?>
 
 
 </body>
