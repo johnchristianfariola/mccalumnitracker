@@ -12,13 +12,18 @@ if (!isset($_SESSION['login_attempts'])) {
 // Function to get the user's IP address
 function getUserIP() {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        // Check if the client IP is set
         return $_SERVER['HTTP_CLIENT_IP'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        // Check if the forwarded IP is set
+        $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        return trim($ipList[0]); // Return the first IP in the list
     } else {
+        // Fallback to REMOTE_ADDR
         return $_SERVER['REMOTE_ADDR'];
     }
 }
+
 
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
