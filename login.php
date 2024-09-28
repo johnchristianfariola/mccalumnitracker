@@ -56,10 +56,10 @@ if (isset($_POST['login'])) {
             }
             exit();
         } else {
-            $_SESSION['error'] = 'Incorrect password';
+            $_SESSION['error'] = 'Incorrect Email or Password';
         }
     } else {
-        $_SESSION['error'] = 'Cannot find account with the email';
+        $_SESSION['error'] = 'Incorrect Email or Password';
     }
 } else {
     $_SESSION['error'] = 'Input Alumni credentials first';
