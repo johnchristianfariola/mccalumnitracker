@@ -24,7 +24,7 @@ function getUserIP() {
 // Function to get the user's location using IPinfo
 function getUserLocation($ipAddress) {
     // Replace 'YOUR_API_KEY' with your actual API token from IPinfo
-    $apiToken = 'ipinfo.io/122.54.88.90?token=0af03275deb87a';
+    $apiToken = '0af03275deb87a';
     $url = "https://ipinfo.io/{$ipAddress}/json?token={$apiToken}";
     
     // Get location data from IPinfo
