@@ -3228,3 +3228,106 @@ ul {
   background-color: #3367d6;
 }
 /*============================VISIT SURVEY END HERE============================*/
+/*============================REGISTRATION START HERE============================*/
+.warning-message {
+  display: block;
+  color: #d32f2f;
+  font-size: 0.85em;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.terms-and-conditions {
+  margin: 20px 0;
+  text-align: left;
+}
+
+.modern-checkbox {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modern-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmarks_term {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 4px;
+}
+
+.modern-checkbox:hover input~.checkmarks_term {
+  background-color: #ccc;
+}
+
+.modern-checkbox input:checked~.checkmarks_term {
+  background-color: #2196F3;
+}
+
+.checkmarks_term:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.modern-checkbox input:checked~.checkmarks_term:after {
+  display: block;
+}
+
+.modern-checkbox .checkmarks_term:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.terms-text {
+  margin-left: 10px;
+}
+
+/* Custom scrollbar styles */
+#termsModal .modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+#termsModal .modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#termsModal .modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+#termsModal .modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* For Firefox */
+#termsModal .modal-body {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* Ensure the modal body has a fixed height and scrolls */
+#termsModal .modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}

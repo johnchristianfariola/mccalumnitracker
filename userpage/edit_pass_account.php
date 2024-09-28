@@ -2,11 +2,10 @@
 require_once '../includes/config.php';
 require_once '../includes/session.php';
 
-
 $firebase = new firebaseRDB($databaseURL);
 
-// Retrieve the user ID from the form
-$user_id = $_POST['user_id'] ?? null;
+// Retrieve the user ID from the session
+$user_id = $_SESSION['alumni_id'] ?? null;
 
 if (!$user_id) {
     die('User ID is missing');
@@ -66,6 +65,9 @@ try {
         }
         
         $_SESSION['update_message'] = implode('. ', $update_messages);
+
+        // Update MySQL database
+        updateMySQLDatabase($user_id, $update_data);
     } else {
         $_SESSION['update_message'] = 'Failed to update profile';
     }
@@ -76,4 +78,41 @@ try {
 // Redirect back to the main page
 header('Location: update_password.php');
 exit();
+
+// Function to update MySQL database
+function updateMySQLDatabase($user_id, $update_data) {
+    $mysqlConn = getMySQLConnection();
+
+    if (!$mysqlConn) {
+        error_log('Failed to connect to MySQL database.');
+        return;
+    }
+
+    $query = "UPDATE applicant SET ";
+    $updateParts = [];
+
+    if (isset($update_data['email'])) {
+        $updateParts[] = "email = '" . $mysqlConn->real_escape_string($update_data['email']) . "'";
+    }
+
+    if (isset($update_data['password'])) {
+        $updateParts[] = "password = '" . $mysqlConn->real_escape_string($update_data['password']) . "'";
+    }
+
+    if (empty($updateParts)) {
+        $mysqlConn->close();
+        return;
+    }
+
+    $query .= implode(", ", $updateParts);
+    $query .= " WHERE unique_id = '" . $mysqlConn->real_escape_string($user_id) . "'";
+
+    $result = $mysqlConn->query($query);
+
+    if (!$result) {
+        error_log('MySQL Update Error: ' . $mysqlConn->error);
+    }
+
+    $mysqlConn->close();
+}
 ?>

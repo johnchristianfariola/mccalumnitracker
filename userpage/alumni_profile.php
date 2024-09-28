@@ -73,15 +73,7 @@
     $categories = json_decode($categoriesData, true);
     ?>
 
-    <style>
-        .warning-message {
-    display: block;
-    color: #d32f2f;
-    font-size: 0.85em;
-    margin-top: 5px;
-    text-align: left;
-}
-    </style>
+    
 </head>
 
 <body style="background:white; ">
@@ -255,7 +247,8 @@
                         <label>Alumni ID</label>
                         <input type="text" name="studentid" placeholder="Enter your School ID"
                             value="<?php echo htmlspecialchars($user['studentid']); ?>" readonly>
-                        <small class="warning-message"><i class="fa fa-info-circle"></i> Caution: Your Alumni ID is a confidential identifier for the
+                        <small class="warning-message"><i class="fa fa-info-circle"></i> Caution: Your Alumni ID is a
+                            confidential identifier for the
                             Document Tracker Website. Keep it secure and do not share it with others.</small>
                     </div>
                     <div class="input-field">
@@ -359,6 +352,15 @@
 
                 </div>
 
+
+                <div class="terms-and-conditions">
+                    <label class="modern-checkbox">
+                        <input type="checkbox" required>
+                        <span class="checkmarks_term"></span>
+                        <span class="terms-text">I have read and agree to the <a href="#" data-bs-toggle="modal"
+                                data-bs-target="#termsModal">Terms and Conditions</a></span>
+                    </label>
+                </div>
                 <div class="buttons">
                     <button type="button" class="backBtn">Back</button>
 
@@ -368,27 +370,11 @@
         </form>
     </div>
 
-    <!-- Welcome Modal -->
-    <div class="modal fade modern-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel"
-        aria-hidden="true" style="padding-right: 0px !important;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="welcomeModalLabel">Welcome, Alumni!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>We're excited to have you here at the Alumni Profile Update page. Your information is valuable to
-                        us and helps us serve you better.</p>
-                    <p>Please take a moment to review and update your details. This ensures you stay connected with our
-                        alumni community and receive relevant updates.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Let's Get Started</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
+    <?php include 'includes/terms_and_condition.php' ?>
+
+
+
 
     <?php include 'includes/footer.php' ?>
 
@@ -397,7 +383,23 @@
 </body>
 
 </html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('termsModal'));
 
+        // Test button to open modal
 
+        testButton.onclick = function () {
+            myModal.show();
+        };
+        document.body.appendChild(testButton);
 
+        // Original trigger
+        document.querySelector('[data-bs-target="#termsModal"]').addEventListener('click', function (e) {
+            e.preventDefault();
+            myModal.show();
+        });
+    });
+</script>
 <?php include 'includes/script.php' ?>
