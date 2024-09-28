@@ -19,13 +19,13 @@ if (isset($_POST['login'])) {
             header('location: home.php'); // Redirect to admin home
             exit();
         } else {
-            $_SESSION['error'] = 'Incorrect password';
+
         }
     } else {
-        $_SESSION['error'] = 'Cannot find account with the username';
+      
     }
 } else {
-    $_SESSION['error'] = 'Input admin credentials first';
+   
 }
 
 header('location: index.php');
