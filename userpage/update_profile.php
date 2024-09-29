@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Initialize the insert data array for MySQL
     $mysqlInsertData = [
         'unique_id' => $alumni_id,
-        'alumni_id' => $alumni_id,
+        'id_number' => $alumni_id,
         'fullname' => $firstname . ' ' . $middlename . ' ' . $lastname,
         'email' => $email,
         'contact' => $contactnumber,

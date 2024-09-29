@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $mysqlUpdateData = [
-            'alumni_id' => $updateData['studentid'],
+            'id_number' => $updateData['studentid'],
             'fullname' => $updateData['firstname'] . ' ' .  $updateData['middlename'] . ' ' .  $updateData['lastname'] ,
             'contact' => $updateData['contactnumber'],
             'address' => $updateData['addressline1'],

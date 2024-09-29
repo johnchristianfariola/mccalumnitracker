@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return false;
         }
 
-        $query = "DELETE FROM alumni_verified WHERE id = ?";
+        $query = "DELETE FROM applicant WHERE unique_id = ?";
         $stmt = $mysqlConn->prepare($query);
         $stmt->bind_param("s", $id);
         $result = $stmt->execute();
