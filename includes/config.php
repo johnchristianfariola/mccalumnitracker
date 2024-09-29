@@ -7,10 +7,10 @@ define('EMAIL_PASSWORD', 'zqhj hxqd ofmj djtv');
 $databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
 
 // MySQL configuration
-$mysqlHost = "localhost";
-$mysqlUsername = "root";
-$mysqlPassword = "";
-$mysqlDatabase = "fms_db";
+$mysqlHost = "127.0.0.1";
+$mysqlUsername = "u510162695_fms_db_root";
+$mysqlPassword = "1Fms_db_root";
+$mysqlDatabase = "u510162695_fms_db";
 
 // Function to get MySQL connection
 function getMySQLConnection() {
