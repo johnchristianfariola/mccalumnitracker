@@ -508,7 +508,7 @@
                                             <option value="Sales">Sales</option>
                                             <option value="Finance">Finance</option>
                                             <option value="Human Resources">Human Resources</option>
-                                            <option value="IT">Information Technology</option>
+                                            <option value="Information Technology">Information Technology</option>
                                             <option value="Customer Service">Customer Service</option>
                                             <option value="Administration">Administration</option>
                                             <option value="Education">Education</option>
@@ -518,7 +518,7 @@
                                             <option value="Product Management">Product Management</option>
                                             <option value="Project Management">Project Management</option>
                                             <option value="Research and_Development">Research and Development</option>
-                                            <option value="Supply_chain">Supply Chain</option>
+                                            <option value="Supply Chain">Supply Chain</option>
                                             <option value="Design">Design</option>
                                             <option value="Quality_assurance">Quality Assurance</option>
                                             <option value="Manufacturing">Manufacturing</option>
