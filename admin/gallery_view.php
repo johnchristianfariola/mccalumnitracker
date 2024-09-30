@@ -218,6 +218,7 @@ $album = json_decode($albumData, true) ?: [];
             });
         });
 
+        // Open delete modal when delete button is clicked
         $('.open-delete').click(function () {
             var id = $(this).data('id');
             $('#deleteAlbumId').val(id);
@@ -225,7 +226,7 @@ $album = json_decode($albumData, true) ?: [];
         });
 
         // Confirm delete
-        $('.btn-confirm-delete').click(function () {
+        $('.btn-confirm-delete').off('click').on('click', function () {
             var id = $('#deleteAlbumId').val();
             $.ajax({
                 url: 'gallery_view_delete.php',
@@ -266,6 +267,8 @@ $album = json_decode($albumData, true) ?: [];
                 }
             });
         });
+
+
         // Save changes when the save button is clicked in the edit modal
         $('#saveChanges').click(function () {
             var formData = new FormData($('#editForm')[0]);
