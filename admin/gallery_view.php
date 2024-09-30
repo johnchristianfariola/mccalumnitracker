@@ -125,7 +125,7 @@ $album = json_decode($albumData, true) ?: [];
                                                             Remove
                                                         </div>
                                                     </div>
-                                                  
+
                                                 </div>
                                                 <div class="album-title">
                                                     <?php echo htmlspecialchars(pathinfo($gallery['image_url'], PATHINFO_FILENAME)); ?>
@@ -218,7 +218,6 @@ $album = json_decode($albumData, true) ?: [];
             });
         });
 
-        // Open delete modal when delete button is clicked
         $('.open-delete').click(function () {
             var id = $(this).data('id');
             $('#deleteAlbumId').val(id);
@@ -232,33 +231,41 @@ $album = json_decode($albumData, true) ?: [];
                 url: 'gallery_view_delete.php',
                 type: 'POST',
                 data: { id: id },
-                success: function () {
+                dataType: 'json',
+                success: function (response) {
                     $('#deleteModal').modal('hide');
-                    // Show SweetAlert success message
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "Gallery item deleted successfully.",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        // Optional: Refresh the page or perform additional actions
-                        window.location.reload();
-                    });
+                    if (response.status === 'success') {
+                        // Show SweetAlert success message
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            // Optional: Refresh the page or perform additional actions
+                            window.location.reload();
+                        });
+                    } else {
+                        // Show SweetAlert error message
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "error",
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
                 },
                 error: function (xhr, status, error) {
                     $('#deleteModal').modal('hide');
                     // Display session error message if any
-                    var errorMessage = xhr.status === 400 ? 'ID is required.' :
-                        xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
-                            'Invalid request method.';
+                    var errorMessage = xhr.status === 400 ? 'ID is required.' : xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' : 'Invalid request method.';
                     console.error('AJAX Error: ' + errorMessage);
                     $('#errorMessage').text(errorMessage).show();
                 }
             });
-
         });
-
         // Save changes when the save button is clicked in the edit modal
         $('#saveChanges').click(function () {
             var formData = new FormData($('#editForm')[0]);
@@ -302,7 +309,7 @@ $album = json_decode($albumData, true) ?: [];
         });
 
 
-       
+
 
         // Filter function to filter gallery items based on input value
         function filterGallery() {
@@ -339,9 +346,9 @@ $album = json_decode($albumData, true) ?: [];
     }
 
 
-      /*======================Progress Bar=============--*/
+    /*======================Progress Bar=============--*/
 
-      document.getElementById('uploadButton').addEventListener('click', function (event) {
+    document.getElementById('uploadButton').addEventListener('click', function (event) {
         event.preventDefault();
 
         // Validate gallery images
@@ -414,13 +421,13 @@ $album = json_decode($albumData, true) ?: [];
         xhr.send(formData);
     });
 
-   
+
 
 
 
     /*===============Script Validation=====================--*/
 
-     function validateAddGalleryForm() {
+    function validateAddGalleryForm() {
         let isValid = true;
 
         // Gallery Image validation
@@ -458,7 +465,7 @@ $album = json_decode($albumData, true) ?: [];
             newFileNameError.style.display = "none";
         }
 
-        
+
 
         return isValid;
     }
@@ -467,11 +474,11 @@ $album = json_decode($albumData, true) ?: [];
         let isValid = true;
 
         // Validate Image File
-        
+
 
         if (isValid) {
-        document.getElementById('submitButton').disabled = true;
-    }
+            document.getElementById('submitButton').disabled = true;
+        }
 
         return isValid;
     }
