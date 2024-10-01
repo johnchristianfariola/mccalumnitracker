@@ -650,7 +650,13 @@ usort($all_comments, function ($a, $b) {
                 show: true
               },
               value: {
-                show: true
+                show: true,
+                formatter: function (val) {
+                  return Math.round(val);
+                }
+              },
+              total: {
+                show: false
               }
             }
           }
@@ -658,8 +664,8 @@ usort($all_comments, function ($a, $b) {
       },
       dataLabels: {
         enabled: true,
-        dropShadow: {
-          enabled: false,
+        formatter: function (val, opts) {
+          return opts.w.config.labels[opts.seriesIndex];
         }
       },
       responsive: [{
