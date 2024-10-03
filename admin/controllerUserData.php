@@ -164,9 +164,7 @@ if (isset($_POST['check-email'])) {
             } catch (Exception $e) {
                 $errors['otp-error'] = "Message could not be sent. Mailer error: {$mail->ErrorInfo}";
             }
-        } else {
-            $errors['email'] = "This email address does not exist!";
-        }
+        } 
     }
 }
 
