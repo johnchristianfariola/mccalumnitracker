@@ -12,13 +12,15 @@ try {
         // Start HTML table
         echo "<table border='1' cellpadding='10'>";
         echo "<tr>";
-        
+
         // Dynamically get column names from the result set
         for ($i = 0; $i < $query->columnCount(); $i++) {
             $columnMeta = $query->getColumnMeta($i);
             echo "<th>" . $columnMeta['name'] . "</th>";
         }
         
+        // Add a header for the Delete button
+        echo "<th>Action</th>";
         echo "</tr>";
 
         // Fetch and display each row
@@ -27,6 +29,9 @@ try {
             foreach ($row as $column => $value) {
                 echo "<td>" . htmlspecialchars($value) . "</td>";
             }
+
+            // Add the delete button with a link to delete.php passing the event_id
+            echo "<td><a href='delete.php?event_id=" . $row['event_id'] . "' onclick='return confirm(\"Are you sure you want to delete this event?\")'>Delete</a></td>";
             echo "</tr>";
         }
 
