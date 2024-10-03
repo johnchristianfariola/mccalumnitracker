@@ -31,7 +31,7 @@ try {
             }
 
             // Add the delete button with a link to delete.php passing the event_id
-            echo "<td><a href='delete.php?event_id=" . $row['event_id'] . "' onclick='return confirm(\"Are you sure you want to delete this event?\")'>Delete</a></td>";
+            echo "<td><a href='delete.php?id=" . $row['id'] . "' onclick='return confirm(\"Are you sure you want to delete this event?\")'>Delete</a></td>";
             echo "</tr>";
         }
 
