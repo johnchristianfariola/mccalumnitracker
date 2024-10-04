@@ -12,7 +12,7 @@ if (isset($_SESSION['alumni'])) {
 ?>
 <?php
 
-
+/*
 // Get current date
 $date = date('Y-m-d');
 
@@ -28,7 +28,7 @@ if ($existingData) {
     // Create new entry for today
     $firebase->insert("track_visitors", [$date => ['count' => 1]]);
 }
-
+*/
 
 
 
