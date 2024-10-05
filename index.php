@@ -15,7 +15,7 @@ if (isset($_SESSION['alumni'])) {
 /*
 // Get current date
 $date = date('Y-m-d');
-
+//
 // Check if an entry for today exists
 $existingData = $firebase->retrieve("track_visitors/$date");
 $existingData = json_decode($existingData, true);
