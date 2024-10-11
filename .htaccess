@@ -22,3 +22,11 @@ Options -Indexes
 <Files ".htaccess">
     Require all denied
 </Files>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Content-Security-Policy "default-src 'self';"
+</IfModule>
