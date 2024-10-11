@@ -1,48 +1,34 @@
 <?php
 $target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["file"]["name"]);
+$file_extension = strtolower(pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION));
+$new_filename = uniqid() . '.' . $file_extension;
+$target_file = $target_dir . $new_filename;
 $uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
 // Check if image file is a actual image or fake image
-if(isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["file"]["tmp_name"]);
-    if($check !== false) {
-        $uploadOk = 1;
-    } else {
-        echo "File is not an image.";
-        $uploadOk = 0;
-    }
+$check = getimagesize($_FILES["file"]["tmp_name"]);
+if($check === false) {
+    echo json_encode(["success" => false, "message" => "File is not an image."]);
+    exit;
 }
 
-// Check if file already exists
-if (file_exists($target_file)) {
-    echo "Sorry, file already exists.";
-    $uploadOk = 0;
-}
-
-// Check file size
-if ($_FILES["file"]["size"] > 500000) {
-    echo "Sorry, your file is too large.";
-    $uploadOk = 0;
+// Check file size (5MB limit)
+if ($_FILES["file"]["size"] > 5000000) {
+    echo json_encode(["success" => false, "message" => "Sorry, your file is too large. Maximum file size is 5MB."]);
+    exit;
 }
 
 // Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-    $uploadOk = 0;
+$allowed_extensions = ["jpg", "jpeg", "png", "gif"];
+if (!in_array($file_extension, $allowed_extensions)) {
+    echo json_encode(["success" => false, "message" => "Sorry, only JPG, JPEG, PNG & GIF files are allowed."]);
+    exit;
 }
 
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-    echo "Sorry, your file was not uploaded.";
-// if everything is ok, try to upload file
+// Try to upload file
+if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+    echo json_encode(["success" => true, "message" => "The file has been uploaded.", "filename" => $new_filename]);
 } else {
-    if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
-        echo "The file ". basename( $_FILES["file"]["name"]). " has been uploaded.";
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-    }
+    echo json_encode(["success" => false, "message" => "Sorry, there was an error uploading your file."]);
 }
 ?>
