@@ -28,9 +28,7 @@ Options -Indexes
     # Prevent clickjacking
     Header set X-Frame-Options "SAMEORIGIN"
 
-    # Content Security Policy
-    # Allow scripts from self and trusted domains
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://trusted.cdn.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://trusted.cdn.com; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'self';"
+  
 </IfModule>
 
 # Block access to sensitive files
