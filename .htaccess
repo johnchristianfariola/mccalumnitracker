@@ -23,3 +23,12 @@ Options -Indexes
     Require all denied
 </Files>
 
+# Block access to sensitive files
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|bak)$">
+    Require all denied
+</FilesMatch>
+
+# Limit HTTP methods
+<LimitExcept GET POST>
+    Require all denied
+</LimitExcept>
