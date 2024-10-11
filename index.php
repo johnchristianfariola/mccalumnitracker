@@ -650,7 +650,7 @@ $data = array_slice($data, 0, 5);
     <script nonce="<random-nonce>"  src="homepage/lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="homepage/js/main.js"></script>
+    <script nonce="<random-nonce>" src="homepage/js/main.js"></script>
 
     <script>
         // Disable right-click
