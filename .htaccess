@@ -1,7 +1,6 @@
 # HTID:23422420: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
 
-# Disable PHP error display for production
-php_value display_errors 0
+php_value display_errors 1
 
 # DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23422420:
 
@@ -23,21 +22,3 @@ Options -Indexes
 <Files ".htaccess">
     Require all denied
 </Files>
-
-# Security headers
-<IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-XSS-Protection "1; mode=block"
-    Header set X-Frame-Options "SAMEORIGIN"
-    Header set Content-Security-Policy "default-src 'self';"
-</IfModule>
-
-# Block access to sensitive files
-<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|bak)$">
-    Require all denied
-</FilesMatch>
-
-# Limit HTTP methods
-<LimitExcept GET POST>
-    Require all denied
-</LimitExcept>
