@@ -37,3 +37,18 @@ Options -Indexes
 <LimitExcept GET POST>
     Require all denied
 </LimitExcept>
+
+
+# Security headers
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Enable XSS protection
+    Header set X-XSS-Protection "1; mode=block"
+
+    # Prevent clickjacking
+    Header set X-Frame-Options "SAMEORIGIN"
+
+  
+</IfModule>
