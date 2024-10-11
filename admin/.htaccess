@@ -1,0 +1,29 @@
+
+# HTID:23422420: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+php_value display_errors 1
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23422420:
+php_value max_file_uploads 560
+php_value upload_max_filesize 100M
+php_value post_max_size 100M
+php_value max_execution_time 300
+php_value max_input_time 300
+
+
+# Enable the rewrite engine
+RewriteEngine On
+
+# Redirect all HTTP requests to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Redirect all requests to https://mccalumnitracker.com
+RewriteCond %{HTTP_HOST} !^mccalumnitracker\.com$ [NC]
+RewriteRule ^(.*)$ https://mccalumnitracker.com/$1 [R=301,L]
+
+# Disable directory listing
+Options -Indexes
+
+# Protect the .htaccess file
+<Files ".htaccess">
+    Require all denied
+</Files>

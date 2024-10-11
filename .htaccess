@@ -1,0 +1,24 @@
+# HTID:23422420: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+
+php_value display_errors 1
+
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23422420:
+
+# Enable the rewrite engine
+RewriteEngine On
+
+# Redirect all HTTP requests to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Redirect all requests to https://mccalumnitracker.com
+RewriteCond %{HTTP_HOST} !^mccalumnitracker\.com$ [NC]
+RewriteRule ^(.*)$ https://mccalumnitracker.com/$1 [R=301,L]
+
+# Disable directory listing
+Options -Indexes
+
+# Protect the .htaccess file
+<Files ".htaccess">
+    Require all denied
+</Files>
