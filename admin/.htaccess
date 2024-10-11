@@ -1,17 +1,13 @@
 
+# HTID:23422420: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+php_value display_errors 1
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23422420:
 php_value max_file_uploads 560
 php_value upload_max_filesize 100M
 php_value post_max_size 100M
 php_value max_execution_time 300
 php_value max_input_time 300
 
-
-# HTID:23422420: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
-
-# Disable PHP error display for production
-php_value display_errors 0
-
-# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:23422420:
 
 # Enable the rewrite engine
 RewriteEngine On
@@ -31,21 +27,3 @@ Options -Indexes
 <Files ".htaccess">
     Require all denied
 </Files>
-
-# Security headers
-<IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-XSS-Protection "1; mode=block"
-    Header set X-Frame-Options "SAMEORIGIN"
-    Header set Content-Security-Policy "default-src 'self';"
-</IfModule>
-
-# Block access to sensitive files
-<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|bak)$">
-    Require all denied
-</FilesMatch>
-
-# Limit HTTP methods
-<LimitExcept GET POST>
-    Require all denied
-</LimitExcept>
