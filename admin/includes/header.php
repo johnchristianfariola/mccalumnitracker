@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-<?php
-session_start();
-?>
+<?php include 'includes/session.php'; ?>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
