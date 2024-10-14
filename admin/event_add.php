@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $firebase = new firebaseRDB($databaseURL);
 
         // Function to upload image and add event
-        // Function to upload image and add event
         function addEventWithImage($firebase, $event_title, $event_venue, $event_date, $event_author, $event_description, $image_url, $event_invited_json, $course_invited_json)
         {
             $table = 'event'; // Assuming 'event' is your Firebase database node for event
@@ -68,11 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'image_url' => $image_url,
                 'event_invited' => $event_invited_json,
                 'course_invited' => $course_invited_json,
-                'event_created' => date('F j, Y g:i A') // Add current date and time
+                'event_created' => date('F j, Y H:i:s') // Updated format here
             );
             return $firebase->insert($table, $data);
         }
-
 
         // Upload image to server
         $upload_dir = 'uploads/';
