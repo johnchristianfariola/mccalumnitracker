@@ -38,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'includes/config.php';
         $firebase = new firebaseRDB($databaseURL);
 
+        // Set timezone to Asia/Manila
+        date_default_timezone_set('Asia/Manila');
+
         $table = 'survey_set';
         $data = array(
             'survey_title' => $survey_title,
