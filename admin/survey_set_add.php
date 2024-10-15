@@ -34,6 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $frm_option_json = json_encode($frm_option);
 
+        // Set timezone to Asia/Manila
+        date_default_timezone_set('Asia/Manila');
+
         // Create data array
         $data = [
             'question' => $question,
