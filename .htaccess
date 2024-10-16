@@ -36,7 +36,6 @@ Options -Indexes
 
     Header always edit Set-Cookie ^(.*)$ $1;HttpOnly
 
-   Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://*.mccalumnitracker.com;"
 
 
 </IfModule>
