@@ -36,7 +36,7 @@ Options -Indexes
 
     Header always edit Set-Cookie ^(.*)$ $1;HttpOnly
 
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' https:/trusted.cdn.com; object-src 'none'; base-uri 'self';"
+     Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self';"
 </IfModule>
 
 
