@@ -35,6 +35,8 @@ Options -Indexes
     Header set Referrer-Policy "no-referrer-when-downgrade"
 
     Header always edit Set-Cookie ^(.*)$ $1;HttpOnly
+
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' https:/trusted.cdn.com; object-src 'none'; base-uri 'self';"
 </IfModule>
 
 
