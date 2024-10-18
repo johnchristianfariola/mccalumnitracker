@@ -40,15 +40,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             function addAlbum($firebase, $albumName, $imagePath) {
                 $table = 'gallery'; // Assuming 'gallery' is your Firebase database table
 
-                // Get the current date in the format "July 23, 2024 10:03:34"
-                $createdOn = date('F j, Y H:i:s');
+                // Create a DateTime object with the Asia/Manila timezone
+                $timezone = new DateTimeZone('Asia/Manila');
+                $date = new DateTime('now', $timezone);
+                
+                // Format the date as "July 23, 2024 10:03:34"
+                $createdOn = $date->format('F j, Y H:i:s');
 
                 $data = array(
                     'gallery_name' => $albumName,
                     'image_url' => $imagePath,
                     'user_id' => 1, // Default user_id
                     'delete_gallery' => 0, // Default delete_gallery
-                    'created_on' => $createdOn // Add the created_on field
+                    'created_on' => $createdOn // Add the created_on field with timezone
                 );
                 $result = $firebase->insert($table, $data);
                 return $result;
