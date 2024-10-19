@@ -12,24 +12,39 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL to alter table and add image_url column
-$alterTableSql = "ALTER TABLE `live_streams` ADD COLUMN `image_url` VARCHAR(255) AFTER `role`";
+// Function to view table contents
+function viewTableContents($conn) {
+    $sql = "SELECT * FROM live_streams";
+    $result = $conn->query($sql);
 
-if ($conn->query($alterTableSql) === TRUE) {
-    echo "Table 'live_streams' altered successfully to add image_url column<br>";
-} else {
-    echo "Error altering table: " . $conn->error . "<br>";
+    if ($result->num_rows > 0) {
+        echo "<h2>Contents of live_streams table:</h2>";
+        echo "<table border='1'>";
+        echo "<tr>";
+        
+        // Output table headers
+        $fields = $result->fetch_fields();
+        foreach ($fields as $field) {
+            echo "<th>" . $field->name . "</th>";
+        }
+        echo "</tr>";
+
+        // Output data of each row
+        while($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            foreach ($row as $value) {
+                echo "<td>" . htmlspecialchars($value ?? 'NULL') . "</td>";
+            }
+            echo "</tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "0 results in live_streams table";
+    }
 }
 
-// SQL to insert data
-$insertDataSql = "INSERT INTO `live_streams` (`stream_id`, `organizer_id`, `channel_name`, `stream_title`, `host_uid`, `stream_status`, `start_time`, `end_time`, `viewer_count`, `app_id`, `token`, `role`, `image_url`, `created_at`, `updated_at`, `is_video_enabled`, `is_audio_enabled`) VALUES
-(11, 31, 'Channel_1', 'Tech Talk', NULL, 'scheduled', '2024-10-18 16:06:00', '2024-10-18 18:06:00', 0, '639e26f0457a4e85b9e24844db6078cd', 'f390d604df0f4e0191dc0652773f77a3', 'host', 'https://picsum.photos/1920/1080?random=1', '2024-10-19 02:38:56', '2024-10-19 08:19:44', 1, 1)";
-
-if ($conn->query($insertDataSql) === TRUE) {
-    echo "New record inserted successfully";
-} else {
-    echo "Error inserting record: " . $conn->error;
-}
+// View table contents
+viewTableContents($conn);
 
 $conn->close();
 ?>
