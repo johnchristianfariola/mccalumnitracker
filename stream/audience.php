@@ -8,14 +8,14 @@
     $stream_id = isset($_GET['stream_id']) ? intval($_GET['stream_id']) : 0;
     
     // Fetch the channel name and stream title for the given stream_id
-    $stmt = $mysqli->prepare("SELECT channel_name, stream_title FROM live_streams WHERE stream_id = ?");
+    $stmt = $conn->prepare("SELECT channel_name, stream_title FROM live_streams WHERE stream_id = ?");
     $stmt->bind_param("i", $stream_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $stream = $result->fetch_assoc();
     
     // Close the connection
-    $mysqli->close();
+    $conn->close();
 
     // If stream not found, set default values
     if (!$stream) {
