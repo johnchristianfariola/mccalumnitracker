@@ -14,7 +14,7 @@ if ($mysqli->connect_error) {
 }
 
 // Fetch the channel name for stream_id = 11
-$result = $mysqli->query("SELECT channel_name FROM live_streams WHERE stream_id = 11");
+$result = $mysqli->query("SELECT channel_name FROM live_streams WHERE stream_id = 1");
 $channelName = $result->fetch_assoc()['channel_name'];
 
 // Close the connection
