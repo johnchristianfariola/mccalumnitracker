@@ -1,9 +1,5 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "yourpassword";
-$dbname = "live_streaming";
-
+    include "db.php";
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 

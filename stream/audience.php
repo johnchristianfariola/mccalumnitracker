@@ -1,17 +1,8 @@
 <?php
-    // Database connection details
-    $host = "127.0.0.1";
-    $username = "u510162695_judging_root";
-    $password = "1Judging_root";
-    $database = "u510162695_judging";
-    
+ 
+    include "db.php";
     // Connect to the database
-    $mysqli = new mysqli($host, $username, $password, $database);
     
-    // Check connection
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
     
     // Get stream_id from URL parameter
     $stream_id = isset($_GET['stream_id']) ? intval($_GET['stream_id']) : 0;

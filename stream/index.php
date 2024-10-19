@@ -1,17 +1,6 @@
 <?php
-// Database connection
-$servername = "127.0.0.1"; // e.g., 'localhost'
-$username = "u510162695_judging_root";
-$password = "1Judging_root";
-$dbname = "u510162695_judging";
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+include "db.php";
 // Fetch live streams
 $sql = "SELECT stream_id, stream_title, stream_status, start_time, image_url FROM live_streams ORDER BY start_time DESC LIMIT 5";
 $result = $conn->query($sql);

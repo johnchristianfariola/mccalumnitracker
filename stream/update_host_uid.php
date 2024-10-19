@@ -1,18 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-$servername = "127.0.0.1"; // e.g., 'localhost'
-$username = "u510162695_judging";
-$password = "1Judging_root";
-$dbname = "u510162695_judging";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
-}
+include "db.php";
 
 // Get data from POST request
 $channelName = $_POST['channel_name'] ?? '';
