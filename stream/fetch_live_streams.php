@@ -3,9 +3,12 @@ header('Content-Type: application/json');
 
 // Database connection parameters
 $servername = "127.0.0.1"; // e.g., 'localhost'
-$username = "root";
-$password = "";
-$dbname = "judging";
+$username = "u510162695_judging";
+$password = "1Judging_root";
+$dbname = "u510162695_judging";
+
+
+    
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
