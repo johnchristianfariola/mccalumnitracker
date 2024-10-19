@@ -1,10 +1,6 @@
 <?php
 // Database connection details
-$host = "127.0.0.1";
-$username = "u510162695_judging_root";
-$password = "1Judging_root";
-$database = "u510162695_judging";
-
+include "db.php";
 
 // Fetch the channel name for stream_id = 11
 $result = $conn->query("SELECT channel_name FROM live_streams WHERE stream_id = 1");
