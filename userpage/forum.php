@@ -150,10 +150,9 @@
                                         </div>
 
                                         <!-- Reaction buttons -->
-                                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem"
-                                            data-forum-id="<?php echo $forum_id; ?>">
+                                        <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
                                             <!-- ... other forum post content ... -->
-                                            <div class="reaction-buttons">
+                                            <div class="reaction-buttons" data-forum-id="<?php echo $forum_id; ?>">
                                                 <span class="reaction-btn" data-reaction="like">
                                                     <i class="fa fa-thumbs-up"></i> Like <span class="reaction-count"> 0</span>
                                                 </span>
@@ -712,11 +711,10 @@
                 }
             }
 
-            // Load initial reaction data
             function loadInitialReactions() {
-                $('.sale-statistic-inner').each(function () {
-                    var $forumPost = $(this);
-                    var forumId = $forumPost.data('forum-id');
+                $('.reaction-buttons').each(function () {
+                    var $reactionButtons = $(this);
+                    var forumId = $reactionButtons.data('forum-id');
 
                     $.ajax({
                         url: 'get_forum_like_count.php',
@@ -725,7 +723,7 @@
                         success: function (response) {
                             var data = JSON.parse(response);
                             if (data.status === 'success') {
-                                updateReactionButtons($forumPost.find('.reaction-buttons'), data.reaction_counts, data.user_reaction);
+                                updateReactionButtons($reactionButtons, data.reaction_counts, data.user_reaction);
                             }
                         },
                         error: function (xhr, status, error) {
@@ -738,11 +736,28 @@
             // Load initial reactions when the page loads
             loadInitialReactions();
 
+            function updateReactionButtons($reactionButtons, reactionCounts, userReaction) {
+                $reactionButtons.find('.reaction-btn').removeClass('active');
+                $reactionButtons.find('.reaction-count').text('0');
+
+                $.each(reactionCounts, function (reaction, count) {
+                    $reactionButtons.find('[data-reaction="' + reaction + '"] .reaction-count').text(count);
+                });
+
+                if (userReaction) {
+                    $reactionButtons.find('[data-reaction="' + userReaction + '"]').addClass('active');
+                }
+            }
+
             // Handle reaction button clicks
             $(document).ready(function () {
+                // Load initial reactions when the page loads
+                loadInitialReactions();
+
+                // Handle reaction button clicks
                 $('.reaction-btn').on('click', function () {
                     var $this = $(this);
-                    var forumId = $this.closest('.sale-statistic-inner').data('forum-id');
+                    var forumId = $this.closest('.reaction-buttons').data('forum-id');
                     var reactionType = $this.data('reaction');
 
                     $.ajax({
@@ -755,17 +770,7 @@
                         success: function (response) {
                             var data = JSON.parse(response);
                             if (data.status === 'success') {
-                                // Update reaction counts
-                                $this.closest('.reaction-buttons').find('.reaction-count').text('0');
-                                $.each(data.reaction_counts, function (reaction, count) {
-                                    $this.closest('.reaction-buttons').find('[data-reaction="' + reaction + '"] .reaction-count').text(count);
-                                });
-
-                                // Update user's reaction
-                                $this.closest('.reaction-buttons').find('.reaction-btn').removeClass('active');
-                                if (data.user_reaction) {
-                                    $this.closest('.reaction-buttons').find('[data-reaction="' + data.user_reaction + '"]').addClass('active');
-                                }
+                                updateReactionButtons($this.closest('.reaction-buttons'), data.reaction_counts, data.user_reaction);
                             } else {
                                 console.error('Error updating reaction:', data.message);
                             }
@@ -776,6 +781,7 @@
                     });
                 });
             });
+
         });
     </script>
 </body>
