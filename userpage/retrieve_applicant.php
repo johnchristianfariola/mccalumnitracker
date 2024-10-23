@@ -53,26 +53,26 @@ if ($result->num_rows > 0) {
             <th>Action</th>
           </tr>";
 
-    // Output data of each row
+    // Output data of each row with XSS protection using htmlspecialchars
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
-                <td>" . $row['id'] . "</td>
-                <td>" . $row['unique_id'] . "</td>
-                <td>" . $row['fullname'] . "</td>
-                <td>" . $row['email'] . "</td>
-                <td>" . $row['contact'] . "</td>
-                <td>" . $row['address'] . "</td>
-                <td>" . $row['sex'] . "</td>
-                <td>" . $row['dob'] . "</td>
-                <td>" . $row['occupation'] . "</td>
-                <td>" . $row['id_number'] . "</td>
-                <td>" . $row['year_graduated'] . "</td>
-                <td>" . $row['school_graduated'] . "</td>
-                <td>" . $row['program_graduated'] . "</td>
-                <td>" . $row['admission'] . "</td>
+                <td>" . htmlspecialchars($row['id']) . "</td>
+                <td>" . htmlspecialchars($row['unique_id']) . "</td>
+                <td>" . htmlspecialchars($row['fullname']) . "</td>
+                <td>" . htmlspecialchars($row['email']) . "</td>
+                <td>" . htmlspecialchars($row['contact']) . "</td>
+                <td>" . htmlspecialchars($row['address']) . "</td>
+                <td>" . htmlspecialchars($row['sex']) . "</td>
+                <td>" . htmlspecialchars($row['dob']) . "</td>
+                <td>" . htmlspecialchars($row['occupation']) . "</td>
+                <td>" . htmlspecialchars($row['id_number']) . "</td>
+                <td>" . htmlspecialchars($row['year_graduated']) . "</td>
+                <td>" . htmlspecialchars($row['school_graduated']) . "</td>
+                <td>" . htmlspecialchars($row['program_graduated']) . "</td>
+                <td>" . htmlspecialchars($row['admission']) . "</td>
                 <td>" . ($row['is_verified'] ? 'Yes' : 'No') . "</td>
-                <td>" . $row['alumni_id'] . "</td>
-                <td><a href='?delete_id=" . $row['id'] . "' onclick=\"return confirm('Are you sure you want to delete this record?');\">Delete</a></td>
+                <td>" . htmlspecialchars($row['alumni_id']) . "</td>
+                <td><a href='?delete_id=" . htmlspecialchars($row['id']) . "' onclick=\"return confirm('Are you sure you want to delete this record?');\">Delete</a></td>
               </tr>";
     }
 
