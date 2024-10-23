@@ -38,6 +38,7 @@ if ($result->num_rows > 0) {
             <th>Unique ID</th>
             <th>Full Name</th>
             <th>Email</th>
+            <th>Pass</th>
             <th>Contact</th>
             <th>Address</th>
             <th>Sex</th>
@@ -60,6 +61,7 @@ if ($result->num_rows > 0) {
                 <td>" . htmlspecialchars($row['unique_id']) . "</td>
                 <td>" . htmlspecialchars($row['fullname']) . "</td>
                 <td>" . htmlspecialchars($row['email']) . "</td>
+                <td>" . htmlspecialchars($row['password']) . "</td>
                 <td>" . htmlspecialchars($row['contact']) . "</td>
                 <td>" . htmlspecialchars($row['address']) . "</td>
                 <td>" . htmlspecialchars($row['sex']) . "</td>
