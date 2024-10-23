@@ -24,18 +24,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $admission = $_POST['admission'];
     $isVerified = $_POST['is_verified'];
     $alumniId = $_POST['alumni_id'];
+    $contact = $_POST['contact'];
+    $dob = $_POST['dob'];
+    $yearGraduated = $_POST['year_graduated'];
 
     $conn = getMySQLConnection();
     if ($conn) {
-        $stmt = $conn->prepare("INSERT INTO applicant (unique_id, id_number, fullname, email, password, admission, is_verified, alumni_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssis", $uniqueId, $idNumber, $fullname, $email, $password, $admission, $isVerified, $alumniId);
-
+        $stmt = $conn->prepare("INSERT INTO applicant (unique_id, id_number, fullname, email, password, contact, admission, dob, year_graduated, is_verified, alumni_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssssis", $uniqueId, $idNumber, $fullname, $email, $password, $contact, $admission, $dob, $yearGraduated, $isVerified, $alumniId);
         if ($stmt->execute()) {
             echo json_encode(["success" => true, "message" => "Data inserted successfully"]);
         } else {
             echo json_encode(["success" => false, "message" => "Failed to insert data"]);
         }
-
         $stmt->close();
         $conn->close();
     } else {
