@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $conn = getMySQLConnection();
     if ($conn) {
-        $stmt = $conn->prepare("INSERT INTO applicant (unique_id, id_number, fullname, email, password, contact, admission, dob, year_graduated, is_verified, alumni_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssssssis", $uniqueId, $idNumber, $fullname, $email, $password, $contact, $admission, $dob, $yearGraduated, $isVerified, $alumniId);
+        $stmt = $conn->prepare("INSERT INTO applicant (unique_id, id_number, fullname, email, password, admission, is_verified, alumni_id, contact, dob, year_graduated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssissss", $uniqueId, $idNumber, $fullname, $email, $password, $admission, $isVerified, $alumniId, $contact, $dob, $yearGraduated);
         if ($stmt->execute()) {
             echo json_encode(["success" => true, "message" => "Data inserted successfully"]);
         } else {
