@@ -16,11 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $alumniId = $_POST["alumni_id"];
     $comment = $_POST["comment"];
     $dateCommented = date("Y-m-d H:i:s");
+    $timestamp = round(microtime(true) * 1000); // Current timestamp in milliseconds
 
     $newComment = [
         "alumni_id" => $alumniId,
         "comment" => $comment,
         "date_commented" => $dateCommented,
+        "timestamp" => $timestamp, // Added timestamp field
         "forum_id" => $forumId,
         "heart_count" => 0,
         "read_mark" => 0
