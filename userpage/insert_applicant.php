@@ -1,19 +1,5 @@
 <?php
-$mysqlHost = "127.0.0.1";
-$mysqlUsername = "u510162695_fms_db_root";
-$mysqlPassword = "1Fms_db_root";
-$mysqlDatabase = "u510162695_fms_db";
-
-// Function to get MySQL connection
-function getMySQLConnection() {
-    global $mysqlHost, $mysqlUsername, $mysqlPassword, $mysqlDatabase;
-    $conn = new mysqli($mysqlHost, $mysqlUsername, $mysqlPassword, $mysqlDatabase);
-    if ($conn->connect_error) {
-        error_log("MySQL Connection failed: " . $conn->connect_error);
-        return false;
-    }
-    return $conn;
-}
+require_once '../includes/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $uniqueId = $_POST['unique_id'];
