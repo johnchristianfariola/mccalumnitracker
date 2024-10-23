@@ -29,14 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['forumName']) && !empty($_POST['forumName']) && isset($_POST['editor1'])) {
         $forumName = $_POST['forumName'];
         $forumDescription = $_POST['editor1'];
-        
-        // Get timestamp from POST or generate if not provided
-        $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : round(microtime(true) * 1000);
 
         // Debug: Log forum data
         error_log('Forum Name: ' . $forumName);
         error_log('Forum Description: ' . $forumDescription);
-        error_log('Timestamp: ' . $timestamp);
 
         // Function to check if forum already exists
         function forumExists($firebase, $forumName)
@@ -61,8 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'forumName' => $forumName,
                 'forumDescription' => $forumDescription,
                 'createdAt' => date('Y-m-d H:i:s'),
-                'alumniId' => $alumniId,
-                'timestamp' => (int)$timestamp // Convert to integer to ensure proper storage
+                'alumniId' => $alumniId
             ];
 
             try {
