@@ -336,10 +336,19 @@
             $('#addForumForm').on('submit', function (e) {
                 e.preventDefault();
 
+                // Create form data from the form
+                var formData = $(this).serializeArray();
+
+                // Add timestamp to the form data
+                formData.push({
+                    name: 'timestamp',
+                    value: Date.now() // This generates current timestamp in milliseconds
+                });
+
                 $.ajax({
                     url: 'forum_add.php',
                     type: 'POST',
-                    data: $(this).serialize(),
+                    data: $.param(formData), // Convert the array back to URL-encoded string
                     dataType: 'json',
                     success: function (response) {
                         if (response.status === 'success') {
@@ -363,11 +372,6 @@
                                 timer: 3000,
                                 showConfirmButton: true
                             });
-
-                            // Optional: Refresh the page after the error alert (comment out if not needed)
-                            // setTimeout(function() {
-                            //     window.location.reload();
-                            // }, 3000);
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -379,16 +383,10 @@
                             timer: 3000,
                             showConfirmButton: true
                         });
-
-                        // Optional: Refresh the page after the error alert (comment out if not needed)
-                        // setTimeout(function() {
-                        //     window.location.reload();
-                        // }, 3000);
                     }
                 });
             });
         });
-
 
         $(document).ready(function () {
             $('.add-comment-btn').click(function () {
