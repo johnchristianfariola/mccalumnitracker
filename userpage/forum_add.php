@@ -57,7 +57,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'forumName' => $forumName,
                 'forumDescription' => $forumDescription,
                 'createdAt' => date('Y-m-d H:i:s'),
-                'alumniId' => $alumniId
+                'alumniId' => $alumniId,
+                'timestamp' => round(microtime(true) * 1000) // Current timestamp in milliseconds
             ];
 
             try {
