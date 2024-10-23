@@ -20,15 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idNumber = $_POST['id_number'];
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
-    $password = $_POST['password']; // Ensure this is hashed
+    $contact = $_POST['contact'];
+    $sex = $_POST['sex'];
+    $dob = $_POST['dob'];
+    $yearGraduated = $_POST['year_graduated'];
     $admission = $_POST['admission'];
+    $programGraduated = $_POST['program_graduated'];
     $isVerified = $_POST['is_verified'];
-    $alumniId = $_POST['alumni_id'];
+    $password = $_POST['password'];
 
     $conn = getMySQLConnection();
     if ($conn) {
-        $stmt = $conn->prepare("INSERT INTO applicant (unique_id, id_number, fullname, email, password, admission, is_verified, alumni_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssis", $uniqueId, $idNumber, $fullname, $email, $password, $admission, $isVerified, $alumniId);
+        $stmt = $conn->prepare("INSERT INTO applicant (unique_id, id_number, fullname, email, contact, sex, dob, year_graduated, admission, program_graduated, is_verified, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssssis", $uniqueId, $idNumber, $fullname, $email, $contact, $sex, $dob, $yearGraduated, $admission, $programGraduated, $isVerified, $password);
 
         if ($stmt->execute()) {
             echo json_encode(["success" => true, "message" => "Data inserted successfully"]);
