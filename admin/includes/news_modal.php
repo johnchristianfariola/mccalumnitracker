@@ -21,58 +21,59 @@
         reader.readAsDataURL(event.target.files[0]);
     }
   
-    function validateAddForm() {
-    var isValid = true;
+function validateAddForm() {
+  var isValid = true;
 
-    // Validate news_title
-    var newsTitle = document.getElementById('news_title').value;
-    var newsTitleError = document.getElementById('news_title_error');
-    if (newsTitle.trim() === "") {
-        newsTitleError.style.display = 'block';
-        isValid = false;
-    } else {
-        newsTitleError.style.display = 'none';
-    }
+  // Synchronize CKEditor content with the textarea
+  if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['description']) {
+    CKEDITOR.instances['description'].updateElement();
+  }
 
-    // Validate news_author
-    var newsAuthor = document.getElementById('news_author').value;
-    var newsAuthorError = document.getElementById('news_author_error');
-    if (newsAuthor.trim() === "") {
-        newsAuthorError.style.display = 'block';
-        isValid = false;
-    } else {
-        newsAuthorError.style.display = 'none';
-    }
+  // Validate news_title
+  var newsTitle = document.getElementById('news_title').value;
+  var newsTitleError = document.getElementById('news_title_error');
+  if (newsTitle.trim() === "") {
+    newsTitleError.style.display = 'block';
+    isValid = false;
+  } else {
+    newsTitleError.style.display = 'none';
+  }
 
-    // Validate description
-    var description = document.getElementById('description').value;
-    var descriptionError = document.getElementById('description_error');
-    if (description.trim() === "") {
-        descriptionError.style.display = 'block';
-        isValid = false;
-    } else {
-        descriptionError.style.display = 'none';
-    }
+  // Validate news_author
+  var newsAuthor = document.getElementById('news_author').value;
+  var newsAuthorError = document.getElementById('news_author_error');
+  if (newsAuthor.trim() === "") {
+    newsAuthorError.style.display = 'block';
+    isValid = false;
+  } else {
+    newsAuthorError.style.display = 'none';
+  }
 
-    // Validate imageUpload
-    var imageUpload = document.getElementById('imageUploadAdd').value;
-    var imageUploadError = document.getElementById('imageUploadAdd_error');
-    if (imageUpload.trim() === "") {
-        imageUploadError.style.display = 'block';
-        isValid = false;
-    } else {
-        imageUploadError.style.display = 'none';
-    }
+  // Validate description
+  var description = document.getElementById('description').value;
+  var descriptionError = document.getElementById('description_error');
+  if (description.trim() === "") {
+    descriptionError.style.display = 'block';
+    isValid = false;
+  } else {
+    descriptionError.style.display = 'none';
+  }
 
-     // Your validation logic here
+  // Validate imageUpload
+  var imageUpload = document.getElementById('imageUploadAdd').value;
+  var imageUploadError = document.getElementById('imageUploadAdd_error');
+  if (imageUpload.trim() === "") {
+    imageUploadError.style.display = 'block';
+    isValid = false;
+  } else {
+    imageUploadError.style.display = 'none';
+  }
 
-     if (isValid) {
-        document.getElementById('submitButton').disabled = true;
-    }
-
-    return isValid;
-
-
+  if (isValid) {
+    document.getElementById('submitButton').disabled = true;
+  }
+  return isValid;
+}
 
 
 }
