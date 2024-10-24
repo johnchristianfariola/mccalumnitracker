@@ -41,6 +41,19 @@
     function validateAddForm() {
         var isValid = true;
 
+        // Synchronize CKEditor content with the textarea
+        if (typeof CKEDITOR !== 'undefined') {
+            if (CKEDITOR.instances['job_description']) {
+                CKEDITOR.instances['job_description'].updateElement();
+            }
+            if (CKEDITOR.instances['expertise_specification']) {
+                CKEDITOR.instances['expertise_specification'].updateElement();
+            }
+            if (CKEDITOR.instances['about_the_role']) {
+                CKEDITOR.instances['about_the_role'].updateElement();
+            }
+        }
+
         // Validate job_title
         var jobTitle = document.getElementById('job_title').value;
         var jobTitleError = document.getElementById('job_title_error');
@@ -97,6 +110,7 @@
 
         return isValid;
     }
+
 
     function validateEditForm() {
         var isValid = true;
