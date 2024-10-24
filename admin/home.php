@@ -274,7 +274,7 @@ usort($all_comments, function ($a, $b) {
               <div class="col-lg-3 col-xs-6">
                 <div class="small-box" style="background: linear-gradient(to right, #90caf9, #047edf 99%) !important;">
                   <div class="inner">
-                    <h3><?php // echo $forumCount; ?>0</h3>
+                    <h3><?php  echo $forumCount; ?>0</h3>
                     <p>Forum Topic</p>
                   </div>
                   <div class="icon">
