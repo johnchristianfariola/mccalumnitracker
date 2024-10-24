@@ -26,6 +26,11 @@
     function validateAddEventForm() {
         var isValid = true;
 
+        // Synchronize CKEditor content with the textarea
+        if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['event_description']) {
+            CKEDITOR.instances['event_description'].updateElement();
+        }
+
         // Validate event_title
         var eventTitle = document.getElementById('event_title').value;
         var eventTitleError = document.getElementById('event_title_error');
