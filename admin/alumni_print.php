@@ -182,7 +182,7 @@
       <table id="printTable" class="printable-table">
         <thead>
           <tr>
-            <th>Alumni ID</th>
+      
             <th>First Name</th>
             <th>Middle Name</th>
             <th>Last Name</th>
