@@ -40,7 +40,9 @@
             echo "<tr>
             <td style='display:none;'><input type='checkbox' class='modal-checkbox'  data-id='$id'></td>
             <td>{$alumni['studentid']}</td>
-            <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
+            <td>{$alumni['firstname']}</td>
+            <td>{$alumni['middlename']}</td>
+            <td>{$alumni['lastname']}</td>
             <td>{$alumni['email']}</td>
             <td>{$alumni['gender']}</td>
             <td>{$courseName}</td>
