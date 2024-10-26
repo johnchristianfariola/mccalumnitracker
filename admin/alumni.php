@@ -135,7 +135,9 @@
                         <tr>
                           <th style="display:none;"></th>
                           <th>Alumni ID</th>
-                          <th>Name</th>
+                          <th>First Name</th>
+                          <th>Middle Name</th>
+                          <th>Last Name</th>
                           <th>Email</th>
                           <th>Gender</th>
                           <th>Course</th>
