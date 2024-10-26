@@ -155,7 +155,7 @@ $filterWorkClassification = isset($_GET['work_classification']) ? sanitizeInput(
                       <thead>
                         <tr>
                           <th style="display:none;"></th>
-                          <th>Alumni ID</th>
+                      
                           <th>First Name</th>
                           <th>Middle Name</th>
                           <th>Last Name</th>
