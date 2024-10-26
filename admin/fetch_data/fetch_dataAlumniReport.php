@@ -35,7 +35,6 @@ if (is_array($alumniData) && count($alumniData) > 0) {
                         <td>{$courseName}</td>
                         <td>{$batchName}</td>
                         <td>{$alumni['work_status']}</td>
-                        <td>{$workClassificationName}</td>
                         <td>{$alumni['date_responded']}</td>
                         <td>
                             <a class='btn btn-warning btn-sm btn-flat open-modal' data-id='$id'>VIEW</a>
