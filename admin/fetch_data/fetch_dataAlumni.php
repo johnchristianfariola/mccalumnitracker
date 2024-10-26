@@ -49,7 +49,7 @@
             <td>{$batchName}</td>
             <td>
             <a class='btn btn-success btn-sm btn-flat open-modal' data-id='$id'>EDIT</a>
-            <a class='btn btn-danger btn-sm btn-flat open-delete' data-id='$id'>DELETE</a>
+            <!--<a class='btn btn-danger btn-sm btn-flat open-delete' data-id='$id'>DELETE</a>-->
             </td>
             </tr>";
         } 
