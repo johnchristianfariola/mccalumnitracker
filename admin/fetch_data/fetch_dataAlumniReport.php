@@ -31,7 +31,9 @@ if (is_array($alumniData) && count($alumniData) > 0) {
                         <td style='display:none;'><input type='checkbox' class='modal-checkbox' data-id='$id'></td>
                         
                         <td>{$alumni['studentid']}</td>
-                        <td>{$alumni['firstname']} {$alumni['middlename']} {$alumni['lastname']}</td>
+                        <td>{$alumni['firstname']}</td>
+                        <td>{$alumni['middlename']}</td>
+                        <td>{$alumni['lastname']}</td>
                         <td>{$courseName}</td>
                         <td>{$batchName}</td>
                         <td>{$alumni['work_status']}</td>
