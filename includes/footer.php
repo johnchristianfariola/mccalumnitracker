@@ -56,23 +56,11 @@ $galleryData = array_slice($galleryData, 0, 6);
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-white mb-3">Alumni Logo</h4>
                 <div class="row g-2 pt-2">
-                    <?php foreach ($galleryData as $galleryItem): ?>
-                        <?php if (isset($galleryItem['image_url']) && !empty($galleryItem['image_url'])): ?>
-                            <div class="col-4">
-                                <img class="img-fluid bg-light p-1" src="admin/<?php echo htmlspecialchars($galleryItem['image_url']); ?>" alt="<?php echo htmlspecialchars($galleryItem['gallery_name']); ?>">
-                            </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                <img src="../images/logo/alumni_logo.png" alt="">
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
-                <h4 class="text-white mb-3">Newsletter</h4>
-                <p></p>
-                <div class="position-relative mx-auto" style="max-width: 400px;">
-                    <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2 openFormButton">SignUp</button>
-                </div>
-            </div>
+        
         </div>
     </div>
     <div class="container">
