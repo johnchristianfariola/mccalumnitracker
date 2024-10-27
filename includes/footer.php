@@ -38,7 +38,7 @@ $galleryData = array_slice($galleryData, 0, 6);
                     <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
                     <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
                     <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
-                </div> 
+                </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-white mb-3">Gallery</h4>
@@ -46,7 +46,9 @@ $galleryData = array_slice($galleryData, 0, 6);
                     <?php foreach ($galleryData as $galleryItem): ?>
                         <?php if (isset($galleryItem['image_url']) && !empty($galleryItem['image_url'])): ?>
                             <div class="col-4">
-                                <img class="img-fluid bg-light p-1" src="admin/<?php echo htmlspecialchars($galleryItem['image_url']); ?>" alt="<?php echo htmlspecialchars($galleryItem['gallery_name']); ?>">
+                                <img class="img-fluid bg-light p-1"
+                                    src="admin/<?php echo htmlspecialchars($galleryItem['image_url']); ?>"
+                                    alt="<?php echo htmlspecialchars($galleryItem['gallery_name']); ?>">
                             </div>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -55,12 +57,14 @@ $galleryData = array_slice($galleryData, 0, 6);
 
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-white mb-3">Alumni Logo</h4>
-                <div class="row g-2 pt-2" style="boder-radius:50px">
-                <img src="../images/logo/alumni_logo.png" alt="">
+                <div class="row g-2 pt-2">
+                    <img src="../images/logo/alumni_logo.png" alt=""
+                        style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;">
                 </div>
+
             </div>
 
-        
+
         </div>
     </div>
     <div class="container">
