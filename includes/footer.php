@@ -54,7 +54,7 @@ $galleryData = array_slice($galleryData, 0, 6);
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <h4 class="text-white mb-3">Alumni Logo</h4>
+                <h4 class="text-white mb-3">Logo</h4>
                 <div class="row g-2 pt-2">
   <img src="../images/logo/alumni_logo.png" alt="" style="border-radius: 50%; width: 100px; height: auto; ">
 </div>
