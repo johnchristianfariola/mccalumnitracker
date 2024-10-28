@@ -181,7 +181,7 @@ date_default_timezone_set('Asia/Manila');
             <div class="pd-right">
               <!--  <a href="#"><i class="fas fa-ellipsis-v"></i></a>-->
                 <?php if ($is_logged_in && $_SESSION['alumni_id'] !== $alumni_id): ?>
-                    <button id="toggleChatbox" class="btn notika-btn-primary">
+                    <button id="toggleChatbox" class="btn notika-btn-primary" style="background-color:#007bff; colorwhite;">
                         <i class="fa fa-group"></i>&nbsp;&nbsp;Message
                     </button>
                 <?php endif; ?>
