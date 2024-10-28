@@ -11,6 +11,7 @@
     // Initialize Firebase URL
     $databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
     $firebase = new firebaseRDB($databaseURL);
+    
 
     // Function to calculate time difference in a human-readable format
     function timeAgo($timestamp)
@@ -261,22 +262,27 @@
                     }
                 }
 
+                // Get the current date
+                $currentDate = date('Y-m-d');
+
+                // Check if the current date matches the event date
+                $isEventToday = ($currentDate === $event_date);
+
                 // Only show the participation button if both batch and course are invited
-                if ($is_batch_invited && $is_course_invited) { ?>
-                <div style="margin-top:20px pull">
-                    <a id="participateBtn" href="javascript:void(0);" 
-                       data-event-id="<?php echo $event_id; ?>"
-                       data-alumni-id="<?php echo $alumni_id; ?>" 
-                       class="btn btn-success notika-btn-success" 
-                       <?php echo $participationExists ? "disabled" : ""; ?>>
-                        <i class="notika-icon notika-next"></i>
-                        <?php echo $participationExists
-                            ? "Already Participated"
-                            : "Participate"; ?>
-                    </a>
-                </div>
-                <?php }
-                ?>
+                if ($is_batch_invited && $is_course_invited && !$isEventToday) { ?>
+                    <div style="margin-top:20px pull">
+                        <a id="participateBtn" href="javascript:void(0);" 
+                           data-event-id="<?php echo $event_id; ?>"
+                           data-alumni-id="<?php echo $alumni_id; ?>" 
+                           class="btn btn-success notika-btn-success" 
+                           <?php echo $participationExists ? "disabled" : ""; ?>>
+                            <i class="notika-icon notika-next"></i>
+                            <?php echo $participationExists
+                                ? "Already Participated"
+                                : "Participate"; ?>
+                        </a>
+                    </div>
+                <?php } ?>
                 <br><br>
 
                 <div class="comments-container">
