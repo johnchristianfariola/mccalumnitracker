@@ -84,7 +84,7 @@ $categoryData = json_decode($firebase->retrieve("category"), true) ?: [];
               <!-- Profile Image -->
               <div class="box box-primary">
                 <div class="box-body box-profile">
-                  <img class="profile-user-img img-responsive img-circle"  style="  width: 70px; height: 70px; border-radius: 50%; object-fit: cover;"
+                  <img class="profile-user-img img-responsive img-circle"  style="  width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"
                     src="../userpage/<?php echo !empty($alumni['profile_url']) ? $alumni['profile_url'] : 'uploads/profile.jpg'; ?>"
                     alt="User profile picture">
 
