@@ -265,17 +265,17 @@
                 // Get the current date
                 $currentDate = date('Y-m-d');
 
-                // Check if the current date matches the event date
-                $isEventToday = ($currentDate === $event_date);
+                // Check if the current date is before the event date
+                $isEventUpcoming = ($currentDate < $event_date);
 
-                // Only show the participation button if both batch and course are invited
-                if ($is_batch_invited && $is_course_invited && !$isEventToday) { ?>
+                // Only show the participation button if both batch and course are invited and the event is upcoming
+                if ($is_batch_invited && $is_course_invited && $isEventUpcoming) { ?>
                     <div style="margin-top:20px pull">
                         <a id="participateBtn" href="javascript:void(0);" 
-                           data-event-id="<?php echo $event_id; ?>"
-                           data-alumni-id="<?php echo $alumni_id; ?>" 
-                           class="btn btn-success notika-btn-success" 
-                           <?php echo $participationExists ? "disabled" : ""; ?>>
+                        data-event-id="<?php echo $event_id; ?>"
+                        data-alumni-id="<?php echo $alumni_id; ?>" 
+                        class="btn btn-success notika-btn-success" 
+                        <?php echo $participationExists ? "disabled" : ""; ?>>
                             <i class="notika-icon notika-next"></i>
                             <?php echo $participationExists
                                 ? "Already Participated"
