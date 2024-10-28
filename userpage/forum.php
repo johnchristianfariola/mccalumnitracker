@@ -123,7 +123,7 @@
                                 <div class="sale-statistic-inner notika-shadow mg-tb-30" style="border-radius: 1rem">
                                     <div class="curved-inner-pro">
                                         <div class="image-section">
-                                            <img class="profile" src="<?php echo htmlspecialchars($profile_url); ?>"
+                                            <img class="profile" style="  width: 55px; height: 40px; border-radius: 50%; object-fit: cover;" src="<?php echo htmlspecialchars($profile_url); ?>"
                                                 alt="profile image">
                                         </div>
                                         <div class="info-section">
