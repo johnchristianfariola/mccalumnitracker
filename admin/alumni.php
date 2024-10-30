@@ -299,52 +299,45 @@
   <script>
     $(document).ready(function () {
       // Handle alumni delete form submission
-      $(document).on('click', '.open-delete', function () {
-        var id = $(this).data('id');
-        $('.deleteId').val(id); // Store the ID in a hidden input field
-        $('#deleteModal').modal('show'); // Show the delete confirmation modal
-    });
+      $('#deleteModal form').on('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
 
-    // Handle the confirmation of deletion
-    $('.btn-confirm-delete').on('click', function () {
-        var id = $('.deleteId').val(); // Retrieve the ID from the hidden input field
+        var formData = $(this).serialize(); // Serialize form data
+
         $.ajax({
-            type: 'POST',
-            url: 'alumni_delete.php', // The URL of your PHP script for deleting alumni
-            data: { id: id }, // Send the ID to the server
-            dataType: 'json',
-            success: function (response) {
-                if (response.status === 'success') {
-                    showAlert('success', response.message);
-                    $('#deleteModal').modal('hide'); // Hide the modal after successful deletion
-                    location.reload(); // Reload the page to reflect changes
-                } else {
-                    showAlert('error', response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error: ' + status + ' ' + error);
-                showAlert('error', 'An unexpected error occurred.');
+          type: 'POST',
+          url: 'alumni_delete.php', // The URL of your PHP script for deleting alumni
+          data: formData,
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else {
+              showAlert('error', response.message);
             }
+            $('#deleteModal').modal('hide'); // Hide the modal after the operation
+          },
+          error: function () {
+            showAlert('error', 'An unexpected error occurred.');
+          }
         });
-    });
+      });
 
-    // Function to display SweetAlert messages
-    function showAlert(type, message) {
+      // Function to display SweetAlert messages
+      function showAlert(type, message) {
         Swal.fire({
-            position: 'top-end',
-            icon: type,
-            title: message,
-            showConfirmButton: false,
-            timer: 2500,
-            willClose: () => {
-                if (type === 'success') {
-                    location.reload(); // Reload the page after the success message
-                }
+          position: 'top-end',
+          icon: type,
+          title: message,
+          showConfirmButton: false,
+          timer: 2500,
+          willClose: () => {
+            if (type === 'success') {
+              location.reload(); // Reload the page after the success message
             }
+          }
         });
-    }
-});
+      }
 
       // Existing form submissions (for add operations)
       $('#addAlumniForm').on('submit', function (event) {
