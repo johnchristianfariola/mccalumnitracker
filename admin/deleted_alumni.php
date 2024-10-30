@@ -48,7 +48,7 @@ $totalCount = 0;
         <!-- Content Header (Page header) -->
         <section class="content-header box-header-background">
           <h1>
-            Alumni Status
+            Deleted Alumni
           </h1>
           <div class="box-inline">
 
