@@ -53,19 +53,19 @@
 
         </ul>
       </li>
-        <li class="treeview">
+      <li class="treeview">
         <a href="#">
-        <i class="fa fa-check-square-o "></i>
+          <i class="fa fa-check-square-o "></i>
           <span>Survey</span>
           <span class="pull-right-container">
-          
+
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
         <ul class="treeview-menu">
           <li><a href="survey.php"><i class="fa fa-angle-right"></i> Survey List</a></li>
         </ul>
-      </li> 
+      </li>
       <li class="treeview">
         <a href="#">
           <i class="fa fa-book"></i>
@@ -76,7 +76,7 @@
           </span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="survey_report.php"><i class="fa fa-angle-right"></i> Survey Report</a></li> 
+          <li><a href="survey_report.php"><i class="fa fa-angle-right"></i> Survey Report</a></li>
           <li><a href="alumni_report.php"><i class="fa fa-angle-right"></i> Alumni Report</a></li>
           <li><a href="event_report.php"><i class="fa fa-angle-right"></i> Event Report</a></li>
 
@@ -98,6 +98,24 @@
 
         </ul>
       -->
+
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-envelope"></i>
+          <span>Archive</span>
+          <span class="pull-right-container">
+
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href=""><i class="fa fa-angle-right"></i> Alumni</a></li>
+          <li><a href=""><i class="fa fa-angle-right"></i> News</a></li>
+          <li><a href=""><i class="fa fa-angle-right"></i> Event</a></li>
+          <li><a href=""><i class="fa fa-angle-right"></i> Job</a></li>
+          <li><a href=""><i class="fa fa-angle-right"></i> Survey</a></li>
+
+        </ul>
 
       </li>
     </ul>
