@@ -140,8 +140,8 @@ echo '</script>';
               <div class="col-sm-6">
                 <div class="row">
                   <div class="col-sm-6 mb-3">
-                    <label for="course" class="col-form-label">Course</label>
-                    <select class="form-control" id="course" name="course">
+                    <label for="course" class="col-form-label" >Course</label>
+                    <select class="form-control" id="course" name="course" required>
                       <option value="">Select Course</option>
                       <?php
                       if (is_array($data)) {
@@ -156,7 +156,7 @@ echo '</script>';
 
                   <div class="col-sm-6 mb-3">
                     <label for="batch" class="col-form-label">Batch Year</label>
-                    <select class="form-control" id="batch" name="batch">
+                    <select class="form-control" id="batch" name="batch" required>
                       <option value="">Select Batch Year</option>
                       <?php
                       if (!empty($batchYears) && is_array($batchYears)) {
@@ -230,7 +230,7 @@ echo '</script>';
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="edit_firstname" class="col-form-label">Firstname</label>
-                    <input type="text" class="form-control" id="editFirstname" name="edit_firstname" required>
+                    <input type="text" class="form-control" id="editFirstname" name="edit_firstname">
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="edit_lastname" class="col-form-label">Lastname</label>
@@ -239,7 +239,7 @@ echo '</script>';
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_middlename" class="col-form-label">Middle Name</label>
-                    <input type="text" class="form-control" id="editMiddlename" name="edit_middlename" required>
+                    <input type="text" class="form-control" id="editMiddlename" name="edit_middlename">
                   </div>
 
                   <div class="col-sm-6 mb-3">
@@ -316,7 +316,7 @@ echo '</script>';
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="edit_course" class="col-form-label">Course</label>
-                    <select class="form-control" id="editCourse" name="edit_course">
+                    <select class="form-control" id="editCourse" name="edit_course" required>
                       <option value="">Select Course</option>
                       <?php
                       if (is_array($data)) {
@@ -331,7 +331,7 @@ echo '</script>';
 
                   <div class="col-sm-6 mb-3">
                     <label for="edit_batch" class="col-form-label">Batch Year</label>
-                    <select class="form-control" id="editBatch" name="edit_batch">
+                    <select class="form-control" id="editBatch" name="edit_batch" required>
                       <option value="">Select Batch Year</option>
                       <?php
                       if (!empty($batchYears) && is_array($batchYears)) {

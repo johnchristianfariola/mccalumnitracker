@@ -15,11 +15,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Include FirebaseRDB class and initialize
     require_once 'includes/firebaseRDB.php';
     require_once 'includes/config.php'; // Include your updated config file
-
     $firebase = new firebaseRDB($databaseURL);
 
     // Extract ID to delete
     $id = $_POST['id'];
+
+    // Function to move alumni data to deleted_alumni node in Firebase
+    function moveAlumniDataToDeleted($firebase, $id) {
+        $table = 'alumni';
+        $deletedTable = 'deleted_alumni';
+
+        // Retrieve the alumni data
+        $alumniData = $firebase->retrieve($table . '/' . $id);
+        $alumniData = json_decode($alumniData, true);
+
+        if ($alumniData) {
+            // Debug: Log the data being moved
+            error_log('Alumni data to move: ' . print_r($alumniData, true));
+
+            // Insert the data into deleted_alumni node
+            // Ensure the path is correct and outside the alumni node
+            $result = $firebase->update($deletedTable, $id, $alumniData);
+            return $result;
+        } else {
+            // Debug: Log if data retrieval failed
+            error_log('Failed to retrieve alumni data for ID: ' . $id);
+        }
+        return null;
+    }
 
     // Function to delete alumni data from Firebase
     function deleteAlumniDataFromFirebase($firebase, $id) {
@@ -34,17 +57,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$mysqlConn) {
             return false;
         }
-
         $query = "DELETE FROM applicant WHERE unique_id = ?";
         $stmt = $mysqlConn->prepare($query);
         $stmt->bind_param("s", $id);
         $result = $stmt->execute();
-
         $stmt->close();
         $mysqlConn->close();
-
         return $result;
     }
+
+    // Move alumni data to deleted_alumni node
+    $moveResult = moveAlumniDataToDeleted($firebase, $id);
 
     // Perform delete in Firebase
     $firebaseResult = deleteAlumniDataFromFirebase($firebase, $id);
@@ -53,7 +76,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mysqlResult = deleteAlumniDataFromMySQL($id);
 
     // Check results
-    if ($firebaseResult === null && !$mysqlResult) {
+    if ($moveResult === null) {
+        $response['status'] = 'error';
+        $response['message'] = 'Failed to move alumni data to deleted_alumni.';
+    } elseif ($firebaseResult === null && !$mysqlResult) {
         $response['status'] = 'error';
         $response['message'] = 'Failed to delete alumni data from both Firebase and MySQL.';
         error_log('Firebase error: Failed to delete alumni data.');
