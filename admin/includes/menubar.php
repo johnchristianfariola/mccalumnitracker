@@ -110,10 +110,10 @@
         </a>
         <ul class="treeview-menu">
           <li><a href="job.php"><i class="fa fa-angle-right"></i> Alumni</a></li>
-          <li><a href=""><i class="fa fa-angle-right"></i> News</a></li>
-          <li><a href=""><i class="fa fa-angle-right"></i> Event</a></li>
-          <li><a href=""><i class="fa fa-angle-right"></i> Job</a></li>
-          <li><a href=""><i class="fa fa-angle-right"></i> Survey</a></li>
+          <li><a href="job.php"><i class="fa fa-angle-right"></i> News</a></li>
+          <li><a href="job.php"><i class="fa fa-angle-right"></i> Event</a></li>
+          <li><a href="job.php"><i class="fa fa-angle-right"></i> Job</a></li>
+          <li><a href="job.php"><i class="fa fa-angle-right"></i> Survey</a></li>
 
         </ul>
 
