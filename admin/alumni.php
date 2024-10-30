@@ -299,29 +299,30 @@
   <script>
     $(document).ready(function () {
       // Handle alumni delete form submission
-
-     $('#deleteModal form').on('submit', function (event) {
+      $('#deleteModal form').on('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
-        var id = $('.btn-confirm-delete').data('id'); // Get the ID from the button
+
+        var formData = $(this).serialize(); // Serialize form data
+
         $.ajax({
-            type: 'POST',
-            url: 'alumni_delete.php', // The URL of your PHP script for deleting alumni data
-            data: { id: id },
-            dataType: 'json',
-            success: function (response) {
-                if (response.status === 'success') {
-                    showAlert('success', response.message);
-                } else {
-                    showAlert('error', response.message);
-                }
-                $('#deleteModal').modal('hide'); // Hide the modal after the operation
-            },
-            error: function () {
-                showAlert('error', 'An unexpected error occurred.');
+          type: 'POST',
+          url: 'alumni_delete.php', // The URL of your PHP script for deleting alumni
+          data: formData,
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              showAlert('success', response.message);
+            } else {
+              showAlert('error', response.message);
             }
+            $('#deleteModal').modal('hide'); // Hide the modal after the operation
+          },
+          error: function () {
+            showAlert('error', 'An unexpected error occurred.');
+          }
         });
-    });
-    
+      });
+
       // Function to display SweetAlert messages
       function showAlert(type, message) {
         Swal.fire({
