@@ -321,6 +321,7 @@
             }
         });
     });
+    
       // Function to display SweetAlert messages
       function showAlert(type, message) {
         Swal.fire({
