@@ -101,8 +101,8 @@
 
       <li class="treeview">
         <a href="#">
-          <i class="fa fa-envelope"></i>
-          <span>Archive</span>
+          <i class="fa fa-trash"></i>
+          <span>Trash</span>
           <span class="pull-right-container">
 
             <i class="fa fa-angle-left pull-right"></i>

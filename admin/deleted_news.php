@@ -2,52 +2,6 @@
 <?php include 'includes/header.php'; ?>
 
 <head>
-    <?php
-    $coursesData = $firebase->retrieve("course");
-    $departmentsData = $firebase->retrieve("departments");
-    $batchYearsData = $firebase->retrieve("batch_yr");
-    $alumniData = $firebase->retrieve("alumni");
-
-    // Decode JSON data into associative arrays
-    $courses = json_decode($coursesData, true) ?: [];
-    $departments = json_decode($departmentsData, true) ?: [];
-    $batchYears = json_decode($batchYearsData, true) ?: [];
-    $alumni = json_decode($alumniData, true) ?: [];
-
-    // Prepare an array to store courses filtered by department ID
-    $filteredCourses = [];
-
-    // Count the total number of alumni
-    $totalAlumniCount = count($alumni);
-
-    // Iterate through courses and filter by department ID
-    foreach ($courses as $courseId => $course) {
-        $departmentId = isset($course['department']) ? $course['department'] : null;
-
-        if ($departmentId && isset($departments[$departmentId])) {
-            $departmentName = isset($departments[$departmentId]['Department Name']) ? $departments[$departmentId]['Department Name'] : 'Unknown';
-
-            // Initialize array to store batch years
-            $courseBatchYears = [];
-
-            // Find batch years for current course
-            foreach ($batchYears as $batchId => $batch) {
-                $courseBatchYears[$batchId] = $batch['batch_yrs'];
-            }
-
-            // Sort batch years in ascending order
-            asort($courseBatchYears);
-
-            // Build the filtered course data
-            $filteredCourses[$departmentName][] = [
-                'courseId' => $courseId,
-                'courseCode' => isset($course['courCode']) ? $course['courCode'] : 'Unknown',
-                'courseName' => isset($course['course_name']) ? $course['course_name'] : 'Unknown',
-                'batchYears' => $courseBatchYears
-            ];
-        }
-    }
-    ?>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -61,11 +15,8 @@
             <div class="main-container">
                 <!-- Content Header (Page header) -->
                 <section class="content-header box-header-background">
-                    <h1>Deleted Alumni List</h1>
+                    <h1>Deleted News List</h1>
                     <div class="box-inline">
-                        <a href="#addnew" data-toggle="modal" class="btn-add-class btn btn-primary btn-sm btn-flat">
-                            <i class="fa fa-trash"></i>&nbsp;&nbsp; Delete All
-                        </a>
                         <div class="search-container">
                             <input type="text" class="search-input" id="search-input" placeholder="Search...">
                             <button class="search-button" onclick="filterTable()">
@@ -82,7 +33,7 @@
                     <ol class="breadcrumb">
                         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li>Archive</li>
-                        <li class="active" style="color:white; !important">Deleted Alumni List</li>
+                        <li class="active" style="color:white; !important">Deleted News List</li>
                     </ol>
                 </section>
 
@@ -118,20 +69,16 @@
                                         <table id="example1" class="table table-bordered printable-table">
                                             <thead>
                                                 <tr>
-                                                    <th style="display:none;"></th>
-                                                    <th>Alumni ID</th>
-                                                    <th>First Name</th>
-                                                    <th>Middle Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Email</th>
-                                                    <th>Gender</th>
-                                                    <th>Course</th>
-                                                    <th>Batch</th>
-                                                    <th>Tools</th>
+                                                    <th>Thumbnails</th>
+                                                    <th>Title</th>
+                                                    <th>Author</th>
+                                                    <th width="30%">Description</th>
+                                                    <th width="10%">Date Posted</th>
+                                                    <th width="10%">Tools</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php include 'fetch_data/fetch_deletedAlumni.php' ?>
+                                                <?php include 'fetch_data/fetch_deletedNews.php' ?>
                                             </tbody>
                                         </table>
                                         <!-- Modal -->
@@ -149,26 +96,25 @@
 
     <?php include 'includes/scripts.php'; ?>
 </body>
-
 <script>
     $(document).ready(function () {
         // Use event delegation to handle delete modal
         $(document).on('click', '.open-delete', function () {
             var id = $(this).data('id');
             $.ajax({
-                url: 'deleted_alumni_row.php',
+                url: 'deleted_news_row.php',
                 type: 'GET',
                 data: { id: id },
                 dataType: 'json',
                 success: function (response) {
-                    // Populate modal with alumni name
-                    $('.deleteId').val(id);
-                    var fullName = response.firstname + ' ' + response.middlename + ' ' + response.lastname;
-                    $('.editFirstname, .editMiddlename, .editLastname').text(fullName);
-                    $('.editStudentid').text(response.studentid);
+                    // Populate modal with news details
+                    $('.deleteNewsId').val(id);
+                    $('.deleteNewsTitle').text(response.news_title);
+                    $('.deleteNewsAuthor').text(response.news_author);
+                    $('.deleteNewsDescription').text(response.news_description);
 
                     // Show the delete confirmation modal
-                    $('#deleteModal').modal('show');
+                    $('#deleteNewsModal').modal('show');
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX Error: ' + status + ' ' + error);
@@ -176,19 +122,19 @@
             });
         });
 
-        // Handle alumni delete form submission
-        $('#deleteModal form').on('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
+        // Handle news delete form submission
+        $('#deleteNewsForm').on('submit', function (event) {
+            event.preventDefault();
 
-            var formData = $(this).serialize(); // Serialize form data
+            var formData = $(this).serialize();
 
             $.ajax({
                 type: 'POST',
-                url: 'deleted_alumni_delete.php', // The URL of your PHP script for deleting alumni
+                url: 'deleted_news_delete.php',
                 data: formData,
                 dataType: 'json',
                 success: function (response) {
-                    $('#deleteModal').modal('hide'); // Hide the modal after the operation
+                    $('#deleteNewsModal').modal('hide');
                     if (response.status === 'success') {
                         showAlert('success', response.message);
                     } else {
@@ -196,29 +142,29 @@
                     }
                 },
                 error: function () {
-                    $('#deleteModal').modal('hide'); // Hide the modal in case of error
+                    $('#deleteNewsModal').modal('hide');
                     showAlert('error', 'An unexpected error occurred.');
                 }
             });
         });
 
-        // Use event delegation to handle retrieve modal
+        // Use event delegation to handle restore modal
         $(document).on('click', '.open-retrieve', function () {
             var id = $(this).data('id');
             $.ajax({
-                url: 'deleted_alumni_row.php',
+                url: 'deleted_news_row.php',
                 type: 'GET',
                 data: { id: id },
                 dataType: 'json',
                 success: function (response) {
-                    // Populate modal with alumni name
-                    $('.retrieveId').val(id);
-                    var fullName = response.firstname + ' ' + response.middlename + ' ' + response.lastname;
-                    $('.editFirstname, .editMiddlename, .editLastname').text(fullName);
-                    $('.editStudentid').text(response.studentid);
+                    // Populate modal with news details
+                    $('.restoreNewsId').val(id);
+                    $('.restoreNewsTitle').text(response.news_title);
+                    $('.restoreNewsAuthor').text(response.news_author);
+                    $('.restoreNewsDescription').text(response.news_description);
 
-                    // Show the retrieve confirmation modal
-                    $('#retrieveModal').modal('show');
+                    // Show the restore confirmation modal
+                    $('#restoreNewsModal').modal('show');
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX Error: ' + status + ' ' + error);
@@ -226,19 +172,20 @@
             });
         });
 
-        // Handle alumni retrieve form submission
-        $('#retrieveModal form').on('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
+        // Handle news restore form submission
+        $('#restoreNewsForm').on('submit', function (event) {
+            event.preventDefault();
 
-            var formData = $(this).serialize(); // Serialize form data
+            var formData = $(this).serialize();
 
             $.ajax({
                 type: 'POST',
-                url: 'deleted_alumni_retrieve.php', // The URL of your PHP script for retrieving alumni
+                url: 'deleted_news_retrieve.php',
                 data: formData,
                 dataType: 'json',
                 success: function (response) {
-                    $('#retrieveModal').modal('hide'); // Hide the modal after the operation
+                    $('#restoreNewsModal').modal('hide');
+                    $('.restoreNewsTitle').text(response.news_title);
                     if (response.status === 'success') {
                         showAlert('success', response.message);
                     } else {
@@ -246,7 +193,7 @@
                     }
                 },
                 error: function () {
-                    $('#retrieveModal').modal('hide'); // Hide the modal in case of error
+                    $('#restoreNewsModal').modal('hide');
                     showAlert('error', 'An unexpected error occurred.');
                 }
             });
@@ -262,12 +209,11 @@
                 timer: 2500,
                 willClose: () => {
                     if (type === 'success') {
-                        location.reload(); // Reload the page after the success message
+                        location.reload();
                     }
                 }
             });
         }
     });
 </script>
-
 </html>
