@@ -1,50 +1,75 @@
 <?php
-session_start(); // Start the session
-
+session_start();
 header('Content-Type: application/json');
 
-$response = array('status' => 'error', 'message' => 'An unexpected error occurred.');
+// Function to send a JSON response
+function sendResponse($status, $message) {
+    echo json_encode(['status' => $status, 'message' => $message]);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure ID is provided
     if (!isset($_POST['id']) || empty($_POST['id'])) {
-        $response['message'] = 'ID is required.';
-        echo json_encode($response);
-        exit;
+        sendResponse('error', 'ID is required.');
     }
 
     // Include FirebaseRDB class and initialize
     require_once 'includes/firebaseRDB.php';
     require_once 'includes/config.php'; // Include your config file
+
     $firebase = new firebaseRDB($databaseURL);
 
     // Extract ID to delete
     $id = $_POST['id'];
 
-    // Function to delete survey data
+    // Function to move survey data to deleted_survey node
+    function moveSurveyDataToDeleted($firebase, $id) {
+        $table = 'survey_set';
+        $deletedTable = 'deleted_survey_set';
+
+        // Retrieve the survey data
+        $surveyData = $firebase->retrieve($table . '/' . $id);
+        $surveyData = json_decode($surveyData, true);
+
+        if ($surveyData) {
+            // Log the data being moved
+            error_log('Survey data to move: ' . print_r($surveyData, true));
+
+            // Add deletion timestamp
+            $surveyData['deleted_at'] = date('Y-m-d H:i:s');
+
+            // Insert the data into deleted_survey node
+            $result = $firebase->update($deletedTable, $id, $surveyData);
+            return $result;
+        } else {
+            // Log if data retrieval failed
+            error_log('Failed to retrieve survey data for ID: ' . $id);
+        }
+        return null;
+    }
+
+    // Function to delete survey data from Firebase
     function deleteSurveyData($firebase, $id) {
-        $table = 'survey_set'; // Assuming 'survey' is your Firebase database node for survey data
-        $result = $firebase->delete($table, $id);
-        return $result;
+        $table = 'survey_set';
+        return $firebase->delete($table, $id);
     }
 
-    // Perform delete
-    $result = deleteSurveyData($firebase, $id);
+    // Move survey data to deleted_survey node
+    $moveResult = moveSurveyDataToDeleted($firebase, $id);
 
-    // Check result
-    if ($result === null) {
-        $response['message'] = 'Failed to delete survey data in Firebase.';
-        error_log('Firebase error: Failed to delete survey data.');
+    // Perform delete in Firebase
+    $deleteResult = deleteSurveyData($firebase, $id);
+
+    // Check results
+    if ($moveResult === null) {
+        sendResponse('error', 'Failed to move survey data to deleted_survey.');
+    } elseif ($deleteResult === null) {
+        sendResponse('error', 'Failed to delete survey data from Firebase.');
     } else {
-        $response['status'] = 'success';
-        $response['message'] = 'survey data deleted successfully!';
+        sendResponse('success', 'Survey data moved to Archive and deleted successfully!');
     }
-
-    echo json_encode($response);
-    exit;
 } else {
-    $response['message'] = 'Invalid request method.';
-    echo json_encode($response);
-    exit;
+    sendResponse('error', 'Invalid request method.');
 }
 ?>
