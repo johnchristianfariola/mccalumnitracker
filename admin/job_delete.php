@@ -1,14 +1,17 @@
 <?php
+session_start();
 header('Content-Type: application/json');
+
+// Function to send a JSON response
+function sendResponse($status, $message) {
+    echo json_encode(['status' => $status, 'message' => $message]);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure ID is provided
     if (!isset($_POST['id']) || empty($_POST['id'])) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'ID is required.'
-        ]);
-        exit;
+        sendResponse('error', 'ID is required.');
     }
 
     // Include FirebaseRDB class and initialize
@@ -19,33 +22,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Extract ID to delete
     $id = $_POST['id'];
 
-    // Function to delete job data
-    function deleteJobData($firebase, $id)
-    {
-        $table = 'job'; // Assuming 'job' is your Firebase database node for job data
-        $result = $firebase->delete($table, $id);
-        return $result;
+    // Function to move job data to deleted_job node
+    function moveJobDataToDeleted($firebase, $id) {
+        $table = 'job';
+        $deletedTable = 'deleted_job';
+
+        // Retrieve the job data
+        $jobData = $firebase->retrieve($table . '/' . $id);
+        $jobData = json_decode($jobData, true);
+
+        if ($jobData) {
+            // Log the data being moved
+            error_log('Job data to move: ' . print_r($jobData, true));
+
+            // Insert the data into deleted_job node
+            $jobData['deleted_at'] = date('Y-m-d H:i:s'); // Add deletion timestamp
+            $result = $firebase->update($deletedTable, $id, $jobData);
+            return $result;
+        } else {
+            // Log if data retrieval failed
+            error_log('Failed to retrieve job data for ID: ' . $id);
+        }
+        return null;
     }
 
-    // Perform delete
-    $result = deleteJobData($firebase, $id);
+    // Function to delete job data from Firebase
+    function deleteJobData($firebase, $id) {
+        $table = 'job';
+        return $firebase->delete($table, $id);
+    }
 
-    // Check result
-    if ($result === null) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Failed to delete job data in Firebase.'
-        ]);
-        error_log('Firebase error: Failed to delete job data.');
+    // Move job data to deleted_job node
+    $moveResult = moveJobDataToDeleted($firebase, $id);
+
+    // Perform delete in Firebase
+    $deleteResult = deleteJobData($firebase, $id);
+
+    // Check results
+    if ($moveResult === null) {
+        sendResponse('error', 'Failed to move job data to deleted_job.');
+    } elseif ($deleteResult === null) {
+        sendResponse('error', 'Failed to delete job data from Firebase.');
     } else {
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Job data deleted successfully!'
-        ]);
+        sendResponse('success', 'Job data moved to deleted_job and deleted successfully!');
     }
 } else {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Invalid request method.'
-    ]);
+    sendResponse('error', 'Invalid request method.');
 }
+?>

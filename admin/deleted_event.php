@@ -15,7 +15,7 @@
             <div class="main-container">
                 <!-- Content Header (Page header) -->
                 <section class="content-header box-header-background">
-                    <h1>Deleted News List</h1>
+                    <h1>Deleted Event List</h1>
                     <div class="box-inline">
                         <div class="search-container">
                             <input type="text" class="search-input" id="search-input" placeholder="Search...">
@@ -33,7 +33,7 @@
                     <ol class="breadcrumb">
                         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li>Archive</li>
-                        <li class="active" style="color:white; !important">Deleted News List</li>
+                        <li class="active" style="color:white; !important">Deleted Event List</li>
                     </ol>
                 </section>
 
@@ -69,7 +69,7 @@
                                         <table id="example1" class="table table-bordered printable-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Thumbnails</th>
+                                                    <th>Thumnails</th>
                                                     <th>Title</th>
                                                     <th>Author</th>
                                                     <th width="30%">Description</th>
@@ -78,7 +78,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php include 'fetch_data/fetch_deletedNews.php' ?>
+                                                <?php include 'fetch_data/fetch_deleteEvent.php' ?>
                                             </tbody>
                                         </table>
                                         <!-- Modal -->
@@ -97,44 +97,42 @@
     <?php include 'includes/scripts.php'; ?>
 </body>
 <script>
-   $(document).ready(function () {
+$(document).ready(function () {
     // Handle restore button click
     $(document).on('click', '.open-retrieve', function () {
         var id = $(this).data('id');
 
-        // Fetch news details using AJAX
+        // Fetch event details using AJAX
         $.ajax({
-            url: 'deleted_news_row.php',
+            url: 'deleted_event_row.php',
             type: 'GET',
             data: { id: id },
             dataType: 'json',
             success: function (response) {
-                // Populate restore modal with news details
+                // Populate restore modal with event details
                 $('.retrieveId').val(id);
-                $('.restoreNewsTitle').text(response.news_title);
-                $('.restoreNewsAuthor').text(response.news_author);
-                $('.restoreNewsDescription').text(response.news_description);
-                $('#restoreNewsModal').modal('show');
+                $('.restoreEventTitle').text(response.event_title);
+                $('#restoreEventModal').modal('show');
             },
             error: function (xhr, status, error) {
                 console.error('AJAX Error: ' + status + ' ' + error);
-                showAlert('error', 'Failed to fetch news details.');
+                showAlert('error', 'Failed to fetch event details.');
             }
         });
     });
 
     // Handle restore form submission
-    $('#restoreNewsForm').on('submit', function (event) {
+    $('#restoreEventForm').on('submit', function (event) {
         event.preventDefault();
         var formData = $(this).serialize();
 
         $.ajax({
             type: 'POST',
-            url: 'deleted_news_retrieve.php',
+            url: 'deleted_event_retrieve.php',
             data: formData,
             dataType: 'json',
             success: function (response) {
-                $('#restoreNewsModal').modal('hide');
+                $('#restoreEventModal').modal('hide');
                 if (response.status === 'success') {
                     showAlert('success', response.message);
                 } else {
@@ -142,7 +140,7 @@
                 }
             },
             error: function () {
-                $('#restoreNewsModal').modal('hide');
+                $('#restoreEventModal').modal('hide');
                 showAlert('error', 'An unexpected error occurred.');
             }
         });
@@ -152,39 +150,37 @@
     $(document).on('click', '.open-delete', function () {
         var id = $(this).data('id');
 
-        // Fetch news details using AJAX
+        // Fetch event details using AJAX
         $.ajax({
-            url: 'deleted_news_row.php',
+            url: 'deleted_event_row.php',
             type: 'GET',
             data: { id: id },
             dataType: 'json',
             success: function (response) {
-                // Populate delete modal with news details
+                // Populate delete modal with event details
                 $('.deleteId').val(id);
-                $('.deleteNewsTitle').text(response.news_title);
-                $('.deleteNewsAuthor').text(response.news_author);
-                $('.deleteNewsDescription').text(response.news_description);
-                $('#deleteNewsModal').modal('show');
+                $('.deleteEventTitle').text(response.event_title);
+                $('#deleteEventModal').modal('show');
             },
             error: function (xhr, status, error) {
                 console.error('AJAX Error: ' + status + ' ' + error);
-                showAlert('error', 'Failed to fetch news details.');
+                showAlert('error', 'Failed to fetch event details.');
             }
         });
     });
 
     // Handle delete form submission
-    $('#deleteNewsForm').on('submit', function (event) {
+    $('#deleteEventForm').on('submit', function (event) {
         event.preventDefault();
         var formData = $(this).serialize();
 
         $.ajax({
             type: 'POST',
-            url: 'deleted_news_delete.php',
+            url: 'deleted_event_delete.php',
             data: formData,
             dataType: 'json',
             success: function (response) {
-                $('#deleteNewsModal').modal('hide');
+                $('#deleteEventModal').modal('hide');
                 if (response.status === 'success') {
                     showAlert('success', response.message);
                 } else {
@@ -192,7 +188,7 @@
                 }
             },
             error: function () {
-                $('#deleteNewsModal').modal('hide');
+                $('#deleteEventModal').modal('hide');
                 showAlert('error', 'An unexpected error occurred.');
             }
         });

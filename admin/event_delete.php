@@ -1,7 +1,6 @@
 <?php
-session_start(); // Start the session
-
-header('Content-Type: application/json'); // Set the content type to JSON
+session_start();
+header('Content-Type: application/json');
 
 // Function to send a JSON response
 function sendResponse($status, $message) {
@@ -23,20 +22,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Extract ID to delete
     $id = $_POST['id'];
 
-    // Function to delete event data
+    // Function to move event data to deleted_event node
+    function moveEventDataToDeleted($firebase, $id) {
+        $table = 'event';
+        $deletedTable = 'deleted_event';
+
+        // Retrieve the event data
+        $eventData = $firebase->retrieve($table . '/' . $id);
+        $eventData = json_decode($eventData, true);
+
+        if ($eventData) {
+            // Log the data being moved
+            error_log('Event data to move: ' . print_r($eventData, true));
+
+            // Insert the data into deleted_event node
+            $eventData['deleted_at'] = date('Y-m-d H:i:s'); // Add deletion timestamp
+            $result = $firebase->update($deletedTable, $id, $eventData);
+            return $result;
+        } else {
+            // Log if data retrieval failed
+            error_log('Failed to retrieve event data for ID: ' . $id);
+        }
+        return null;
+    }
+
+    // Function to delete event data from Firebase
     function deleteEventData($firebase, $id) {
-        $table = 'event'; // Assuming 'event' is your Firebase database node for event data
+        $table = 'event';
         return $firebase->delete($table, $id);
     }
 
-    // Perform delete
-    $result = deleteEventData($firebase, $id);
+    // Move event data to deleted_event node
+    $moveResult = moveEventDataToDeleted($firebase, $id);
 
-    // Check result
-    if ($result === null) {
-        sendResponse('error', 'Failed to delete event data in Firebase.');
+    // Perform delete in Firebase
+    $deleteResult = deleteEventData($firebase, $id);
+
+    // Check results
+    if ($moveResult === null) {
+        sendResponse('error', 'Failed to move event data to deleted_event.');
+    } elseif ($deleteResult === null) {
+        sendResponse('error', 'Failed to delete event data from Firebase.');
     } else {
-        sendResponse('success', 'Event data deleted successfully!');
+        sendResponse('success', 'Event data moved to deleted_event and deleted successfully!');
     }
 } else {
     sendResponse('error', 'Invalid request method.');
