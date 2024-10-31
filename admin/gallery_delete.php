@@ -1,52 +1,58 @@
-<?php
-session_start(); // Start the session
+<?php 
+session_start(); 
+header('Content-Type: application/json');
+
+// Function to send a JSON response
+function sendResponse($status, $message) {
+    echo json_encode(['status' => $status, 'message' => $message]);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ensure ID is provided
-    if (empty($_POST['id'])) {
-        $_SESSION['error'] = 'ID is required.';
-        header('HTTP/1.1 400 Bad Request');
-        exit;
+    if (!isset($_POST['id']) || empty($_POST['id'])) {
+        sendResponse('error', 'ID is required.');
     }
 
-    // Include FirebaseRDB class and initialize
     require_once 'includes/firebaseRDB.php';
-    require_once 'includes/config.php'; // Include your config file
+    require_once 'includes/config.php';
     $firebase = new firebaseRDB($databaseURL);
-    // Extract ID to delete
+
     $id = $_POST['id'];
 
-    // Function to delete gallery data and related gallery_view data
-    function deleteGalleryData($firebase, $id)
-    {
-        $galleryTable = 'gallery'; // Assuming 'gallery' is your Firebase database node for gallery data
-        $viewTable = 'gallery_view'; // Assuming 'gallery_view' is your Firebase database node for gallery view data
+    function moveGalleryDataToDeleted($firebase, $id) {
+        $table = 'gallery';
+        $deletedTable = 'deleted_gallery';
 
-        // Delete from gallery
-        $firebase->delete($galleryTable, $id);
+        $galleryData = $firebase->retrieve($table . '/' . $id);
+        $galleryData = json_decode($galleryData, true);
 
-        // Check and delete from gallery_view
-        $viewData = json_decode($firebase->get($viewTable), true); // Fetch all data from gallery_view
-        if ($viewData) {
-            foreach ($viewData as $key => $item) {
-                if (isset($item['gallery_id']) && $item['gallery_id'] === $id) {
-                    $firebase->delete($viewTable, $key); // Delete matching item from gallery_view
-                }
-            }
+        if ($galleryData) {
+            error_log('Gallery data to move: ' . print_r($galleryData, true));
+            $galleryData['deleted_at'] = date('Y-m-d H:i:s');
+            $result = $firebase->update($deletedTable, $id, $galleryData);
+            return $result;
+        } else {
+            error_log('Failed to retrieve gallery data for ID: ' . $id);
+            return null;
         }
     }
 
-    // Perform delete
-    deleteGalleryData($firebase, $id);
+    function deleteGalleryData($firebase, $id) {
+        $table = 'gallery';
+        return $firebase->delete($table, $id);
+    }
 
-    // Set success message
-    $_SESSION['success'] = 'Gallery data deleted successfully!';
-    header('HTTP/1.1 200 OK');
-    exit;
+    $moveResult = moveGalleryDataToDeleted($firebase, $id);
+    $deleteResult = deleteGalleryData($firebase, $id);
 
+    if ($moveResult === null) {
+        sendResponse('error', 'Failed to move gallery data to deleted_gallery.');
+    } elseif ($deleteResult === null) {
+        sendResponse('error', 'Failed to delete gallery data from Firebase.');
+    } else {
+        sendResponse('success', 'Gallery data moved to Archive and deleted successfully!');
+    }
 } else {
-    $_SESSION['error'] = 'Invalid request method.';
-    header('HTTP/1.1 405 Method Not Allowed');
-    exit;
+    sendResponse('error', 'Invalid request method.');
 }
 ?>

@@ -252,28 +252,39 @@ $galleries = json_decode($galleryData, true) ?: [];
                 url: 'gallery_delete.php',
                 type: 'POST',
                 data: { id: id },
-                success: function () {
+                dataType: 'json',
+                success: function (response) {
                     $('#deleteModal').modal('hide');
-                    // Show SweetAlert success message
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "Gallery item deleted successfully.",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        // Optional: Refresh the page or perform additional actions
-                        window.location.reload();
-                    });
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "error",
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
                 },
                 error: function (xhr, status, error) {
                     $('#deleteModal').modal('hide');
-                    // Display session error message if any
-                    var errorMessage = xhr.status === 400 ? 'ID is required.' :
-                        xhr.status === 500 ? 'Failed to delete gallery data in Firebase.' :
-                            'Invalid request method.';
-                    console.error('AJAX Error: ' + errorMessage);
-                    $('#errorMessage').text(errorMessage).show();
+                    console.error('AJAX Error: ' + status + ' ' + error);
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: 'An unexpected error occurred.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }
             });
         });
@@ -330,7 +341,7 @@ $galleries = json_decode($galleryData, true) ?: [];
         });
     }
 
-  
+
 
 
 </script>

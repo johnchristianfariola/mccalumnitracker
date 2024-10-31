@@ -112,6 +112,7 @@
           <li><a href="deleted_alumni.php"><i class="fa fa-angle-right"></i> Alumni</a></li>
           <li><a href="deleted_news.php"><i class="fa fa-angle-right"></i> News</a></li>
           <li><a href="deleted_event.php"><i class="fa fa-angle-right"></i> Event</a></li>
+          <li><a href="deleted_gallery.php"><i class="fa fa-angle-right"></i> Gallery</a></li>
           <li><a href="deleted_job.php"><i class="fa fa-angle-right"></i> Job</a></li>
           <li><a href="deleted_survey.php"><i class="fa fa-angle-right"></i> Survey</a></li>
 

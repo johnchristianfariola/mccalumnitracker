@@ -364,3 +364,66 @@
         </div>
     </div>
 </div>
+
+
+<!-- Delete Gallery Modal -->
+<div class="modal fade" id="deleteGalleryModal" tabindex="-1" role="dialog" aria-labelledby="deleteGalleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><b>Deleting Gallery...</b></h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="deleteGalleryForm" method="POST">
+                    <input type="hidden" class="deleteId" name="id">
+                    <div class="text-center">
+                        <h4>Gallery Title</h4>
+                        <h2 class="deleteGalleryTitle"></h2>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default pull-right btn-flat btn-class" form="deleteGalleryForm" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+                <button type="button" class="btn btn-flat btn-class" data-dismiss="modal">
+                    <i class="fa fa-close"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Restore Gallery Modal -->
+<div class="modal fade" id="restoreGalleryModal" tabindex="-1" role="dialog" aria-labelledby="restoreGalleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><b>Restoring Gallery...</b></h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="restoreGalleryForm" method="POST">
+                    <input type="hidden" class="retrieveId" name="id">
+                    <div class="text-center">
+                        <h4>Gallery Title</h4>
+                        <h2 class="restoreGalleryTitle"></h2>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default pull-right btn-flat btn-class" form="restoreGalleryForm" style="background:linear-gradient(to right, #90caf9, #047edf 99%); color:white;">
+                    <i class="fa fa-recycle"></i> Restore
+                </button>
+                <button type="button" class="btn btn-flat btn-class" data-dismiss="modal">
+                    <i class="fa fa-close"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
