@@ -132,7 +132,7 @@ $data = array_slice($data, 0, 5);
                     <div class="container">
                         <div class="row justify-content-start">
                             <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Welcome Bac
+                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Welcome Back
                                 </h5>
                                 <h1 class="display-3 text-white animated slideInDown">Reconnect. Reimagine. Rediscover.
                                 </h1>
