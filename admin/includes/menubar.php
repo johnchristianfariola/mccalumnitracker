@@ -1,13 +1,4 @@
 <?php
-// Include FirebaseRDB class and config
-require_once 'includes/firebaseRDB.php';
-require_once 'includes/config.php';
-
-// Firebase Realtime Database URL
-$databaseURL = "https://mccalumniapp-default-rtdb.firebaseio.com";
-
-// Instantiate FirebaseRDB object
-$firebase = new firebaseRDB($databaseURL);
 
 // Function to count unique keys in a node
 function countUniqueKeys($firebase, $node)
