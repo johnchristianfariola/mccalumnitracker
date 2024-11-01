@@ -225,7 +225,7 @@ usort($all_comments, function ($a, $b) {
 
         <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-          <li class="active">Dashboard</li>
+          <li class="active">Dashboar</li>
         </ol>
       </section>
 
