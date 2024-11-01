@@ -1,26 +1,3 @@
-<?php
-
-// Function to count unique keys in a node
-function countUniqueKeys($firebase, $node)
-{
-  $data = $firebase->retrieve($node);
-  $data = json_decode($data, true);
-
-  return is_array($data) ? count(array_keys($data)) : 0;
-}
-
-// Count unique keys in each node
-$newsCount = countUniqueKeys($firebase, "deleted_news");
-$alumniCount = countUniqueKeys($firebase, "deleted_alumni");
-$jobCount = countUniqueKeys($firebase, "deleted_job");
-$galleryCount = countUniqueKeys($firebase, "deleted_gallery");
-$surveyCount = countUniqueKeys($firebase, "deleted_survey_set"); // Updated line
-$eventCount = countUniqueKeys($firebase, "deleted_event");
-// Sum the counts
-$totalCount = $newsCount + $alumniCount + $jobCount + $galleryCount + $surveyCount + $eventCount;
-
-// Display the count in the HTML
-?>
 
 <aside class="main-sidebar">
   <!-- sidebar: style can be found in sidebar.less -->
@@ -123,53 +100,7 @@ $totalCount = $newsCount + $alumniCount + $jobCount + $galleryCount + $surveyCou
         </ul>
       -->
 
-      <li class="treeview">
-        <a href="#">
-          <i class="fa fa-trash"></i>
-          <span>Trash</span>
-          <span class="pull-right-container">
-
-            <i class="fa fa-angle-left pull-right"></i> &nbsp; &nbsp; &nbsp;
-            <span class="pull-right-container">
-              <small class="label pull-right bg-red"><?php echo $totalCount; ?></small>
-            </span>
-
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li>
-            <a href="deleted_alumni.php">
-              <i class="fa fa-angle-right"></i> <small class="label bg-red"><?php echo $alumniCount; ?></small> Alumni
-            </a>
-          </li>
-          <li>
-            <a href="deleted_news.php">
-              <i class="fa fa-angle-right"></i> <small class="label bg-red"><?php echo $newsCount; ?></small> News
-            </a>
-          </li>
-          <li>
-            <a href="deleted_event.php">
-              <i class="fa fa-angle-right"></i> <small class="label bg-red"><?php echo $eventCount; ?></small> Event
-            </a>
-          </li>
-          <li>
-            <a href="deleted_gallery.php">
-              <i class="fa fa-angle-right"></i> <small class="label bg-red"><?php echo $galleryCount; ?></small> Gallery
-            </a>
-          </li>
-          <li>
-            <a href="deleted_job.php">
-              <i class="fa fa-angle-right"></i> <small class="label bg-red"><?php echo $jobCount; ?></small> Job
-            </a>
-          </li>
-          <li>
-            <a href="deleted_survey.php">
-              <i class="fa fa-angle-right"></i> <small class="label bg-red"><?php echo $surveyCount; ?></small> Survey
-            </a>
-          </li>
-        </ul>
-
-      </li>
+   
     </ul>
   </section>
   <!-- /.sidebar -->
