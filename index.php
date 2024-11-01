@@ -1,6 +1,11 @@
 <?php
 require_once 'controllerUserData.php';
 
+// Function to check if data is empty
+function isDataEmpty($data) {
+    return empty($data);
+}
+
 if (isset($_SESSION['alumni'])) {
     if ($_SESSION['forms_completed'] == false) {
         header('location: userpage/alumni_profile.php');
@@ -9,13 +14,11 @@ if (isset($_SESSION['alumni'])) {
     }
     exit();
 }
-?>
-<?php
 
-/*
+/* 
 // Get current date
 $date = date('Y-m-d');
-//
+
 // Check if an entry for today exists
 $existingData = $firebase->retrieve("track_visitors/$date");
 $existingData = json_decode($existingData, true);
@@ -28,36 +31,22 @@ if ($existingData) {
     // Create new entry for today
     $firebase->insert("track_visitors", [$date => ['count' => 1]]);
 }
-
 */
 
+// Retrieve data from Firebase
+$data = json_decode($firebase->retrieve("news"), true) ?? [];
+$eventData = json_decode($firebase->retrieve("event"), true) ?? [];
+$jobData = json_decode($firebase->retrieve("job"), true) ?? [];
 
-$data = $firebase->retrieve("news");
-$data = json_decode($data, true);
-
-$eventData = $firebase->retrieve("event");
-$eventData = json_decode($eventData, true);
-
-$jobData = $firebase->retrieve("job");
-$jobData = json_decode($jobData, true);
-
-// Sort job data by creation date in descending order
-usort($jobData, function ($a, $b) {
+// Sort and slice data as needed
+usort($jobData, function ($a, $b): int {
     return strtotime($b['job_created']) - strtotime($a['job_created']);
 });
-
-
-// Sort data by date in descending order
 usort($data, function ($a, $b) {
     return strtotime($b['news_created']) - strtotime($a['news_created']);
 });
-
-// Slice to get only the first 5 items
 $data = array_slice($data, 0, 5);
-
 ?>
-
-
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -363,80 +352,85 @@ $data = array_slice($data, 0, 5);
     </style>
 
 
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
-                <h6 class="section-title bg-white text-center px-3">News</h6>
-                <h1 class="mb-5">News</h1>
-            </div>
-            <div class="owl-carousel testimonial-carousel position-relative">
-                <?php foreach ($data as $key => $news): ?>
-                    <div class="testimonial-item">
-                        <div class="item">
-                            <a class="openFormButton probootstrap-featured-news-box">
-                                <figure class="probootstrap-media">
-                                    <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image"
-                                        class="img-responsive fixed-dimension-img">
-                                </figure>
-                                <div class="probootstrap-text">
-                                    <h3 class="news-title"><?php echo $news['news_title']; ?></h3>
-                                    <p class="news-description"><?php echo strip_tags($news['news_description']); ?></p>
-                                    <span class="probootstrap-date"><i
-                                            class="icon-calendar"></i><?php echo $news['news_created']; ?></span>
-                                </div>
-                            </a>
+    <?php if (!isDataEmpty($data)): ?>
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
+                    <h6 class="section-title bg-white text-center px-3">News</h6>
+                    <h1 class="mb-5">News</h1>
+                </div>
+                <div class="owl-carousel testimonial-carousel position-relative">
+                    <?php foreach ($data as $news): ?>
+                        <div class="testimonial-item">
+                            <div class="item">
+                                <a class="openFormButton probootstrap-featured-news-box">
+                                    <figure class="probootstrap-media">
+                                        <img src="admin/<?php echo $news['image_url']; ?>" alt="News Image"
+                                            class="img-responsive fixed-dimension-img">
+                                    </figure>
+                                    <div class="probootstrap-text">
+                                        <h3 class="news-title"><?php echo $news['news_title']; ?></h3>
+                                        <p class="news-description"><?php echo strip_tags($news['news_description']); ?></p>
+                                        <span class="probootstrap-date"><i
+                                                class="icon-calendar"></i><?php echo $news['news_created']; ?></span>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
+                <button class="btn openFormButton" style="float:right">View All</button>
             </div>
-            <button class="btn openFormButton" style="float:right">View All</button>
         </div>
-    </div>
+    <?php endif; ?>
     <!-- News End -->
 
 
     <!-- Event Start -->
 
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center px-3">EVENT</h6>
-                <h1 class="mb-5">EVENT</h1>
-            </div>
-            <div class="row g-4 justify-content-center">
-                <?php foreach ($eventData as $key => $event): ?>
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="item">
-                            <center>
-                                <a class="openFormButton probootstrap-featured-news-box">
-                                    <figure class="probootstrap-media">
-                                        <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
-                                            class="img-responsive fixed-dimension-img">
-                                    </figure>
-                                    <div class="probootstrap-text"
-                                        style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
-                                        <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
-                                        <p class="event-description"><?php echo strip_tags($event['event_description']); ?>
-                                        </p>
-                                        <span class="probootstrap-date" style="font-size:14px"><i
-                                                class="icon-calendar"></i><b>Date Posted:</b>
-                                            <?php echo $event['event_created']; ?> | <b>Date of Event:</b>
-                                            <?php echo $event['event_date']; ?></span>
-                                    </div>
-                                </a>
-                            </center>
+    <?php if (!isDataEmpty($eventData)): ?>
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h6 class="section-title bg-white text-center px-3">EVENT</h6>
+                    <h1 class="mb-5">EVENT</h1>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <?php foreach ($eventData as $event): ?>
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="item">
+                                <center>
+                                    <a class="openFormButton probootstrap-featured-news-box">
+                                        <figure class="probootstrap-media">
+                                            <img src="admin/<?php echo $event['image_url']; ?>" alt="Event Image"
+                                                class="img-responsive fixed-dimension-img">
+                                        </figure>
+                                        <div class="probootstrap-text"
+                                            style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                                            <h3 class="event-title"><?php echo $event['event_title']; ?></h3>
+                                            <p class="event-description"><?php echo strip_tags($event['event_description']); ?>
+                                            </p>
+                                            <span class="probootstrap-date" style="font-size:14px"><i
+                                                    class="icon-calendar"></i><b>Date Posted:</b>
+                                                <?php echo $event['event_created']; ?> | <b>Date of Event:</b>
+                                                <?php echo $event['event_date']; ?></span>
+                                        </div>
+                                    </a>
+                                </center>
+                            </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
+                <button class="btn openFormButton" style="float:right">View All</button>
             </div>
-            <button class="btn openFormButton" style="float:right">View All</button>
         </div>
-    </div>
+    <?php endif; ?>
 
 
     <!-- Event End -->
 
 
+    <?php if (!isDataEmpty($jobData)): ?>
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -444,33 +438,28 @@ $data = array_slice($data, 0, 5);
                 <h1 class="mb-5">Available Job Listings</h1>
             </div>
             <div class="row g-4 justify-content-center">
-                <?php foreach ($jobData as $key => $job): ?>
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="item">
-                            <center>
-                                <a class="openFormButton probootstrap-featured-news-box">
-                                    <figure class="probootstrap-media">
-                                        <img src="admin/<?php echo $job['image_path']; ?>" alt="Job Image"
-                                            class="img-responsive fixed-dimension-img">
-                                    </figure>
-                                    <div class="probootstrap-text"
-                                        style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
-                                        <h3 class="job-title"><?php echo $job['job_title']; ?></h3>
-                                        <p class="event-description"><?php echo strip_tags($job['job_description']); ?></p>
-                                        <span class="probootstrap-date" style="font-size:14px"><i
-                                                class="icon-calendar"></i><b>Date Posted:</b>
-                                            <?php echo $job['job_created']; ?> | <b>Company:</b>
-                                            <?php echo $job['company_name']; ?> | <b>Work Time:</b>
-                                            <?php echo $job['work_time']; ?></span>
-                                    </div>
-                                </a>
-                            </center>
-                        </div>
+                <?php foreach ($jobData as $job): ?>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="item">
+                        <center>
+                            <a class="openFormButton probootstrap-featured-news-box">
+                                <figure class="probootstrap-media">
+                                    <img src="admin/<?php echo $job['image_path']; ?>" alt="Job Image" class="img-responsive fixed-dimension-img">
+                                </figure>
+                                <div class="probootstrap-text" style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                                    <h3 class="job-title"><?php echo $job['job_title']; ?></h3>
+                                    <p class="event-description"><?php echo strip_tags($job['job_description']); ?></p>
+                                    <span class="probootstrap-date" style="font-size:14px"><i class="icon-calendar"></i><b>Date Posted:</b> <?php echo $job['job_created']; ?> | <b>Company:</b> <?php echo $job['company_name']; ?> | <b>Work Time:</b> <?php echo $job['work_time']; ?></span>
+                                </div>
+                            </a>
+                        </center>
                     </div>
+                </div>
                 <?php endforeach; ?>
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
 
     <!-- Team Start
@@ -640,14 +629,14 @@ $data = array_slice($data, 0, 5);
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    
+
     <!-- JavaScript Libraries -->
     <script nonce="<random-nonce>" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script nonce="<random-nonce>" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script nonce="<random-nonce>"  src="homepage/lib/wow/wow.min.js"></script>
+    <script nonce="<random-nonce>" src="homepage/lib/wow/wow.min.js"></script>
     <script nonce="<random-nonce>" src="homepage/lib/easing/easing.min.js"></script>
     <script nonce="<random-nonce>" src="homepage/lib/waypoints/waypoints.min.js"></script>
-    <script nonce="<random-nonce>"  src="homepage/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script nonce="<random-nonce>" src="homepage/lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
     <script nonce="<random-nonce>" src="homepage/js/main.js"></script>

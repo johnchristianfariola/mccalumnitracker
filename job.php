@@ -1,4 +1,5 @@
 <?php
+
 // Include necessary files
 require_once 'includes/firebaseRDB.php';
 require_once 'includes/config.php';
@@ -9,17 +10,22 @@ $firebase = new firebaseRDB($databaseURL);
 $jobData = $firebase->retrieve("job");
 $jobData = json_decode($jobData, true);
 
-// Sort job data by creation date in descending order
-usort($jobData, function ($a, $b) {
-    return strtotime($b['job_created']) - strtotime($a['job_created']);
-});
+// Check if jobData is not null and is an array
+if (is_array($jobData)) {
+    // Sort job data by creation date in descending order
+    usort($jobData, function ($a, $b) {
+        return strtotime($b['job_created']) - strtotime($a['job_created']);
+    });
+} else {
+    // Initialize jobData as an empty array if it's null
+    $jobData = [];
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <?php include 'includes/header.php' ?>
-
 <body>
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -59,24 +65,30 @@ usort($jobData, function ($a, $b) {
                 <h1 class="mb-5">Available Job Listings</h1>
             </div>
             <div class="row g-4 justify-content-center">
-                <?php foreach ($jobData as $key => $job): ?>
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="item">
-                            <center>
-                                <a class="openFormButton probootstrap-featured-news-box">
-                                    <figure class="probootstrap-media">
-                                        <img src="admin/<?php echo $job['image_path']; ?>" alt="Job Image" class="img-responsive fixed-dimension-img">
-                                    </figure>
-                                    <div class="probootstrap-text" style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
-                                        <h3 class="job-title"><?php echo $job['job_title']; ?></h3>
-                                        <p class="event-description"><?php echo strip_tags($job['job_description']); ?></p>
-                                        <span class="probootstrap-date" style="font-size:14px"><i class="icon-calendar"></i><b>Date Posted:</b> <?php echo $job['job_created']; ?> | <b>Company:</b> <?php echo $job['company_name']; ?> | <b>Work Time:</b> <?php echo $job['work_time']; ?></span>
-                                    </div>
-                                </a>
-                            </center>
+                <?php if (!empty($jobData)): ?>
+                    <?php foreach ($jobData as $key => $job): ?>
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="item">
+                                <center>
+                                    <a class="openFormButton probootstrap-featured-news-box">
+                                        <figure class="probootstrap-media">
+                                            <img src="admin/<?php echo $job['image_path']; ?>" alt="Job Image" class="img-responsive fixed-dimension-img">
+                                        </figure>
+                                        <div class="probootstrap-text" style="border-top: 1px solid silver; border-left: 1px solid silver; border-right: 1px solid silver; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                                            <h3 class="job-title"><?php echo $job['job_title']; ?></h3>
+                                            <p class="event-description"><?php echo strip_tags($job['job_description']); ?></p>
+                                            <span class="probootstrap-date" style="font-size:14px"><i class="icon-calendar"></i><b>Date Posted:</b> <?php echo $job['job_created']; ?> | <b>Company:</b> <?php echo $job['company_name']; ?> | <b>Work Time:</b> <?php echo $job['work_time']; ?></span>
+                                        </div>
+                                    </a>
+                                </center>
+                            </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <center>
+                    <h3>No job listings available at the moment.</h3>
+                    </center>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -103,5 +115,4 @@ usort($jobData, function ($a, $b) {
     <!-- Modal -->
     <?php include 'includes/auth.php' ?>
 </body>
-
 </html>
