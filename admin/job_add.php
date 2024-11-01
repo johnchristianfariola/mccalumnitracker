@@ -1,5 +1,6 @@
 <?php
 session_start(); // Start the session
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Handle the image uploads
         $image = $_FILES['imageUpload'];
         $imagePath = 'uploads/' . basename($image['name']);
+        
         $logo = $_FILES['imageUploadlogo'];
         $logoPath = 'uploads/' . basename($logo['name']);
 
@@ -43,8 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Function to add job
             function addJob($firebase, $job_title, $company_name, $job_description, $status, $work_time, $location, $salary_range, $job_categories, $imagePath, $logoPath, $expertise_specification, $about_the_role) {
                 $table = 'job';
+                
                 // Set timezone to Asia/Manila
                 date_default_timezone_set('Asia/Manila');
+                
                 $data = array(
                     'job_title' => $job_title,
                     'company_name' => $company_name,

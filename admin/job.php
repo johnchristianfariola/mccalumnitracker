@@ -19,7 +19,7 @@
           <div class="search-container">
             <input type="text" class="search-input" id="search-input" placeholder="Search...">
             <button class="search-button" onclick="filterTable()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 0" fill="none"
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-search">
                 <circle cx="11" cy="11" r="8"></circle>
@@ -66,7 +66,7 @@
                 <div class="table-responsive">
                   <table id="example1" class="table table-bordered">
                     <thead>
-                      <th>Stats</th>
+                      <th>Status</th>
                       <th width="15%">Work Type</th>
                       <th>Job Title</th>
                       <th>Company</th>
@@ -92,260 +92,250 @@
   <?php include 'includes/scripts.php'; ?>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <script>
-    $(document).ready(function () {
-      var originalData = {};
-      var currentEditors = {};
+$(document).ready(function () {
+  var originalData = {};
+  var currentEditors = {};
 
-      function fetcheventData(id, successCallback, errorCallback) {
-        $.ajax({
-          url: 'job_row.php',
-          type: 'GET',
-          data: { id: id },
-          dataType: 'json',
-          success: successCallback,
-          error: errorCallback
-        });
+  function fetcheventData(id, successCallback, errorCallback) {
+    $.ajax({
+      url: 'job_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: successCallback,
+      error: errorCallback
+    });
+  }
+
+  function initializeCKEditor(elementId) {
+    if (window.CKEDITOR && CKEDITOR.replace) {
+      // Destroy existing instance if it exists
+      if (currentEditors[elementId]) {
+        currentEditors[elementId].destroy();
+      }
+      // Create new instance
+      currentEditors[elementId] = CKEDITOR.replace(elementId);
+    } else {
+      console.error('CKEditor is not defined or replace method is missing.');
+    }
+  }
+
+  $('.open-modal').click(function () {
+    var id = $(this).data('id');
+    fetcheventData(id, function (response) {
+      $('#editId').val(id);
+      $('#edit_job_title').val(response.job_title);
+      $('#edit_company_name').val(response.company_name);
+      $('#edit_location').val(response.location);
+      $('#edit_salary_range').val(response.salary_range);
+      $('#edit_contact_email').val(response.contact_email);
+
+      $('#edit_parttime').prop('checked', response.work_time === 'Part-Time');
+      $('#edit_fulltime').prop('checked', response.work_time === 'Full-Time');
+      $('#edit_statusActive').prop('checked', response.status === 'Active');
+      $('#edit_statusArchive').prop('checked', response.status === 'Archive');
+
+      // Initialize Select2
+      $('#edit_job_categories').select2();
+
+      // Populate job categories
+      if (response.job_categories && Array.isArray(response.job_categories)) {
+        $('#edit_job_categories').val(response.job_categories).trigger('change');
       }
 
-      function initializeCKEditor(elementId) {
-        if (window.CKEDITOR && CKEDITOR.replace) {
-          // Destroy existing instance if it exists
-          if (currentEditors[elementId]) {
-            currentEditors[elementId].destroy();
-          }
-          // Create new instance
-          currentEditors[elementId] = CKEDITOR.replace(elementId);
-        } else {
-          console.error('CKEditor is not defined or replace method is missing.');
-        }
+      if (response.image_path && response.image_path.trim() !== '') {
+        $('#imagePreviewImg2').attr('src', response.image_path).show();
+      } else {
+        $('#imagePreviewImg2').hide();
       }
 
-      $('.open-modal').click(function () {
-        var id = $(this).data('id');
-        fetcheventData(id, function (response) {
-          $('#editId').val(id);
-          $('#edit_job_title').val(response.job_title);
-          $('#edit_company_name').val(response.company_name);
-          $('#edit_location').val(response.location);
-          $('#edit_salary_range').val(response.salary_range);
-          $('#edit_contact_email').val(response.contact_email);
-
-          $('#edit_parttime').prop('checked', response.work_time === 'Part-Time');
-          $('#edit_fulltime').prop('checked', response.work_time === 'Full-Time');
-          $('#edit_statusActive').prop('checked', response.status === 'Active');
-          $('#edit_statusArchive').prop('checked', response.status === 'Archive');
-
-          // Initialize Select2
-          $('#edit_job_categories').select2();
-
-          // Populate job categories
-          if (response.job_categories && Array.isArray(response.job_categories)) {
-            $('#edit_job_categories').val(response.job_categories).trigger('change');
-          }
-
-          if (response.image_path && response.image_path.trim() !== '') {
-            $('#imagePreviewImg2').attr('src', response.image_path).show();
-          } else {
-            $('#imagePreviewImg2').hide();
-          }
-
-          if (response.logo_path && response.logo_path.trim() !== '') {
-            $('#imagePreviewImgLogo2').attr('src', response.logo_path).show();
-          } else {
-            $('#imagePreviewImgLogo2').hide();
-          }
-
-          // Set the textarea values before initializing CKEditor
-          $('#edit_description').val(response.job_description);
-          $('#edit_expertise_specification').val(response.expertise_specification);
-          $('#edit_about_the_role').val(response.about_the_role);
-
-          originalData = {
-            job_title: response.job_title,
-            company_name: response.company_name,
-            work_time: response.work_time,
-            status: response.status,
-            job_description: response.job_description,
-            expertise_specification: response.expertise_specification,
-            about_the_role: response.about_the_role,
-            image_path: response.image_path
-          };
-
-          $('#editModal').modal('show');
-
-          // Use a setTimeout to ensure the modal is fully shown before initializing CKEditor
-          setTimeout(function () {
-            initializeCKEditor('edit_description');
-            initializeCKEditor('edit_expertise_specification');
-            initializeCKEditor('edit_about_the_role');
-          }, 100);
-        }, function (xhr, status, error) {
-          console.error('AJAX Error: ' + status + ' ' + error);
-        });
-      });
-
-      $('#editModal').on('hidden.bs.modal', function () {
-        // Destroy all CKEditor instances when the modal is closed
-        for (var elementId in currentEditors) {
-          if (currentEditors.hasOwnProperty(elementId)) {
-            currentEditors[elementId].destroy();
-            delete currentEditors[elementId];
-          }
-        }
-      });
-
-      // Open delete modal when delete button is clicked
-      $('.open-delete').click(function () {
-        var id = $(this).data('id');
-
-        // Make an AJAX request to fetch job details
-        $.ajax({
-          url: 'job_row.php',
-          type: 'GET',
-          data: { id: id },
-          dataType: 'json',
-          success: function (response) {
-            // Populate modal with alumni name
-            $('.deleteId').val(id); // Update value of deleteId input field
-            $('.deleteTitle').text(response.job_title);
-
-            // Show the delete confirmation modal
-            $('#deleteModal').modal('show');
-
-            // Store the ID in a data attribute of the delete button
-            $('.btn-confirm-delete').data('id', id);
-          },
-          error: function (xhr, status, error) {
-            console.error('AJAX Error: ' + status + ' ' + error);
-          }
-        });
-      });
-
-      $('#addJobForm').on('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        var formData = new FormData(this); // Create FormData object
-
-        // Manually handle multiple select if needed
-        var jobCategories = $('#job_categories').val(); // Get the selected categories
-        formData.append('job_categories', JSON.stringify(jobCategories)); // Convert to JSON string
-
-        $.ajax({
-          xhr: function () {
-            var xhr = new window.XMLHttpRequest();
-            xhr.upload.addEventListener("progress", function (evt) {
-              if (evt.lengthComputable) {
-                var percentComplete = evt.loaded / evt.total;
-                $('#progress-bar').css('width', percentComplete * 100 + '%');
-              }
-            }, false);
-            return xhr;
-          },
-          type: 'POST',
-          url: 'job_add.php', // The URL of your PHP script for adding the job
-          data: formData,
-          contentType: false, // Important for file upload
-          processData: false, // Important for file upload
-          dataType: 'json', // Expect JSON response from server
-          success: function (response) {
-            if (response.status === 'success') {
-              showAlert('success', response.message);
-            } else {
-              showAlert('error', response.message);
-            }
-          },
-          error: function () {
-            showAlert('error', 'An unexpected error occurred.');
-          }
-        });
-      });
-
-      $('#deleteJobForm').on('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        var formData = new FormData(this); // Create FormData object
-
-        $.ajax({
-          type: 'POST',
-          url: 'job_delete.php', // The URL of your PHP script for adding news
-          data: formData,
-          contentType: false, // Important for file upload
-          processData: false, // Important for file upload
-          dataType: 'json',
-          success: function (response) {
-            if (response.status === 'success') {
-              showAlert('success', response.message);
-            } else {
-              showAlert('error', response.message);
-            }
-          },
-          error: function () {
-            showAlert('error', 'An unexpected error occurred.');
-          }
-        });
-      });
-
-      $('#editJobForm').on('submit', function (event) {
-        event.preventDefault();
-        var formData = new FormData(this);
-
-        // Get the updated content from CKEditor instances
-        formData.set('edit_description', currentEditors['edit_description'].getData());
-        formData.set('edit_expertise_specification', currentEditors['edit_expertise_specification'].getData());
-        formData.set('edit_about_the_role', currentEditors['edit_about_the_role'].getData());
-
-        $.ajax({
-          type: 'POST',
-          url: 'job_edit.php',
-          data: formData,
-          contentType: false,
-          processData: false,
-          dataType: 'json',
-          success: function (response) {
-            if (response.status === 'success') {
-              showAlert('success', response.message);
-            } else if (response.status === 'info') {
-              showAlertEdit(response.status, response.message);
-            } else {
-              showAlert('error', response.message);
-            }
-          },
-          error: function () {
-            showAlert('error', 'An unexpected error occurred.');
-          }
-        });
-      });
-
-      function showAlert(type, message) {
-        Swal.fire({
-          position: 'top-end',
-          icon: type,
-          title: message,
-          showConfirmButton: false,
-          timer: 2500,
-          willClose: () => {
-            if (type === 'success') {
-              location.reload();
-            }
-          }
-        });
+      if (response.logo_path && response.logo_path.trim() !== '') {
+        $('#imagePreviewImgLogo2').attr('src', response.logo_path).show();
+      } else {
+        $('#imagePreviewImgLogo2').hide();
       }
 
-      function showAlertEdit(type, message) {
-        Swal.fire({
-          icon: type,
-          title: type === 'info' ? 'Information' : 'Error',
-          text: message,
-          confirmButtonText: 'OK',
-          customClass: {
-            title: 'swal-title',
-            htmlContainer: 'swal-text',
-            confirmButton: 'swal-button'
-          }
-        });
+      // Set the textarea values before initializing CKEditor
+      $('#edit_description').val(response.job_description);
+      $('#edit_expertise_specification').val(response.expertise_specification);
+      $('#edit_about_the_role').val(response.about_the_role);
+
+      originalData = {
+        job_title: response.job_title,
+        company_name: response.company_name,
+        work_time: response.work_time,
+        status: response.status,
+        job_description: response.job_description,
+        expertise_specification: response.expertise_specification,
+        about_the_role: response.about_the_role,
+        image_path: response.image_path
+      };
+
+      $('#editModal').modal('show');
+
+      // Use a setTimeout to ensure the modal is fully shown before initializing CKEditor
+      setTimeout(function () {
+        initializeCKEditor('edit_description');
+        initializeCKEditor('edit_expertise_specification');
+        initializeCKEditor('edit_about_the_role');
+      }, 100);
+    }, function (xhr, status, error) {
+      console.error('AJAX Error: ' + status + ' ' + error);
+    });
+  });
+
+  $('#editModal').on('hidden.bs.modal', function () {
+    // Destroy all CKEditor instances when the modal is closed
+    for (var elementId in currentEditors) {
+      if (currentEditors.hasOwnProperty(elementId)) {
+        currentEditors[elementId].destroy();
+        delete currentEditors[elementId];
+      }
+    }
+  });
+
+  // Open delete modal when delete button is clicked
+  $('.open-delete').click(function () {
+    var id = $(this).data('id');
+
+    // Make an AJAX request to fetch job details
+    $.ajax({
+      url: 'job_row.php',
+      type: 'GET',
+      data: { id: id },
+      dataType: 'json',
+      success: function (response) {
+        // Populate modal with alumni name
+        $('.deleteId').val(id); // Update value of deleteId input field
+        $('.deleteTitle').text(response.job_title);
+
+        // Show the delete confirmation modal
+        $('#deleteModal').modal('show');
+
+        // Store the ID in a data attribute of the delete button
+        $('.btn-confirm-delete').data('id', id);
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX Error: ' + status + ' ' + error);
       }
     });
-  </script>
+  });
+
+  $('#addJobForm').on('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = new FormData(this); // Create FormData object
+
+    // Manually handle multiple select if needed
+    var jobCategories = $('#job_categories').val(); // Get the selected categories
+    formData.append('job_categories', JSON.stringify(jobCategories)); // Convert to JSON string
+
+    $.ajax({
+      type: 'POST',
+      url: 'job_add.php', // The URL of your PHP script for adding the job
+      data: formData,
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
+      dataType: 'json', // Expect JSON response from server
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+  $('#deleteJobForm').on('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = new FormData(this); // Create FormData object
+
+    $.ajax({
+      type: 'POST',
+      url: 'job_delete.php', // The URL of your PHP script for adding news
+      data: formData,
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+  $('#editJobForm').on('submit', function (event) {
+    event.preventDefault();
+    var formData = new FormData(this);
+    
+    // Get the updated content from CKEditor instances
+    formData.set('edit_description', currentEditors['edit_description'].getData());
+    formData.set('edit_expertise_specification', currentEditors['edit_expertise_specification'].getData());
+    formData.set('edit_about_the_role', currentEditors['edit_about_the_role'].getData());
+
+    $.ajax({
+      type: 'POST',
+      url: 'job_edit.php',
+      data: formData,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      success: function (response) {
+        if (response.status === 'success') {
+          showAlert('success', response.message);
+        } else if (response.status === 'info') {
+          showAlertEdit(response.status, response.message);
+        } else {
+          showAlert('error', response.message);
+        }
+      },
+      error: function () {
+        showAlert('error', 'An unexpected error occurred.');
+      }
+    });
+  });
+
+  function showAlert(type, message) {
+    Swal.fire({
+      position: 'top-end',
+      icon: type,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      willClose: () => {
+        if (type === 'success') {
+          location.reload();
+        }
+      }
+    });
+  }
+
+  function showAlertEdit(type, message) {
+    Swal.fire({
+      icon: type,
+      title: type === 'info' ? 'Information' : 'Error',
+      text: message,
+      confirmButtonText: 'OK',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-text',
+        confirmButton: 'swal-button'
+      }
+    });
+  }
+});
+</script>
 </body>
 
 </html>
